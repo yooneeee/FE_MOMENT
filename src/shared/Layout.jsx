@@ -8,7 +8,7 @@ function Header() {
     <HeaderStyles>
       <HeaderTitle
         onClick={() => {
-          navigate("/");
+          navigate("/main");
         }}
       >
         Moment
@@ -38,6 +38,7 @@ function Header() {
         >
           로그인
         </HeaderButton>
+
         <HeaderButton>회원가입</HeaderButton>
       </ButtonBox>
     </HeaderStyles>
@@ -56,7 +57,9 @@ function Layout({ children }) {
   return (
     <TotalLayout>
       <Header />
+
       <LayoutStyles>{children}</LayoutStyles>
+
       <Footer />
     </TotalLayout>
   );
