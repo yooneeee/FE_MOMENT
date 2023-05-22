@@ -3,7 +3,7 @@ import styled from "styled-components";
 import InitialNav from "../components/InitialNav";
 import { useNavigate } from "react-router-dom";
 
-function InitialPage() {
+function Start() {
   const navigate = useNavigate();
   return (
     <PageContainer>
@@ -40,7 +40,7 @@ function InitialPage() {
   );
 }
 
-export default InitialPage;
+export default Start;
 
 const PageContainer = styled.div`
   width: 100%;
