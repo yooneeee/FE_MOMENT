@@ -10,18 +10,53 @@ function Main() {
             </div>
 
             <MainBody>
-                <CardGroupName>
-                    <CardName>
-                        당신을 위한 맞춤 추천
-                    </CardName>
-                    <MoreButton>더보기</MoreButton>
-                </CardGroupName>
+                {/* 당신을 위한 맞춤 추천 카테고리 */}
+                <CategoryContainer>
+                    <CardGroupName>
+                        <CardName>
+                            당신을 위한 맞춤 추천
+                        </CardName>
+                        <MoreButton>더보기</MoreButton>
+                    </CardGroupName>
 
-                <CardContainer>
-                  <Card/>   
-                  <Card/>      
-                  <Card/>                 
-                </CardContainer>
+                    <CardContainer>
+                        <Card />
+                        <Card />
+                        <Card />
+                    </CardContainer>
+                </CategoryContainer>
+
+                {/* 모델 구직 카테고리 */}
+                <CategoryContainer>
+                    <CardGroupName>
+                        <CardName>
+                            Model
+                        </CardName>
+                        <MoreButton>더보기</MoreButton>
+                    </CardGroupName>
+
+                    <CardContainer>
+                        <Card />
+                        <Card />
+                        <Card />
+                    </CardContainer>
+                </CategoryContainer>
+
+                {/* 작가 구인 카테고리 */}
+                <CategoryContainer>
+                    <CardGroupName>
+                        <CardName>
+                            Photographer
+                        </CardName>
+                        <MoreButton>더보기</MoreButton>
+                    </CardGroupName>
+
+                    <CardContainer>
+                        <Card />
+                        <Card />
+                        <Card />
+                    </CardContainer>
+                </CategoryContainer>
             </MainBody>
         </>
     )
@@ -37,6 +72,10 @@ const MainBody = styled.div`
     padding: 70px 90px;
 `;
 
+const CategoryContainer = styled.div`
+    margin-bottom: 60px;
+`
+
 const CardGroupName = styled.div`
     display: flex;
     align-items: center;
@@ -45,14 +84,15 @@ const CardGroupName = styled.div`
 `
 
 const CardName = styled.p`
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 25px;
+    font-weight:700;
 `
 
 const MoreButton = styled.div`
     border: none;
     color: #0096c6;
     cursor: pointer;
+    font-weight: 600;
 `
 
 const CardContainer = styled.div`
