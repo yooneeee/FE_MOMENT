@@ -1,4 +1,4 @@
-div, input, textarea, button {
+div, input, textarea, button,img {
   box-sizing: border-box;
 }
 body {
