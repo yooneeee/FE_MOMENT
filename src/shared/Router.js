@@ -6,22 +6,23 @@ import Login from "../pages/Login";
 import Layout from "./Layout";
 import Feed from "../pages/Feed";
 import Board from "../pages/Board";
-
+import MyPage from "../pages/MyPage";
 
 const Router = () => {
-    return (
-        <BrowserRouter>
-            <Layout>
-                <Routes>
-                    <Route path="/" element={<Start />} />
-                    <Route path="main" element={<Main />} />
-                    <Route path="login" element={<Login />} />
-                    <Route path="feed" element={<Feed />} /> 
-                    <Route path="board" element={<Board />} /> 
-                </Routes>
-            </Layout>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Start />} />
+          <Route path="main" element={<Main />} />
+          <Route path="login" element={<Login />} />
+          <Route path="feed" element={<Feed />} />
+          <Route path="board" element={<Board />} />
+          <Route path="mypage" element={<MyPage />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
 };
 
 export default Router;
