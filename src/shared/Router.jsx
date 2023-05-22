@@ -1,15 +1,26 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import InitialPage from "../pages/InitialPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Start from "../pages/Start";
+import Main from "../pages/Main";
+import Login from "../pages/Login";
+import Layout from "./Layout";
+import Feed from "../pages/Feed";
+import Board from "../pages/Board";
 
-function Router() {
+const Router = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<InitialPage />}></Route>
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Start />} />
+          <Route path="main" element={<Main />} />
+          <Route path="login" element={<Login />} />
+          <Route path="feed" element={<Feed />} />
+          <Route path="board" element={<Board />} />
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
-}
+};
 
 export default Router;
