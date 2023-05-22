@@ -60,16 +60,18 @@ const UserNickName = styled.div`
 const CardProfileImgContainer = styled.div`
     display: flex;
     gap: 20px;
-    justify-content: center; /* 추가 */
+    justify-content: center;
     padding-bottom: 15px;
 `
 
-const CardProfileImg = styled.img`
-    width: calc(30% - 6.67px); /* 수정 */
-    height: auto;
-    background: #eee;
-    border-radius: 5px;
+const CardProfileImg = styled.div`
+    width: calc(30% - 6.67px);
+    height: 0;
+    padding-bottom: calc(30% - 6.67px);
+    background-image: url(${props => props.src});
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: cover;
+    border-radius: 5px;
 `
+
