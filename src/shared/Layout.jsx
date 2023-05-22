@@ -6,7 +6,7 @@ function Header() {
   const navigate = useNavigate()
   return (
     <HeaderStyles>
-      <HeaderTitle onClick={() => { navigate('/') }}>Moment</HeaderTitle>
+      <HeaderTitle onClick={() => { navigate('/main') }}>Moment</HeaderTitle>
       <LinkBox>
         <HeaderButton onClick={() => { navigate('/feed') }}>피드</HeaderButton>
         <HeaderButton onClick={() => { navigate('/board') }}>게시판</HeaderButton>
