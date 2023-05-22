@@ -66,7 +66,6 @@ const FeedContainer = styled.div`
 
 const Cards = styled.div`
     width: 33.3%;
-    height: 300px;
     background: black;
 `
 
