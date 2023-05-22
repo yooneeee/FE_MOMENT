@@ -6,13 +6,13 @@ function InitialNav() {
   const navigate = useNavigate();
   return (
     <HeaderWrapper>
-      <div onClick={() => navigate("/Main")} id="header-title">
+      <div onClick={() => navigate("/main")} id="header-title">
         &nbsp; Moment
       </div>
 
       <Navbar>
-        <NavItem onClick={() => navigate("/Main")}>HOME</NavItem>
-        <NavItem onClick={() => navigate("/Login")}>로그인/회원가입</NavItem>
+        <NavItem onClick={() => navigate("/main")}>HOME</NavItem>
+        <NavItem onClick={() => navigate("/login")}>로그인/회원가입</NavItem>
       </Navbar>
     </HeaderWrapper>
   );
