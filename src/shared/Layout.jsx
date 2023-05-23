@@ -72,10 +72,12 @@ function Layout({ children }) {
 export default Layout;
 
 const TotalLayout = styled.div`
-  overflow-x: hidden;
-  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 50px;
+  box-sizing: border-box;
 `;
-
 const HeaderStyles = styled.div`
   width: 100%;
   background: black;
@@ -105,11 +107,11 @@ const FooterStyles = styled.div`
   left: 0;
   z-index: 999; /* 추가: footer를 다른 요소 위에 표시하기 위한 z-index 설정 */
 `;
-
 const LayoutStyles = styled.div`
-  min-height: 100vh;
-  padding-top: 50px;
-  padding-bottom: 50px; /* 추가: footer가 화면을 가리지 않도록 padding-bottom 추가 */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 `;
 
 const HeaderTitle = styled.p`
