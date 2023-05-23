@@ -30,12 +30,12 @@ const Item = styled.div`
   padding: 16px;
   background-color: #f9f9f9;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 90%;
+  width: 100%;
 
   @media (min-width: 768px) {
     flex-direction: row;
     align-items: flex-start;
-    width: 90%;
+    width: 100%;
   }
 `;
 

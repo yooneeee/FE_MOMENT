@@ -7,8 +7,11 @@ function Board() {
     <Container>
       <Header>
         <Navbar>
-          <NavItem>모델 구인</NavItem>
-          <NavItem>사진작가 구인</NavItem>
+          <span>게시판</span>
+          <NavItems>
+            <NavItem>Model</NavItem>
+            <NavItem>Photo</NavItem>
+          </NavItems>
         </Navbar>
       </Header>
       <Content>
@@ -31,20 +34,24 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
-const Header = styled.header`
-  background-color: #f2f2f2;
-  padding: 16px;
-  width: 100%;
-`;
-
 const Navbar = styled.nav`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
 `;
-
+const NavItems = styled.nav`
+  display: flex;
+  gap: 20px;
+`;
 const NavItem = styled.div`
   cursor: pointer;
+`;
+
+const Header = styled.header`
+  padding: 16px;
+  width: 80%;
+  border-bottom: 1px solid #ddd;
 `;
 
 const Content = styled.div`
