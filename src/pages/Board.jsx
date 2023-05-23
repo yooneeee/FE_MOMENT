@@ -44,6 +44,7 @@ const NavItems = styled.nav`
   display: flex;
   gap: 20px;
 `;
+
 const NavItem = styled.div`
   cursor: pointer;
 `;
