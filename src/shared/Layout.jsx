@@ -38,7 +38,14 @@ function Header() {
         >
           로그인
         </HeaderButton>
-        <HeaderButton>회원가입</HeaderButton>
+        <HeaderButton
+          name={"integratedsignup"}
+          onClick={() => {
+            navigate("/integratedsignup");
+          }}
+        >
+          회원가입
+        </HeaderButton>
       </ButtonBox>
     </HeaderStyles>
   );
