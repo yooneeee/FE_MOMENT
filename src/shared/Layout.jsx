@@ -72,10 +72,12 @@ function Layout({ children }) {
 export default Layout;
 
 const TotalLayout = styled.div`
-  overflow-x: hidden;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 50px;
+  box-sizing: border-box;
 `;
-
 const HeaderStyles = styled.div`
   width: 100%;
   background: black;
@@ -103,10 +105,11 @@ const FooterStyles = styled.div`
   justify-content: center;
   font-size: 12px;
 `;
-
 const LayoutStyles = styled.div`
-  min-height: 100vh;
-  padding-top: 50px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 `;
 
 const HeaderTitle = styled.p`
