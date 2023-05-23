@@ -38,7 +38,6 @@ function Header() {
         >
           로그인
         </HeaderButton>
-
         <HeaderButton>회원가입</HeaderButton>
       </ButtonBox>
     </HeaderStyles>
@@ -57,9 +56,7 @@ function Layout({ children }) {
   return (
     <TotalLayout>
       <Header />
-
       <LayoutStyles>{children}</LayoutStyles>
-
       <Footer />
     </TotalLayout>
   );
@@ -81,7 +78,12 @@ const HeaderStyles = styled.div`
   padding-left: 20px;
   color: white;
   font-weight: 600;
-  overflow: hidden; // 너비를 초과하는 컨텐츠 가려짐
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  top: 0;
+  left: 0;
 `;
 
 const FooterStyles = styled.div`
@@ -97,6 +99,7 @@ const FooterStyles = styled.div`
 
 const LayoutStyles = styled.div`
   min-height: 100vh;
+  padding-top: 50px;
 `;
 
 const HeaderTitle = styled.p`
