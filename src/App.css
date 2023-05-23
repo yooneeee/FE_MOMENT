@@ -1,6 +1,11 @@
-div, input, textarea, button,img {
+div,
+input,
+textarea,
+button,
+img {
   box-sizing: border-box;
 }
+
 body {
   margin: 0px;
 }

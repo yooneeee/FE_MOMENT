@@ -6,7 +6,7 @@ import Login from "../pages/Login";
 import Layout from "./Layout";
 import Feed from "../pages/Feed";
 import Board from "../pages/Board";
-import MyPage from "../pages/MyPage";
+import FeedDetail from "../pages/FeedDetail";
 
 const Router = () => {
   return (
@@ -18,7 +18,7 @@ const Router = () => {
           <Route path="login" element={<Login />} />
           <Route path="feed" element={<Feed />} />
           <Route path="board" element={<Board />} />
-          <Route path="mypage" element={<MyPage />} />
+          <Route path="feeddetail" element={<FeedDetail />} />
         </Routes>
       </Layout>
     </BrowserRouter>
