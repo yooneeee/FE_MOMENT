@@ -73,7 +73,7 @@ export default Layout;
 
 const TotalLayout = styled.div`
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
 `;
 
 const HeaderStyles = styled.div`
@@ -85,12 +85,10 @@ const HeaderStyles = styled.div`
   padding-left: 20px;
   color: white;
   font-weight: 600;
-  overflow: hidden;
   position: fixed;
   top: 0;
   left: 0;
-  top: 0;
-  left: 0;
+  z-index: 999; /* 추가: header를 다른 요소 위에 표시하기 위한 z-index 설정 */
 `;
 
 const FooterStyles = styled.div`
@@ -102,11 +100,16 @@ const FooterStyles = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 12px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 999; /* 추가: footer를 다른 요소 위에 표시하기 위한 z-index 설정 */
 `;
 
 const LayoutStyles = styled.div`
   min-height: 100vh;
   padding-top: 50px;
+  padding-bottom: 50px; /* 추가: footer가 화면을 가리지 않도록 padding-bottom 추가 */
 `;
 
 const HeaderTitle = styled.p`

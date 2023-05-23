@@ -9,6 +9,7 @@ import Board from "../pages/Board";
 import FeedDetail from "../pages/FeedDetail";
 import IntegratedSignup from "../pages/IntegratedSignup";
 import EmailSignup from "../pages/EmailSignup";
+import MyPage from "../pages/MyPage";
 
 const Router = () => {
   return (
@@ -23,6 +24,8 @@ const Router = () => {
           <Route path="feed" element={<Feed />} />
           <Route path="board" element={<Board />} />
           <Route path="feeddetail" element={<FeedDetail />} />
+          <Route path="mypage" element={<MyPage />} />
+          <Route path="emailsignup" element={<EmailSignup />} />
         </Routes>
       </Layout>
     </BrowserRouter>

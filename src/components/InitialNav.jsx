@@ -35,9 +35,11 @@ const HeaderWrapper = styled.div`
     cursor: pointer;
   }
 `;
+
 const Navbar = styled.div`
   display: flex;
 `;
+
 const NavItem = styled.div`
   margin-right: 20px;
   font-size: 16px;

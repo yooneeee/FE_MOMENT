@@ -31,7 +31,6 @@ const FeedContainer = styled.div`
   height: auto;
   flex-wrap: wrap;
 `;
-
 const ImgBackground = styled.div`
   height: 100vh;
   display: flex;
@@ -41,7 +40,6 @@ const ImgBackground = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
 `;
-
 const Footer = styled.div`
   background: #282828;
   padding: 15px;
@@ -49,7 +47,6 @@ const Footer = styled.div`
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
 `;
-
 const DetailImg = styled.img`
   width: 100%;
   height: 0;
@@ -59,12 +56,10 @@ const DetailImg = styled.img`
   background-repeat: no-repeat;
   background-position: center;
 `;
-
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
 `;
-
 const ProfileImg = styled.img`
   width: 50px;
   height: 50px;
@@ -73,12 +68,10 @@ const ProfileImg = styled.img`
   padding: 10px;
   flex-shrink: 0;
 `;
-
 const UserPostion = styled.div`
   color: #a9a9a9;
   font-size: 14px;
 `;
-
 const UserNickName = styled.div`
   font-size: 23px;
 `;
