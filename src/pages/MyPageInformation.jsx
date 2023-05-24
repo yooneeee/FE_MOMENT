@@ -7,7 +7,12 @@ function MyPageInformation() {
   const pwHandler = () => {
     setIsVisible(!isVisible);
   };
-
+  const nicknameHandler = () => {
+    setIsVisible(!isVisible);
+  };
+  const cancelHandler = () => {
+    setIsVisible(false);
+  };
   return (
     <Container>
       <div>기본 회원정보</div>
@@ -17,7 +22,9 @@ function MyPageInformation() {
       <Box>
         <Text>닉네임</Text>
         <Text2>미뇽</Text2>
-        <button>닉네임 변경</button>
+        {isVisible ? null : (
+          <Button onClick={nicknameHandler}>닉네임 변경</Button>
+        )}
       </Box>
       <Line1 />
       <Box>
@@ -26,26 +33,29 @@ function MyPageInformation() {
         </Text>
         <Text2>
           {isVisible ? (
-            <>
-              <div>
+            <HiddenForm>
+              <Column>
                 <span>현재 비밀번호</span>
-                <input type="password" />
-              </div>
-              <div>
+                <HiddenInput type="password" />
+              </Column>
+              <Column>
                 <span>신규 비밀번호</span>
-                <input type="password" />
-              </div>
-              <div>
+                <HiddenInput type="password" />
+              </Column>
+              <Column>
                 <span>신규 비밀번호 재 입력</span>
-                <input type="password" />
-              </div>
-            </>
+                <HiddenInput type="password" />
+              </Column>
+              <ButtonColumn>
+                <HiddenFormBtn onClick={cancelHandler}>취소</HiddenFormBtn>
+                <HiddenFormBtn>완료</HiddenFormBtn>
+              </ButtonColumn>
+            </HiddenForm>
           ) : (
             <span>********</span>
           )}
         </Text2>
-        <Button onClick={pwHandler}>비밀번호 변경</Button>
-        {/* {isVisible && <div>보여지나</div>} */}
+        {isVisible ? null : <Button onClick={pwHandler}>비밀번호 변경</Button>}
       </Box>
       <Line1 />
     </Container>
@@ -70,10 +80,39 @@ const Box = styled.div`
   /* max-width: 800px; */
   margin: 10px auto 0;
 `;
+const HiddenForm = styled.div`
+  padding: 10px;
+`;
+const Column = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+`;
+
+const HiddenInput = styled.input`
+  border: 1px solid #cacaca;
+  padding: 5px 30px;
+`;
+
+const ButtonColumn = styled.div`
+  width: 100%;
+  max-width: 33%;
+  display: flex;
+  justify-content: space-between;
+  /* margin: 0 auto 5px; */
+  margin: 0 0 5px;
+`;
+const HiddenFormBtn = styled.button`
+  padding: 8px 19px;
+  border: none;
+  background-color: #d1d1d1;
+  margin-top: 10px;
+`;
 const Text = styled.div`
-  /* float: left;
+  float: left;
+  width: 100%;
   max-width: 30%;
-  background-color: #c0f10d; */
+  background-color: #c0f10d;
   height: auto;
   padding: 15px 0;
   box-sizing: border-box;
@@ -83,9 +122,10 @@ const Text = styled.div`
   text-align: left;
 `;
 const Text2 = styled.div`
-  /* display: inline-block; */
-  /* max-width: 55%;
-  background-color: #ffb773; */
+  display: inline-block;
+  width: 100%;
+  max-width: 55%;
+  background-color: #ffb773;
   height: auto;
   padding: 15px 0;
   box-sizing: border-box;
@@ -95,7 +135,8 @@ const Text2 = styled.div`
   text-align: left;
 
   span {
-    font-weight: 900;
+    font-weight: 800;
+    font-size: 15px;
   }
 `;
 const Button = styled.button`
@@ -114,5 +155,5 @@ const Line = styled.div`
 const Line1 = styled.div`
   border-top: 1px solid #d6d6d6;
   width: 100%;
-  margin: 20px auto;
+  margin: 10px auto;
 `;
