@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
+import BoardItem from "../components/BoardItem";
 
 function MyPage() {
   return (
@@ -22,21 +23,28 @@ function MyPage() {
             </StFlex>
           </ProfileInfo>
         </ProfileSection>
-        <WorkSection>
-          <Work>작업</Work>
-          <WorkList>
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-          </WorkList>
-        </WorkSection>
+        <Container>
+          <WorkSection>
+            <Work>작업</Work>
+            <WorkList>
+              <WorkItem />
+              <WorkItem />
+              <WorkItem />
+              <WorkItem />
+              <WorkItem />
+              <WorkItem />
+              <WorkItem />
+              <WorkItem />
+              <WorkItem />
+              <WorkItem />
+            </WorkList>
+          </WorkSection>
+          <Content>
+            <Work>내가 쓴 게시물</Work>
+            <BoardItem />
+            <BoardItem />
+          </Content>
+        </Container>
       </ContentContainer>
     </PageContainer>
   );
@@ -52,7 +60,9 @@ const PageContainer = styled.div`
   background-color: #f5f5f5;
   padding: 20px;
 `;
-
+const Container = styled.div`
+  width: 100%;
+`;
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -191,4 +201,8 @@ const WorkItem = styled.div`
   @media (max-width: 480px) {
     height: 200px;
   }
+`;
+const Content = styled.div`
+  flex-grow: 1;
+  margin: 30px;
 `;
