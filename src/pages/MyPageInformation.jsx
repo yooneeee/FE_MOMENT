@@ -2,17 +2,25 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 
 function MyPageInformation() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [pwIsVisible, setpwIsVisible] = useState(false);
+  const [nickIsVisible, setnickIsVisible] = useState(false);
 
-  const pwHandler = () => {
-    setIsVisible(!isVisible);
-  };
+  /* 버튼 클릭시 히든 폼 */
   const nicknameHandler = () => {
-    setIsVisible(!isVisible);
+    setnickIsVisible(!nickIsVisible);
   };
-  const cancelHandler = () => {
-    setIsVisible(false);
+  const pwHandler = () => {
+    setpwIsVisible(!pwIsVisible);
   };
+
+  /* 취소 버튼 클릭시 되돌아가기 */
+  const nickCancelHandler = () => {
+    setnickIsVisible(false);
+  };
+  const pwcancelHandler = () => {
+    setpwIsVisible(false);
+  };
+
   return (
     <Container>
       <div>기본 회원정보</div>
@@ -21,8 +29,20 @@ function MyPageInformation() {
       <Line1 />
       <Box>
         <Text>닉네임</Text>
-        <Text2>미뇽</Text2>
-        {isVisible ? null : (
+        <Text2>
+          {nickIsVisible ? (
+            <HiddenForm>
+              <HiddenInput type="text" />
+              <ButtonColumn>
+                <HiddenFormBtn onClick={nickCancelHandler}>취소</HiddenFormBtn>
+                <HiddenFormBtn>완료</HiddenFormBtn>
+              </ButtonColumn>
+            </HiddenForm>
+          ) : (
+            <span>미뇽</span>
+          )}
+        </Text2>
+        {nickIsVisible ? null : (
           <Button onClick={nicknameHandler}>닉네임 변경</Button>
         )}
       </Box>
@@ -32,7 +52,7 @@ function MyPageInformation() {
           <span>비밀번호</span>
         </Text>
         <Text2>
-          {isVisible ? (
+          {pwIsVisible ? (
             <HiddenForm>
               <Column>
                 <span>현재 비밀번호</span>
@@ -47,7 +67,7 @@ function MyPageInformation() {
                 <HiddenInput type="password" />
               </Column>
               <ButtonColumn>
-                <HiddenFormBtn onClick={cancelHandler}>취소</HiddenFormBtn>
+                <HiddenFormBtn onClick={pwcancelHandler}>취소</HiddenFormBtn>
                 <HiddenFormBtn>완료</HiddenFormBtn>
               </ButtonColumn>
             </HiddenForm>
@@ -55,7 +75,9 @@ function MyPageInformation() {
             <span>********</span>
           )}
         </Text2>
-        {isVisible ? null : <Button onClick={pwHandler}>비밀번호 변경</Button>}
+        {pwIsVisible ? null : (
+          <Button onClick={pwHandler}>비밀번호 변경</Button>
+        )}
       </Box>
       <Line1 />
     </Container>
