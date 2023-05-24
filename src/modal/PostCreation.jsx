@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useRef } from "react";
 import { styled } from "styled-components";
+import { Input } from "../styles/InputStyles";
 
 function PostCreation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +19,9 @@ function PostCreation() {
           <ModalView onClick={(e) => e.stopPropagation()}>
             <Top>
               {/* <ExitBtn onClick={openModalHandler}>x</ExitBtn> */}
-              <Text>새 게시글 작성</Text>
+              <CancelButton>취소</CancelButton>
+              <Text1>새 게시글 작성</Text1>
+              <UploadButton>업로드</UploadButton>
             </Top>
             <Container>
               <ImageUploadContainer></ImageUploadContainer>
@@ -29,8 +32,9 @@ function PostCreation() {
                     <UserNickName>Jun</UserNickName>
                   </div>
                 </CardHeader>
-                <input />
-                <input />
+                <TitleInput type="text" placeholder="제목 입력.." />
+                <DetailTextarea type="text" placeholder="상세내용 입력.." />
+                <span>위치 추가</span>
               </InformationContainer>
             </Container>
           </ModalView>
@@ -63,31 +67,6 @@ const ModalBackdrop = styled.div`
   right: 0;
   bottom: 0;
 `;
-
-const ModalBtn = styled.button`
-  background-color: var(--coz-purple-600);
-  text-decoration: none;
-  border: none;
-  padding: 20px;
-  color: white;
-  border-radius: 30px;
-  cursor: grab;
-`;
-
-const ExitBtn = styled(ModalBtn)`
-  color: black;
-  /* background-color: #4000c7;
-  border-radius: 10px; */
-  text-decoration: none;
-  /* margin: 10px; */
-  /* padding: 5px 10px; */
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const ModalView = styled.div`
   display: flex;
   /* align-items: center; */
@@ -108,13 +87,25 @@ const Top = styled.div`
   border-left: none;
   padding: 10px;
 `;
-
-const Text = styled.div`
+const CancelButton = styled.button`
+  margin-left: 10px;
+  border: none;
+  background-color: white;
+  font-size: 15px;
+`;
+const UploadButton = styled.button`
+  margin-right: 10px;
+  border: none;
+  background-color: white;
+  font-size: 15px;
+`;
+const Text1 = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   flex-grow: 1;
+  font-weight: 700;
 `;
 
 const Container = styled.div`
@@ -137,8 +128,10 @@ const ImageUploadContainer = styled.div`
 
 const InformationContainer = styled.div`
   display: flex;
+  width: 35%;
   flex-direction: column;
   margin-left: 10px;
+  margin-right: 10px;
 `;
 
 const ProfileImg = styled.img`
@@ -156,4 +149,24 @@ const UserNickName = styled.div`
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
+`;
+const TitleInput = styled(Input)`
+  height: 8%;
+
+  &::placeholder {
+    color: #6e6e6e;
+  }
+`;
+const DetailTextarea = styled.textarea`
+  width: 100%;
+  outline: none;
+  border: none;
+  height: 50%;
+  font-size: 14px;
+  font-weight: 400;
+  resize: none;
+
+  &::placeholder {
+    color: #6e6e6e;
+  }
 `;
