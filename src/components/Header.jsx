@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 function Header() {
   const navigate = useNavigate();
+  // 현재 창 너비
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  // 메뉴창과, 글 쓰기 state 저장
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWriteMenuOpen, setIsWriteMenuOpen] = useState(false);
-  /* 
-  const toggleMenuOpen = () => {
-    setIsMenuOpen(true);
-  }; */
+  // 헤더 컴포넌트 DOM 요소 참조
+  const headerRef = useRef(null);
+
+  //메뉴, 글쓰기 메뉴 토글 여닫는 함수
   const toggleMenuClose = () => {
     setIsMenuOpen(false);
   };
@@ -20,21 +22,32 @@ function Header() {
   const toggleWriteMenuClose = () => {
     setIsWriteMenuOpen(false);
   };
+  //창 너비에 따라 메뉴와 글쓰기 메뉴를 닫는 함수
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+    setIsMenuOpen(false);
+    setIsWriteMenuOpen(false);
+  };
+  //헤더 영역 외의 클릭 이벤트를 처리해 메뉴와 글쓰기 메뉴를 닫는 함수
+  const handleClickOutside = (event) => {
+    if (headerRef.current && !headerRef.current.contains(event.target)) {
+      setIsMenuOpen(false); // 헤더 밖을 클릭시 메뉴 닫기
+      setIsWriteMenuOpen(false); // 헤더 밖을 클릭시 글쓰기 메뉴 닫기
+    }
+  };
+
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      setIsMenuOpen(false); // 화면 크기 변화 시 메뉴 닫기
-      setIsWriteMenuOpen(false); // 화면 크기 변화 시 글쓰기 메뉴 닫기
-    };
     window.addEventListener("resize", handleResize);
+    document.addEventListener("click", handleClickOutside);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
   return (
-    <HeaderStyles isMobile={windowWidth <= 768}>
+    <HeaderStyles isMobile={windowWidth <= 768} ref={headerRef}>
       <HeaderTitle
         onClick={() => {
           navigate("/main");
@@ -239,12 +252,6 @@ const ButtonBox = styled.div`
   margin-left: auto;
   margin-right: 30px;
 `;
-
-/* const LinkBox = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-left: 30px;
-`; */
 
 const HeaderButton = styled.button`
   padding: 8px;
