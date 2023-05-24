@@ -75,7 +75,7 @@ function EmailSignup() {
             onChange={handleFormChange}
           />
         </InputWrap>
-        <InputTitle>직업?</InputTitle>
+        <InputTitle>직업</InputTitle>
         <ButtonContainer>
           <SelectionButton onClick={() => handleFormChange("role", "model")}>
             모델
@@ -151,6 +151,7 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   margin: 10px 0;
 `;
+
 const SelectionButton = styled.button`
   background-color: #ffffff;
   border-radius: 3px;
