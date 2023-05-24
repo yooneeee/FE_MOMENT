@@ -81,16 +81,18 @@ const TotalLayout = styled.div`
 const HeaderStyles = styled.div`
   width: 100%;
   background: black;
+  color: white;
   height: 50px;
   display: flex;
   align-items: center;
   padding-left: 20px;
-  color: white;
   font-weight: 600;
+  overflow: hidden;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 999; /* 추가: header를 다른 요소 위에 표시하기 위한 z-index 설정 */
+  top: 0;
+  left: 0;
 `;
 
 const FooterStyles = styled.div`
@@ -102,10 +104,6 @@ const FooterStyles = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: 999; /* 추가: footer를 다른 요소 위에 표시하기 위한 z-index 설정 */
 `;
 const LayoutStyles = styled.div`
   flex: 1;
