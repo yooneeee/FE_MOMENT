@@ -1,0 +1,177 @@
+.create-board-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.create-board-modal button {
+    outline: none;
+    cursor: pointer;
+    border: 0;
+}
+
+.create-board-modal>section {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 0.3rem;
+    background-color: #fff;
+    animation: modal-show 0.3s;
+    overflow: hidden;
+}
+
+
+.create-board-modal>section>header {
+    position: relative;
+    padding: 16px;
+    background-color: transparent;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #dee2e6;
+    ;
+}
+
+
+.create-board-modal>section>button {
+    padding: 6px 12px;
+    color: #fff;
+    background-color: transparent;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 800;
+    position: absolute;
+    top: 28px;
+    right: 28px;
+}
+
+.create-board-modal.openModal {
+    display: flex;
+    align-items: center;
+    animation: modal-bg-show 0.3s;
+}
+
+@keyframes modal-show {
+    from {
+        opacity: 0;
+        margin-top: -50px;
+    }
+
+    to {
+        opacity: 1;
+        margin-top: 0;
+    }
+}
+
+@keyframes modal-bg-show {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.container {
+    display: flex;
+}
+
+/* 사진 들어가는 부분 */
+.main-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 700px;
+    max-height: 700px;
+    overflow: hidden;
+}
+
+/* 인풋 들어가는 부분 */
+.inputSection {
+    min-width: 480px;
+    min-height: 700px;
+    padding: 20px;
+}
+
+.btn-upload {
+    width: 150px;
+    height: 30px;
+    background: #1E90FF;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+
+    &:hover {
+        background: rgb(77, 77, 77);
+        color: #fff;
+    }
+}
+
+#file {
+    display: none;
+}
+
+.imgContainer {
+    width: 720px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+
+}
+
+.headerTitle {
+    padding: 5px;
+}
+
+.saveButton {
+    padding: 5px;
+    background-color: transparent;
+    font-weight: 600;
+}
+
+.profileBox {
+    display: flex;
+    align-items: center;
+}
+
+.profileImg {
+    width: 70px;
+    height: 70px;
+    border-radius: 70%;
+    object-fit: cover;
+    padding: 15px;
+    flex-shrink: 0;
+}
+
+.contentInput {
+    margin-left: 5px;
+    width: 98%;
+    height: 50%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 500;
+    resize: none;
+    border: none;
+    outline: none;
+}
