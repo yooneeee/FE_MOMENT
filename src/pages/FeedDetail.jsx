@@ -33,7 +33,7 @@ const FeedContainer = styled.div`
 `;
 
 const ImgBackground = styled.div`
-  height: 80.7vh;
+  height: calc(100vh - 100px);
   display: flex;
   align-items: center;
   justify-content: center;
