@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: calc(100vh-100px);
   width: 100%;
 `;
 export const CenteredContent = styled.div`
