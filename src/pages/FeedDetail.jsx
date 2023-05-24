@@ -7,9 +7,18 @@ function FeedDetail() {
       {/* <ImgBackground src='img/profile_1.jpeg'> */}
       <ImgBackground>
         <DetailImg src="img/profile_1.jpeg"></DetailImg>
+        <Footer>
+          <CardHeader>
+            <ProfileImg src="img/monkey_test.jpeg"></ProfileImg>
+            <div>
+              <UserPostion>Photo</UserPostion>
+              <UserNickName>Jun</UserNickName>
+            </div>
+          </CardHeader>
+        </Footer>
       </ImgBackground>
 
-      <Footer>
+      {/* <Footer>
         <CardHeader>
           <ProfileImg src="img/monkey_test.jpeg"></ProfileImg>
           <div>
@@ -17,7 +26,7 @@ function FeedDetail() {
             <UserNickName>Jun</UserNickName>
           </div>
         </CardHeader>
-      </Footer>
+      </Footer> */}
     </FeedContainer>
   );
 }
@@ -33,13 +42,15 @@ const FeedContainer = styled.div`
 `;
 
 const ImgBackground = styled.div`
-  height: 80.7vh;
+  height: calc(100vh - 100px);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center;
+  justify-content: center; */
   background-image: url(${(props) => props.src});
   background-repeat: no-repeat;
   background-size: cover;
+
+  flex-direction: column;
 `;
 
 const Footer = styled.div`
