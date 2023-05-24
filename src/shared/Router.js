@@ -10,6 +10,7 @@ import FeedDetail from "../pages/FeedDetail";
 import IntegratedSignup from "../pages/IntegratedSignup";
 import EmailSignup from "../pages/EmailSignup";
 import MyPage from "../pages/MyPage";
+import MyPage from "../pages/MyPage";
 
 const Router = () => {
   return (

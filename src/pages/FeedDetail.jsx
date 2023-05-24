@@ -4,24 +4,21 @@ import { styled } from "styled-components";
 function FeedDetail() {
   return (
     <FeedContainer>
-      {/* <ImgBackground src='img/profile_1.jpeg'> */}
       <ImgBackground>
         <DetailImg src="img/profile_1.jpeg"></DetailImg>
+        <Footer>
+          <CardHeader>
+            <ProfileImg src="img/monkey_test.jpeg"></ProfileImg>
+            <div>
+              <UserPostion>Photo</UserPostion>
+              <UserNickName>Jun</UserNickName>
+            </div>
+          </CardHeader>
+        </Footer>
       </ImgBackground>
-
-      <Footer>
-        <CardHeader>
-          <ProfileImg src="img/monkey_test.jpeg"></ProfileImg>
-          <div>
-            <UserPostion>Photo</UserPostion>
-            <UserNickName>Jun</UserNickName>
-          </div>
-        </CardHeader>
-      </Footer>
     </FeedContainer>
   );
 }
-
 export default FeedDetail;
 
 const FeedContainer = styled.div`
@@ -35,6 +32,7 @@ const FeedContainer = styled.div`
 const ImgBackground = styled.div`
   height: calc(100vh - 100px);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-image: url(${(props) => props.src});
@@ -44,6 +42,7 @@ const ImgBackground = styled.div`
 
 const Footer = styled.div`
   background: #282828;
+  width: 100%;
   padding: 15px;
   color: white;
   border-top-left-radius: 25px;
