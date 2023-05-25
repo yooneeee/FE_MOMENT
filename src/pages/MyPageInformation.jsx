@@ -162,8 +162,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* width: 800px; */
-  max-width: 50%;
+  width: 800px;
+  /* max-width: 50%; */
   margin: 10px auto 0;
 `;
 const Title = styled.div`
