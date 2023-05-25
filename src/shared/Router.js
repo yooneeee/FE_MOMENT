@@ -10,6 +10,7 @@ import FeedDetail from "../pages/FeedDetail";
 import IntegratedSignup from "../pages/IntegratedSignup";
 import EmailSignup from "../pages/EmailSignup";
 import MyPage from "../pages/MyPage";
+import MyPageInformation from "../pages/MyPageInformation";
 
 const Router = () => {
   return (
@@ -20,11 +21,12 @@ const Router = () => {
           <Route path="main" element={<Main />} />
           <Route path="login" element={<Login />} />
           <Route path="integratedsignup" element={<IntegratedSignup />} />
+          <Route path="emailsignup" element={<EmailSignup />} />
           <Route path="feed" element={<Feed />} />
           <Route path="board" element={<Board />} />
           <Route path="feeddetail" element={<FeedDetail />} />
           <Route path="mypage" element={<MyPage />} />
-          <Route path="emailsignup" element={<EmailSignup />} />
+          <Route path="mypageinformation" element={<MyPageInformation />} />
         </Routes>
       </Layout>
     </BrowserRouter>
