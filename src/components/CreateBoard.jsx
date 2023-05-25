@@ -51,7 +51,7 @@ const CreateBoard = (props) => {
       {open ? (
         <section ref={modalRef}>
           <header>
-            <p className="headerTitle">새 피드 만들기</p>
+            <p className="headerTitle">새 게시글 만들기</p>
             <button className="saveButton">저장하기</button>
           </header>
 
@@ -82,7 +82,7 @@ const CreateBoard = (props) => {
               <div className="profileBox">
                 <img src="img/monkey_test.jpeg" className="profileImg" />
                 <div>
-                  <p>Photo</p>
+                  <p className="position">Photo</p>
                   <p>Jun</p>
                 </div>
               </div>
