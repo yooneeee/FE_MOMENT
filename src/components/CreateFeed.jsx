@@ -52,22 +52,45 @@ const CreateFeed = (props) => {
             <p className="headerTitle">새 피드 만들기</p>
             <button className="saveButton">저장하기</button>
           </header>
-          <main className="main-body">
-            {!previewImage ? (
-              <label htmlFor="file" className="btn-upload">
-                파일 업로드하기
-                <input
-                  type="file"
-                  name="file"
-                  id="file"
-                  onChange={handleFileChange}
-                />
-              </label>
-            ) : (
-              <img src={previewImage} alt="Preview" className="preview-image" />
-            )}
-          </main>
-          {/* <div>인풋구역입니다</div> */}
+
+          <div className="container">
+            <main className="main-body">
+              <div className="imgContainer">
+                {!previewImage ? (
+                  <label htmlFor="file" className="btn-upload">
+                    파일 업로드하기
+                    <input
+                      type="file"
+                      name="file"
+                      id="file"
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                ) : (
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="preview-image"
+                  />
+                )}
+              </div>
+            </main>
+
+            <div className="inputSection">
+              <div className="profileBox">
+                <img src="img/monkey_test.jpeg" className="profileImg" />
+                <div>
+                  <p className="position">Photo</p>
+                  <p>Jun</p>
+                </div>
+              </div>
+              <textarea
+                className="contentInput"
+                placeholder="문구 입력..."
+              ></textarea>
+            </div>
+          </div>
+
           <button className="close" onClick={close}>
             X
           </button>
