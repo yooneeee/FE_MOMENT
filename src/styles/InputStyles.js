@@ -11,7 +11,7 @@ export const InputWrap = styled.div`
     border: 1px solid #636363;
   }
 `;
-export const InputTitle = styled.div`
+export const InputTitle = styled.label`
   font-size: 17px;
   font-weight: 600;
   color: #262626;
