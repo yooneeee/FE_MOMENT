@@ -1,17 +1,27 @@
 import { useCallback, useState } from "react";
 
-const useInput = () => {
-  const [value, setValue] = useState();
+export function useInput(initialValue) {
+  const [value, setValue] = useState(initialValue);
 
-  const handleInputChange = useCallback((e) => {
+  const onChange = (e) => {
     setValue(e.target.value);
-  }, []);
+  };
 
-  const resetValue = () => {
+  const reset = () => {
     setValue("");
   };
 
-  return [value, handleInputChange, resetValue];
-};
+  return [value, onChange, reset];
+}
 
-export { useInput };
+export function useInputs(initialValue) {
+  const [values, setValues] = useState(initialValue);
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+  };
+
+  const reset = useCallback(() => setValues(initialValue), []);
+  return [values, onChange, reset];
+}
