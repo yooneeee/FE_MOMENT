@@ -12,9 +12,28 @@ function EmailSignup() {
 
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [sex, setSex] = useState("");
   const [role, setRole] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+
+  const newUser = {
+    nickname,
+
+    sex,
+    role,
+    password,
+    email,
+  };
+
+  const passwordCheckHandler = useCallback(
+    (e) => {
+      setPasswordError(e.target.value !== password);
+      setPasswordCheck(e.target.value);
+    },
+    [password]
+  );
 
   // 성별 버튼 클릭 핸들러
   const sexButtonClickHandler = useCallback((selectedSex) => {
@@ -25,18 +44,18 @@ function EmailSignup() {
   const roleButtonClickHandler = useCallback((selectedRole) => {
     setRole(selectedRole);
   }, []);
+
   const MemoizedSelectionButton = React.memo(SelectionButton);
 
   const signupButtonHandler = (e) => {
     e.preventDefault();
   };
 
-  /* 
   // 정규식
   const emailRegex =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
-  
+
   // 이메일 에러 메세지
   const emailMessage = useMemo(() => {
     if (email && !emailRegex.test(email)) {
@@ -53,7 +72,7 @@ function EmailSignup() {
     } else {
       return "";
     }
-  }, [password]); */
+  }, [password]);
 
   return (
     <Container>
@@ -142,7 +161,16 @@ function EmailSignup() {
         </InputWrap>
         <InputTitle>비밀번호 확인</InputTitle>
         <InputWrap>
-          <Input type="password" placeholder="비밀번호를 확인해주세요." />
+          <Input
+            type="password"
+            placeholder="비밀번호를 확인해주세요."
+            value={passwordCheck}
+            required
+            onChange={passwordCheckHandler}
+          />
+          {/*           {passwordError && (
+            <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>
+          )} */}
         </InputWrap>
         <InputTitle>휴대폰 인증</InputTitle>
         <BottomButtonWrap>
