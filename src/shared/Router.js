@@ -9,7 +9,6 @@ import Board from "../pages/Board";
 import FeedDetail from "../pages/FeedDetail";
 import IntegratedSignup from "../pages/IntegratedSignup";
 import EmailSignup from "../pages/EmailSignup";
-import PostCreation from "../modal/PostCreation";
 import MyPage from "../pages/MyPage";
 import MyPageInformation from "../pages/MyPageInformation";
 
@@ -26,7 +25,6 @@ const Router = () => {
           <Route path="feed" element={<Feed />} />
           <Route path="board" element={<Board />} />
           <Route path="feeddetail" element={<FeedDetail />} />
-          <Route path="postcreation" element={<PostCreation />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="mypageinformation" element={<MyPageInformation />} />
         </Routes>
