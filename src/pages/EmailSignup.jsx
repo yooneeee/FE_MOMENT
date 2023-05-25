@@ -1,39 +1,42 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Container, TitleLogo, Title } from "../styles/ContainerStyles";
 import { InputWrap, Input, InputTitle } from "../styles/InputStyles";
-import { useForm } from "../hooks/useForm";
-import { useFileReader } from "../hooks/useFileReader";
+
 function EmailSignup() {
   const navigate = useNavigate();
   const backButtonHandler = () => {
     navigate("/main");
   };
 
-  const initialState = {
-    nickname: "",
-    role: "",
-    sex: "",
-    email: "",
-    password: "",
-    phone: "",
-    profileImg: "",
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [sex, setSex] = useState("");
+  const [role, setRole] = useState("");
+
+  // 성별 버튼 클릭 핸들러
+  const sexButtonClickHandler = useCallback((selectedSex) => {
+    setSex(selectedSex);
+  }, []);
+
+  // 직업 버튼 클릭 핸들러
+  const roleButtonClickHandler = useCallback((selectedRole) => {
+    setRole(selectedRole);
+  }, []);
+  const MemoizedSelectionButton = React.memo(SelectionButton);
+
+  const signupButtonHandler = (e) => {
+    e.preventDefault();
   };
 
-  // 폼 데이터 입력값 받는 Hook
-  const [form, handleFormChange, handleFileChange, resetForm] =
-    useForm(initialState);
-  const { email, password, nickname, role, sex, phone, profileImg } = form;
-
-  // 이미지 URL 리더 Hook
-  const [imageUrl, fileReader] = useFileReader();
-
+  /* 
   // 정규식
   const emailRegex =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
-
+  
   // 이메일 에러 메세지
   const emailMessage = useMemo(() => {
     if (email && !emailRegex.test(email)) {
@@ -50,14 +53,7 @@ function EmailSignup() {
     } else {
       return "";
     }
-  }, [password]);
-
-  // 이미지 파일 리더
-  const imageFileReader = async () => {
-    if (profileImg) {
-      fileReader(profileImg);
-    }
-  };
+  }, [password]); */
 
   return (
     <Container>
@@ -72,29 +68,52 @@ function EmailSignup() {
             name="nickname"
             value={nickname || ""}
             placeholder="닉네임을 입력해주세요."
-            onChange={handleFormChange}
+            onChange={(e) => setNickname(e.target.value)}
           />
+          {console.log(nickname, role)}
         </InputWrap>
         <InputTitle>직업</InputTitle>
         <ButtonContainer>
-          <SelectionButton onClick={() => handleFormChange("role", "model")}>
+          <MemoizedSelectionButton
+            onClick={() => roleButtonClickHandler("model")}
+            style={{
+              backgroundColor: role === "model" ? "#000000" : "#ffffff",
+              color: role === "model" ? "#ffffff" : "#000000",
+            }}
+          >
             모델
-          </SelectionButton>
-          <SelectionButton
-            onClick={() => handleFormChange("role", "photographer")}
+          </MemoizedSelectionButton>
+          <MemoizedSelectionButton
+            onClick={() => roleButtonClickHandler("photographer")}
+            style={{
+              backgroundColor: role === "photographer" ? "#000000" : "#ffffff",
+              color: role === "photographer" ? "#ffffff" : "#000000",
+            }}
           >
             작가
-          </SelectionButton>
+          </MemoizedSelectionButton>
         </ButtonContainer>
 
         <InputTitle>성별</InputTitle>
         <ButtonContainer>
-          <SelectionButton onClick={() => handleFormChange("sex", "male")}>
+          <MemoizedSelectionButton
+            onClick={() => sexButtonClickHandler("male")}
+            style={{
+              backgroundColor: sex === "male" ? "#000000" : "#ffffff",
+              color: sex === "male" ? "#ffffff" : "#000000",
+            }}
+          >
             남자
-          </SelectionButton>
-          <SelectionButton onClick={() => handleFormChange("sex", "female")}>
+          </MemoizedSelectionButton>
+          <MemoizedSelectionButton
+            onClick={() => sexButtonClickHandler("female")}
+            style={{
+              backgroundColor: sex === "female" ? "#000000" : "#ffffff",
+              color: sex === "female" ? "#ffffff" : "#000000",
+            }}
+          >
             여자
-          </SelectionButton>
+          </MemoizedSelectionButton>
         </ButtonContainer>
 
         <InputTitle>이메일</InputTitle>
@@ -103,8 +122,9 @@ function EmailSignup() {
             type="text"
             name="email"
             value={email || ""}
-            onChange={handleFormChange}
-            message={emailMessage}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
             placeholder="이메일 주소를 입력해주세요"
           />
         </InputWrap>
@@ -115,8 +135,9 @@ function EmailSignup() {
             name="password"
             value={password}
             placeholder="비밀번호를 입력해주세요"
-            onChange={handleFormChange}
-            message={passwordMessage}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
         </InputWrap>
         <InputTitle>비밀번호 확인</InputTitle>
@@ -125,7 +146,9 @@ function EmailSignup() {
         </InputWrap>
         <InputTitle>휴대폰 인증</InputTitle>
         <BottomButtonWrap>
-          <BottomButton>회원 가입 완료</BottomButton>
+          <BottomButton type="submit" onClick={signupButtonHandler}>
+            회원 가입 완료
+          </BottomButton>
           <BottomButton onClick={backButtonHandler}>취소</BottomButton>
         </BottomButtonWrap>
       </CenteredContent>
