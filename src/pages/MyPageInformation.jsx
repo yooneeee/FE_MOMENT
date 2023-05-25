@@ -68,8 +68,6 @@ function MyPageInformation() {
           <ProfileText>
             {ImgIsVisible ? (
               <HiddenForm>
-                {/* <HiddenNick> */}
-                {/* <button>사진 선택</button> */}
                 <UploadButton>
                   사진선택
                   <input type="file" onChange={fileSelectHandler}></input>
@@ -77,7 +75,6 @@ function MyPageInformation() {
                 <BasicImgButton onClick={basicImgHandler}>
                   기본이미지로 변경
                 </BasicImgButton>
-                {/* </HiddenNick> */}
                 <ButtonColumn>
                   <HiddenFormBtn onClick={imgcancelHandler}>취소</HiddenFormBtn>
                   <HiddenFormBtn>완료</HiddenFormBtn>
@@ -179,12 +176,13 @@ const Title = styled.div`
     font-size: 25px;
   }
 `;
+
 const ProfileContainer = styled.div`
   width: 200px;
   height: 200px;
   border-radius: 50%;
   overflow: hidden;
-  cursor: pointer;
+  /* cursor: pointer; */
 `;
 const ProfileImg = styled.img`
   width: 100%;
@@ -217,12 +215,7 @@ const BasicImgButton = styled(UploadButton)`
 `;
 
 const Box = styled.div`
-  /* width: 100%;
-  align-items: center; */
-  /* display: grid; */
-  /* grid-template-columns: 30% 55% 15%; */
   width: 100%;
-  /* max-width: 800px; */
   margin: 10px auto 0;
 `;
 const HiddenForm = styled.div`
