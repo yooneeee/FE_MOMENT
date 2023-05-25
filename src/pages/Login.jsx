@@ -14,8 +14,10 @@ import {
   KakaoLogoImage,
   EmailButton,
 } from "../styles/ButtonStyles";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   return (
     <Container>
       <CenteredContent>

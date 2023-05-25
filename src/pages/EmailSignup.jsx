@@ -26,7 +26,7 @@ function EmailSignup() {
         <InputWrap>
           <Input type="text" placeholder="닉네임을 입력해주세요." />
         </InputWrap>
-        <InputTitle>직업?</InputTitle>
+        <InputTitle>직업</InputTitle>
         <ButtonContainer>
           <SelectionButton>모델</SelectionButton>
           <SelectionButton>작가</SelectionButton>
@@ -66,6 +66,7 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   margin: 10px 0;
 `;
+
 const SelectionButton = styled.button`
   background-color: #ffffff;
   border-radius: 3px;

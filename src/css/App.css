@@ -1,0 +1,16 @@
+div,
+input,
+textarea,
+button,
+img {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+}
+
+/* 스크롤바를 숨기는 CSS 코드 */
+body::-webkit-scrollbar {
+  display: none;
+}

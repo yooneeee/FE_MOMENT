@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import CreateFeed from "../components/CreateFeed";
+import CreateBoard from "../components/CreateBoard";
+import "../css/App.css";
 
 function Feed() {
   const navigate = useNavigate();
+  const [feedModalOpen, setFeedModalOpen] = useState(false);
+  const [boardModalOpen, setBoardModalOpen] = useState(false);
+
+  const openFeedModal = () => {
+    setFeedModalOpen(true);
+  };
+  const closeFeedModal = () => {
+    setFeedModalOpen(false);
+  };
+  const openBoardModal = () => {
+    setBoardModalOpen(true);
+  };
+  const closeBoardModal = () => {
+    setBoardModalOpen(false);
+  };
+
   return (
     <FeedContainer>
       <Cards>
@@ -15,10 +34,26 @@ function Feed() {
         />
       </Cards>
       <Cards>
-        <CardsImg src="img/profile_2.jpeg" />
+        <CardsImg
+          src="img/profile_2.jpeg"
+          onClick={() => {
+            openFeedModal();
+          }}
+        />
+        {feedModalOpen && (
+          <CreateFeed open={openFeedModal} close={closeFeedModal} />
+        )}
       </Cards>
       <Cards>
-        <CardsImg src="img/profile_3.jpeg" />
+        <CardsImg
+          src="img/profile_3.jpeg"
+          onClick={() => {
+            openBoardModal();
+          }}
+        />
+        {boardModalOpen && (
+          <CreateBoard open={openBoardModal} close={closeBoardModal} />
+        )}
       </Cards>
       <Cards>
         <CardsImg src="img/profile_4.jpeg" />
