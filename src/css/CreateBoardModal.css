@@ -36,7 +36,6 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #dee2e6;
-    ;
 }
 
 
@@ -140,6 +139,7 @@
 
 .headerTitle {
     padding: 5px;
+    color: black;
 }
 
 .saveButton {
@@ -151,11 +151,16 @@
 .profileBox {
     display: flex;
     align-items: center;
+    color: black;
+}
+
+.position {
+    color: #787878;
 }
 
 .profileImg {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border-radius: 70%;
     object-fit: cover;
     padding: 15px;
