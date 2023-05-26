@@ -1,8 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import CreateBoard from "./CreateBoard";
+import CreateFeed from "./CreateFeed";
 
 function Header() {
+  const [feedModalOpen, setFeedModalOpen] = useState(false);
+  const [boardModalOpen, setBoardModalOpen] = useState(false);
+
+  const openFeedModal = () => {
+    setFeedModalOpen(true);
+  };
+  const closeFeedModal = () => {
+    setFeedModalOpen(false);
+  };
+  const openBoardModal = () => {
+    setBoardModalOpen(true);
+  };
+  const closeBoardModal = () => {
+    setBoardModalOpen(false);
+  };
   const navigate = useNavigate();
   // 현재 창 너비
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -121,6 +138,7 @@ function Header() {
         <ToggleWriteMenu>
           <MenuButton
             onClick={() => {
+              openFeedModal();
               toggleWriteMenuClose();
               toggleMenuClose();
             }}
@@ -129,6 +147,7 @@ function Header() {
           </MenuButton>
           <MenuButton
             onClick={() => {
+              openBoardModal();
               toggleWriteMenuClose();
               toggleMenuClose();
             }}
@@ -179,6 +198,12 @@ function Header() {
           </MenuButton>
         </ToggleMenu>
       )}
+      {feedModalOpen && (
+        <CreateFeed open={openFeedModal} close={closeFeedModal} />
+      )}
+      {boardModalOpen && (
+        <CreateBoard open={openBoardModal} close={closeBoardModal} />
+      )}
     </HeaderStyles>
   );
 }
@@ -224,6 +249,7 @@ const MenuButton = styled.button`
 const MenuIcon = styled.span`
   font-size: 20px;
 `;
+
 const HeaderStyles = styled.div`
   width: 100%;
   background: black;

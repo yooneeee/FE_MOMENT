@@ -1,4 +1,4 @@
-.create-feed-modal {
+.feed-datail-modal {
     display: none;
     position: fixed;
     top: 0;
@@ -9,13 +9,13 @@
     background-color: rgba(0, 0, 0, 0.6);
 }
 
-.create-feed-modal button {
+.feed-datail-modal button {
     outline: none;
     cursor: pointer;
     border: 0;
 }
 
-.create-feed-modal>section {
+.feed-datail-modal>section {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
@@ -26,7 +26,7 @@
 }
 
 
-.create-feed-modal>section>header {
+.feed-datail-modal>section>header {
     position: relative;
     padding: 16px;
     background-color: transparent;
@@ -40,7 +40,7 @@
 }
 
 
-.create-feed-modal>section>button {
+.feed-datail-modal>section>button {
     padding: 6px 12px;
     color: #fff;
     background-color: transparent;
@@ -52,7 +52,7 @@
     right: 28px;
 }
 
-.create-feed-modal.openModal {
+.feed-datail-modal.openModal {
     display: flex;
     align-items: center;
     animation: modal-bg-show 0.3s;
@@ -180,4 +180,11 @@
     resize: none;
     border: none;
     outline: none;
+}
+
+.feedDetailImg {
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }

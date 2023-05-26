@@ -36,7 +36,6 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #dee2e6;
-    ;
 }
 
 
@@ -99,6 +98,7 @@
     min-width: 480px;
     min-height: 700px;
     padding: 20px;
+    color: black
 }
 
 .btn-upload {
@@ -140,6 +140,7 @@
 
 .headerTitle {
     padding: 5px;
+    color: black;
 }
 
 .saveButton {
@@ -151,15 +152,39 @@
 .profileBox {
     display: flex;
     align-items: center;
+    color: black;
+}
+
+.position {
+    color: #787878;
 }
 
 .profileImg {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border-radius: 70%;
     object-fit: cover;
     padding: 15px;
     flex-shrink: 0;
+}
+
+.titleInput {
+    margin-left: 5px;
+    width: 98%;
+    height: 7%;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 21px;
+    font-weight: 500;
+    resize: none;
+    border: none;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+.titleInput::placeholder {
+    font-weight: 900;
+    color: #a9a9a9;
 }
 
 .contentInput {
@@ -167,11 +192,14 @@
     width: 98%;
     height: 50%;
     padding: 10px;
-    border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 500;
     resize: none;
     border: none;
     outline: none;
+}
+
+.contentInput::placeholder {
+    color: #a9a9a9;
 }

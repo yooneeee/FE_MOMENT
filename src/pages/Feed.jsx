@@ -1,26 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import CreateFeed from "../components/CreateFeed";
-import CreateBoard from "../components/CreateBoard";
+import FeedDetail from "../components/FeedDetail";
 import "../css/App.css";
 
 function Feed() {
   const navigate = useNavigate();
-  const [feedModalOpen, setFeedModalOpen] = useState(false);
-  const [boardModalOpen, setBoardModalOpen] = useState(false);
+  const [feedDetailOpen, setFeedDetailOpen] = useState(false);
 
-  const openFeedModal = () => {
-    setFeedModalOpen(true);
+  const openFeedDetail = () => {
+    setFeedDetailOpen(true);
   };
-  const closeFeedModal = () => {
-    setFeedModalOpen(false);
-  };
-  const openBoardModal = () => {
-    setBoardModalOpen(true);
-  };
-  const closeBoardModal = () => {
-    setBoardModalOpen(false);
+
+  const closeFeedDetail = () => {
+    setFeedDetailOpen(false);
   };
 
   return (
@@ -29,31 +22,18 @@ function Feed() {
         <CardsImg
           src="img/profile_1.jpeg"
           onClick={() => {
-            navigate("/feeddetail");
+            openFeedDetail();
           }}
         />
-      </Cards>
-      <Cards>
-        <CardsImg
-          src="img/profile_2.jpeg"
-          onClick={() => {
-            openFeedModal();
-          }}
-        />
-        {feedModalOpen && (
-          <CreateFeed open={openFeedModal} close={closeFeedModal} />
+        {feedDetailOpen && (
+          <FeedDetail open={openFeedDetail} close={closeFeedDetail} />
         )}
       </Cards>
       <Cards>
-        <CardsImg
-          src="img/profile_3.jpeg"
-          onClick={() => {
-            openBoardModal();
-          }}
-        />
-        {boardModalOpen && (
-          <CreateBoard open={openBoardModal} close={closeBoardModal} />
-        )}
+        <CardsImg src="img/profile_2.jpeg" />
+      </Cards>
+      <Cards>
+        <CardsImg src="img/profile_3.jpeg" />
       </Cards>
       <Cards>
         <CardsImg src="img/profile_4.jpeg" />
