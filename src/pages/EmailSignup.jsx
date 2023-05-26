@@ -1,10 +1,14 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Container, TitleLogo, Title } from "../styles/ContainerStyles";
 import { InputWrap, Input, InputTitle } from "../styles/InputStyles";
 import { useMutation } from "react-query";
-import { signup } from "../apis/auth/signup";
+import {
+  checkEmailAxios,
+  sendEmailAxios,
+  signupAxios,
+} from "../apis/auth/signup";
 
 function EmailSignup() {
   const navigate = useNavigate();
@@ -23,7 +27,14 @@ function EmailSignup() {
   const [passwordCheckErrorMessage, setPasswordCheckErrorMessage] =
     useState(false);
 
-  const signupMutation = useMutation(signup, {
+  const [signupActive, setSignupActive] = useState(false);
+
+  // 이메일 인증 번호 state
+  const [code, setCode] = useState("");
+  const [isSendEmail, setIsSendEmail] = useState(false);
+  const [emailChecking, setEmailChecking] = useState(false);
+
+  const signupMutation = useMutation(signupAxios, {
     onSuccess: () => {
       alert("회원가입이 완료되었습니다✨");
       setNickname("");
@@ -34,12 +45,27 @@ function EmailSignup() {
       setPasswordCheck("");
       navigate("/login");
     },
-    onError: (error) => {
-      /*  setErrorMessage(error.response.data.message); */
+  });
+  const sendEmailMutation = useMutation(sendEmailAxios, {
+    onSuccess: () => {
+      setIsSendEmail(true);
+      alert("회원님의 이메일로 인증번호를 전송했습니다!");
+    },
+    onError: () => {
+      setIsSendEmail(false);
     },
   });
-
-  // 정규식
+  const checkEmailMutation = useMutation(checkEmailAxios, {
+    onSuccess: () => {
+      setEmailChecking(true);
+      alert("이메일 인증에 성공하셨습니다!");
+    },
+    onError: () => {
+      setEmailChecking(false);
+      alert("인증번호를 다시 확인해보세요!");
+    },
+  });
+  // 이메일, 패스워드 정규식
   const emailRegex =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
@@ -72,11 +98,10 @@ function EmailSignup() {
     }
   }, [passwordCheck]);
 
-  // 성별 버튼 클릭 핸들러
+  // 성별, 직업 버튼 클릭 핸들러
   const sexButtonClickHandler = useCallback((selectedSex) => {
     setSex(selectedSex);
   }, []);
-  // 직업 버튼 클릭 핸들러
   const roleButtonClickHandler = useCallback((selectedRole) => {
     setRole(selectedRole);
   }, []);
@@ -86,6 +111,25 @@ function EmailSignup() {
   function validatePasswordCheck(password, passwordCheck) {
     return password === passwordCheck;
   }
+  const signupActiveHandler = () => {
+    return !nickname || !email || !password || !passwordCheck || !sex || !role
+      ? setSignupActive(false)
+      : setSignupActive(true);
+  };
+
+  // 이메일 서버에 전송
+  const emailSendButtonHandler = () => {
+    sendEmailMutation.mutate(email);
+  };
+
+  // 이메일 인증번호 확인
+  const emailVerifyNumCheckHandler = () => {
+    if (!code) {
+      alert("인증번호를 입력해주세요!");
+    }
+    checkEmailMutation.mutate({ email, code });
+  };
+
   // 회원가입버튼 클릭
   const signupButtonHandler = (e) => {
     e.preventDefault();
@@ -101,8 +145,6 @@ function EmailSignup() {
     } else if (role.length === 0) {
       alert("직업을 선택해주세요");
     } */
-    if (!nickname || email || password || passwordCheck || sex || role) {
-    }
 
     const newUser = {
       nickname,
@@ -131,7 +173,6 @@ function EmailSignup() {
             placeholder="닉네임을 입력해주세요."
             onChange={(e) => setNickname(e.target.value)}
           />
-          {console.log(nickname, role)}
         </InputWrap>
         <InputTitle>직업</InputTitle>
         <ButtonContainer>
@@ -188,24 +229,50 @@ function EmailSignup() {
               placeholder="이메일 주소를 입력해주세요"
             />
           </InputWrap>
-          <MailCheckButton>인증번호 전송</MailCheckButton>
+          <MailCheckButton onClick={emailSendButtonHandler}>
+            인증번호 전송
+          </MailCheckButton>
         </InputGroup>
         {emailErrorMessage && <ErrorMessage>{emailError}</ErrorMessage>}
-        <InputTitle>이메일</InputTitle>
+        <InputTitle>인증번호</InputTitle>
         <InputGroup>
           <InputWrap>
             <Input
               type="text"
-              name="email"
-              value={email || ""}
+              name="code"
+              value={code || ""}
               onChange={(e) => {
-                setEmail(e.target.value);
+                setCode(e.target.value);
               }}
-              placeholder="이메일 주소를 입력해주세요"
+              placeholder="인증번호를 입력해주세요"
             />
           </InputWrap>
-          <MailCheckButton>확인</MailCheckButton>
+          <MailCheckButton onClick={emailVerifyNumCheckHandler}>
+            {emailChecking ? "인증완료" : "확인"}
+          </MailCheckButton>
         </InputGroup>
+        {/* 이메일 인증번호 입력란 => 이메일을 서버에 성공적으로 보내면 인증번호 입력란이 나게 */}
+        {/*  {isSendEmail && !emailChecking && (
+          <>
+            <InputTitle>인증번호</InputTitle>
+            <InputGroup>
+              <InputWrap>
+                <Input
+                  type="number"
+                  name="code"
+                  value={code || ""}
+                  onChange={(e) => {
+                    setCode(e.target.value);
+                  }}
+                  placeholder="인증번호를 입력해주세요"
+                />
+              </InputWrap>
+              <MailCheckButton onClick={emailVerifyNumCheckHandler}>
+                확인
+              </MailCheckButton>
+            </InputGroup>
+          </>
+        )} */}
         <InputTitle>비밀번호</InputTitle>
         <InputWrap>
           <Input
@@ -234,7 +301,11 @@ function EmailSignup() {
           <ErrorMessage>{passwordCheckError}</ErrorMessage>
         )}
         <BottomButtonWrap>
-          <BottomButton type="submit" onClick={signupButtonHandler}>
+          <BottomButton
+            type="submit"
+            onClick={signupButtonHandler}
+            /*  disabled={signupActive} */
+          >
             회원 가입 완료
           </BottomButton>
           <BottomButton onClick={backButtonHandler}>취소</BottomButton>
@@ -305,7 +376,7 @@ const MailCheckButton = styled.button`
 
 /* 회원가입, 취소 버튼 */
 const BottomButton = styled.button`
-  width: 40%;
+  width: 35%;
   height: 48px;
   border: none;
   font-weight: 700;
@@ -316,14 +387,15 @@ const BottomButton = styled.button`
   cursor: pointer;
 
   /* 요소가 비활성화 상태일 때 */
-  /*  &:disabled {
+  &:disabled {
     background-color: #dadada;
     color: white;
-  } */
+  }
 `;
 const BottomButtonWrap = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  justify-content: space-evenly;
   margin: 80px 40px;
 `;
 const ErrorMessage = styled.div`
