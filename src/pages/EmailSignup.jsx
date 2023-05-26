@@ -3,6 +3,8 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Container, TitleLogo, Title } from "../styles/ContainerStyles";
 import { InputWrap, Input, InputTitle } from "../styles/InputStyles";
+import { useMutation } from "react-query";
+import { signup } from "../apis/auth/signup";
 
 function EmailSignup() {
   const navigate = useNavigate();
@@ -16,24 +18,28 @@ function EmailSignup() {
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
 
-  const newUser = {
-    nickname,
-
-    sex,
-    role,
-    password,
-    email,
-  };
-
-  const passwordCheckHandler = useCallback(
-    (e) => {
-      setPasswordError(e.target.value !== password);
-      setPasswordCheck(e.target.value);
+  const signupMutation = useMutation(signup, {
+    onSuccess: () => {
+      alert("회원가입이 완료되었습니다✨");
+      setNickname("");
+      setEmail("");
+      setSex("");
+      setRole("");
+      setPassword("");
+      setPasswordCheck("");
+      navigate("/login");
     },
-    [password]
-  );
+    onError: (error) => {
+      setErrorMessage(error.response.data.message);
+    },
+  });
+
+  // 정규식
+  const emailRegex =
+    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
 
   // 성별 버튼 클릭 핸들러
   const sexButtonClickHandler = useCallback((selectedSex) => {
@@ -46,37 +52,53 @@ function EmailSignup() {
   }, []);
 
   const MemoizedSelectionButton = React.memo(SelectionButton);
-
+  // password 확인
+  function validatePasswordCheck(password, passwordCheck) {
+    return password === passwordCheck;
+  }
+  // 회원가입버튼 클릭
   const signupButtonHandler = (e) => {
     e.preventDefault();
+
+    if (nickname.length === 0) {
+      alert("닉네임을 입력해주세요");
+    } else if (email.length === 0) {
+      alert("이메일을 입력해주세요");
+    } else if (password.length === 0) {
+      alert("비밀번호를 입력해주세요");
+    } else if (sex.length === 0) {
+      alert("성별을 선택해주세요");
+    } else if (role.length === 0) {
+      alert("직업을 선택해주세요");
+    }
+
+    if (!passwordRegex.test(password)) {
+      setErrorMessage("비밀번호는 8~20자의 영문, 숫자 포함 8자리 이상입니다.");
+    }
+    if (!emailRegex.test(email)) {
+      setErrorMessage("이메일의 형식이 올바르지 않습니다.");
+      return;
+    }
+    if (!validatePasswordCheck(password, passwordCheck)) {
+      setErrorMessage("입력하신 비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    const newUser = {
+      nickname,
+      sex,
+      role,
+      password,
+      email,
+    };
+
+    console.log("새로운 회원 정보 => ", newUser);
+    signupMutation.mutate(newUser);
   };
-
-  // 정규식
-  const emailRegex =
-    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
-
-  // 이메일 에러 메세지
-  const emailMessage = useMemo(() => {
-    if (email && !emailRegex.test(email)) {
-      return "이메일을 확인해 주세요";
-    } else {
-      return "";
-    }
-  }, [email]);
-
-  // 패스워드 에러메세지
-  const passwordMessage = useMemo(() => {
-    if (password && !passwordRegex.test(password)) {
-      return "비밀번호는 영문, 숫자 포함 8자리 이상입니다.";
-    } else {
-      return "";
-    }
-  }, [password]);
 
   return (
     <Container>
-      <CenteredContent>
+      <CenteredContent onSubmit={signupButtonHandler}>
         <TitleLogo>
           <Title>Moment</Title>
         </TitleLogo>
@@ -163,21 +185,21 @@ function EmailSignup() {
         <InputWrap>
           <Input
             type="password"
-            placeholder="비밀번호를 확인해주세요."
+            placeholder="비밀번호를 다시 입력해주세요."
             value={passwordCheck}
             required
-            onChange={passwordCheckHandler}
+            onChange={(e) => {
+              setPasswordCheck(e.target.value);
+            }}
           />
-          {/*           {passwordError && (
-            <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>
-          )} */}
         </InputWrap>
-        <InputTitle>휴대폰 인증</InputTitle>
+
         <BottomButtonWrap>
           <BottomButton type="submit" onClick={signupButtonHandler}>
             회원 가입 완료
           </BottomButton>
           <BottomButton onClick={backButtonHandler}>취소</BottomButton>
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </BottomButtonWrap>
       </CenteredContent>
     </Container>
@@ -242,4 +264,13 @@ const BottomButtonWrap = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 80px 40px;
+`;
+const ErrorMessage = styled.div`
+  width: 320px;
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  flex-wrap: warp;
+  text-align: center;
 `;
