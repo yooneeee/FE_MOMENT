@@ -1,9 +1,21 @@
 import { instance } from "../axios";
 // 회원가입API, method : post, url : /users/signup
 const signupAxios = async (newUser) => {
+  console.log(newUser);
+  const formData = new FormData();
+  formData.append("profileImg", newUser.profileImg);
+
+  const config = {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
+  };
   try {
-    const response = await instance.post(`/users/signup`, newUser);
-    console.log(response);
+    const response = await instance.post(
+      `/users/signup`,
+      { ...newUser, formData },
+      config
+    );
     return response.data;
   } catch (error) {
     const errorMessage = error.response.data.errorMessage;
@@ -13,9 +25,9 @@ const signupAxios = async (newUser) => {
 };
 // 이메일 인증코드 보내기API, method: post, url: /emails/auth
 const sendEmailAxios = async (email) => {
-  console.log("이메일", email);
   try {
     const response = await instance.post("/emails/auth", email);
+    console.log(response);
     return response.data;
   } catch (error) {
     const errorMessage = error.response.data.errorMessage;
