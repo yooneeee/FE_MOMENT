@@ -38,6 +38,8 @@ const ImgBackground = styled.div`
   background-image: url(${(props) => props.src});
   background-repeat: no-repeat;
   background-size: cover;
+
+  flex-direction: column;
 `;
 
 const Footer = styled.div`
