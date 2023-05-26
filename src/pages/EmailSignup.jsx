@@ -18,7 +18,10 @@ function EmailSignup() {
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
-  const [errorMessage, setErrorMessage] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState(false);
+  const [passwordCheckErrorMessage, setPasswordCheckErrorMessage] =
+    useState(false);
 
   const signupMutation = useMutation(signup, {
     onSuccess: () => {
@@ -32,7 +35,7 @@ function EmailSignup() {
       navigate("/login");
     },
     onError: (error) => {
-      setErrorMessage(error.response.data.message);
+      /*  setErrorMessage(error.response.data.message); */
     },
   });
 
@@ -41,11 +44,38 @@ function EmailSignup() {
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
 
+  // 이메일 에러 메세지
+  const emailError = useMemo(() => {
+    if (email && !emailRegex.test(email)) {
+      setEmailErrorMessage(true);
+      return "이메일의 형식이 올바르지 않습니다.";
+    } else {
+      return "";
+    }
+  }, [email]);
+  // 패스워드 에러 메세지
+  const passwordError = useMemo(() => {
+    if (password && !passwordRegex.test(password)) {
+      setPasswordErrorMessage(true);
+      return "비밀번호는 8~20자의 영문, 숫자 포함 8자리 이상입니다.";
+    } else {
+      return "";
+    }
+  }, [password]);
+  // 패스워드체크 에러 메세지
+  const passwordCheckError = useMemo(() => {
+    if (!validatePasswordCheck(password, passwordCheck)) {
+      setPasswordCheckErrorMessage(true);
+      return "입력하신 비밀번호가 일치하지 않습니다.";
+    } else {
+      return "";
+    }
+  }, [passwordCheck]);
+
   // 성별 버튼 클릭 핸들러
   const sexButtonClickHandler = useCallback((selectedSex) => {
     setSex(selectedSex);
   }, []);
-
   // 직업 버튼 클릭 핸들러
   const roleButtonClickHandler = useCallback((selectedRole) => {
     setRole(selectedRole);
@@ -60,7 +90,7 @@ function EmailSignup() {
   const signupButtonHandler = (e) => {
     e.preventDefault();
 
-    if (nickname.length === 0) {
+    /*     if (nickname.length === 0) {
       alert("닉네임을 입력해주세요");
     } else if (email.length === 0) {
       alert("이메일을 입력해주세요");
@@ -70,18 +100,8 @@ function EmailSignup() {
       alert("성별을 선택해주세요");
     } else if (role.length === 0) {
       alert("직업을 선택해주세요");
-    }
-
-    if (!passwordRegex.test(password)) {
-      setErrorMessage("비밀번호는 8~20자의 영문, 숫자 포함 8자리 이상입니다.");
-    }
-    if (!emailRegex.test(email)) {
-      setErrorMessage("이메일의 형식이 올바르지 않습니다.");
-      return;
-    }
-    if (!validatePasswordCheck(password, passwordCheck)) {
-      setErrorMessage("입력하신 비밀번호가 일치하지 않습니다.");
-      return;
+    } */
+    if (!nickname || email || password || passwordCheck || sex || role) {
     }
 
     const newUser = {
@@ -134,7 +154,6 @@ function EmailSignup() {
             작가
           </MemoizedSelectionButton>
         </ButtonContainer>
-
         <InputTitle>성별</InputTitle>
         <ButtonContainer>
           <MemoizedSelectionButton
@@ -156,19 +175,37 @@ function EmailSignup() {
             여자
           </MemoizedSelectionButton>
         </ButtonContainer>
-
         <InputTitle>이메일</InputTitle>
-        <InputWrap>
-          <Input
-            type="text"
-            name="email"
-            value={email || ""}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            placeholder="이메일 주소를 입력해주세요"
-          />
-        </InputWrap>
+        <InputGroup>
+          <InputWrap>
+            <Input
+              type="text"
+              name="email"
+              value={email || ""}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              placeholder="이메일 주소를 입력해주세요"
+            />
+          </InputWrap>
+          <MailCheckButton>인증번호 전송</MailCheckButton>
+        </InputGroup>
+        {emailErrorMessage && <ErrorMessage>{emailError}</ErrorMessage>}
+        <InputTitle>이메일</InputTitle>
+        <InputGroup>
+          <InputWrap>
+            <Input
+              type="text"
+              name="email"
+              value={email || ""}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              placeholder="이메일 주소를 입력해주세요"
+            />
+          </InputWrap>
+          <MailCheckButton>확인</MailCheckButton>
+        </InputGroup>
         <InputTitle>비밀번호</InputTitle>
         <InputWrap>
           <Input
@@ -181,25 +218,26 @@ function EmailSignup() {
             }}
           />
         </InputWrap>
+        {passwordErrorMessage && <ErrorMessage>{passwordError}</ErrorMessage>}
         <InputTitle>비밀번호 확인</InputTitle>
         <InputWrap>
           <Input
             type="password"
             placeholder="비밀번호를 다시 입력해주세요."
             value={passwordCheck}
-            required
             onChange={(e) => {
               setPasswordCheck(e.target.value);
             }}
           />
         </InputWrap>
-
+        {passwordCheckErrorMessage && (
+          <ErrorMessage>{passwordCheckError}</ErrorMessage>
+        )}
         <BottomButtonWrap>
           <BottomButton type="submit" onClick={signupButtonHandler}>
             회원 가입 완료
           </BottomButton>
           <BottomButton onClick={backButtonHandler}>취소</BottomButton>
-          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </BottomButtonWrap>
       </CenteredContent>
     </Container>
@@ -211,7 +249,7 @@ export default EmailSignup;
 const CenteredContent = styled.form`
   flex: 1 0 auto;
   margin: 0px auto;
-  max-width: 500px;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -241,6 +279,29 @@ const SelectionButton = styled.button`
     color: white;
   }
 `;
+const InputGroup = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+`;
+/* 메일 확인, 인증 버튼 */
+const MailCheckButton = styled.button`
+  margin: 0 10px;
+  width: 16%;
+  height: 48px;
+  border: none;
+  font-weight: 700;
+  background-color: #000000;
+  border-radius: 64px;
+  color: white;
+  cursor: pointer;
+
+  /* 요소가 비활성화 상태일 때 */
+  &:disabled {
+    background-color: #dadada;
+    color: white;
+  }
+`;
 
 /* 회원가입, 취소 버튼 */
 const BottomButton = styled.button`
@@ -266,11 +327,7 @@ const BottomButtonWrap = styled.div`
   margin: 80px 40px;
 `;
 const ErrorMessage = styled.div`
-  width: 320px;
   color: red;
   font-size: 14px;
-  margin-bottom: 10px;
-  margin-top: 15px;
   flex-wrap: warp;
-  text-align: center;
 `;
