@@ -27,7 +27,7 @@ const FeedDetail = (props) => {
   }, []);
 
   return (
-    <div className={open ? "openModal create-feed-modal" : "create-feed-modal"}>
+    <div className={open ? "openModal feed-datail-modal" : "feed-datail-modal"}>
       {open ? (
         <section ref={modalRef}>
           <header>
