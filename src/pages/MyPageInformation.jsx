@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 function MyPageInformation() {
   const [image, setImage] = useState("img/snowball.png");

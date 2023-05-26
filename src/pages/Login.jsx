@@ -1,5 +1,5 @@
 import React from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { InputWrap, Input, InputTitle } from "../styles/InputStyles";
 import { ButtonText } from "../styles/ButtonStyles";
 import {
