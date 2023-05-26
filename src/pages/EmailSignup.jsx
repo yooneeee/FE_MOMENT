@@ -1,57 +1,205 @@
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  CenteredContent,
-  TitleLogo,
-  Title,
-} from "../styles/ContainerStyles";
+import { Container, TitleLogo, Title } from "../styles/ContainerStyles";
 import { InputWrap, Input, InputTitle } from "../styles/InputStyles";
+import { useMutation } from "react-query";
+import { signup } from "../apis/auth/signup";
 
 function EmailSignup() {
   const navigate = useNavigate();
-
   const backButtonHandler = () => {
     navigate("/main");
   };
 
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [sex, setSex] = useState("");
+  const [role, setRole] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [errorMessage, setErrorMessage] = useState(false);
+
+  const signupMutation = useMutation(signup, {
+    onSuccess: () => {
+      alert("회원가입이 완료되었습니다✨");
+      setNickname("");
+      setEmail("");
+      setSex("");
+      setRole("");
+      setPassword("");
+      setPasswordCheck("");
+      navigate("/login");
+    },
+    onError: (error) => {
+      setErrorMessage(error.response.data.message);
+    },
+  });
+
+  // 정규식
+  const emailRegex =
+    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
+
+  // 성별 버튼 클릭 핸들러
+  const sexButtonClickHandler = useCallback((selectedSex) => {
+    setSex(selectedSex);
+  }, []);
+
+  // 직업 버튼 클릭 핸들러
+  const roleButtonClickHandler = useCallback((selectedRole) => {
+    setRole(selectedRole);
+  }, []);
+
+  const MemoizedSelectionButton = React.memo(SelectionButton);
+  // password 확인
+  function validatePasswordCheck(password, passwordCheck) {
+    return password === passwordCheck;
+  }
+  // 회원가입버튼 클릭
+  const signupButtonHandler = (e) => {
+    e.preventDefault();
+
+    if (nickname.length === 0) {
+      alert("닉네임을 입력해주세요");
+    } else if (email.length === 0) {
+      alert("이메일을 입력해주세요");
+    } else if (password.length === 0) {
+      alert("비밀번호를 입력해주세요");
+    } else if (sex.length === 0) {
+      alert("성별을 선택해주세요");
+    } else if (role.length === 0) {
+      alert("직업을 선택해주세요");
+    }
+
+    if (!passwordRegex.test(password)) {
+      setErrorMessage("비밀번호는 8~20자의 영문, 숫자 포함 8자리 이상입니다.");
+    }
+    if (!emailRegex.test(email)) {
+      setErrorMessage("이메일의 형식이 올바르지 않습니다.");
+      return;
+    }
+    if (!validatePasswordCheck(password, passwordCheck)) {
+      setErrorMessage("입력하신 비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    const newUser = {
+      nickname,
+      sex,
+      role,
+      password,
+      email,
+    };
+
+    console.log("새로운 회원 정보 => ", newUser);
+    signupMutation.mutate(newUser);
+  };
+
   return (
     <Container>
-      <CenteredContent>
+      <CenteredContent onSubmit={signupButtonHandler}>
         <TitleLogo>
           <Title>Moment</Title>
         </TitleLogo>
         <InputTitle>닉네임</InputTitle>
         <InputWrap>
-          <Input type="text" placeholder="닉네임을 입력해주세요." />
+          <Input
+            type="text"
+            name="nickname"
+            value={nickname || ""}
+            placeholder="닉네임을 입력해주세요."
+            onChange={(e) => setNickname(e.target.value)}
+          />
+          {console.log(nickname, role)}
         </InputWrap>
         <InputTitle>직업</InputTitle>
         <ButtonContainer>
-          <SelectionButton>모델</SelectionButton>
-          <SelectionButton>작가</SelectionButton>
+          <MemoizedSelectionButton
+            onClick={() => roleButtonClickHandler("model")}
+            style={{
+              backgroundColor: role === "model" ? "#000000" : "#ffffff",
+              color: role === "model" ? "#ffffff" : "#000000",
+            }}
+          >
+            모델
+          </MemoizedSelectionButton>
+          <MemoizedSelectionButton
+            onClick={() => roleButtonClickHandler("photographer")}
+            style={{
+              backgroundColor: role === "photographer" ? "#000000" : "#ffffff",
+              color: role === "photographer" ? "#ffffff" : "#000000",
+            }}
+          >
+            작가
+          </MemoizedSelectionButton>
         </ButtonContainer>
+
         <InputTitle>성별</InputTitle>
         <ButtonContainer>
-          <SelectionButton>남자</SelectionButton>
-          <SelectionButton>여자</SelectionButton>
+          <MemoizedSelectionButton
+            onClick={() => sexButtonClickHandler("male")}
+            style={{
+              backgroundColor: sex === "male" ? "#000000" : "#ffffff",
+              color: sex === "male" ? "#ffffff" : "#000000",
+            }}
+          >
+            남자
+          </MemoizedSelectionButton>
+          <MemoizedSelectionButton
+            onClick={() => sexButtonClickHandler("female")}
+            style={{
+              backgroundColor: sex === "female" ? "#000000" : "#ffffff",
+              color: sex === "female" ? "#ffffff" : "#000000",
+            }}
+          >
+            여자
+          </MemoizedSelectionButton>
         </ButtonContainer>
+
         <InputTitle>이메일</InputTitle>
         <InputWrap>
-          <Input type="text" placeholder="이메일 주소를 입력해주세요" />
+          <Input
+            type="text"
+            name="email"
+            value={email || ""}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            placeholder="이메일 주소를 입력해주세요"
+          />
         </InputWrap>
         <InputTitle>비밀번호</InputTitle>
         <InputWrap>
-          <Input type="password" placeholder="비밀번호를 입력해주세요" />
+          <Input
+            type="password"
+            name="password"
+            value={password}
+            placeholder="비밀번호를 입력해주세요"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
         </InputWrap>
         <InputTitle>비밀번호 확인</InputTitle>
         <InputWrap>
-          <Input type="password" placeholder="비밀번호를 확인해주세요." />
+          <Input
+            type="password"
+            placeholder="비밀번호를 다시 입력해주세요."
+            value={passwordCheck}
+            required
+            onChange={(e) => {
+              setPasswordCheck(e.target.value);
+            }}
+          />
         </InputWrap>
-        <InputTitle>휴대폰 인증</InputTitle>
+
         <BottomButtonWrap>
-          <BottomButton>회원 가입 완료</BottomButton>
+          <BottomButton type="submit" onClick={signupButtonHandler}>
+            회원 가입 완료
+          </BottomButton>
           <BottomButton onClick={backButtonHandler}>취소</BottomButton>
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </BottomButtonWrap>
       </CenteredContent>
     </Container>
@@ -59,6 +207,16 @@ function EmailSignup() {
 }
 
 export default EmailSignup;
+
+const CenteredContent = styled.form`
+  flex: 1 0 auto;
+  margin: 0px auto;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 40px 0px;
+`;
 
 /* 버튼 선택 */
 const ButtonContainer = styled.div`
@@ -106,4 +264,13 @@ const BottomButtonWrap = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 80px 40px;
+`;
+const ErrorMessage = styled.div`
+  width: 320px;
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  flex-wrap: warp;
+  text-align: center;
 `;
