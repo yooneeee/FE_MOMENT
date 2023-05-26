@@ -2,12 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { InputWrap, Input, InputTitle } from "../styles/InputStyles";
 import { ButtonText } from "../styles/ButtonStyles";
-import {
-  Container,
-  CenteredContent,
-  Title,
-  TitleLogo,
-} from "../styles/ContainerStyles";
+import { Container, Title, TitleLogo } from "../styles/ContainerStyles";
 import {
   KakaoLoginButton,
   KakaoLogoContainer,
@@ -15,9 +10,35 @@ import {
   EmailButton,
 } from "../styles/ButtonStyles";
 import { useNavigate } from "react-router-dom";
+import { useInput } from "../hooks/useInput";
+import { useMutation } from "react-query";
+import { loginAxios } from "../apis/auth/login";
 
 function Login() {
   const navigate = useNavigate();
+  const [email, onChangeEmailHandler, resetEmail] = useInput("");
+  const [password, onChangePasswordHandler, resetPassword] = useInput("");
+
+  const loginMutation = useMutation(loginAxios, {
+    onSuccess: () => {
+      navigate("/main");
+      alert("로그인 성공!");
+      resetEmail();
+      resetPassword();
+    },
+  });
+
+  const loginButtonHandler = () => {
+    if (!email || !password) {
+      alert("아이디와 패스워드를 모두 입력해주세요.");
+      return;
+    }
+    const user = {
+      email,
+      password,
+    };
+    loginMutation.mutate(user);
+  };
   return (
     <Container>
       <CenteredContent>
@@ -26,15 +47,29 @@ function Login() {
         </TitleLogo>
         <InputTitle>이메일</InputTitle>
         <InputWrap>
-          <Input type="text" placeholder="이메일 주소를 입력해주세요" />
+          <Input
+            type="text"
+            name="email"
+            value={email}
+            onChange={onChangeEmailHandler}
+            placeholder="이메일 주소를 입력해주세요"
+          />
         </InputWrap>
         <InputTitle>비밀번호</InputTitle>
         <InputWrap>
-          <Input type="password" placeholder="비밀번호를 입력해주세요." />
+          <Input
+            type="password"
+            name="password"
+            value={password}
+            onChange={onChangePasswordHandler}
+            placeholder="비밀번호를 입력해주세요."
+          />
         </InputWrap>
         <ButtonWrap>
           <EmailButton>
-            <ButtonText>이메일로 로그인하기</ButtonText>
+            <ButtonText onClick={loginButtonHandler}>
+              이메일로 로그인하기
+            </ButtonText>
           </EmailButton>
         </ButtonWrap>
         <Line />
@@ -59,4 +94,13 @@ const Line = styled.div`
   border-top: 1px solid #d4d4d4;
   width: 100%;
   margin: 40px auto;
+`;
+const CenteredContent = styled.form`
+  flex: 1 0 auto;
+  margin: 0px auto;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 40px 0px;
 `;
