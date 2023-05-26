@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Container, TitleLogo, Title } from "../styles/ContainerStyles";
@@ -26,13 +26,15 @@ function EmailSignup() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState(false);
   const [passwordCheckErrorMessage, setPasswordCheckErrorMessage] =
     useState(false);
-
   const [signupActive, setSignupActive] = useState(false);
+  // 이미지 state
+  const [profileImg, setProfileImg] = useState(null);
+  const [imgUrl, setImgUrl] = useState(null);
 
   // 이메일 인증 번호 state
   const [code, setCode] = useState("");
   const [isSendEmail, setIsSendEmail] = useState(false);
-  const [emailChecking, setEmailChecking] = useState(false);
+  const [isemailChecking, setIsEmailChecking] = useState(false);
 
   const signupMutation = useMutation(signupAxios, {
     onSuccess: () => {
@@ -57,11 +59,11 @@ function EmailSignup() {
   });
   const checkEmailMutation = useMutation(checkEmailAxios, {
     onSuccess: () => {
-      setEmailChecking(true);
+      setIsEmailChecking(true);
       alert("이메일 인증에 성공하셨습니다!");
     },
     onError: () => {
-      setEmailChecking(false);
+      setIsEmailChecking(false);
       alert("인증번호를 다시 확인해보세요!");
     },
   });
@@ -106,17 +108,34 @@ function EmailSignup() {
     setRole(selectedRole);
   }, []);
 
+  // 이미지 첨부
+  const addPhoto = (e) => {
+    e.preventDefault();
+    setProfileImg(e.target.files[0]);
+
+    // 미리보기
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    reader.onload = () => {
+      const previewImgUrl = reader.result;
+      setImgUrl(previewImgUrl);
+    };
+  };
+
   const MemoizedSelectionButton = React.memo(SelectionButton);
   // password 확인
   function validatePasswordCheck(password, passwordCheck) {
     return password === passwordCheck;
   }
   const signupActiveHandler = () => {
-    return !nickname || !email || !password || !passwordCheck || !sex || !role
-      ? setSignupActive(false)
-      : setSignupActive(true);
+    if (!email || !password || !nickname || !sex || !role) {
+      setSignupActive(false);
+    } else {
+      setSignupActive(true);
+    }
   };
-
   // 이메일 서버에 전송
   const emailSendButtonHandler = () => {
     sendEmailMutation.mutate(email);
@@ -126,37 +145,37 @@ function EmailSignup() {
   const emailVerifyNumCheckHandler = () => {
     if (!code) {
       alert("인증번호를 입력해주세요!");
+    } else {
+      checkEmailMutation.mutate({ email, code });
     }
-    checkEmailMutation.mutate({ email, code });
   };
 
   // 회원가입버튼 클릭
   const signupButtonHandler = (e) => {
     e.preventDefault();
-
-    /*     if (nickname.length === 0) {
-      alert("닉네임을 입력해주세요");
-    } else if (email.length === 0) {
-      alert("이메일을 입력해주세요");
-    } else if (password.length === 0) {
-      alert("비밀번호를 입력해주세요");
-    } else if (sex.length === 0) {
-      alert("성별을 선택해주세요");
-    } else if (role.length === 0) {
-      alert("직업을 선택해주세요");
-    } */
-
     const newUser = {
       nickname,
       sex,
       role,
       password,
       email,
+      profileImg,
     };
-
+    if (signupActive) {
+      if (!isemailChecking) {
+        alert("이메일 인증을 완료해주세요!");
+        return;
+      }
+      signupMutation.mutate(newUser);
+    } else {
+      alert("회원정보를 모두 입력해주세요!");
+    }
     console.log("새로운 회원 정보 => ", newUser);
-    signupMutation.mutate(newUser);
   };
+
+  useEffect(() => {
+    signupActiveHandler();
+  }, [email, nickname, password, role, sex]);
 
   return (
     <Container>
@@ -164,6 +183,16 @@ function EmailSignup() {
         <TitleLogo>
           <Title>Moment</Title>
         </TitleLogo>
+        <StImageUpload>
+          <InputTitle>프로필 사진을 선택해 주세요.</InputTitle>
+          <StProfile image={imgUrl}>IMAGE</StProfile>
+          <input
+            type="file"
+            id="fileUpload"
+            name="profileImg"
+            onChange={addPhoto}
+          ></input>
+        </StImageUpload>
         <InputTitle>닉네임</InputTitle>
         <InputWrap>
           <Input
@@ -248,17 +277,17 @@ function EmailSignup() {
             />
           </InputWrap>
           <MailCheckButton onClick={emailVerifyNumCheckHandler}>
-            {emailChecking ? "인증완료" : "확인"}
+            {isemailChecking ? "인증완료" : "확인"}
           </MailCheckButton>
         </InputGroup>
         {/* 이메일 인증번호 입력란 => 이메일을 서버에 성공적으로 보내면 인증번호 입력란이 나게 */}
-        {/*  {isSendEmail && !emailChecking && (
+        {/*  {isSendEmail && !isEmailChecking && (
           <>
             <InputTitle>인증번호</InputTitle>
             <InputGroup>
               <InputWrap>
                 <Input
-                  type="number"
+                  type="text"
                   name="code"
                   value={code || ""}
                   onChange={(e) => {
@@ -304,7 +333,7 @@ function EmailSignup() {
           <BottomButton
             type="submit"
             onClick={signupButtonHandler}
-            /*  disabled={signupActive} */
+            bgcolor={signupActive ? "black" : "lightgrey"}
           >
             회원 가입 완료
           </BottomButton>
@@ -325,6 +354,7 @@ const CenteredContent = styled.form`
   flex-direction: column;
   box-sizing: border-box;
   padding: 40px 0px;
+  justify-content: center;
 `;
 
 /* 버튼 선택 */
@@ -380,7 +410,7 @@ const BottomButton = styled.button`
   height: 48px;
   border: none;
   font-weight: 700;
-  background-color: #000000;
+  background-color: ${(props) => props.bgcolor || "black"};
   border-radius: 64px;
   color: white;
   margin-bottom: 16px;
@@ -402,4 +432,26 @@ const ErrorMessage = styled.div`
   color: red;
   font-size: 14px;
   flex-wrap: warp;
+`;
+export const StImageUpload = styled.div`
+  padding: 5%;
+  margin-bottom: 3%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+
+  input {
+    padding-top: 3%;
+  }
+`;
+export const StProfile = styled.div`
+  width: 200px;
+  line-height: 200px;
+  font-size: 0.7rem;
+  text-align: center;
+  color: #ccc;
+  margin: 10px auto;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+
+  background: ${(props) => `url(${props.image}) no-repeat 50% /cover`};
 `;
