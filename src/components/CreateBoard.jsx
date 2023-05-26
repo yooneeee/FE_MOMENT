@@ -2,8 +2,69 @@ import React, { useEffect, useRef, useState } from "react";
 import "../css/CreateBoardModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
+import { styled } from "styled-components";
 
 const CreateBoard = (props) => {
+  // 해시태그 기능
+  const [inputHashTag, setInputHashTag] = useState("");
+  const [hashTags, setHashTags] = useState([]);
+
+  const isEmptyValue = (value) => {
+    if (!value.length) {
+      return true;
+    }
+    return false;
+  };
+
+  const addHashTag = (e) => {
+    const allowedCommand = ["Comma", "Enter", "Space", "NumpadEnter"];
+    if (!allowedCommand.includes(e.code)) return;
+
+    if (isEmptyValue(e.target.value.trim())) {
+      return setInputHashTag("");
+    }
+
+    let newHashTag = e.target.value.trim();
+    const regExp = /[\{\}\[\]\/?.;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
+    if (regExp.test(newHashTag)) {
+      newHashTag = newHashTag.replace(regExp, "");
+    }
+    if (newHashTag.includes(",")) {
+      newHashTag = newHashTag.split(",").join("");
+    }
+
+    if (isEmptyValue(newHashTag)) return;
+
+    if (hashTags.length >= 3) return;
+
+    setHashTags((prevHashTags) => {
+      return [...new Set([...prevHashTags, newHashTag])];
+    });
+
+    setInputHashTag("");
+  };
+
+  const removeHashTag = (tag) => {
+    setHashTags((prevHashTags) =>
+      prevHashTags.filter((hashTag) => hashTag !== tag)
+    );
+  };
+
+  const keyDownHandler = (e) => {
+    if (e.code !== "Enter" && e.code !== "NumpadEnter") return;
+    e.preventDefault();
+
+    const regExp = /^[a-z|A-Z|가-힣|ㄱ-ㅎ|ㅏ-ㅣ|0-9| \t|]+$/g;
+    if (!regExp.test(e.target.value)) {
+      setInputHashTag("");
+    }
+  };
+
+  const changeHashTagInput = (e) => {
+    setInputHashTag(e.target.value);
+  };
+
+  /////////////////////////////////////////////////////////////
   const { open, close } = props;
   const [file, setFile] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -51,7 +112,7 @@ const CreateBoard = (props) => {
       {open ? (
         <section ref={modalRef}>
           <header>
-            <p className="headerTitle">새 피드 만들기</p>
+            <p className="headerTitle">새 게시글 만들기</p>
             <button className="saveButton">저장하기</button>
           </header>
 
@@ -82,17 +143,40 @@ const CreateBoard = (props) => {
               <div className="profileBox">
                 <img src="img/monkey_test.jpeg" className="profileImg" />
                 <div>
-                  <p>Photo</p>
+                  <p className="position">Photo</p>
                   <p>Jun</p>
                 </div>
               </div>
               <textarea
+                className="titleInput"
+                placeholder="제목 입력..."
+              ></textarea>
+              <textarea
                 className="contentInput"
                 placeholder="문구 입력..."
               ></textarea>
+
+              <HashTageContainer>
+                <InputTitle>해시태그</InputTitle>
+                <HashTag>
+                  {hashTags.map((hashTag) => (
+                    <Tag key={hashTag} onClick={() => removeHashTag(hashTag)}>
+                      {hashTag}
+                    </Tag>
+                  ))}
+
+                  <HashTagInput
+                    value={inputHashTag}
+                    onChange={changeHashTagInput}
+                    onKeyUp={addHashTag}
+                    onKeyDown={keyDownHandler}
+                    placeholder="#해시태그를 등록해보세요. (최대 3개)"
+                    className="hashTagInput"
+                  />
+                </HashTag>
+              </HashTageContainer>
             </div>
           </div>
-
           <button className="close" onClick={close}>
             X
           </button>
@@ -103,3 +187,49 @@ const CreateBoard = (props) => {
 };
 
 export default CreateBoard;
+
+const HashTageContainer = styled.div`
+  margin-top: 20px;
+`;
+
+const HashTag = styled.div`
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 100%;
+  border: 2px solid $GRAY;
+  border-radius: 10px;
+  padding: 5px;
+  gap: 5px;
+  margin-top: 10px;
+`;
+
+const Tag = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  background: #1e90ff;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &::before {
+    content: "#";
+  }
+
+  &:hover {
+    background: #4a88db;
+  }
+`;
+
+const HashTagInput = styled.input`
+  outline: none;
+  border: none;
+  font-size: 16px;
+  padding: 5px;
+  width: 100%;
+`;
+
+const InputTitle = styled.div`
+  padding-bottom: 10px;
+  padding-left: 6px;
+`;

@@ -1,30 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import "../css/CreateFeedModal.css";
+import "../css/FeedDetailModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
 
-const CreateFeed = (props) => {
+const FeedDetail = (props) => {
   const { open, close } = props;
   const [file, setFile] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
   const modalRef = useRef(null);
-
-  // 이미지 미리보기
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setPreviewImage(null);
-    }
-  };
 
   // 모달창 바깥을 눌렀을 때 모달 close
   const handleOutsideClick = (e) => {
@@ -49,30 +31,14 @@ const CreateFeed = (props) => {
       {open ? (
         <section ref={modalRef}>
           <header>
-            <p className="headerTitle">새 피드 만들기</p>
+            <p className="headerTitle">피드</p>
             <button className="saveButton">저장하기</button>
           </header>
 
           <div className="container">
             <main className="main-body">
               <div className="imgContainer">
-                {!previewImage ? (
-                  <label htmlFor="file" className="btn-upload">
-                    파일 업로드하기
-                    <input
-                      type="file"
-                      name="file"
-                      id="file"
-                      onChange={handleFileChange}
-                    />
-                  </label>
-                ) : (
-                  <img
-                    src={previewImage}
-                    alt="Preview"
-                    className="preview-image"
-                  />
-                )}
+                <img src="img/profile_12.jpeg" className="feedDetailImg" />
               </div>
             </main>
 
@@ -100,4 +66,4 @@ const CreateFeed = (props) => {
   );
 };
 
-export default CreateFeed;
+export default FeedDetail;
