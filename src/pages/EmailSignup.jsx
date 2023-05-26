@@ -108,7 +108,7 @@ function EmailSignup() {
     setRole(selectedRole);
   }, []);
 
-  // 이미지 첨부
+  // 프로필사진 업로드
   const addPhoto = (e) => {
     e.preventDefault();
     setProfileImg(e.target.files[0]);
@@ -161,25 +161,25 @@ function EmailSignup() {
       email,
       profileImg,
     };
-    if (signupActive) {
-      if (!isemailChecking) {
-        alert("이메일 인증을 완료해주세요!");
-        return;
+    if (e.target.type === "submit") {
+      if (signupActive) {
+        if (!isemailChecking) {
+          alert("이메일 인증을 완료해주세요!");
+          return;
+        }
+        signupMutation.mutate(newUser);
+      } else {
+        alert("회원정보를 모두 입력해주세요!");
       }
-      signupMutation.mutate(newUser);
-    } else {
-      alert("회원정보를 모두 입력해주세요!");
+      console.log("새로운 회원 정보 => ", newUser);
     }
-    console.log("새로운 회원 정보 => ", newUser);
   };
-
   useEffect(() => {
     signupActiveHandler();
-  }, [email, nickname, password, role, sex]);
-
+  }, [nickname, email, sex, role, password]);
   return (
     <Container>
-      <CenteredContent onSubmit={signupButtonHandler}>
+      <CenteredContent>
         <TitleLogo>
           <Title>Moment</Title>
         </TitleLogo>

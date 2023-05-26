@@ -18,8 +18,7 @@ const signupAxios = async (newUser) => {
     );
     return response.data;
   } catch (error) {
-    const errorMessage = error.response.data.errorMessage;
-    alert(errorMessage);
+    alert(error);
     throw error;
   }
 };
@@ -30,8 +29,7 @@ const sendEmailAxios = async (email) => {
     console.log(response);
     return response.data;
   } catch (error) {
-    const errorMessage = error.response.data.errorMessage;
-    alert(errorMessage);
+    alert(error);
     throw error;
   }
 };
@@ -41,8 +39,7 @@ const checkEmailAxios = async ({ email, code }) => {
     const response = await instance.post("/emails/check", { email, code });
     return response.data;
   } catch (error) {
-    const errorMessage = error.response.data.errorMessage;
-    alert(errorMessage);
+    alert(error);
     throw error;
   }
 };
