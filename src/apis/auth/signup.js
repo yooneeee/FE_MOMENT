@@ -1,21 +1,13 @@
 import { instance } from "../axios";
 // 회원가입API, method : post, url : /users/signup
-const signupAxios = async (newUser) => {
-  console.log(newUser);
-  const formData = new FormData();
-  formData.append("profileImg", newUser.profileImg);
-
+const signupAxios = async (formData) => {
   const config = {
     headers: {
       "content-type": "multipart/form-data",
     },
   };
   try {
-    const response = await instance.post(
-      `/users/signup`,
-      { ...newUser, formData },
-      config
-    );
+    const response = await instance.post(`/users/signup`, formData, config);
     return response.data;
   } catch (error) {
     alert(error);

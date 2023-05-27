@@ -16,9 +16,9 @@ function EmailSignup() {
     navigate("/main");
   };
 
-  const [nickname, setNickname] = useState("");
+  const [nickName, setNickName] = useState("");
   const [email, setEmail] = useState("");
-  const [sex, setSex] = useState("");
+  const [gender, setGender] = useState("");
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -39,9 +39,9 @@ function EmailSignup() {
   const signupMutation = useMutation(signupAxios, {
     onSuccess: () => {
       alert("회원가입이 완료되었습니다✨");
-      setNickname("");
+      setNickName("");
       setEmail("");
-      setSex("");
+      setGender("");
       setRole("");
       setPassword("");
       setPasswordCheck("");
@@ -55,6 +55,7 @@ function EmailSignup() {
     },
     onError: () => {
       setIsSendEmail(false);
+      alert("회원님의 이메일로 인증번호를 전송을 실패했습니다!");
     },
   });
   const checkEmailMutation = useMutation(checkEmailAxios, {
@@ -102,7 +103,7 @@ function EmailSignup() {
 
   // 성별, 직업 버튼 클릭 핸들러
   const sexButtonClickHandler = useCallback((selectedSex) => {
-    setSex(selectedSex);
+    setGender(selectedSex);
   }, []);
   const roleButtonClickHandler = useCallback((selectedRole) => {
     setRole(selectedRole);
@@ -130,7 +131,7 @@ function EmailSignup() {
     return password === passwordCheck;
   }
   const signupActiveHandler = () => {
-    if (!email || !password || !nickname || !sex || !role) {
+    if (!email || !password || !nickName || !gender) {
       setSignupActive(false);
     } else {
       setSignupActive(true);
@@ -138,7 +139,7 @@ function EmailSignup() {
   };
   // 이메일 서버에 전송
   const emailSendButtonHandler = () => {
-    sendEmailMutation.mutate(email);
+    sendEmailMutation.mutate({ email });
   };
 
   // 이메일 인증번호 확인
@@ -153,30 +154,34 @@ function EmailSignup() {
   // 회원가입버튼 클릭
   const signupButtonHandler = (e) => {
     e.preventDefault();
-    const newUser = {
-      nickname,
-      sex,
+    const formData = new FormData();
+    formData.append("profile", profileImg);
+
+    const signup = {
+      nickName,
+      gender,
       role,
       password,
       email,
-      profileImg,
     };
-    if (e.target.type === "submit") {
-      if (signupActive) {
-        if (!isemailChecking) {
-          alert("이메일 인증을 완료해주세요!");
-          return;
-        }
-        signupMutation.mutate(newUser);
-      } else {
-        alert("회원정보를 모두 입력해주세요!");
+    formData.append(
+      "signup",
+      new Blob([JSON.stringify(signup)], { type: "application/json" })
+    );
+
+    if (signupActive) {
+      if (!isemailChecking) {
+        alert("이메일 인증을 완료해주세요!");
+        return;
       }
-      console.log("새로운 회원 정보 => ", newUser);
+      signupMutation.mutate(formData);
+    } else {
+      alert("회원정보를 모두 입력해주세요!");
     }
   };
   useEffect(() => {
     signupActiveHandler();
-  }, [nickname, email, sex, role, password]);
+  }, [nickName, email, gender, role, password]);
   return (
     <Container>
       <CenteredContent>
@@ -198,27 +203,27 @@ function EmailSignup() {
           <Input
             type="text"
             name="nickname"
-            value={nickname || ""}
+            value={nickName || ""}
             placeholder="닉네임을 입력해주세요."
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={(e) => setNickName(e.target.value)}
           />
         </InputWrap>
         <InputTitle>직업</InputTitle>
         <ButtonContainer>
           <MemoizedSelectionButton
-            onClick={() => roleButtonClickHandler("model")}
+            onClick={() => roleButtonClickHandler("MODEL")}
             style={{
-              backgroundColor: role === "model" ? "#000000" : "#ffffff",
-              color: role === "model" ? "#ffffff" : "#000000",
+              backgroundColor: role === "MODEL" ? "#000000" : "#ffffff",
+              color: role === "MODEL" ? "#ffffff" : "#000000",
             }}
           >
             모델
           </MemoizedSelectionButton>
           <MemoizedSelectionButton
-            onClick={() => roleButtonClickHandler("photographer")}
+            onClick={() => roleButtonClickHandler("PHOTOGRAPHER")}
             style={{
-              backgroundColor: role === "photographer" ? "#000000" : "#ffffff",
-              color: role === "photographer" ? "#ffffff" : "#000000",
+              backgroundColor: role === "PHOTOGRAPHER" ? "#000000" : "#ffffff",
+              color: role === "PHOTOGRAPHER" ? "#ffffff" : "#000000",
             }}
           >
             작가
@@ -227,19 +232,19 @@ function EmailSignup() {
         <InputTitle>성별</InputTitle>
         <ButtonContainer>
           <MemoizedSelectionButton
-            onClick={() => sexButtonClickHandler("male")}
+            onClick={() => sexButtonClickHandler("MALE")}
             style={{
-              backgroundColor: sex === "male" ? "#000000" : "#ffffff",
-              color: sex === "male" ? "#ffffff" : "#000000",
+              backgroundColor: gender === "MALE" ? "#000000" : "#ffffff",
+              color: gender === "MALE" ? "#ffffff" : "#000000",
             }}
           >
             남자
           </MemoizedSelectionButton>
           <MemoizedSelectionButton
-            onClick={() => sexButtonClickHandler("female")}
+            onClick={() => sexButtonClickHandler("FEMALE")}
             style={{
-              backgroundColor: sex === "female" ? "#000000" : "#ffffff",
-              color: sex === "female" ? "#ffffff" : "#000000",
+              backgroundColor: gender === "FEMALE" ? "#000000" : "#ffffff",
+              color: gender === "FEMALE" ? "#ffffff" : "#000000",
             }}
           >
             여자
@@ -258,11 +263,11 @@ function EmailSignup() {
               placeholder="이메일 주소를 입력해주세요"
             />
           </InputWrap>
-          <MailCheckButton onClick={emailSendButtonHandler}>
-            인증번호 전송
+          <MailCheckButton type="button" onClick={emailSendButtonHandler}>
+            {isemailChecking ? "인증완료" : "인증번호 전송"}
           </MailCheckButton>
         </InputGroup>
-        {emailErrorMessage && <ErrorMessage>{emailError}</ErrorMessage>}
+        {/*         {emailErrorMessage && <ErrorMessage>{emailError}</ErrorMessage>}
         <InputTitle>인증번호</InputTitle>
         <InputGroup>
           <InputWrap>
@@ -276,12 +281,12 @@ function EmailSignup() {
               placeholder="인증번호를 입력해주세요"
             />
           </InputWrap>
-          <MailCheckButton onClick={emailVerifyNumCheckHandler}>
+          <MailCheckButton type="button" onClick={emailVerifyNumCheckHandler}>
             {isemailChecking ? "인증완료" : "확인"}
           </MailCheckButton>
-        </InputGroup>
+        </InputGroup> */}
         {/* 이메일 인증번호 입력란 => 이메일을 서버에 성공적으로 보내면 인증번호 입력란이 나게 */}
-        {/*  {isSendEmail && !isEmailChecking && (
+        {isSendEmail && !isemailChecking && (
           <>
             <InputTitle>인증번호</InputTitle>
             <InputGroup>
@@ -296,12 +301,15 @@ function EmailSignup() {
                   placeholder="인증번호를 입력해주세요"
                 />
               </InputWrap>
-              <MailCheckButton onClick={emailVerifyNumCheckHandler}>
-                확인
+              <MailCheckButton
+                type="button"
+                onClick={emailVerifyNumCheckHandler}
+              >
+                {isemailChecking ? "인증완료" : "확인"}
               </MailCheckButton>
             </InputGroup>
           </>
-        )} */}
+        )}
         <InputTitle>비밀번호</InputTitle>
         <InputWrap>
           <Input
@@ -331,7 +339,7 @@ function EmailSignup() {
         )}
         <BottomButtonWrap>
           <BottomButton
-            type="submit"
+            type="button"
             onClick={signupButtonHandler}
             bgcolor={signupActive ? "black" : "lightgrey"}
           >
@@ -452,6 +460,5 @@ export const StProfile = styled.div`
   margin: 10px auto;
   border: 1px solid #ccc;
   border-radius: 50%;
-
   background: ${(props) => `url(${props.image}) no-repeat 50% /cover`};
 `;
