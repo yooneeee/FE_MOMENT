@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "../css/CreateBoardModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 const CreateBoard = (props) => {
   // 해시태그 기능
