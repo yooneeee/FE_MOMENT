@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { InputWrap, Input, InputTitle } from "../styles/InputStyles";
 import { ButtonText } from "../styles/ButtonStyles";
@@ -18,6 +18,13 @@ function Login() {
   const navigate = useNavigate();
   const [email, onChangeEmailHandler, resetEmail] = useInput("");
   const [password, onChangePasswordHandler, resetPassword] = useInput("");
+  const [loginActive, setLoginActive] = useState(false);
+
+  const loginActiveHandler = () => {
+    return email.includes("@") && password.length >= 8
+      ? setLoginActive(true)
+      : setLoginActive(false);
+  };
 
   const loginMutation = useMutation(loginAxios, {
     onSuccess: () => {
@@ -26,13 +33,13 @@ function Login() {
       resetEmail();
       resetPassword();
     },
+    onError: (error) => {
+      alert("아이디와 비밀번호를 다시 확인해주세요!");
+      resetPassword();
+    },
   });
 
   const loginButtonHandler = () => {
-    if (!email || !password) {
-      alert("아이디와 패스워드를 모두 입력해주세요.");
-      return;
-    }
     const user = {
       email,
       password,
@@ -66,10 +73,8 @@ function Login() {
           />
         </InputWrap>
         <ButtonWrap>
-          <EmailButton>
-            <ButtonText onClick={loginButtonHandler}>
-              이메일로 로그인하기
-            </ButtonText>
+          <EmailButton onClick={loginButtonHandler}>
+            <ButtonText>이메일로 로그인하기</ButtonText>
           </EmailButton>
         </ButtonWrap>
         <Line />
