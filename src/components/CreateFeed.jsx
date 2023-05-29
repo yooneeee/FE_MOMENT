@@ -2,13 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import "../css/CreateFeedModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
+import { useInput } from "../hooks/useInput";
+import { createFeedAxios } from "../apis/create/createFeed";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 const CreateFeed = (props) => {
   const { open, close } = props;
-  const [file, setFile] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [content, onChangeContentHandler] = useInput();
   const modalRef = useRef(null);
+  const navigate = useNavigate();
 
   // 이미지 미리보기
   const handleFileChange = (e) => {
@@ -44,13 +49,41 @@ const CreateFeed = (props) => {
     };
   }, []);
 
+  // 서버 통신
+  const createFeedMutation = useMutation(createFeedAxios, {
+    onSuccess: () => {
+      alert("피드 생성이 완료됐습니다");
+      close();
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  // 저장하기 버튼 클릭
+  const saveButtonHandler = () => {
+    if (!selectedFile || !content) {
+      alert("사진과 내용을 모두 입력해주세요");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("imageFile", selectedFile);
+    formData.append("contents", content);
+
+    createFeedMutation.mutate(formData);
+    console.log("양식이 모두 채워졌고, 서버 전송 준비완료");
+  };
+
   return (
     <div className={open ? "openModal create-feed-modal" : "create-feed-modal"}>
       {open ? (
         <section ref={modalRef}>
           <header>
             <p className="headerTitle">새 피드 만들기</p>
-            <button className="saveButton">저장하기</button>
+            <button className="saveButton" onClick={saveButtonHandler}>
+              저장하기
+            </button>
           </header>
 
           <div className="container">
@@ -87,6 +120,8 @@ const CreateFeed = (props) => {
               <textarea
                 className="contentInput"
                 placeholder="문구 입력..."
+                value={content}
+                onChange={onChangeContentHandler}
               ></textarea>
             </div>
           </div>
