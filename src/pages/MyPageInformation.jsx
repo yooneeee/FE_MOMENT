@@ -2,12 +2,13 @@ import React, { useState, useRef } from "react";
 import styled from "styled-components";
 
 function MyPageInformation() {
+  /* 기본 이미지 토끼, 추후에 바꿀 예정 */
   const [image, setImage] = useState("img/snowball.png");
   const fileInput = useRef(null);
 
   const [pwIsVisible, setpwIsVisible] = useState(false);
   const [nickIsVisible, setnickIsVisible] = useState(false);
-  const [ImgIsVisible, setImgIsVisible] = useState(false);
+  const [imgIsVisible, setImgIsVisible] = useState(false);
 
   /* 버튼 클릭시 히든 폼 */
   const nicknameHandler = () => {
@@ -17,7 +18,7 @@ function MyPageInformation() {
     setpwIsVisible(!pwIsVisible);
   };
   const imgHandler = () => {
-    setImgIsVisible(!ImgIsVisible);
+    setImgIsVisible(!imgIsVisible);
   };
 
   /* 취소 버튼 클릭시 되돌아가기 */
@@ -66,7 +67,7 @@ function MyPageInformation() {
         </ProfileContainer>
         <TextColumn>
           <ProfileText>
-            {ImgIsVisible ? (
+            {imgIsVisible ? (
               <HiddenForm>
                 <UploadButton>
                   사진선택
@@ -91,7 +92,7 @@ function MyPageInformation() {
             )}
           </ProfileText>
         </TextColumn>
-        {ImgIsVisible ? null : <Button onClick={imgHandler}>사진 변경</Button>}
+        {imgIsVisible ? null : <Button onClick={imgHandler}>사진 변경</Button>}
       </Box>
       <Line1 />
       <Box>
@@ -152,6 +153,38 @@ function MyPageInformation() {
         )}
       </Box>
       <Line1 />
+      <Box>
+        <Text>
+          <span>Role</span>
+        </Text>
+        {/* <ProfileText>
+            {imgIsVisible ? (
+              <HiddenForm>
+                <UploadButton>
+                  사진선택
+                  <input type="file" onChange={fileSelectHandler}></input>
+                </UploadButton>
+                <BasicImgButton onClick={basicImgHandler}>
+                  기본이미지로 변경
+                </BasicImgButton>
+                <ButtonColumn>
+                  <HiddenFormBtn onClick={imgcancelHandler}>취소</HiddenFormBtn>
+                  <HiddenFormBtn>완료</HiddenFormBtn>
+                </ButtonColumn>
+              </HiddenForm>
+            ) : (
+              <>
+                <span>회원님을 알릴 수 있는 사진을 등록해 주세요.</span>
+                <br />
+                <span>
+                  등록 된 사진은 회원님의 게시물이나 피드에 사용됩니다.
+                </span>
+              </>
+            )}
+          </ProfileText>
+        </TextColumn>
+        {imgIsVisible ? null : <Button onClick={imgHandler}>사진 변경</Button>} */}
+      </Box>
     </Container>
   );
 }
