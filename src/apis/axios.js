@@ -25,10 +25,20 @@ instance.interceptors.request.use(
   }
 );
 
-instance.interceptors.response.use(function (response) {
-  sessionStorage.setItem("Access_key", response.headers.get("Access_key"));
-  sessionStorage.setItem("Refresh_key", response.headers.get("Refresh_key"));
+instance.interceptors.response.use(
+  function (response) {
+    const accessKeyHeader = response.headers.get("ACCESS_KEY");
+    const refreshKeyHeader = response.headers.get("REFRESH_KEY");
 
-  return response;
-});
+    if (accessKeyHeader && refreshKeyHeader) {
+      sessionStorage.setItem("Access_key", accessKeyHeader);
+      sessionStorage.setItem("Refresh_key", refreshKeyHeader);
+    }
+
+    return response;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
 export { instance };
