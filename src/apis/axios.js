@@ -11,8 +11,8 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     if (config.headers === undefined) return config;
-    const Access_key = localStorage.getItem("Access_key");
-    const Refresh_key = localStorage.getItem("Refresh_key");
+    const Access_key = sessionStorage.getItem("Access_key");
+    const Refresh_key = sessionStorage.getItem("Refresh_key");
 
     if (Access_key || Refresh_key) {
       config.headers["Access_key"] = Access_key;
