@@ -3,7 +3,7 @@ import "../css/CreateFeedModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
 import { useInput } from "../hooks/useInput";
-import { createFeedAxios } from "../apis/ feed/createFeed";
+import { createFeedAxios } from "../apis/feed/createFeed";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
