@@ -90,7 +90,10 @@ function Header() {
     logoutMutation.mutate();
   };
   return (
-    <HeaderStyles isMobile={windowWidth <= 768} ref={headerRef}>
+    <HeaderStyles
+      ismobile={windowWidth <= 768 ? "true" : "false"}
+      ref={headerRef}
+    >
       <HeaderTitle
         onClick={() => {
           navigate("/main");

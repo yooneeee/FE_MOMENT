@@ -58,6 +58,7 @@ function EmailSignup() {
       alert("회원님의 이메일로 인증번호를 전송을 실패했습니다!");
     },
   });
+
   const checkEmailMutation = useMutation(checkEmailAxios, {
     onSuccess: () => {
       setIsEmailChecking(true);

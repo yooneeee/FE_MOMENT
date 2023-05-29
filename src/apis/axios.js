@@ -24,10 +24,21 @@ instance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-//토큰저장
-instance.interceptors.response.use(function (response) {
-  localStorage.setItem("Access_key", response.headers.get("Access_key"));
-  localStorage.setItem("Refresh_key", response.headers.get("Refresh_key"));
-  return response;
-});
+
+instance.interceptors.response.use(
+  function (response) {
+    const accessKeyHeader = response.headers.get("Access_key");
+    const refreshKeyHeader = response.headers.get("Refresh_key");
+
+    if (accessKeyHeader && refreshKeyHeader) {
+      sessionStorage.setItem("Access_key", accessKeyHeader);
+      sessionStorage.setItem("Refresh_key", refreshKeyHeader);
+    }
+    return response;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+
 export { instance };
