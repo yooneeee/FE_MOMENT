@@ -9,6 +9,7 @@ function MyPageInformation() {
   const [pwIsVisible, setpwIsVisible] = useState(false);
   const [nickIsVisible, setnickIsVisible] = useState(false);
   const [imgIsVisible, setImgIsVisible] = useState(false);
+  const [roleIsVisivle, setRoleVisivle] = useState(false);
 
   /* 버튼 클릭시 히든 폼 */
   const nicknameHandler = () => {
@@ -20,20 +21,26 @@ function MyPageInformation() {
   const imgHandler = () => {
     setImgIsVisible(!imgIsVisible);
   };
+  const roleHandler = () => {
+    setRoleVisivle(!roleIsVisivle);
+  };
 
   /* 취소 버튼 클릭시 되돌아가기 */
   const nickCancelHandler = () => {
     setnickIsVisible(false);
   };
-  const pwcancelHandler = () => {
+  const pwCancelHandler = () => {
     setpwIsVisible(false);
   };
-  const imgcancelHandler = () => {
+  const imgCancelHandler = () => {
     setImgIsVisible(false);
     setImage("img/snowball.png");
   };
-  const basicImgHandler = () => {
+  const basiCImgHandler = () => {
     setImage("img/snowball.png");
+  };
+  const roleCancelHandler = () => {
+    setRoleVisivle(false);
   };
 
   const fileSelectHandler = (e) => {
@@ -73,11 +80,11 @@ function MyPageInformation() {
                   사진선택
                   <input type="file" onChange={fileSelectHandler}></input>
                 </UploadButton>
-                <BasicImgButton onClick={basicImgHandler}>
+                <BasicImgButton onClick={basiCImgHandler}>
                   기본이미지로 변경
                 </BasicImgButton>
                 <ButtonColumn>
-                  <HiddenFormBtn onClick={imgcancelHandler}>취소</HiddenFormBtn>
+                  <HiddenFormBtn onClick={imgCancelHandler}>취소</HiddenFormBtn>
                   <HiddenFormBtn>완료</HiddenFormBtn>
                 </ButtonColumn>
               </HiddenForm>
@@ -140,7 +147,7 @@ function MyPageInformation() {
                 <HiddenInput type="password" />
               </Column>
               <ButtonColumn>
-                <HiddenFormBtn onClick={pwcancelHandler}>취소</HiddenFormBtn>
+                <HiddenFormBtn onClick={pwCancelHandler}>취소</HiddenFormBtn>
                 <HiddenFormBtn>완료</HiddenFormBtn>
               </ButtonColumn>
             </HiddenForm>
@@ -157,34 +164,26 @@ function MyPageInformation() {
         <Text>
           <span>Role</span>
         </Text>
-        {/* <ProfileText>
-            {imgIsVisible ? (
-              <HiddenForm>
-                <UploadButton>
-                  사진선택
-                  <input type="file" onChange={fileSelectHandler}></input>
-                </UploadButton>
-                <BasicImgButton onClick={basicImgHandler}>
-                  기본이미지로 변경
-                </BasicImgButton>
-                <ButtonColumn>
-                  <HiddenFormBtn onClick={imgcancelHandler}>취소</HiddenFormBtn>
-                  <HiddenFormBtn>완료</HiddenFormBtn>
-                </ButtonColumn>
-              </HiddenForm>
-            ) : (
-              <>
-                <span>회원님을 알릴 수 있는 사진을 등록해 주세요.</span>
-                <br />
-                <span>
-                  등록 된 사진은 회원님의 게시물이나 피드에 사용됩니다.
-                </span>
-              </>
-            )}
-          </ProfileText>
+        <TextColumn>
+          {roleIsVisivle ? (
+            <HiddenForm>
+              <Column>
+                <UploadButton>모델 or 작가</UploadButton>
+              </Column>
+              <ButtonColumn>
+                <HiddenFormBtn onClick={roleCancelHandler}>취소</HiddenFormBtn>
+                <HiddenFormBtn>완료</HiddenFormBtn>
+              </ButtonColumn>
+            </HiddenForm>
+          ) : (
+            <span>Photographer</span>
+          )}
         </TextColumn>
-        {imgIsVisible ? null : <Button onClick={imgHandler}>사진 변경</Button>} */}
+        {roleIsVisivle ? null : (
+          <Button onClick={roleHandler}>Role 변경</Button>
+        )}
       </Box>
+      <Line1 />
     </Container>
   );
 }
