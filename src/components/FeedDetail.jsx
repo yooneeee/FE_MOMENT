@@ -2,9 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import "../css/FeedDetailModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
+import { feedDetail } from "../apis/feed/feedDetail";
+import { useQuery } from "react-query";
+
+// 다른 화면 클릭 후 피드 페이지 클릭 시 화면 재 렌더링 되는 버그 있음
 
 const FeedDetail = (props) => {
-  const { open, close } = props;
+  const { open, close, photoId } = props;
   const [file, setFile] = useState("");
   const modalRef = useRef(null);
 
@@ -26,19 +30,31 @@ const FeedDetail = (props) => {
     };
   }, []);
 
+  // 서버 통신
+  const { isError, isLoading, data } = useQuery(["feedDetail", photoId], () =>
+    feedDetail(photoId)
+  );
+
+  if (isLoading) {
+    return;
+  }
+
+  if (isError) {
+    return <h1>오류가 발생하였습니다...!</h1>;
+  }
+
   return (
     <div className={open ? "openModal feed-datail-modal" : "feed-datail-modal"}>
       {open ? (
         <section ref={modalRef}>
           <header>
             <p className="headerTitle">피드</p>
-            <button className="saveButton">저장하기</button>
           </header>
 
           <div className="container">
             <main className="main-body">
               <div className="imgContainer">
-                <img src="img/profile_12.jpeg" className="feedDetailImg" />
+                <img src={data.photoUrl} className="feedDetailImg" />
               </div>
             </main>
 
@@ -50,10 +66,10 @@ const FeedDetail = (props) => {
                   <p>Jun</p>
                 </div>
               </div>
-              <textarea
-                className="contentInput"
-                placeholder="문구 입력..."
-              ></textarea>
+
+              <div className="contentArea">
+                <p>{data.contents}</p>
+              </div>
             </div>
           </div>
 
