@@ -37,3 +37,10 @@ const checkEmailAxios = async ({ email, code }) => {
 };
 
 export { signupAxios, sendEmailAxios, checkEmailAxios };
+
+// Cookies.set("ACCESS_KEY", response.data.ACCESS_KEY);
+// Cookies.set("REFRESH_KEY", response.data.REFRESH_KEY);
+// const accessToken = Cookies.get("accesstoken");
+// const refreshToken = Cookies.get("refreshtoken");
+// console.log(accessToken);
+// console.log(refreshToken);
