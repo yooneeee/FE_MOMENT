@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { InputWrap, Input, InputTitle } from "../styles/InputStyles";
 import { ButtonText } from "../styles/ButtonStyles";
@@ -40,12 +40,15 @@ function Login() {
   });
 
   const loginButtonHandler = () => {
-    const user = {
-      email,
-      password,
-    };
-    loginMutation.mutate(user);
+    loginMutation.mutate({ email, password });
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("Access_key")) {
+      alert("이미 로그인 된 회원입니다.");
+      navigate("/main");
+    }
+  });
   return (
     <Container>
       <CenteredContent>
