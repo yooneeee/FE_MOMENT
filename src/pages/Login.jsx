@@ -27,9 +27,9 @@ function Login() {
   };
 
   const loginMutation = useMutation(loginAxios, {
-    onSuccess: () => {
-      navigate("/main");
+    onSuccess: (response) => {
       alert("로그인 성공!");
+      navigate("/main");
       resetEmail();
       resetPassword();
     },
