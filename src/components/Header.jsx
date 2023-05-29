@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import CreateBoard from "./CreateBoard";
 import CreateFeed from "./CreateFeed";
+import { useMutation } from "react-query";
+import { logoutAxios } from "../apis/auth/login";
 
 function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
   const [boardModalOpen, setBoardModalOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
   const openFeedModal = () => {
     setFeedModalOpen(true);
@@ -52,7 +55,14 @@ function Header() {
       setIsWriteMenuOpen(false); // 헤더 밖을 클릭시 글쓰기 메뉴 닫기
     }
   };
-
+  useEffect(() => {
+    const accessKey = localStorage.getItem("Access_key");
+    if (accessKey) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, []);
   useEffect(() => {
     window.addEventListener("resize", handleResize);
     document.addEventListener("click", handleClickOutside);
@@ -63,6 +73,22 @@ function Header() {
     };
   }, []);
 
+  const logoutMutation = useMutation(logoutAxios, {
+    onSuccess: () => {
+      alert("로그아웃 되었습니다.");
+      navigate("/");
+    },
+    onError: (error) => {
+      alert(error);
+    },
+  });
+
+  const logoutHandler = (e) => {
+    e.stopPropagation();
+    localStorage.removeItem("Access_key");
+    localStorage.removeItem("Refresh_key");
+    logoutMutation.mutate();
+  };
   return (
     <HeaderStyles isMobile={windowWidth <= 768} ref={headerRef}>
       <HeaderTitle
@@ -112,24 +138,39 @@ function Header() {
             >
               글쓰기
             </HeaderButton>
-            <HeaderButton
-              name={"login"}
-              onClick={() => {
-                navigate("/login");
+            {isLogin ? (
+              <HeaderButton
+                name={"logout"}
+                onClick={logoutHandler}
+                /*   onClick={() => {
+                logoutHandler();
                 toggleWriteMenuClose();
-              }}
-            >
-              로그인
-            </HeaderButton>
-            <HeaderButton
-              name={"integratedsignup"}
-              onClick={() => {
-                navigate("/integratedsignup");
-                toggleWriteMenuClose();
-              }}
-            >
-              회원가입
-            </HeaderButton>
+              }} */
+              >
+                로그아웃
+              </HeaderButton>
+            ) : (
+              <>
+                <HeaderButton
+                  name={"login"}
+                  onClick={() => {
+                    navigate("/login");
+                    toggleWriteMenuClose();
+                  }}
+                >
+                  로그인
+                </HeaderButton>
+                <HeaderButton
+                  name={"integratedsignup"}
+                  onClick={() => {
+                    navigate("/integratedsignup");
+                    toggleWriteMenuClose();
+                  }}
+                >
+                  회원가입
+                </HeaderButton>
+              </>
+            )}
           </>
         )}
       </ButtonBox>
@@ -178,24 +219,32 @@ function Header() {
             게시판
           </MenuButton>
           <MenuButton onClick={toggleWriteMenuOpen}>글쓰기</MenuButton>
-          <MenuButton
-            onClick={() => {
-              navigate("/login");
-              toggleMenuClose();
-              toggleWriteMenuClose();
-            }}
-          >
-            로그인
-          </MenuButton>
-          <MenuButton
-            onClick={() => {
-              navigate("/integratedsignup");
-              toggleMenuClose();
-              toggleWriteMenuClose();
-            }}
-          >
-            회원가입
-          </MenuButton>
+          {isLogin ? (
+            <MenuButton name={"logout"} onClick={logoutHandler}>
+              로그인
+            </MenuButton>
+          ) : (
+            <>
+              <MenuButton
+                onClick={() => {
+                  navigate("/login");
+                  toggleMenuClose();
+                  toggleWriteMenuClose();
+                }}
+              >
+                로그인
+              </MenuButton>
+              <MenuButton
+                onClick={() => {
+                  navigate("/integratedsignup");
+                  toggleMenuClose();
+                  toggleWriteMenuClose();
+                }}
+              >
+                회원가입
+              </MenuButton>
+            </>
+          )}
         </ToggleMenu>
       )}
       {feedModalOpen && (
