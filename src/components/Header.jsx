@@ -5,11 +5,14 @@ import CreateBoard from "./CreateBoard";
 import CreateFeed from "./CreateFeed";
 import { useMutation } from "react-query";
 import { logoutAxios } from "../apis/auth/login";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutSuccess } from "../redux/modules/user";
 
 function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
   const [boardModalOpen, setBoardModalOpen] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
   const openFeedModal = () => {
     setFeedModalOpen(true);
@@ -31,7 +34,11 @@ function Header() {
   const [isWriteMenuOpen, setIsWriteMenuOpen] = useState(false);
   // 헤더 컴포넌트 DOM 요소 참조
   const headerRef = useRef(null);
-
+  const toggleWriteMenuRight = isWriteMenuOpen
+    ? isLoggedIn
+      ? "195px"
+      : "170px"
+    : "0";
   //메뉴, 글쓰기 메뉴 토글 여닫는 함수
   const toggleMenuClose = () => {
     setIsMenuOpen(false);
@@ -55,14 +62,7 @@ function Header() {
       setIsWriteMenuOpen(false); // 헤더 밖을 클릭시 글쓰기 메뉴 닫기
     }
   };
-  useEffect(() => {
-    const accessKey = localStorage.getItem("Access_key");
-    if (accessKey) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  }, []);
+
   useEffect(() => {
     window.addEventListener("resize", handleResize);
     document.addEventListener("click", handleClickOutside);
@@ -76,6 +76,7 @@ function Header() {
   const logoutMutation = useMutation(logoutAxios, {
     onSuccess: () => {
       alert("로그아웃 되었습니다.");
+      dispatch(logoutSuccess());
       navigate("/");
     },
     onError: (error) => {
@@ -85,8 +86,8 @@ function Header() {
 
   const logoutHandler = (e) => {
     e.stopPropagation();
-    localStorage.removeItem("Access_key");
-    localStorage.removeItem("Refresh_key");
+    sessionStorage.removeItem("Access_key");
+    sessionStorage.removeItem("Refresh_key");
     logoutMutation.mutate();
   };
   return (
@@ -141,17 +142,28 @@ function Header() {
             >
               글쓰기
             </HeaderButton>
-            {isLogin ? (
-              <HeaderButton
-                name={"logout"}
-                onClick={logoutHandler}
-                /*   onClick={() => {
+            {isLoggedIn ? (
+              <>
+                <HeaderButton
+                  name={"Mypage"}
+                  onClick={() => {
+                    navigate("/mypage");
+                    toggleWriteMenuClose();
+                  }}
+                >
+                  마이페이지
+                </HeaderButton>
+                <HeaderButton
+                  name={"logout"}
+                  onClick={logoutHandler}
+                  /*   onClick={() => {
                 logoutHandler();
                 toggleWriteMenuClose();
               }} */
-              >
-                로그아웃
-              </HeaderButton>
+                >
+                  로그아웃
+                </HeaderButton>
+              </>
             ) : (
               <>
                 <HeaderButton
@@ -179,7 +191,7 @@ function Header() {
       </ButtonBox>
       {/* 글쓰기 모달 열렸을 때 */}
       {isWriteMenuOpen && (
-        <ToggleWriteMenu>
+        <ToggleWriteMenu style={{ right: toggleWriteMenuRight }}>
           <MenuButton
             onClick={() => {
               openFeedModal();
@@ -222,10 +234,22 @@ function Header() {
             게시판
           </MenuButton>
           <MenuButton onClick={toggleWriteMenuOpen}>글쓰기</MenuButton>
-          {isLogin ? (
-            <MenuButton name={"logout"} onClick={logoutHandler}>
-              로그인
-            </MenuButton>
+          {isLoggedIn ? (
+            <>
+              <MenuButton
+                name={"mypage"}
+                onClick={() => {
+                  navigate("/mypage");
+                  toggleMenuClose();
+                  toggleWriteMenuClose();
+                }}
+              >
+                마이페이지
+              </MenuButton>
+              <MenuButton name={"logout"} onClick={logoutHandler}>
+                로그아웃
+              </MenuButton>
+            </>
           ) : (
             <>
               <MenuButton
@@ -274,7 +298,7 @@ const ToggleMenu = styled.div`
 const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 100%;
-  right: 170px;
+  right: 195px;
   background-color: black;
   padding: 10px;
   display: flex;
@@ -282,7 +306,7 @@ const ToggleWriteMenu = styled.div`
   z-index: 100;
   @media (max-width: 768px) {
     top: 100px;
-    right: 80px;
+    right: 100px;
   }
 `;
 const MenuButton = styled.button`
@@ -292,7 +316,6 @@ const MenuButton = styled.button`
   background: none;
   color: white;
   cursor: pointer;
-
   &:hover {
     opacity: 40%;
   }
