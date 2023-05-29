@@ -73,7 +73,7 @@ function Login() {
           />
         </InputWrap>
         <ButtonWrap>
-          <EmailButton onClick={loginButtonHandler}>
+          <EmailButton type="button" onClick={loginButtonHandler}>
             <ButtonText>이메일로 로그인하기</ButtonText>
           </EmailButton>
         </ButtonWrap>
