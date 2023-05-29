@@ -3,7 +3,7 @@ import "../css/CreateFeedModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
 import { useInput } from "../hooks/useInput";
-import { createFeedAxios } from "../apis/create/createFeed";
+import { createFeedAxios } from "../apis/ feed/createFeed";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
@@ -54,6 +54,7 @@ const CreateFeed = (props) => {
     onSuccess: () => {
       alert("피드 생성이 완료됐습니다");
       close();
+      navigate("/feed");
     },
     onError: (error) => {
       console.log(error);
@@ -72,7 +73,6 @@ const CreateFeed = (props) => {
     formData.append("contents", content);
 
     createFeedMutation.mutate(formData);
-    console.log("양식이 모두 채워졌고, 서버 전송 준비완료");
   };
 
   return (
