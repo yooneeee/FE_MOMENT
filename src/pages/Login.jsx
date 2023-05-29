@@ -13,12 +13,15 @@ import { useNavigate } from "react-router-dom";
 import { useInput } from "../hooks/useInput";
 import { useMutation } from "react-query";
 import { loginAxios } from "../apis/auth/login";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../redux/modules/user";
 
 function Login() {
   const navigate = useNavigate();
   const [email, onChangeEmailHandler, resetEmail] = useInput("");
   const [password, onChangePasswordHandler, resetPassword] = useInput("");
   const [loginActive, setLoginActive] = useState(false);
+  const dispatch = useDispatch();
 
   const loginActiveHandler = () => {
     return email.includes("@") && password.length >= 8
@@ -29,6 +32,7 @@ function Login() {
   const loginMutation = useMutation(loginAxios, {
     onSuccess: (response) => {
       alert("로그인 성공!");
+      dispatch(loginSuccess());
       navigate("/main");
       resetEmail();
       resetPassword();
