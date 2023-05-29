@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import FeedDetail from "../components/FeedDetail";
 import "../css/App.css";
+import { useQuery } from "react-query";
+import { getFeed } from "../apis/ feed/getFeed";
 
 function Feed() {
   const navigate = useNavigate();
@@ -16,61 +18,34 @@ function Feed() {
     setFeedDetailOpen(false);
   };
 
+  // 서버 통신
+  const { isLoading, isError, data } = useQuery("getFeed", getFeed);
+
+  if (isLoading) {
+    return <h1>로딩 중입니다..!</h1>;
+  }
+
+  if (isError) {
+    return <h1>{isError}</h1>;
+  }
+
   return (
     <FeedContainer>
-      <Cards>
-        <CardsImg
-          src="img/profile_1.jpeg"
-          onClick={() => {
-            openFeedDetail();
-          }}
-        />
-        {feedDetailOpen && (
-          <FeedDetail open={openFeedDetail} close={closeFeedDetail} />
-        )}
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_2.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_3.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_4.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_5.png" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_6.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_7.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_8.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_9.jpg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_10.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_11.webp" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_12.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_13.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_14.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_15.jpeg" />
-      </Cards>
+      {data.map((item) => {
+        return (
+          <Cards key={item.photoId}>
+            <CardsImg
+              src={item.photoUrl}
+              onClick={() => {
+                openFeedDetail();
+              }}
+            />
+          </Cards>
+        );
+      })}
+      {feedDetailOpen && (
+        <FeedDetail open={openFeedDetail} close={closeFeedDetail} />
+      )}
     </FeedContainer>
   );
 }
