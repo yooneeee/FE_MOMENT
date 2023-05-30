@@ -1,15 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 
-function Card() {
+function Card({ user }) {
+  if (!user) {
+    return null; // user 객체가 없을 경우 null을 반환
+  }
   return (
     <CardDesign>
       <CardHeader>
-        <ProfileImg src="img/monkey_test.jpeg"></ProfileImg>
+        <ProfileImg src={user.profileUrl}></ProfileImg>
 
         <div>
-          <UserPostion>Photo</UserPostion>
-          <UserNickName>Jun</UserNickName>
+          <UserPostion> {user.role} </UserPostion>
+          <UserNickName>{user.nickName}</UserNickName>
         </div>
       </CardHeader>
 
