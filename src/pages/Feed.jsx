@@ -3,74 +3,57 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import FeedDetail from "../components/FeedDetail";
 import "../css/App.css";
+import { useQuery } from "react-query";
+import { getFeed } from "../apis/feed/getFeed";
 
 function Feed() {
   const navigate = useNavigate();
-  const [feedDetailOpen, setFeedDetailOpen] = useState(false);
+  const [feedDetailOpen, setFeedDetailOpen] = useState([]);
 
-  const openFeedDetail = () => {
-    setFeedDetailOpen(true);
+  const openFeedDetail = (photoId) => {
+    setFeedDetailOpen((prevOpen) => [...prevOpen, photoId]);
   };
 
-  const closeFeedDetail = () => {
-    setFeedDetailOpen(false);
+  const closeFeedDetail = (photoId) => {
+    setFeedDetailOpen((prevOpen) => prevOpen.filter((id) => id !== photoId));
   };
+
+  // 서버 통신
+  const { isLoading, isError, data } = useQuery("getFeed", getFeed);
+
+  if (isLoading) {
+    return;
+  }
+
+  if (isError) {
+    return <h1>오류가 발생하였습니다...!</h1>;
+  }
 
   return (
     <FeedContainer>
-      <Cards>
-        <CardsImg
-          src="img/profile_1.jpeg"
-          onClick={() => {
-            openFeedDetail();
-          }}
-        />
-        {feedDetailOpen && (
-          <FeedDetail open={openFeedDetail} close={closeFeedDetail} />
-        )}
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_2.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_3.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_4.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_5.png" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_6.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_7.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_8.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_9.jpg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_10.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_11.webp" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_12.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_13.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_14.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_15.jpeg" />
-      </Cards>
+      {data.map((item) => {
+        const isOpen = feedDetailOpen.includes(item.photoId);
+
+        return (
+          <React.Fragment key={item.photoId}>
+            <Cards>
+              <CardsImg
+                src={item.photoUrl}
+                onClick={() => {
+                  openFeedDetail(item.photoId);
+                }}
+              />
+            </Cards>
+            {isOpen && (
+              <FeedDetail
+                open={() => openFeedDetail(item.photoId)}
+                close={() => closeFeedDetail(item.photoId)}
+                photoId={item.photoId}
+              />
+            )}
+          </React.Fragment>
+        );
+      })}
     </FeedContainer>
   );
 }

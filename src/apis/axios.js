@@ -14,7 +14,7 @@ instance.interceptors.request.use(
     const Access_key = sessionStorage.getItem("Access_key");
     const Refresh_key = sessionStorage.getItem("Refresh_key");
 
-    if (Access_key && Refresh_key) {
+    if (Access_key || Refresh_key) {
       config.headers["Access_key"] = Access_key;
       config.headers["Refresh_key"] = Refresh_key;
     }
@@ -27,18 +27,18 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   function (response) {
-    const accessKeyHeader = response.headers.get("ACCESS_KEY");
-    const refreshKeyHeader = response.headers.get("REFRESH_KEY");
+    const accessKeyHeader = response.headers.get("Access_key");
+    const refreshKeyHeader = response.headers.get("Refresh_key");
 
     if (accessKeyHeader && refreshKeyHeader) {
       sessionStorage.setItem("Access_key", accessKeyHeader);
       sessionStorage.setItem("Refresh_key", refreshKeyHeader);
     }
-
     return response;
   },
   function (error) {
     return Promise.reject(error);
   }
 );
+
 export { instance };
