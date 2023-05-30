@@ -12,7 +12,11 @@ function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
   const [boardModalOpen, setBoardModalOpen] = useState(false);
   const dispatch = useDispatch();
+
+  // 로그인 여부 확인
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const nickName = useSelector((state) => state.user.nickName);
+  const profileImg = useSelector((state) => state.user.profileImg);
 
   const openFeedModal = () => {
     setFeedModalOpen(true);
@@ -136,16 +140,12 @@ function Header() {
             >
               게시판
             </HeaderButton>
-            <HeaderButton
-              name={"Write"}
-              onClick={() => {
-                setIsWriteMenuOpen(!isWriteMenuOpen);
-              }}
-            >
-              글쓰기
-            </HeaderButton>
             {isLoggedIn ? (
               <>
+                <HeaderButton>
+                  <ProfileImg src={profileImg}></ProfileImg>
+                  <div> {nickName}</div>
+                </HeaderButton>
                 <HeaderButton
                   name={"Mypage"}
                   onClick={() => {
@@ -188,6 +188,14 @@ function Header() {
                 </HeaderButton>
               </>
             )}
+            <HeaderButton
+              name={"Write"}
+              onClick={() => {
+                setIsWriteMenuOpen(!isWriteMenuOpen);
+              }}
+            >
+              글쓰기
+            </HeaderButton>
           </>
         )}
       </ButtonBox>
@@ -238,6 +246,10 @@ function Header() {
           <MenuButton onClick={toggleWriteMenuOpen}>글쓰기</MenuButton>
           {isLoggedIn ? (
             <>
+              <HeaderButton>
+                <ProfileImg src={profileImg}></ProfileImg>
+                <div> {nickName}</div>
+              </HeaderButton>
               <MenuButton
                 name={"mypage"}
                 onClick={() => {
@@ -300,7 +312,8 @@ const ToggleMenu = styled.div`
 const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 100%;
-  right: 195px;
+  right: 1px;
+  /*   right: 195px; */
   background-color: black;
   padding: 10px;
   display: flex;
@@ -308,7 +321,7 @@ const ToggleWriteMenu = styled.div`
   z-index: 100;
   @media (max-width: 768px) {
     top: 100px;
-    right: 100px;
+    right: 0px;
   }
 `;
 const MenuButton = styled.button`
@@ -358,9 +371,21 @@ const ButtonBox = styled.div`
 
 const HeaderButton = styled.button`
   padding: 8px;
+  gap: 10px;
   cursor: pointer;
   border: none;
   background: none;
+  align-items: center;
   color: white;
+  display: flex;
+`;
+
+const ProfileImg = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 70%;
+  object-fit: cover;
+  /*  padding: 15px; */
+  flex-shrink: 0;
 `;
 export default Header;
