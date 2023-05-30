@@ -15,7 +15,7 @@ const logoutAxios = async () => {
     return response.data;
   } catch (error) {
     alert(error);
-    throw error;
+    return Promise.reject(error.response.data.message);
   }
 };
 

@@ -76,18 +76,20 @@ function Header() {
   const logoutMutation = useMutation(logoutAxios, {
     onSuccess: () => {
       alert("로그아웃 되었습니다.");
-      dispatch(logoutSuccess());
       navigate("/");
     },
     onError: (error) => {
-      alert(error);
+      throw error;
     },
   });
 
-  const logoutHandler = (e) => {
+  const logoutHandler = async (e) => {
     e.stopPropagation();
     sessionStorage.removeItem("Access_key");
     sessionStorage.removeItem("Refresh_key");
+    await logoutMutation.mutateAsync();
+    dispatch(logoutSuccess());
+    navigate("/");
     logoutMutation.mutate();
   };
   return (
