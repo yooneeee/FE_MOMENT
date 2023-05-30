@@ -7,7 +7,7 @@ import { main } from "../apis/main/main";
 function Main() {
   // 서버 통신
   const { isLoading, isError, data } = useQuery("main", main);
-  /*   console.log(data); */
+
   if (isLoading) {
     return <h1>로딩 중입니다..!</h1>;
   }
