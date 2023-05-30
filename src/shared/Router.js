@@ -11,6 +11,7 @@ import IntegratedSignup from "../pages/IntegratedSignup";
 import EmailSignup from "../pages/EmailSignup";
 import MyPage from "../pages/MyPage";
 import MyPageInformation from "../pages/MyPageInformation";
+import Chat from "../pages/Chat";
 
 const Router = () => {
   return (
@@ -27,6 +28,7 @@ const Router = () => {
           <Route path="feeddetail" element={<FeedDetail />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="mypageinformation" element={<MyPageInformation />} />
+          <Route path="chat" element={<Chat />} />
         </Routes>
       </Layout>
     </BrowserRouter>
