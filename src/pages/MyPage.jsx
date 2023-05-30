@@ -6,6 +6,7 @@ function MyPage() {
   return (
     <PageContainer>
       <ContentContainer>
+        <div>dksdy</div>
         <ProfileSection>
           <ProfilePicture src="https://images.khan.co.kr/article/2022/11/28/news-p.v1.20221128.e8a14e02233b4849bc301cc01d170cc5_P1.jpg" />
           <ProfileInfo>
