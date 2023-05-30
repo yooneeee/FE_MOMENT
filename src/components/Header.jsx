@@ -33,17 +33,15 @@ function Header() {
   const navigate = useNavigate();
   // 현재 창 너비
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  // 메뉴창과, 글 쓰기 state 저장
+  // 메뉴창과, 글 쓰기, 프로필 state 저장
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWriteMenuOpen, setIsWriteMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
   // 헤더 컴포넌트 DOM 요소 참조
   const headerRef = useRef(null);
-  const toggleWriteMenuRight = isWriteMenuOpen
-    ? isLoggedIn
-      ? "195px"
-      : "170px"
-    : "0";
-  //메뉴, 글쓰기 메뉴 토글 여닫는 함수
+
+  //메뉴, 글쓰기 메뉴, 프로필 메뉴 토글 여닫는 함수
   const toggleMenuClose = () => {
     setIsMenuOpen(false);
   };
@@ -53,17 +51,22 @@ function Header() {
   const toggleWriteMenuClose = () => {
     setIsWriteMenuOpen(false);
   };
+  const toggleProfileMenuClose = () => {
+    setIsProfileMenuOpen(false);
+  };
   //창 너비에 따라 메뉴와 글쓰기 메뉴를 닫는 함수
   const handleResize = () => {
     setWindowWidth(window.innerWidth);
     setIsMenuOpen(false);
     setIsWriteMenuOpen(false);
+    setIsProfileMenuOpen(false);
   };
   //헤더 영역 외의 클릭 이벤트를 처리해 메뉴와 글쓰기 메뉴를 닫는 함수
   const handleClickOutside = (event) => {
     if (headerRef.current && !headerRef.current.contains(event.target)) {
-      setIsMenuOpen(false); // 헤더 밖을 클릭시 메뉴 닫기
-      setIsWriteMenuOpen(false); // 헤더 밖을 클릭시 글쓰기 메뉴 닫기
+      setIsMenuOpen(false);
+      setIsWriteMenuOpen(false);
+      setIsProfileMenuOpen(false);
     }
   };
 
@@ -88,7 +91,6 @@ function Header() {
   });
 
   const logoutHandler = async (e) => {
-    e.stopPropagation();
     sessionStorage.removeItem("Access_key");
     sessionStorage.removeItem("Refresh_key");
     await logoutMutation.mutateAsync();
@@ -117,6 +119,7 @@ function Header() {
             onClick={() => {
               setIsMenuOpen(!isMenuOpen);
               toggleWriteMenuClose();
+              toggleProfileMenuClose();
             }}
           >
             <MenuIcon>&#9776;</MenuIcon>
@@ -128,6 +131,7 @@ function Header() {
               onClick={() => {
                 navigate("/feeds");
                 toggleWriteMenuClose();
+                toggleProfileMenuClose();
               }}
             >
               피드
@@ -136,34 +140,21 @@ function Header() {
               onClick={() => {
                 navigate("/board");
                 toggleWriteMenuClose();
+                toggleProfileMenuClose();
               }}
             >
               게시판
             </HeaderButton>
             {isLoggedIn ? (
               <>
-                <HeaderButton>
-                  <ProfileImg src={profileImg}></ProfileImg>
-                  <div> {nickName}</div>
-                </HeaderButton>
                 <HeaderButton
-                  name={"Mypage"}
                   onClick={() => {
-                    navigate("/mypage");
+                    setIsProfileMenuOpen(!isProfileMenuOpen);
                     toggleWriteMenuClose();
                   }}
                 >
-                  마이페이지
-                </HeaderButton>
-                <HeaderButton
-                  name={"logout"}
-                  onClick={logoutHandler}
-                  /*   onClick={() => {
-                logoutHandler();
-                toggleWriteMenuClose();
-              }} */
-                >
-                  로그아웃
+                  <ProfileImg src={profileImg} />
+                  <div>{nickName}</div>
                 </HeaderButton>
               </>
             ) : (
@@ -173,6 +164,7 @@ function Header() {
                   onClick={() => {
                     navigate("/login");
                     toggleWriteMenuClose();
+                    toggleProfileMenuClose();
                   }}
                 >
                   로그인
@@ -182,6 +174,7 @@ function Header() {
                   onClick={() => {
                     navigate("/integratedsignup");
                     toggleWriteMenuClose();
+                    toggleProfileMenuClose();
                   }}
                 >
                   회원가입
@@ -192,6 +185,7 @@ function Header() {
               name={"Write"}
               onClick={() => {
                 setIsWriteMenuOpen(!isWriteMenuOpen);
+                toggleProfileMenuClose();
               }}
             >
               글쓰기
@@ -199,13 +193,39 @@ function Header() {
           </>
         )}
       </ButtonBox>
+      {/* 프로필 모달 열렸을 때 */}
+      {isProfileMenuOpen && (
+        <ToggleProfileMenu>
+          <MenuButton
+            name={"mypage"}
+            onClick={() => {
+              navigate("/mypage");
+              toggleMenuClose();
+              toggleWriteMenuClose();
+              toggleProfileMenuClose();
+            }}
+          >
+            마이페이지
+          </MenuButton>
+          <MenuButton
+            name={"logout"}
+            onClick={() => {
+              logoutHandler();
+              toggleProfileMenuClose();
+            }}
+          >
+            로그아웃
+          </MenuButton>
+        </ToggleProfileMenu>
+      )}
       {/* 글쓰기 모달 열렸을 때 */}
       {isWriteMenuOpen && (
-        <ToggleWriteMenu style={{ right: toggleWriteMenuRight }}>
+        <ToggleWriteMenu>
           <MenuButton
             onClick={() => {
               openFeedModal();
               toggleWriteMenuClose();
+              toggleProfileMenuClose();
               toggleMenuClose();
             }}
           >
@@ -215,6 +235,7 @@ function Header() {
             onClick={() => {
               openBoardModal();
               toggleWriteMenuClose();
+              toggleProfileMenuClose();
               toggleMenuClose();
             }}
           >
@@ -230,6 +251,7 @@ function Header() {
               navigate("/feed");
               toggleMenuClose();
               toggleWriteMenuClose();
+              toggleProfileMenuClose();
             }}
           >
             피드
@@ -239,23 +261,39 @@ function Header() {
               navigate("/board");
               toggleMenuClose();
               toggleWriteMenuClose();
+              toggleProfileMenuClose();
             }}
           >
             게시판
           </MenuButton>
-          <MenuButton onClick={toggleWriteMenuOpen}>글쓰기</MenuButton>
+          <MenuButton
+            onClick={() => {
+              toggleWriteMenuOpen();
+              toggleProfileMenuClose();
+            }}
+          >
+            글쓰기
+          </MenuButton>
           {isLoggedIn ? (
             <>
-              <HeaderButton>
-                <ProfileImg src={profileImg}></ProfileImg>
-                <div> {nickName}</div>
-              </HeaderButton>
+              <MenuButton
+                onClick={() => {
+                  toggleWriteMenuClose();
+                  setIsProfileMenuOpen(!isProfileMenuOpen);
+                }}
+              >
+                <ProfileContainer>
+                  <ProfileImg src={profileImg}></ProfileImg>
+                  <ProfileName>{nickName}</ProfileName>
+                </ProfileContainer>
+              </MenuButton>
               <MenuButton
                 name={"mypage"}
                 onClick={() => {
                   navigate("/mypage");
                   toggleMenuClose();
                   toggleWriteMenuClose();
+                  toggleProfileMenuClose();
                 }}
               >
                 마이페이지
@@ -271,6 +309,7 @@ function Header() {
                   navigate("/login");
                   toggleMenuClose();
                   toggleWriteMenuClose();
+                  toggleProfileMenuClose();
                 }}
               >
                 로그인
@@ -280,6 +319,7 @@ function Header() {
                   navigate("/integratedsignup");
                   toggleMenuClose();
                   toggleWriteMenuClose();
+                  toggleProfileMenuClose();
                 }}
               >
                 회원가입
@@ -312,16 +352,15 @@ const ToggleMenu = styled.div`
 const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 100%;
-  right: 1px;
-  /*   right: 195px; */
+  right: 0;
   background-color: black;
   padding: 10px;
   display: flex;
   flex-direction: column;
   z-index: 100;
   @media (max-width: 768px) {
-    top: 100px;
-    right: 0px;
+    top: 105px;
+    right: 88px;
   }
 `;
 const MenuButton = styled.button`
@@ -385,7 +424,36 @@ const ProfileImg = styled.img`
   height: 30px;
   border-radius: 70%;
   object-fit: cover;
-  /*  padding: 15px; */
   flex-shrink: 0;
+  @media (max-width: 768px) {
+    width: 22px;
+    height: 22px;
+  }
 `;
+
+const ToggleProfileMenu = styled.div`
+  position: absolute;
+  top: 50px;
+  right: 88px;
+  background-color: black;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  @media (max-width: 768px) {
+    top: 135px;
+    right: 88px;
+  }
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ProfileName = styled.div`
+  margin-left: 8px;
+  font-size: 15px;
+`;
+
 export default Header;
