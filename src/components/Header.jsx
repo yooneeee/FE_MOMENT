@@ -122,7 +122,7 @@ function Header() {
             {/*    화면크기 768px보다 클 때 */}
             <HeaderButton
               onClick={() => {
-                navigate("/feed");
+                navigate("/feeds");
                 toggleWriteMenuClose();
               }}
             >
