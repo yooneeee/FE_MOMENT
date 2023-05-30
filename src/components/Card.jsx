@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 function Card({ user }) {
   if (!user) {
-    return null; // user 객체가 없을 경우 null을 반환
+    return null;
   }
   return (
     <CardDesign>
@@ -15,11 +15,15 @@ function Card({ user }) {
           <UserNickName>{user.nickName}</UserNickName>
         </div>
       </CardHeader>
-
       <CardProfileImgContainer>
-        <CardProfileImg src="img/profile_1.jpeg" />
-        <CardProfileImg src="img/profile_2.jpeg" />
-        <CardProfileImg src="img/profile_3.jpeg" />
+        {user.photoList?.map((item) => (
+          <CardProfileImg key={item.photoUrl} src={item.photoUrl} />
+        ))}
+        {user.photoList?.length < 3 && (
+          <CardProfileImgPlaceholder>
+            {/* {user.photoList?.length} */}
+          </CardProfileImgPlaceholder>
+        )}
       </CardProfileImgContainer>
     </CardDesign>
   );
@@ -75,4 +79,17 @@ const CardProfileImg = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 5px;
+`;
+const CardProfileImgPlaceholder = styled.div`
+  width: calc(30% - 6.67px);
+  height: 0;
+  padding-bottom: calc(30% - 6.67px);
+  border-radius: 5px;
+  background-color: #e9e9e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #999999;
+  font-size: 16px;
 `;
