@@ -1,8 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
+import { useQuery } from "react-query";
+import { main } from "../apis/main/main";
 
 function Main() {
+  // 서버 통신
+  const { isLoading, isError, data } = useQuery("main", main);
+
+  if (isLoading) {
+    return <h1>로딩 중입니다..!</h1>;
+  }
+
+  if (isError) {
+    return <h1>{isError}</h1>;
+  }
   return (
     <>
       <div>
@@ -18,9 +30,9 @@ function Main() {
           </CardGroupName>
 
           <CardContainer>
-            <Card />
-            <Card />
-            <Card />
+            {data?.map((item) => {
+              return <Card key={item.userId} user={item} />;
+            })}
           </CardContainer>
         </CategoryContainer>
 
