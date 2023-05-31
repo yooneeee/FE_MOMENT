@@ -3,7 +3,7 @@ import { instance } from "../axios";
 const loginAxios = async ({ email, password }) => {
   try {
     const response = await instance.post("/users/login", { email, password });
-    return response;
+    return response.data;
   } catch (error) {
     return Promise.reject(error.response.data.message);
   }
@@ -15,7 +15,7 @@ const logoutAxios = async () => {
     return response.data;
   } catch (error) {
     alert(error);
-    throw error;
+    return Promise.reject(error.response.data.message);
   }
 };
 

@@ -14,7 +14,7 @@ import { useInput } from "../hooks/useInput";
 import { useMutation } from "react-query";
 import { loginAxios } from "../apis/auth/login";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../redux/modules/user";
+import { loginSuccess, setUser } from "../redux/modules/user";
 
 function Login() {
   const navigate = useNavigate();
@@ -33,6 +33,14 @@ function Login() {
     onSuccess: (response) => {
       alert("로그인 성공!");
       dispatch(loginSuccess());
+      dispatch(
+        setUser({
+          nickName: response.nickName,
+          profileImg: response.profileImg,
+          role: response.role,
+        })
+      );
+
       navigate("/main");
       resetEmail();
       resetPassword();
@@ -46,13 +54,10 @@ function Login() {
   const loginButtonHandler = () => {
     loginMutation.mutate({ email, password });
   };
-
   useEffect(() => {
-    if (localStorage.getItem("Access_key")) {
-      alert("이미 로그인 된 회원입니다.");
-      navigate("/main");
-    }
-  });
+    loginActiveHandler();
+  }, [email, password]);
+
   return (
     <Container>
       <CenteredContent>
@@ -80,7 +85,11 @@ function Login() {
           />
         </InputWrap>
         <ButtonWrap>
-          <EmailButton type="button" onClick={loginButtonHandler}>
+          <EmailButton
+            type="button"
+            disabled={!loginActive}
+            onClick={loginButtonHandler}
+          >
             <ButtonText>이메일로 로그인하기</ButtonText>
           </EmailButton>
         </ButtonWrap>

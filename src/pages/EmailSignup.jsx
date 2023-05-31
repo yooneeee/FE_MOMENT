@@ -171,10 +171,10 @@ function EmailSignup() {
     );
 
     if (signupActive) {
-      if (!isemailChecking) {
+      /*  if (!isemailChecking) {
         alert("이메일 인증을 완료해주세요!");
         return;
-      }
+      } */
       signupMutation.mutate(formData);
     } else {
       alert("회원정보를 모두 입력해주세요!");
@@ -268,24 +268,6 @@ function EmailSignup() {
             {isemailChecking ? "인증완료" : "인증번호 전송"}
           </MailCheckButton>
         </InputGroup>
-        {/*         {emailErrorMessage && <ErrorMessage>{emailError}</ErrorMessage>}
-        <InputTitle>인증번호</InputTitle>
-        <InputGroup>
-          <InputWrap>
-            <Input
-              type="text"
-              name="code"
-              value={code || ""}
-              onChange={(e) => {
-                setCode(e.target.value);
-              }}
-              placeholder="인증번호를 입력해주세요"
-            />
-          </InputWrap>
-          <MailCheckButton type="button" onClick={emailVerifyNumCheckHandler}>
-            {isemailChecking ? "인증완료" : "확인"}
-          </MailCheckButton>
-        </InputGroup> */}
         {/* 이메일 인증번호 입력란 => 이메일을 서버에 성공적으로 보내면 인증번호 입력란이 나게 */}
         {isSendEmail && !isemailChecking && (
           <>

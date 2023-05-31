@@ -2,6 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoggedIn: false,
+  nickName: "",
+  profileImg: "",
+  role: "",
 };
 
 export const userSlice = createSlice({
@@ -13,9 +16,17 @@ export const userSlice = createSlice({
     },
     logoutSuccess: (state) => {
       state.isLoggedIn = false;
+      state.nickName = "";
+      state.profileImg = "";
+      state.role = "";
+    },
+    setUser: (state, action) => {
+      state.nickName = action.payload.nickName;
+      state.profileImg = action.payload.profileImg;
+      state.role = action.payload.role;
     },
   },
 });
 
-export const { loginSuccess, logoutSuccess } = userSlice.actions;
+export const { loginSuccess, logoutSuccess, setUser } = userSlice.actions;
 export default userSlice.reducer;
