@@ -2,9 +2,21 @@ import React from "react";
 import styled from "styled-components";
 import InitialNav from "../components/InitialNav";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { initialMain } from "../apis/main/initialMain";
 
 function Start() {
   const navigate = useNavigate();
+  // 서버 통신
+  const { isLoading, isError, data } = useQuery("initialMain", initialMain);
+
+  if (isLoading) {
+    return <h1>로딩 중입니다..!</h1>;
+  }
+
+  if (isError) {
+    return <h1>{isError}</h1>;
+  }
   return (
     <PageContainer>
       <NavigationBar>
@@ -25,15 +37,9 @@ function Start() {
           </StartButton>
         </DescriptionContainer>
         <PostListSection>
-          <PostImage src="https://t1.daumcdn.net/cfile/tistory/125A09345096470417" />
-          <PostImage src="https://t1.daumcdn.net/cfile/tistory/125A09345096470417" />
-          <PostImage src="https://t1.daumcdn.net/cfile/tistory/125A09345096470417" />
-          <PostImage src="https://t1.daumcdn.net/cfile/tistory/125A09345096470417" />
-          <PostImage src="https://t1.daumcdn.net/cfile/tistory/125A09345096470417" />
-          <PostImage src="https://t1.daumcdn.net/cfile/tistory/125A09345096470417" />
-          <PostImage src="https://t1.daumcdn.net/cfile/tistory/125A09345096470417" />
-          <PostImage src="https://t1.daumcdn.net/cfile/tistory/125A09345096470417" />
-          <PostImage src="https://t1.daumcdn.net/cfile/tistory/125A09345096470417" />
+          {data.map((item) => {
+            return <PostImage key={item.photoUrl} src={item.photoUrl} />;
+          })}
         </PostListSection>
       </ContentContainer>
     </PageContainer>
@@ -67,7 +73,7 @@ const StartButton = styled.button`
   border: none;
   padding: 20px 50px;
   border-radius: 60px;
-  background-color: #df8383;
+  background-color: #000000;
   color: white;
   font-size: 25px;
   font-weight: bold;
