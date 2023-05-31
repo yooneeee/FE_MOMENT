@@ -1,23 +1,37 @@
 import React from "react";
 import styled from "styled-components";
 import BoardItem from "../components/BoardItem";
+import { mypage } from "../apis/mypage/mypage";
+import { useQuery } from "react-query";
 
-function MyPage() {
+const MyPage = () => {
+  const hostId = 5;
+  const { isError, isLoading, data } = useQuery(
+    ["mypage", mypage],
+    () => mypage(5)
+    // mypage(hostId)
+  );
+  if (isLoading) {
+    return <h1>로딩 중입니다..!</h1>;
+  }
+
+  if (isError) {
+    return <h1>오류,,,</h1>;
+  }
   return (
     <PageContainer>
       <ContentContainer>
-        <div>dksdy</div>
         <ProfileSection>
-          <ProfilePicture src="https://images.khan.co.kr/article/2022/11/28/news-p.v1.20221128.e8a14e02233b4849bc301cc01d170cc5_P1.jpg" />
+          <ProfilePicture src={data.profileUrl} />
           <ProfileInfo>
             <StFlex>
-              <span>모델</span>
-              <UserNickname>Nickname</UserNickname>
+              <span>{data.role}</span>
+              <UserNickname>{data.nickName}</UserNickname>
             </StFlex>
             <StFlex>
-              <Post>게시물 3</Post>
+              <Post>게시물 {data.photoList.length}</Post>
               <span>|</span>
-              <Recommend>추천 0</Recommend>
+              <Recommend>추천 {data.recommendCnt}</Recommend>
             </StFlex>
             <StFlex>
               <ChatBtn>채팅</ChatBtn>
@@ -49,7 +63,7 @@ function MyPage() {
       </ContentContainer>
     </PageContainer>
   );
-}
+};
 
 export default MyPage;
 
