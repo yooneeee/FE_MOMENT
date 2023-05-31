@@ -54,7 +54,7 @@ const CreateFeed = (props) => {
     onSuccess: () => {
       alert("피드 생성이 완료됐습니다");
       close();
-      navigate("/feed");
+      navigate("/feeds");
     },
     onError: (error) => {
       console.log(error);
