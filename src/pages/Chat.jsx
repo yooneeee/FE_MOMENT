@@ -13,14 +13,19 @@ function Chat() {
 
   const connect = () => {
     client.current = new StompJs.Client({
-      brokerURL: "ws://REACT_APP_SERVER_URL/ws-edit",
+      brokerURL: "ws://15.165.14.7/ws-edit",
       onConnect: () => {
         console.log("success");
         subscribe();
       },
     });
+    // client.webSocketFactory = function () {
+    //   return new SockJS("REACT_APP_SERVER_URL/ws-edit");
+    // };
+
     client.current.activate(); // 소켓 연결을 해주는 method
   };
+
   //   console.log(client.current);
   const publish = (chat) => {
     if (!client.current.connected) return;
@@ -37,7 +42,7 @@ function Chat() {
   };
 
   const subscribe = () => {
-    client.current.subscribe("/sub/chat/" + apply_id, (body) => {
+    client.current.subscribe("/sub/chat/room" + apply_id, (body) => {
       const json_body = JSON.parse(body.body);
       setChatList((_chat_list) => [..._chat_list, json_body]);
     });
@@ -60,9 +65,9 @@ function Chat() {
   };
 
   // 프로필 이미지 가져오기
-  const getProfileImage = async (receiverId) => {
+  const getProfileImage = async (userId) => {
     try {
-      const response = await instance.get(`/api/profile/${receiverId}`);
+      const response = await instance.get(`/chatRoom/enter/${userId}`);
       return response.data.profileImageUrl;
     } catch (error) {
       console.log(error);
@@ -71,9 +76,9 @@ function Chat() {
   };
 
   // 사용자 닉네임 가져오기
-  const getNickname = async (receiverId) => {
+  const getNickname = async (userId) => {
     try {
-      const response = await instance.get(`/api/user/${receiverId}`);
+      const response = await instance.get(`/chatRoom/enter/${userId}`);
       return response.data.nickname;
     } catch (error) {
       console.log(error);
