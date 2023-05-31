@@ -19,10 +19,10 @@ function Card({ user }) {
         {user.photoList?.map((item) => (
           <CardProfileImg key={item.photoUrl} src={item.photoUrl} />
         ))}
-        {user.photoList?.length < 3 && (
-          <CardProfileImgPlaceholder>
-            {/* {user.photoList?.length} */}
-          </CardProfileImgPlaceholder>
+        {[...Array(Math.max(0, 3 - (user.photoList?.length || 0)))].map(
+          (_, index) => (
+            <CardProfileImgPlaceholder key={index} />
+          )
         )}
       </CardProfileImgContainer>
     </CardDesign>
@@ -80,6 +80,7 @@ const CardProfileImg = styled.div`
   background-position: center;
   border-radius: 5px;
 `;
+
 const CardProfileImgPlaceholder = styled.div`
   width: calc(30% - 6.67px);
   height: 0;
