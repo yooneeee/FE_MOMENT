@@ -4,48 +4,56 @@ import styled from "styled-components";
 import FeedDetail from "../components/FeedDetail";
 import "../css/App.css";
 import { useQuery } from "react-query";
-import { getFeed } from "../apis/ feed/getFeed";
+import { getFeed } from "../apis/feed/getFeed";
 
 function Feed() {
   const navigate = useNavigate();
-  const [feedDetailOpen, setFeedDetailOpen] = useState(false);
+  const [feedDetailOpen, setFeedDetailOpen] = useState([]);
 
-  const openFeedDetail = () => {
-    setFeedDetailOpen(true);
+  const openFeedDetail = (photoId) => {
+    setFeedDetailOpen((prevOpen) => [...prevOpen, photoId]);
   };
 
-  const closeFeedDetail = () => {
-    setFeedDetailOpen(false);
+  const closeFeedDetail = (photoId) => {
+    setFeedDetailOpen((prevOpen) => prevOpen.filter((id) => id !== photoId));
   };
 
   // 서버 통신
   const { isLoading, isError, data } = useQuery("getFeed", getFeed);
 
   if (isLoading) {
-    return <h1>로딩 중입니다..!</h1>;
+    return;
   }
 
   if (isError) {
-    return <h1>{isError}</h1>;
+    return <h1>오류가 발생하였습니다...!</h1>;
   }
 
   return (
     <FeedContainer>
       {data.map((item) => {
+        const isOpen = feedDetailOpen.includes(item.photoId);
+
         return (
-          <Cards key={item.photoId}>
-            <CardsImg
-              src={item.photoUrl}
-              onClick={() => {
-                openFeedDetail();
-              }}
-            />
-          </Cards>
+          <React.Fragment key={item.photoId}>
+            <Cards>
+              <CardsImg
+                src={item.photoUrl}
+                onClick={() => {
+                  openFeedDetail(item.photoId);
+                }}
+              />
+            </Cards>
+            {isOpen && (
+              <FeedDetail
+                open={() => openFeedDetail(item.photoId)}
+                close={() => closeFeedDetail(item.photoId)}
+                photoId={item.photoId}
+              />
+            )}
+          </React.Fragment>
         );
       })}
-      {feedDetailOpen && (
-        <FeedDetail open={openFeedDetail} close={closeFeedDetail} />
-      )}
     </FeedContainer>
   );
 }
