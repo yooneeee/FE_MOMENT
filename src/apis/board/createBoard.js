@@ -1,13 +1,13 @@
 import { instance } from "../axios";
 
-const createFeedAxios = async (formData) => {
+const createBoardAxios = async (formData) => {
   const config = {
     headers: {
       "content-type": "multipart/form-data",
     },
   };
   try {
-    const response = await instance.post("/feeds/upload", formData, config);
+    const response = await instance.post("/boards", formData, config);
     return response.data;
   } catch (error) {
     alert(error);
@@ -15,4 +15,4 @@ const createFeedAxios = async (formData) => {
   }
 };
 
-export { createFeedAxios };
+export { createBoardAxios };
