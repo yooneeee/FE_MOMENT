@@ -5,13 +5,6 @@ import { useMutation } from "react-query";
 import { useQuery } from "react-query";
 
 function MyPageInformation() {
-  const { isLoading, isError, data } = useQuery("mypageAxios", mypageAxios);
-  if (isLoading) {
-    return <p>로딩중입니다....!</p>;
-  }
-  if (isError) {
-    return <p>오류가 발생하였습니다...!</p>;
-  }
   /* 기본 이미지 토끼, 추후에 바꿀 예정 */
   const [image, setImage] = useState("img/snowball.png");
   const fileInput = useRef(null);
@@ -128,158 +121,147 @@ function MyPageInformation() {
   };
 
   return (
-    <>
-      {/* <div>안녕</div> */}
-      <Container>
-        <Box>
-          <Title>
-            기본 회원정보<span>필수</span>
-          </Title>
-          <Line />
-          <Text1>사진</Text1>
-          <ProfileContainer>
-            <ProfileImg
-              src={image}
-              alt="프로필 이미지"
-              //   onClick={() => {
-              //     fileInput.current.click();
-              //   }}
-            />
-          </ProfileContainer>
-          <TextColumn>
-            <ProfileText>
-              {imgIsVisible ? (
-                <HiddenForm>
-                  <UploadButton>
-                    사진선택
-                    <input type="file" onChange={fileSelectHandler}></input>
-                  </UploadButton>
-                  <BasicImgButton onClick={basiCImgHandler}>
-                    기본이미지로 변경
-                  </BasicImgButton>
-                  <ButtonColumn>
-                    <HiddenFormBtn onClick={imgCancelHandler}>
-                      취소
-                    </HiddenFormBtn>
-                    <HiddenFormBtn>완료</HiddenFormBtn>
-                  </ButtonColumn>
-                </HiddenForm>
-              ) : (
-                <>
-                  <span>회원님을 알릴 수 있는 사진을 등록해 주세요.</span>
-                  <br />
-                  <span>
-                    등록 된 사진은 회원님의 게시물이나 피드에 사용됩니다.
-                  </span>
-                </>
-              )}
-            </ProfileText>
-          </TextColumn>
-          {imgIsVisible ? null : (
-            <Button onClick={imgHandler}>사진 변경</Button>
-          )}
-        </Box>
-        <Line1 />
-        <Box>
-          <Text>닉네임</Text>
-          <TextColumn>
-            {nickIsVisible ? (
+    <Container>
+      <Box>
+        <Title>
+          기본 회원정보<span>필수</span>
+        </Title>
+        <Line />
+        <Text1>사진</Text1>
+        <ProfileContainer>
+          <ProfileImg
+            src={image}
+            alt="프로필 이미지"
+            //   onClick={() => {
+            //     fileInput.current.click();
+            //   }}
+          />
+        </ProfileContainer>
+        <TextColumn>
+          <ProfileText>
+            {imgIsVisible ? (
               <HiddenForm>
-                <HiddenNick>
-                  <span>길이는 최대 ~자 이내로 작성해주세요.</span>
-                  <br />
-                  <span>중복 닉네임 불가합니다.</span>
-                </HiddenNick>
-                <HiddenInput
-                  type="text"
-                  placeholder="닉네임 입력(최대 ~자)"
-                  value={newNick}
-                  onChange={nickChangeHandler}
-                />
+                <UploadButton>
+                  사진선택
+                  <input type="file" onChange={fileSelectHandler}></input>
+                </UploadButton>
+                <BasicImgButton onClick={basiCImgHandler}>
+                  기본이미지로 변경
+                </BasicImgButton>
                 <ButtonColumn>
-                  <HiddenFormBtn onClick={nickCancelHandler}>
-                    취소
-                  </HiddenFormBtn>
+                  <HiddenFormBtn onClick={imgCancelHandler}>취소</HiddenFormBtn>
                   <HiddenFormBtn>완료</HiddenFormBtn>
                 </ButtonColumn>
               </HiddenForm>
             ) : (
-              <span>{data.nickName}</span>
+              <>
+                <span>회원님을 알릴 수 있는 사진을 등록해 주세요.</span>
+                <br />
+                <span>
+                  등록 된 사진은 회원님의 게시물이나 피드에 사용됩니다.
+                </span>
+              </>
             )}
-          </TextColumn>
-          {nickIsVisible ? null : (
-            <Button onClick={nicknameHandler}>닉네임 변경</Button>
+          </ProfileText>
+        </TextColumn>
+        {imgIsVisible ? null : <Button onClick={imgHandler}>사진 변경</Button>}
+      </Box>
+      <Line1 />
+      <Box>
+        <Text>닉네임</Text>
+        <TextColumn>
+          {nickIsVisible ? (
+            <HiddenForm>
+              <HiddenNick>
+                <span>길이는 최대 ~자 이내로 작성해주세요.</span>
+                <br />
+                <span>중복 닉네임 불가합니다.</span>
+              </HiddenNick>
+              <HiddenInput
+                type="text"
+                placeholder="닉네임 입력(최대 ~자)"
+                value={newNick}
+                onChange={nickChangeHandler}
+              />
+              <ButtonColumn>
+                <HiddenFormBtn onClick={nickCancelHandler}>취소</HiddenFormBtn>
+                <HiddenFormBtn>완료</HiddenFormBtn>
+              </ButtonColumn>
+            </HiddenForm>
+          ) : (
+            <span>미뇽</span>
           )}
-        </Box>
-        <Line1 />
-        <Box>
-          <Text>
-            <span>비밀번호</span>
-          </Text>
-          <TextColumn>
-            {pwIsVisible ? (
-              <HiddenForm>
-                <Column>
-                  <span>현재 비밀번호</span>
-                  <HiddenInput type="password" />
-                </Column>
-                <Column>
-                  <span>신규 비밀번호</span>
-                  <HiddenInput
-                    type="password"
-                    value={newPw}
-                    onChange={pwChangeHandler}
-                  />
-                </Column>
-                {/* <Column>
+        </TextColumn>
+        {nickIsVisible ? null : (
+          <Button onClick={nicknameHandler}>닉네임 변경</Button>
+        )}
+      </Box>
+      <Line1 />
+      <Box>
+        <Text>
+          <span>비밀번호</span>
+        </Text>
+        <TextColumn>
+          {pwIsVisible ? (
+            <HiddenForm>
+              <Column>
+                <span>현재 비밀번호</span>
+                <HiddenInput type="password" />
+              </Column>
+              <Column>
+                <span>신규 비밀번호</span>
+                <HiddenInput
+                  type="password"
+                  value={newPw}
+                  onChange={pwChangeHandler}
+                />
+              </Column>
+              {/* <Column>
                   <span>신규 비밀번호 재 입력</span>
                   <HiddenInput type="password" />
                 </Column> */}
-                <ButtonColumn>
-                  <HiddenFormBtn onClick={pwCancelHandler}>취소</HiddenFormBtn>
-                  <HiddenFormBtn>완료</HiddenFormBtn>
-                </ButtonColumn>
-              </HiddenForm>
-            ) : (
-              <span>********</span>
-            )}
-          </TextColumn>
-          {pwIsVisible ? null : (
-            <Button onClick={pwHandler}>비밀번호 변경</Button>
+              <ButtonColumn>
+                <HiddenFormBtn onClick={pwCancelHandler}>취소</HiddenFormBtn>
+                <HiddenFormBtn>완료</HiddenFormBtn>
+              </ButtonColumn>
+            </HiddenForm>
+          ) : (
+            <span>********</span>
           )}
-        </Box>
-        <Line1 />
-        <Box>
-          <Text>
-            <span>Role</span>
-          </Text>
-          <TextColumn>
-            {roleIsVisivle ? (
-              <HiddenForm>
-                <Column>
-                  <UploadButton onClick={roleChangeHandler}>
-                    PHOTOGRAPHER
-                  </UploadButton>
-                </Column>
-                <ButtonColumn>
-                  <HiddenFormBtn onClick={roleCancelHandler}>
-                    취소
-                  </HiddenFormBtn>
-                  <HiddenFormBtn>완료</HiddenFormBtn>
-                </ButtonColumn>
-              </HiddenForm>
-            ) : (
-              <span>Photographer</span>
-            )}
-          </TextColumn>
-          {roleIsVisivle ? null : (
-            <Button onClick={roleHandler}>Role 변경</Button>
+        </TextColumn>
+        {pwIsVisible ? null : (
+          <Button onClick={pwHandler}>비밀번호 변경</Button>
+        )}
+      </Box>
+      <Line1 />
+      <Box>
+        <Text>
+          <span>Role</span>
+        </Text>
+        <TextColumn>
+          {roleIsVisivle ? (
+            <HiddenForm>
+              <Column>
+                <UploadButton onClick={roleChangeHandler}>
+                  PHOTOGRAPHER
+                </UploadButton>
+              </Column>
+              <ButtonColumn>
+                <HiddenFormBtn onClick={roleCancelHandler}>취소</HiddenFormBtn>
+                <HiddenFormBtn>완료</HiddenFormBtn>
+              </ButtonColumn>
+            </HiddenForm>
+          ) : (
+            <span>Photographer</span>
           )}
-        </Box>
-        <Line1 />
-        <button onClick={changeButtonHandler}>정보변경</button>
-      </Container>
-    </>
+        </TextColumn>
+        {roleIsVisivle ? null : (
+          <Button onClick={roleHandler}>Role 변경</Button>
+        )}
+      </Box>
+      <Line1 />
+      <button onClick={changeButtonHandler}>정보변경</button>
+    </Container>
   );
 }
 
