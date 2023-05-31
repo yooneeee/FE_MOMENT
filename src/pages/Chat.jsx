@@ -2,31 +2,50 @@ import React, { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router";
 import * as StompJs from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { Chatting } from "../apis/mypage/chatting";
+import { useQuery } from "react-query";
 import { instance } from "../apis/axios";
 
 function Chat() {
+  // const { isLoading, isError, data } = useQuery("Chatting", Chatting);
+  // console.log(data);
+
+  // if (isLoading) {
+  //   return <h1>로딩 중입니다..!</h1>;
+  // }
+
+  // if (isError) {
+  //   return <h1>{isError}</h1>;
+  // }
   const [chatList, setChatList] = useState([]);
   const [chat, setChat] = useState("");
 
   const { apply_id } = useParams();
   const client = useRef({});
 
+  // const connect = () => {
+  //   client.current = new StompJs.Client({
+  //     brokerURL: "ws://15.165.14.7/ws-edit",
+  //     onConnect: () => {
+  //       console.log("success");
+  //       subscribe();
+  //     },
+  //   });
+
+  //   client.current.activate(); // 소켓 연결을 해주는 method
+  // };
+
   const connect = () => {
-    client.current = new StompJs.Client({
-      brokerURL: "ws://15.165.14.7/ws-edit",
-      onConnect: () => {
-        console.log("success");
-        subscribe();
-      },
+    const socket = new SockJS("http://15.165.14.7/ws-edit");
+    const stompClient = StompJs.Stomp.over(socket);
+    stompClient.connect({}, () => {
+      console.log("Connected to WebSocket");
+      subscribe();
     });
-    // client.webSocketFactory = function () {
-    //   return new SockJS("REACT_APP_SERVER_URL/ws-edit");
-    // };
-
-    client.current.activate(); // 소켓 연결을 해주는 method
+    client.current = stompClient;
   };
+  // console.log(client.current);
 
-  //   console.log(client.current);
   const publish = (chat) => {
     if (!client.current.connected) return;
 
@@ -56,7 +75,6 @@ function Chat() {
     // 채팅 입력 시 state에 값 설정
     setChat(event.target.value);
   };
-
   const handleSubmit = (event) => {
     // 보내기 버튼 눌렀을 때 publish
     event.preventDefault();
