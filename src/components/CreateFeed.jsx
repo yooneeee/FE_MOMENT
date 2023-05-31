@@ -63,8 +63,8 @@ const CreateFeed = (props) => {
 
   // 저장하기 버튼 클릭
   const saveButtonHandler = () => {
-    if (!selectedFile || !content) {
-      alert("사진과 내용을 모두 입력해주세요");
+    if (!selectedFile) {
+      alert("사진을 선택해주세요");
       return;
     }
 
