@@ -16,6 +16,8 @@ import { loginAxios } from "../apis/auth/login";
 import { useDispatch } from "react-redux";
 import { loginSuccess, setUser } from "../redux/modules/user";
 
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URL}&response_type=code`;
+
 function Login() {
   const navigate = useNavigate();
   const [email, onChangeEmailHandler, resetEmail] = useInput("");
@@ -32,12 +34,14 @@ function Login() {
   const loginMutation = useMutation(loginAxios, {
     onSuccess: (response) => {
       alert("로그인 성공!");
+      console.log(response);
       dispatch(loginSuccess());
       dispatch(
         setUser({
           nickName: response.nickName,
           profileImg: response.profileImg,
           role: response.role,
+          userId: response.userId,
         })
       );
 

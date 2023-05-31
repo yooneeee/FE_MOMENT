@@ -17,6 +17,7 @@ function Header() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const nickName = useSelector((state) => state.user.nickName);
   const profileImg = useSelector((state) => state.user.profileImg);
+  const userId = useSelector((state) => state.user.userId);
 
   const openFeedModal = () => {
     setFeedModalOpen(true);
@@ -199,7 +200,7 @@ function Header() {
           <MenuButton
             name={"mypage"}
             onClick={() => {
-              navigate("/mypage");
+              navigate(`/page/${userId}`);
               toggleMenuClose();
               toggleWriteMenuClose();
               toggleProfileMenuClose();
@@ -290,7 +291,7 @@ function Header() {
               <MenuButton
                 name={"mypage"}
                 onClick={() => {
-                  navigate("/mypage");
+                  navigate(`/page/${userId}`);
                   toggleMenuClose();
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
@@ -360,7 +361,7 @@ const ToggleWriteMenu = styled.div`
   z-index: 100;
   @media (max-width: 768px) {
     top: 105px;
-    right: 88px;
+    right: 120px;
   }
 `;
 const MenuButton = styled.button`
@@ -442,7 +443,7 @@ const ToggleProfileMenu = styled.div`
   z-index: 100;
   @media (max-width: 768px) {
     top: 135px;
-    right: 88px;
+    right: 120px;
   }
 `;
 

@@ -5,6 +5,7 @@ const initialState = {
   nickName: "",
   profileImg: "",
   role: "",
+  userId: "",
 };
 
 export const userSlice = createSlice({
@@ -19,11 +20,13 @@ export const userSlice = createSlice({
       state.nickName = "";
       state.profileImg = "";
       state.role = "";
+      state.userId = "";
     },
     setUser: (state, action) => {
       state.nickName = action.payload.nickName;
       state.profileImg = action.payload.profileImg;
       state.role = action.payload.role;
+      state.userId = action.payload.userId;
     },
   },
 });
