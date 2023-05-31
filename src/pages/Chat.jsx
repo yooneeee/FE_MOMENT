@@ -97,8 +97,8 @@ function Chat() {
     const fetchProfileAndNickname = async () => {
       const updatedChatList = await Promise.all(
         chatList.map(async (chat) => {
-          const profileImg = await getProfileImage(chat.receiverId);
-          const nickname = await getNickname(chat.receiverId);
+          const profileImg = await getProfileImage(chat.userId);
+          const nickname = await getNickname(chat.userId);
           return {
             ...chat,
             receiverProfileImg: profileImg,
