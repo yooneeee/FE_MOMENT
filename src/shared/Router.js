@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Start from "../pages/Start";
 import Main from "../pages/Main";
-import Login from "../pages/Login";
+import Login from "../pages/Login/Login";
 import Layout from "./Layout";
 import Feed from "../pages/Feed";
 import Board from "../pages/Board";
@@ -11,6 +11,7 @@ import IntegratedSignup from "../pages/IntegratedSignup";
 import EmailSignup from "../pages/EmailSignup";
 import MyPage from "../pages/MyPage";
 import MyPageInformation from "../pages/MyPageInformation";
+import KakaoLoginRedirect from "../pages/Login/KakaoLoginRedirect";
 
 const Router = () => {
   return (
@@ -20,6 +21,7 @@ const Router = () => {
           <Route path="/" element={<Start />} />
           <Route path="main" element={<Main />} />
           <Route path="login" element={<Login />} />
+          <Route path="/users/kakao" element={<KakaoLoginRedirect />} />
           <Route path="integratedsignup" element={<IntegratedSignup />} />
           <Route path="emailsignup" element={<EmailSignup />} />
           <Route path="feeds" element={<Feed />} />
