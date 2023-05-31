@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
-import authKakaoLogin from "../apis/auth/kakaoLogin";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
+import authKakaoLogin from "../../apis/auth/authKakaoLogin";
 
-function RedirectKakaoLogin() {
+function KakaoLoginRedirect() {
   const navigate = useNavigate();
-  const redirectCode = new URL(window.location.href).searchParams.get("code");
-  const { data, isError } = useQuery("kakaoAuth", async () => {
-    const result = await authKakaoLogin(redirectCode);
+  const code = new URL(window.location.href).searchParams.get("code");
+
+  const { data, isError } = useQuery("authKakaoLogin", async () => {
+    const result = await authKakaoLogin(code);
+    console.log(code);
     return result;
   });
   const redirectHandler = () => {
@@ -26,4 +28,4 @@ function RedirectKakaoLogin() {
   return <div>RedirectKakaoLogin</div>;
 }
 
-export default RedirectKakaoLogin;
+export default KakaoLoginRedirect;
