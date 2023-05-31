@@ -7,7 +7,6 @@ import { useQuery } from "react-query";
 import { getFeed } from "../apis/feed/getFeed";
 
 function Feed() {
-  const navigate = useNavigate();
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
 
   const openFeedDetail = (photoId) => {

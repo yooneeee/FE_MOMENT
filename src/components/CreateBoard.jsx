@@ -3,6 +3,10 @@ import "../css/CreateBoardModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
 import styled from "styled-components";
+import { useInput } from "../hooks/useInput";
+import { createBoardAxios } from "../apis/board/createBoard";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 const CreateBoard = (props) => {
   // 해시태그 기능
@@ -37,6 +41,10 @@ const CreateBoard = (props) => {
 
     if (hashTags.length >= 3) return;
 
+    if (!newHashTag.startsWith("#")) {
+      newHashTag = `#${newHashTag}`;
+    }
+
     setHashTags((prevHashTags) => {
       return [...new Set([...prevHashTags, newHashTag])];
     });
@@ -66,10 +74,12 @@ const CreateBoard = (props) => {
 
   /////////////////////////////////////////////////////////////
   const { open, close } = props;
-  const [file, setFile] = useState("");
+  const modalRef = useRef(null);
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const modalRef = useRef(null);
+  const [title, onChangeTitleHandler] = useInput();
+  const [content, onChangeContentHandler] = useInput();
 
   // 이미지 미리보기
   const handleFileChange = (e) => {
@@ -105,6 +115,42 @@ const CreateBoard = (props) => {
     };
   }, []);
 
+  // 서버 통신
+  const createBoardMutation = useMutation(createBoardAxios, {
+    onSuccess: () => {
+      alert("게시글 생성이 완료됐습니다");
+      close();
+      navigate("/board");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  // 저장하기 버튼 클릭
+  const saveButtonHandler = () => {
+    if (!selectedFile || !content) {
+      alert("사진과 내용을 모두 입력해주세요");
+      return;
+    }
+
+    const formData = new FormData();
+
+    const boardRequestDto = {
+      title: title,
+      contents: content,
+      locationTags: hashTags,
+    };
+
+    formData.append(
+      "boardRequestDto",
+      new Blob([JSON.stringify(boardRequestDto)], { type: "application/json" })
+    );
+    formData.append("boardImg", selectedFile);
+
+    createBoardMutation.mutate(formData);
+  };
+
   return (
     <div
       className={open ? "openModal create-board-modal" : "create-board-modal"}
@@ -113,7 +159,9 @@ const CreateBoard = (props) => {
         <section ref={modalRef}>
           <header>
             <p className="headerTitle">새 게시글 만들기</p>
-            <button className="saveButton">저장하기</button>
+            <button className="saveButton" onClick={saveButtonHandler}>
+              저장하기
+            </button>
           </header>
 
           <div className="container">
@@ -150,10 +198,14 @@ const CreateBoard = (props) => {
               <textarea
                 className="titleInput"
                 placeholder="제목 입력..."
+                value={title}
+                onChange={onChangeTitleHandler}
               ></textarea>
               <textarea
                 className="contentInput"
                 placeholder="문구 입력..."
+                value={content}
+                onChange={onChangeContentHandler}
               ></textarea>
 
               <HashTageContainer>
@@ -211,11 +263,6 @@ const Tag = styled.div`
   padding: 5px;
   border-radius: 5px;
   cursor: pointer;
-
-  &::before {
-    content: "#";
-  }
-
   &:hover {
     background: #4a88db;
   }
