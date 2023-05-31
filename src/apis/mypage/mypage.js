@@ -23,7 +23,6 @@ const mypageIngormationAxios = async (photoId, formData) => {
   };
   try {
     const response = await instance.put(`/page/${photoId}`, formData, config);
-    console.log(response);
     return response.data;
   } catch (error) {
     alert(error);
@@ -31,4 +30,4 @@ const mypageIngormationAxios = async (photoId, formData) => {
   }
 };
 
-export { mypageIngormationAxios, mypageAxios };
+export { mypageIngormationAxios };
