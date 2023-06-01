@@ -5,7 +5,6 @@ const mypage = async (hostId) => {
     const { data } = await instance.get(`/page/${hostId}`);
     return data;
   } catch (error) {
-    alert(error);
     throw error;
   }
 };
@@ -24,7 +23,6 @@ const mypageInformationAxios = async ({ hostId, formData }) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    alert(error);
     throw error;
   }
 };
