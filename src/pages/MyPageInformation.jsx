@@ -2,31 +2,24 @@ import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { mypageInformationAxios } from "../apis/mypage/mypage";
 import { useMutation } from "react-query";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 const MyPageInformation = () => {
   const { hostId } = useParams();
-
-  const [inputs, setInputs] = useState({
-    nickName: "",
-    password: "",
-    role: "",
-    profileImg: null,
-  });
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setInputs({ ...inputs, [name]: value });
-  };
+  const navigate = useNavigate();
 
   /* 기본 이미지 토끼, 추후에 바꿀 예정 */
-  const [image, setImage] = useState("img/snowball.png");
-  const fileInput = useRef(null);
+  const [image, setImage] = useState(null);
+  const fileInput = useRef();
 
   const [pwIsVisible, setpwIsVisible] = useState(false);
   const [nickIsVisible, setnickIsVisible] = useState(false);
   const [imgIsVisible, setImgIsVisible] = useState(false);
   const [roleIsVisivle, setRoleVisivle] = useState(false);
+
+  const [newNick, setNewNick] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [newRole, setNewRole] = useState("");
 
   /* 버튼 클릭시 히든 폼 */
   const nicknameHandler = () => {
@@ -59,91 +52,52 @@ const MyPageInformation = () => {
   const roleCancelHandler = () => {
     setRoleVisivle(false);
   };
-
   /* 프로필 이미지 선택 */
-  const fileSelectHandler = async (e) => {
+  const fileSelectHandler = (e) => {
     const file = e.target.files[0];
     // 파일 처리 로직 추가
     // 이미지 업로드 후 이미지 변경 로직
-    const reader = new FileReader();
-    reader.onload = () => {
-      const uploadedImage = reader.result;
-      setImage(uploadedImage);
-    };
-    reader.readAsDataURL(file);
-    setInputs({ ...inputs, profileImg: file });
-    /*     const file = e.target.files[0];
-    try {
-      const formData = new FormData();
-      formData.append("profileImage", file);
-      await mypageInformationAxios(hostId, formData);
-    } catch (error) {
-      // Handle error
-      console.log(error);
-      alert(error);
-    } */
+    setImage(file);
+    console.log("프로필", file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
+  const mutation = useMutation(mypageInformationAxios, {
+    onSuccess: (response) => {
+      alert("수정 완료(❁´◡`❁)", response);
+      navigate(`/page/${hostId}`);
+    },
+    onError: (error) => {
+      alert("수정 실패o(TヘTo)", error);
+    },
+  });
 
-  // const { mutate } = useMutation(mypageInformationAxios);
-
-  // const handleFormSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   const formData = new FormData();
-  //   formData.append("profileImage", inputs.profileImg);
-
-  //   const update = {
-  //     nickName: inputs.nickName,
-  //     password: inputs.password,
-  //     role: inputs.role,
-  //   };
-  //   const blob = new Blob([JSON.stringify(update)], {
-  //     // type에 JSON 타입 지정
-  //     type: "application/json",
-  //   });
-
-  //   formData.append("update", blob);
-  //   // formData.append("update", JSON.stringify(update));
-
-  //   mutate([hostId, formData], {
-  //     onSuccess: (data) => {
-  //       // Handle successful update
-  //       console.log(data);
-  //     },
-  //     onError: (error) => {
-  //       // Handle error
-  //       console.log(error);
-  //       alert(error);
-  //     },
-  //   });
-  // };
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const formData = new FormData();
-      formData.append("profileImage", inputs.profileImg);
+    const file = fileInput.current.files[0];
+    console.log("핸들러", file);
+    const formData = new FormData();
 
-      const update = {
-        nickName: inputs.nickName,
-        password: inputs.password,
-        role: inputs.role,
-      };
-      // const blob = new Blob([JSON.stringify(update)], {
-      //   // type에 JSON 타입 지정
-      //   type: "application/json",
-      // });
-
-      // formData.append("update", blob);
-      formData.append("update", JSON.stringify(update));
-
-      await mypageInformationAxios(hostId, formData);
-      console.log("업데이트?");
-    } catch (error) {
-      // Handle error
-      console.log(error);
-      alert(error);
-    }
+    const update = {
+      nickName: newNick,
+      password: newPw,
+      role: newRole,
+    };
+    formData.append(
+      "update",
+      new Blob([JSON.stringify(update)], { type: "application/json" })
+    );
+    console.log("마지막", file);
+    file && formData.append("profile", file);
+    console.log(hostId);
+    console.log(formData);
+    mutation.mutate({ hostId, formData });
   };
 
   return (
@@ -156,11 +110,21 @@ const MyPageInformation = () => {
           <Line />
           <Text1>사진</Text1>
           <ProfileContainer>
-            <ProfileImg src="img/snowball.png" alt="프로필 이미지" />
+            <ProfileImg src={image} />
           </ProfileContainer>
           <TextColumn>
             <ProfileText>
-              {imgIsVisible ? (
+              <UploadButton>
+                사진선택
+                <input
+                  type="file"
+                  name="profileImg"
+                  accept="image/*"
+                  onChange={fileSelectHandler}
+                  ref={fileInput}
+                ></input>
+              </UploadButton>
+              {/* {imgIsVisible ? (
                 <HiddenForm>
                   <UploadButton>
                     사진선택
@@ -168,7 +132,6 @@ const MyPageInformation = () => {
                       type="file"
                       name="profileImg"
                       accept="image/*"
-                      ref={fileInput}
                       onChange={fileSelectHandler}
                     ></input>
                   </UploadButton>
@@ -190,12 +153,12 @@ const MyPageInformation = () => {
                     등록 된 사진은 회원님의 게시물이나 피드에 사용됩니다.
                   </span>
                 </>
-              )}
+              )} */}
             </ProfileText>
           </TextColumn>
-          {imgIsVisible ? null : (
+          {/* {imgIsVisible ? null : (
             <Button onClick={imgHandler}>사진 변경</Button>
-          )}
+          )} */}
         </Box>
         <Line1 />
         <Box>
@@ -205,8 +168,10 @@ const MyPageInformation = () => {
               type="text"
               placeholder="닉네임 입력(최대 ~자)"
               name="nickName"
-              value={inputs.nickName}
-              onChange={onChange}
+              value={newNick}
+              onChange={(e) => {
+                setNewNick(e.target.value);
+              }}
             />
             {/* {nickIsVisible ? (
             <HiddenForm>
@@ -244,8 +209,10 @@ const MyPageInformation = () => {
               <HiddenInput
                 type="password"
                 name="password"
-                value={inputs.password}
-                onChange={onChange}
+                value={newPw}
+                onChange={(e) => {
+                  setNewPw(e.target.value);
+                }}
               />
             </Column>
             {/* {pwIsVisible ? (
@@ -290,8 +257,10 @@ const MyPageInformation = () => {
               type="text"
               placeholder="영어를 입력하세요."
               name="role"
-              value={inputs.role}
-              onChange={onChange}
+              value={newRole}
+              onChange={(e) => {
+                setNewRole(e.target.value);
+              }}
             />
             {/* {roleIsVisivle ? (
             <HiddenForm>
@@ -353,11 +322,15 @@ const ProfileContainer = styled.div`
   border-radius: 50%;
   overflow: hidden;
   /* cursor: pointer; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const ProfileImg = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  background-color: #a3ffff;
 `;
 const ProfileText = styled.div`
   margin-top: 10px;
