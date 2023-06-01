@@ -7,6 +7,7 @@ import { useInput } from "../hooks/useInput";
 import { createBoardAxios } from "../apis/board/createBoard";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineClose } from "react-icons/ai";
 
 const CreateBoard = (props) => {
   // 해시태그 기능
@@ -159,9 +160,14 @@ const CreateBoard = (props) => {
         <section ref={modalRef}>
           <header>
             <p className="headerTitle">새 게시글 만들기</p>
-            <button className="saveButton" onClick={saveButtonHandler}>
-              저장하기
-            </button>
+            <div className="headerRightBox">
+              <button className="saveButton" onClick={saveButtonHandler}>
+                저장하기
+              </button>
+              <button className="close" onClick={close}>
+                <AiOutlineClose />
+              </button>
+            </div>
           </header>
 
           <div className="container">
@@ -229,9 +235,6 @@ const CreateBoard = (props) => {
               </HashTageContainer>
             </div>
           </div>
-          <button className="close" onClick={close}>
-            X
-          </button>
         </section>
       ) : null}
     </div>
