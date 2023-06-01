@@ -1,19 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 
-function BoardItem() {
+function BoardItem({ item }) {
   return (
-    <Item>
-      <ImageContainer />
+    <Item key={item.boardId}>
+      <ImageContainer img={item.boardImgUrl} />
       <ContentContainer>
-        <Title>서울에서 작업하실 모델 찾아요!</Title>
+        <Title>{item.title}</Title>
         <PhotographerInfo>
-          <PhotographerName>Photographer</PhotographerName>
-          <div>닉네임</div>
+          <PhotographerName>{item.role}</PhotographerName>
+          <div>{item.nickName}</div>
         </PhotographerInfo>
         <MeetInfo>
-          <Location>서울 중구</Location>
-          <Date>2023.08.08</Date>
+          {/* <Location>서울 중구</Location> */}
+          <Date>{item.createdTime}</Date>
         </MeetInfo>
       </ContentContainer>
     </Item>
@@ -46,7 +46,7 @@ const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url(https://post-phinf.pstatic.net/MjAxODAyMTZfMTc1/MDAxNTE4NzY4MzY2Mzky.uHl9W4Ck2pCtJpTIRSsmSD_x3RrSJE9TgsAAH6KwBWYg.E5STeiemwcVj5M7BLB5zS5bfD6Ou2GzIK-TBVvn3YIMg.JPEG/%EB%AC%B4%EC%A0%9C-1_%EB%B3%B5%EC%82%AC.jpg);
+  background-image: url(${(props) => props.img});
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

@@ -6,7 +6,6 @@ import Login from "../pages/Login/Login";
 import Layout from "./Layout";
 import Feed from "../pages/Feed";
 import Board from "../pages/Board";
-import FeedDetail from "../pages/FeedDetail";
 import IntegratedSignup from "../pages/IntegratedSignup";
 import EmailSignup from "../pages/EmailSignup";
 import MyPage from "../pages/MyPage";
@@ -28,13 +27,8 @@ const Router = () => {
           <Route path="feeds" element={<Feed />} />
           <Route path="board" element={<Board />} />
           <Route path="feeddetail" element={<FeedDetail />} />
-          {/* <Route path="mypage" element={<MyPage />} /> */}
           <Route path={`page/:hostId`} element={<MyPage />} />
-          {/* <Route path="mypageinformation" element={<MyPageInformation />} /> */}
-          <Route
-            path={`mypageinformation/:hostId`}
-            element={<MyPageInformation />}
-          />
+          <Route path={`mypageinformation/:hostId`} element={<MyPageInformation />} />
           <Route path="chat" element={<Chat />} />
         </Routes>
       </Layout>

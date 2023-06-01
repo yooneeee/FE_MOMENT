@@ -203,3 +203,13 @@
 .contentInput::placeholder {
     color: #a9a9a9;
 }
+
+.headerRightBox {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.close {
+    margin-top: 3px;
+}

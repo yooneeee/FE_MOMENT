@@ -10,4 +10,15 @@ const authKakaoLogin = async (code) => {
   }
 };
 
-export default authKakaoLogin;
+const sendRoleAxios = async (role) => {
+  try {
+    const response = await instance.post("/users/kakao/role", role);
+    console.log("response", response);
+    return response.data;
+  } catch (error) {
+    alert(error);
+    throw error;
+  }
+};
+
+export { authKakaoLogin, sendRoleAxios };
