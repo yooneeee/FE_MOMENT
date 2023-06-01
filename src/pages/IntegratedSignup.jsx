@@ -14,9 +14,16 @@ import {
   EmailButton,
   ButtonText,
 } from "../styles/ButtonStyles";
+import { REDIRECT_URI, REST_API_KEY } from "./Login/KakaoLoginData";
+
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
 function IntegratedSignup() {
   const navigate = useNavigate();
+  const kakaoSignupButtonHandler = () => {
+    window.location.href = KAKAO_AUTH_URL;
+  };
+
   return (
     <Container>
       <CenteredContent>
@@ -42,7 +49,7 @@ function IntegratedSignup() {
           <Text3>또는</Text3>
           <Line />
         </TextWithLines>
-        <KakaoLoginButton>
+        <KakaoLoginButton type="button" onClick={kakaoSignupButtonHandler}>
           <KakaoLogoContainer>
             <KakaoLogoImage src="img/KakaoLogoImage.png" alt="카카오 로고" />
           </KakaoLogoContainer>

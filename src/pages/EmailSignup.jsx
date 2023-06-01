@@ -268,6 +268,7 @@ function EmailSignup() {
             {isemailChecking ? "인증완료" : "인증번호 전송"}
           </MailCheckButton>
         </InputGroup>
+        {emailErrorMessage && <ErrorMessage>{emailError}</ErrorMessage>}
         {/* 이메일 인증번호 입력란 => 이메일을 서버에 성공적으로 보내면 인증번호 입력란이 나게 */}
         {isSendEmail && !isemailChecking && (
           <>

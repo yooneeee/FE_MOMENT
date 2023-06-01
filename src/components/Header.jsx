@@ -97,7 +97,6 @@ function Header() {
     await logoutMutation.mutateAsync();
     dispatch(logoutSuccess());
     navigate("/");
-    logoutMutation.mutate();
   };
   return (
     <HeaderStyles

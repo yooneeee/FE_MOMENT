@@ -27,8 +27,11 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   function (response) {
-    const accessKeyHeader = response.headers.get("Access_key");
-    const refreshKeyHeader = response.headers.get("Refresh_key");
+    const accessKeyHeader =
+      response.headers.get("Access_key") || response.headers.get("access_key");
+    const refreshKeyHeader =
+      response.headers.get("Refresh_key") ||
+      response.headers.get("refresh_key");
 
     if (accessKeyHeader && refreshKeyHeader) {
       sessionStorage.setItem("Access_key", accessKeyHeader);
