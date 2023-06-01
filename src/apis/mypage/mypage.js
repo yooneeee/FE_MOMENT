@@ -10,12 +10,15 @@ const mypage = async (hostId) => {
   }
 };
 
-const mypageInformationAxios = async (hostId, formData) => {
+const mypageInformationAxios = async ({ hostId, formData }) => {
   const config = {
     headers: {
       "Content-type": "multipart/form-data",
     },
   };
+  console.log(hostId);
+  console.log(formData);
+
   try {
     const response = await instance.put(`/page/${hostId}`, formData, config);
     return response.data;
