@@ -4,12 +4,12 @@ import BoardItem from "../components/BoardItem";
 import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 // have a unique "key" prop? ㅜㅜㅜ
 
 const MyPage = () => {
   const { hostId } = useParams();
-  console.log(hostId);
+  // console.log(hostId);
 
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
@@ -21,6 +21,7 @@ const MyPage = () => {
   if (isError) {
     return <h1>오류ㅜ.ㅜ</h1>;
   }
+  console.log(data);
   return (
     <PageContainer>
       <ContentContainer>
@@ -37,7 +38,9 @@ const MyPage = () => {
               <Recommend>추천 {data.recommendCnt}</Recommend>
             </StFlex>
             <StFlex>
-              <ChatBtn>채팅</ChatBtn>
+              <Link to={`/mypageinformation/${hostId}`}>
+                <ChatBtn>프로필 편집</ChatBtn>
+              </Link>
             </StFlex>
           </ProfileInfo>
         </ProfileSection>
