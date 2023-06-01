@@ -28,7 +28,11 @@ const Router = () => {
           <Route path="feeddetail" element={<FeedDetail />} />
           {/* <Route path="mypage" element={<MyPage />} /> */}
           <Route path={`page/:hostId`} element={<MyPage />} />
-          <Route path="mypageinformation" element={<MyPageInformation />} />
+          {/* <Route path="mypageinformation" element={<MyPageInformation />} /> */}
+          <Route
+            path={`mypageinformation/:hostId`}
+            element={<MyPageInformation />}
+          />
           <Route path="chat" element={<Chat />} />
         </Routes>
       </Layout>
