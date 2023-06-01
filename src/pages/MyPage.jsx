@@ -55,8 +55,8 @@ const MyPage = () => {
           </WorkSection>
           <Content>
             <Work>내가 쓴 게시물</Work>
-            <BoardItem />
-            <BoardItem />
+            {/* <BoardItem />
+            <BoardItem /> */}
           </Content>
         </Container>
       </ContentContainer>
