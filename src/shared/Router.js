@@ -6,7 +6,6 @@ import Login from "../pages/Login";
 import Layout from "./Layout";
 import Feed from "../pages/Feed";
 import Board from "../pages/Board";
-import FeedDetail from "../pages/FeedDetail";
 import IntegratedSignup from "../pages/IntegratedSignup";
 import EmailSignup from "../pages/EmailSignup";
 import MyPage from "../pages/MyPage";
@@ -24,7 +23,6 @@ const Router = () => {
           <Route path="emailsignup" element={<EmailSignup />} />
           <Route path="feeds" element={<Feed />} />
           <Route path="board" element={<Board />} />
-          <Route path="feeddetail" element={<FeedDetail />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="mypageinformation" element={<MyPageInformation />} />
         </Routes>
