@@ -14,6 +14,7 @@ const MyPage = () => {
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
   );
+
   if (isLoading) {
     return <h1>로딩 중입니다..!</h1>;
   }
@@ -152,7 +153,7 @@ const ChatBtn = styled.button`
 const ProfilePicture = styled.img`
   width: 200px;
   height: 200px;
-  object-fit: fill;
+  object-fit: cover;
   border-radius: 50%;
 `;
 
