@@ -3,20 +3,23 @@ import styled from "styled-components";
 import BoardItem from "../components/BoardItem";
 import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+
+// have a unique "key" prop? ㅜㅜㅜ
 
 const MyPage = () => {
-  const hostId = 5;
-  const { isError, isLoading, data } = useQuery(
-    ["mypage", mypage],
-    () => mypage(5)
-    // mypage(hostId)
+  const { hostId } = useParams();
+  console.log(hostId);
+
+  const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
+    mypage(hostId)
   );
   if (isLoading) {
     return <h1>로딩 중입니다..!</h1>;
   }
 
   if (isError) {
-    return <h1>오류,,,</h1>;
+    return <h1>오류ㅜ.ㅜ</h1>;
   }
   return (
     <PageContainer>
@@ -42,16 +45,9 @@ const MyPage = () => {
           <WorkSection>
             <Work>작업</Work>
             <WorkList>
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
+              {data.photoList.map((item, index) => {
+                return <WorkItem key={index} src={item.photoUrl} />;
+              })}
             </WorkList>
           </WorkSection>
           <Content>
@@ -212,7 +208,10 @@ const WorkList = styled.div`
 const WorkItem = styled.div`
   width: 100%;
   padding-top: 100%;
-  background-color: lightgray;
+  background-image: ${(props) => `url(${props.src})`};
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
   @media (max-width: 480px) {
     height: 200px;
