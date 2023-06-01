@@ -4,6 +4,7 @@ import InitialNav from "../components/InitialNav";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { initialMain } from "../apis/main/initialMain";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function Start() {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ function Start() {
   const { isLoading, isError, data } = useQuery("initialMain", initialMain);
 
   if (isLoading) {
-    return <h1>로딩 중입니다..!</h1>;
+    return <LoadingSpinner />;
   }
 
   if (isError) {
