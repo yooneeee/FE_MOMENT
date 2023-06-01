@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FeedDetail from "../components/FeedDetail";
 import "../css/App.css";
 import { useQuery } from "react-query";
-import { getFeed } from "../apis/feed/getFeed";
+import { getFeedAxios } from "../apis/feed/getFeedAxios";
 
 function Feed() {
+  // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
 
   const openFeedDetail = (photoId) => {
@@ -18,7 +18,7 @@ function Feed() {
   };
 
   // 서버 통신
-  const { isLoading, isError, data } = useQuery("getFeed", getFeed);
+  const { isLoading, isError, data } = useQuery("getFeedAxios", getFeedAxios);
 
   if (isLoading) {
     return;

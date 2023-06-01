@@ -3,9 +3,10 @@ import "../css/CreateFeedModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
 import { useInput } from "../hooks/useInput";
-import { createFeedAxios } from "../apis/feed/createFeed";
+import { createFeedAxios } from "../apis/feed/createFeedAxios";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineClose } from "react-icons/ai";
 
 const CreateFeed = (props) => {
   const { open, close } = props;
@@ -81,9 +82,14 @@ const CreateFeed = (props) => {
         <section ref={modalRef}>
           <header>
             <p className="headerTitle">새 피드 만들기</p>
-            <button className="saveButton" onClick={saveButtonHandler}>
-              저장하기
-            </button>
+            <div className="headerRightBox">
+              <button className="saveButton" onClick={saveButtonHandler}>
+                저장하기
+              </button>
+              <button className="close" onClick={close}>
+                <AiOutlineClose />
+              </button>
+            </div>
           </header>
 
           <div className="container">
@@ -126,9 +132,9 @@ const CreateFeed = (props) => {
             </div>
           </div>
 
-          <button className="close" onClick={close}>
+          {/* <button className="close" onClick={close}>
             X
-          </button>
+          </button> */}
         </section>
       ) : null}
     </div>

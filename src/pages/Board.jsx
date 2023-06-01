@@ -1,8 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import BoardItem from "../components/BoardItem";
+import { useQuery } from "react-query";
+import { getBoard } from "../apis/create/getBoard";
 
 function Board() {
+  const { isError, isLoading, data } = useQuery("getBoard", getBoard);
+
+  if (isLoading) {
+    return;
+  }
+
+  if (isError) {
+    return <h1>오류가 발생하였습니다...!</h1>;
+  }
   return (
     <Container>
       <Header>
@@ -15,13 +26,9 @@ function Board() {
         </Navbar>
       </Header>
       <Content>
-        <BoardItem />
-        <BoardItem />
-        <BoardItem />
-        <BoardItem />
-        <BoardItem />
-        <BoardItem />
-        <BoardItem />
+        {data.map((item) => {
+          return <BoardItem item={item} key={item.boardId} />;
+        })}
       </Content>
     </Container>
   );

@@ -10,7 +10,6 @@ const createBoardAxios = async (formData) => {
     const response = await instance.post("/boards", formData, config);
     return response.data;
   } catch (error) {
-    alert(error);
     throw error;
   }
 };
