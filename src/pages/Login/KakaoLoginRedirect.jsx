@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { authKakaoLogin, sendRoleAxios } from "../../apis/auth/authKakaoLogin";
 import { useDispatch } from "react-redux";
-import { loginSuccess, setUser } from "../../redux/modules/user";
+import { loginSuccess, setUser, setUserRole } from "../../redux/modules/user";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import styled from "styled-components";
 
@@ -68,8 +68,8 @@ function KakaoLoginRedirect() {
     setModal(false);
   };
   const roleButtonHandler = () => {
-    sendRoleMutation.mutate({ role });
-    console.log(role);
+    sendRoleMutation.mutate(role);
+    dispatch(setUserRole({ role: role }));
   };
 
   const activeHandler = () => {
