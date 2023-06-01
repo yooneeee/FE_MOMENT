@@ -34,10 +34,11 @@ const MyPage = () => {
               <UserNickname>{data.nickName}</UserNickname>
             </StFlex>
             <StFlex>
-              <Post>게시물 {data.photoList.length}</Post>
+              <Post>피드 {data.photoList.length}</Post>
               <span>|</span>
-              <Recommend>추천 {data.boardCnt}</Recommend>
+              <Recommend>게시글 {data.boardCnt}</Recommend>
             </StFlex>
+            <Post>추천 {data.totalPhotoLoveCnt}</Post>
             <StFlex>
               <Link to={`/mypageinformation/${hostId}`}>
                 <ChatBtn>프로필 편집</ChatBtn>
@@ -56,8 +57,9 @@ const MyPage = () => {
           </WorkSection>
           <Content>
             <Work>내가 쓴 게시물</Work>
-            {/* <BoardItem />
-            <BoardItem /> */}
+            {/* {data.boardList.map((item, index) => {
+              return <BoardItem key={index} src={item.boardImgUrl} />;
+            })} */}
           </Content>
         </Container>
       </ContentContainer>
