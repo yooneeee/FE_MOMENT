@@ -1,5 +1,6 @@
 import { instance } from "../axios";
 
+/* 마이페이지 */
 const mypage = async (hostId) => {
   try {
     const { data } = await instance.get(`/page/${hostId}`);
@@ -10,6 +11,7 @@ const mypage = async (hostId) => {
   }
 };
 
+/* 마이페이지 정보 수정 */
 const mypageInformationAxios = async ({ hostId, formData }) => {
   const config = {
     headers: {
