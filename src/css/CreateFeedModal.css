@@ -147,6 +147,7 @@
     padding: 5px;
     background-color: transparent;
     font-weight: 600;
+    margin-left: auto;
 }
 
 .profileBox {
@@ -180,4 +181,14 @@
     resize: none;
     border: none;
     outline: none;
+}
+
+.headerRightBox {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.close {
+    margin-top: 3px;
 }
