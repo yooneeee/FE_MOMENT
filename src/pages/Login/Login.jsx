@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { InputWrap, Input, InputTitle } from "../styles/InputStyles";
-import { ButtonText } from "../styles/ButtonStyles";
-import { Container, Title, TitleLogo } from "../styles/ContainerStyles";
+import { InputWrap, Input, InputTitle } from "../../styles/InputStyles";
+import { ButtonText } from "../../styles/ButtonStyles";
+import { Container, Title, TitleLogo } from "../../styles/ContainerStyles";
 import {
   KakaoLoginButton,
   KakaoLogoContainer,
   KakaoLogoImage,
   EmailButton,
-} from "../styles/ButtonStyles";
+} from "../../styles/ButtonStyles";
 import { useNavigate } from "react-router-dom";
-import { useInput } from "../hooks/useInput";
+import { useInput } from "../../hooks/useInput";
 import { useMutation } from "react-query";
-import { loginAxios } from "../apis/auth/login";
+import { loginAxios } from "../../apis/auth/login";
 import { useDispatch } from "react-redux";
-import { loginSuccess, setUser } from "../redux/modules/user";
+import { loginSuccess, setUser } from "../../redux/modules/user";
+import { REST_API_KEY, REDIRECT_URI } from "./KakaoLoginData";
+
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
 function Login() {
   const navigate = useNavigate();
@@ -32,12 +35,14 @@ function Login() {
   const loginMutation = useMutation(loginAxios, {
     onSuccess: (response) => {
       alert("로그인 성공!");
+      console.log(response);
       dispatch(loginSuccess());
       dispatch(
         setUser({
           nickName: response.nickName,
           profileImg: response.profileImg,
           role: response.role,
+          userId: response.userId,
         })
       );
 
@@ -57,6 +62,10 @@ function Login() {
   useEffect(() => {
     loginActiveHandler();
   }, [email, password]);
+
+  const kakaoLoginButtonHandler = () => {
+    window.location.href = KAKAO_AUTH_URL;
+  };
 
   return (
     <Container>
@@ -94,7 +103,7 @@ function Login() {
           </EmailButton>
         </ButtonWrap>
         <Line />
-        <KakaoLoginButton>
+        <KakaoLoginButton type="button" onClick={kakaoLoginButtonHandler}>
           <KakaoLogoContainer>
             <KakaoLogoImage src="img/KakaoLogoImage.png" alt="카카오 로고" />
           </KakaoLogoContainer>
@@ -125,3 +134,9 @@ const CenteredContent = styled.form`
   box-sizing: border-box;
   padding: 40px 0px;
 `;
+/* <카카오 소셜 로그인 flow>
+프론트엔드로 부터 인가 코드를 전달 받는다.
+전달 받은 인가 코드를 가지고, 카카오 인증 서버에 토큰 발급 요청을 보낸다.
+전달 받는 카카오 토큰을 가지고 카카오 리소스 서버에 유저 정보 요청을 보낸다.
+전달 받은 유저 정보를 가지고 회원가입 중복 여부를 거친다.
+중복이라면(카카오로 로그인한적있는 유저), jwt 토큰을 발급하여 프론트엔드에 전달하고, 중복이 아니라면 새로운 유저로 가입을 시킨 후, jwt 토큰을 발급하여 프론트 엔드에 전달한다. */

@@ -3,13 +3,14 @@ import styled from "styled-components";
 import Card from "../components/Card";
 import { useQuery } from "react-query";
 import { main } from "../apis/main/main";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function Main() {
   // 서버 통신
   const { isLoading, isError, data } = useQuery("main", main);
 
   if (isLoading) {
-    return <h1>로딩 중입니다..!</h1>;
+    return <LoadingSpinner />;
   }
 
   if (isError) {
