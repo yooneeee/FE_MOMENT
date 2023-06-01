@@ -5,7 +5,7 @@ import styled from "styled-components";
 function LoadingSpinner() {
   return (
     <Background>
-      <img src={Spinner} alt="loading-spinner"></img>r
+      <img src={Spinner} alt="loading-spinner"></img>
     </Background>
   );
 }
