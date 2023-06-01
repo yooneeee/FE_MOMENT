@@ -36,7 +36,7 @@ const MyPage = () => {
             <StFlex>
               <Post>게시물 {data.photoList.length}</Post>
               <span>|</span>
-              <Recommend>추천 {data.recommendCnt}</Recommend>
+              <Recommend>추천 {data.boardCnt}</Recommend>
             </StFlex>
             <StFlex>
               <Link to={`/mypageinformation/${hostId}`}>
