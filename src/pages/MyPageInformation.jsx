@@ -9,7 +9,8 @@ const MyPageInformation = () => {
   const navigate = useNavigate();
 
   /* 기본 이미지 토끼, 추후에 바꿀 예정 */
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("/img/profileImg.jpg");
+  console.log(image);
   const fileInput = useRef();
 
   const [pwIsVisible, setpwIsVisible] = useState(false);
@@ -330,7 +331,6 @@ const ProfileImg = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background-color: #a3ffff;
 `;
 const ProfileText = styled.div`
   margin-top: 10px;
