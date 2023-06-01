@@ -1,10 +1,24 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
-import { mypageIngormationAxios, mypageAxios } from "../apis/mypage/mypage";
+import { mypageInformationAxios } from "../apis/mypage/mypage";
 import { useMutation } from "react-query";
-import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-function MyPageInformation() {
+const MyPageInformation = () => {
+  const { hostId } = useParams();
+
+  const [inputs, setInputs] = useState({
+    nickName: "",
+    password: "",
+    role: "",
+    profileImg: null,
+  });
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setInputs({ ...inputs, [name]: value });
+  };
+
   /* 기본 이미지 토끼, 추후에 바꿀 예정 */
   const [image, setImage] = useState("img/snowball.png");
   const fileInput = useRef(null);
@@ -13,11 +27,6 @@ function MyPageInformation() {
   const [nickIsVisible, setnickIsVisible] = useState(false);
   const [imgIsVisible, setImgIsVisible] = useState(false);
   const [roleIsVisivle, setRoleVisivle] = useState(false);
-
-  // const [newImg, setNewImg] = useState("");
-  const [newNick, setNewNick] = useState("");
-  const [newPw, setNewPw] = useState("");
-  const [newRole, setNewRole] = useState("");
 
   /* 버튼 클릭시 히든 폼 */
   const nicknameHandler = () => {
@@ -52,7 +61,7 @@ function MyPageInformation() {
   };
 
   /* 프로필 이미지 선택 */
-  const fileSelectHandler = (e) => {
+  const fileSelectHandler = async (e) => {
     const file = e.target.files[0];
     // 파일 처리 로직 추가
     // 이미지 업로드 후 이미지 변경 로직
@@ -62,115 +71,144 @@ function MyPageInformation() {
       setImage(uploadedImage);
     };
     reader.readAsDataURL(file);
+    setInputs({ ...inputs, profileImg: file });
+    /*     const file = e.target.files[0];
+    try {
+      const formData = new FormData();
+      formData.append("profileImage", file);
+      await mypageInformationAxios(hostId, formData);
+    } catch (error) {
+      // Handle error
+      console.log(error);
+      alert(error);
+    } */
   };
 
-  /* 프로필 수정 */
-  // const imgChangeHandler = (e) => {
-  //   setNewImg(e.target.value);
+  // const { mutate } = useMutation(mypageInformationAxios);
+
+  // const handleFormSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const formData = new FormData();
+  //   formData.append("profileImage", inputs.profileImg);
+
+  //   const update = {
+  //     nickName: inputs.nickName,
+  //     password: inputs.password,
+  //     role: inputs.role,
+  //   };
+  //   const blob = new Blob([JSON.stringify(update)], {
+  //     // type에 JSON 타입 지정
+  //     type: "application/json",
+  //   });
+
+  //   formData.append("update", blob);
+  //   // formData.append("update", JSON.stringify(update));
+
+  //   mutate([hostId, formData], {
+  //     onSuccess: (data) => {
+  //       // Handle successful update
+  //       console.log(data);
+  //     },
+  //     onError: (error) => {
+  //       // Handle error
+  //       console.log(error);
+  //       alert(error);
+  //     },
+  //   });
   // };
-  const nickChangeHandler = (e) => {
-    setNewNick(e.target.value);
-  };
-  const pwChangeHandler = (e) => {
-    setNewPw(e.target.value);
-  };
-  const roleChangeHandler = (e) => {
-    // const selectedRole = e.target.innerText;
-    // setNewRole(selectedRole);
-    // setRoleVisivle(false);
-    setNewRole("PHOTOGRAPHER");
-  };
-  // const roleButtonHandler = (e) => {
-  //   roleChangeHandler(e);
-  //   setRoleVisivle(true);
-  // };
-
-  /* 서버 통신 */
-  // const MypageMutation = useMutation(mypageIngormationAxios, {
-  //   onSuccess: () => {
-  //     alert("회원정보 수정 완료!");
-  //   },
-  //   onError: (error) => {
-  //     console.log(error);
-  //   },
-  // });
-
-  // console.log(MypageMutation);
-  /* 변경 버튼 클릭 */
-  const changeButtonHandler = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
+      formData.append("profileImage", inputs.profileImg);
 
-    formData.append("profileImg", image);
+      const update = {
+        nickName: inputs.nickName,
+        password: inputs.password,
+        role: inputs.role,
+      };
+      // const blob = new Blob([JSON.stringify(update)], {
+      //   // type에 JSON 타입 지정
+      //   type: "application/json",
+      // });
 
-    const update = {
-      nickName: newNick,
-      password: newPw,
-      role: newRole,
-    };
+      // formData.append("update", blob);
+      formData.append("update", JSON.stringify(update));
 
-    formData.append("update", JSON.stringify(update));
-
-    // formData.append(
-    //   "update",
-    //   new Blob([JSON.stringify(update)], { type: "application/json" })
-    // );
-    // MypageMutation.mutate(formData);
-    // console.log("서버 전송 완료!");
+      await mypageInformationAxios(hostId, formData);
+      console.log("업데이트?");
+    } catch (error) {
+      // Handle error
+      console.log(error);
+      alert(error);
+    }
   };
 
   return (
     <Container>
-      <Box>
-        <Title>
-          기본 회원정보<span>필수</span>
-        </Title>
-        <Line />
-        <Text1>사진</Text1>
-        <ProfileContainer>
-          <ProfileImg
-            src={image}
-            alt="프로필 이미지"
-            //   onClick={() => {
-            //     fileInput.current.click();
-            //   }}
-          />
-        </ProfileContainer>
-        <TextColumn>
-          <ProfileText>
-            {imgIsVisible ? (
-              <HiddenForm>
-                <UploadButton>
-                  사진선택
-                  <input type="file" onChange={fileSelectHandler}></input>
-                </UploadButton>
-                <BasicImgButton onClick={basiCImgHandler}>
-                  기본이미지로 변경
-                </BasicImgButton>
-                <ButtonColumn>
-                  <HiddenFormBtn onClick={imgCancelHandler}>취소</HiddenFormBtn>
-                  <HiddenFormBtn>완료</HiddenFormBtn>
-                </ButtonColumn>
-              </HiddenForm>
-            ) : (
-              <>
-                <span>회원님을 알릴 수 있는 사진을 등록해 주세요.</span>
-                <br />
-                <span>
-                  등록 된 사진은 회원님의 게시물이나 피드에 사용됩니다.
-                </span>
-              </>
-            )}
-          </ProfileText>
-        </TextColumn>
-        {imgIsVisible ? null : <Button onClick={imgHandler}>사진 변경</Button>}
-      </Box>
-      <Line1 />
-      <Box>
-        <Text>닉네임</Text>
-        <TextColumn>
-          {nickIsVisible ? (
+      <form onSubmit={handleFormSubmit}>
+        <Box>
+          <Title>
+            기본 회원정보<span>필수</span>
+          </Title>
+          <Line />
+          <Text1>사진</Text1>
+          <ProfileContainer>
+            <ProfileImg src="img/snowball.png" alt="프로필 이미지" />
+          </ProfileContainer>
+          <TextColumn>
+            <ProfileText>
+              {imgIsVisible ? (
+                <HiddenForm>
+                  <UploadButton>
+                    사진선택
+                    <input
+                      type="file"
+                      name="profileImg"
+                      accept="image/*"
+                      ref={fileInput}
+                      onChange={fileSelectHandler}
+                    ></input>
+                  </UploadButton>
+                  <BasicImgButton onClick={basiCImgHandler}>
+                    기본이미지로 변경
+                  </BasicImgButton>
+                  <ButtonColumn>
+                    <HiddenFormBtn onClick={imgCancelHandler}>
+                      취소
+                    </HiddenFormBtn>
+                    <HiddenFormBtn>완료</HiddenFormBtn>
+                  </ButtonColumn>
+                </HiddenForm>
+              ) : (
+                <>
+                  <span>회원님을 알릴 수 있는 사진을 등록해 주세요.</span>
+                  <br />
+                  <span>
+                    등록 된 사진은 회원님의 게시물이나 피드에 사용됩니다.
+                  </span>
+                </>
+              )}
+            </ProfileText>
+          </TextColumn>
+          {imgIsVisible ? null : (
+            <Button onClick={imgHandler}>사진 변경</Button>
+          )}
+        </Box>
+        <Line1 />
+        <Box>
+          <Text>닉네임</Text>
+          <TextColumn>
+            <HiddenInput
+              type="text"
+              placeholder="닉네임 입력(최대 ~자)"
+              name="nickName"
+              value={inputs.nickName}
+              onChange={onChange}
+            />
+            {/* {nickIsVisible ? (
             <HiddenForm>
               <HiddenNick>
                 <span>길이는 최대 ~자 이내로 작성해주세요.</span>
@@ -180,8 +218,7 @@ function MyPageInformation() {
               <HiddenInput
                 type="text"
                 placeholder="닉네임 입력(최대 ~자)"
-                value={newNick}
-                onChange={nickChangeHandler}
+                name="nickName"
               />
               <ButtonColumn>
                 <HiddenFormBtn onClick={nickCancelHandler}>취소</HiddenFormBtn>
@@ -190,19 +227,28 @@ function MyPageInformation() {
             </HiddenForm>
           ) : (
             <span>미뇽</span>
-          )}
-        </TextColumn>
-        {nickIsVisible ? null : (
+          )} */}
+          </TextColumn>
+          {/* {nickIsVisible ? null : (
           <Button onClick={nicknameHandler}>닉네임 변경</Button>
-        )}
-      </Box>
-      <Line1 />
-      <Box>
-        <Text>
-          <span>비밀번호</span>
-        </Text>
-        <TextColumn>
-          {pwIsVisible ? (
+        )} */}
+        </Box>
+        <Line1 />
+        <Box>
+          <Text>
+            <span>비밀번호</span>
+          </Text>
+          <TextColumn>
+            <Column>
+              <span>신규 비밀번호</span>
+              <HiddenInput
+                type="password"
+                name="password"
+                value={inputs.password}
+                onChange={onChange}
+              />
+            </Column>
+            {/* {pwIsVisible ? (
             <HiddenForm>
               <Column>
                 <span>현재 비밀번호</span>
@@ -210,16 +256,12 @@ function MyPageInformation() {
               </Column>
               <Column>
                 <span>신규 비밀번호</span>
-                <HiddenInput
-                  type="password"
-                  value={newPw}
-                  onChange={pwChangeHandler}
-                />
+                <HiddenInput type="password" name="password" />
               </Column>
-              {/* <Column>
+              <Column>
                   <span>신규 비밀번호 재 입력</span>
                   <HiddenInput type="password" />
-                </Column> */}
+                </Column>
               <ButtonColumn>
                 <HiddenFormBtn onClick={pwCancelHandler}>취소</HiddenFormBtn>
                 <HiddenFormBtn>완료</HiddenFormBtn>
@@ -227,43 +269,61 @@ function MyPageInformation() {
             </HiddenForm>
           ) : (
             <span>********</span>
-          )}
-        </TextColumn>
-        {pwIsVisible ? null : (
+          )} */}
+          </TextColumn>
+          {/* {pwIsVisible ? null : (
           <Button onClick={pwHandler}>비밀번호 변경</Button>
-        )}
-      </Box>
-      <Line1 />
-      <Box>
-        <Text>
-          <span>Role</span>
-        </Text>
-        <TextColumn>
-          {roleIsVisivle ? (
+        )} */}
+        </Box>
+        <Line1 />
+        <Box>
+          <Text>
+            <span>Role</span>
+          </Text>
+          <TextColumn>
+            <HiddenNick>
+              <span>1. PHOTOGRAPHER </span>
+              <br />
+              <span>2. MODEL </span>
+            </HiddenNick>
+            <HiddenInput
+              type="text"
+              placeholder="영어를 입력하세요."
+              name="role"
+              value={inputs.role}
+              onChange={onChange}
+            />
+            {/* {roleIsVisivle ? (
             <HiddenForm>
-              <Column>
-                <UploadButton onClick={roleChangeHandler}>
-                  PHOTOGRAPHER
-                </UploadButton>
-              </Column>
+              <HiddenNick>
+                <span>1. PHOTOGRAPHER </span>
+                <br />
+                <span>2. MODEL </span>
+              </HiddenNick>
+              <HiddenInput
+                type="text"
+                placeholder="영어를 입력하세요."
+                name="role"
+              />
               <ButtonColumn>
                 <HiddenFormBtn onClick={roleCancelHandler}>취소</HiddenFormBtn>
                 <HiddenFormBtn>완료</HiddenFormBtn>
               </ButtonColumn>
             </HiddenForm>
           ) : (
-            <span>Photographer</span>
-          )}
-        </TextColumn>
-        {roleIsVisivle ? null : (
+            <span>작가</span>
+          )} */}
+          </TextColumn>
+          {/* {roleIsVisivle ? null : (
           <Button onClick={roleHandler}>Role 변경</Button>
-        )}
-      </Box>
-      <Line1 />
-      <button onClick={changeButtonHandler}>정보변경</button>
+        )} */}
+        </Box>
+        <Line1 />
+        <button type="submit">정보변경</button>
+      </form>
     </Container>
   );
-}
+};
 
 export default MyPageInformation;
 
