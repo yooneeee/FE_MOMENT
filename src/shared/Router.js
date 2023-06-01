@@ -26,7 +26,8 @@ const Router = () => {
           <Route path="feeds" element={<Feed />} />
           <Route path="board" element={<Board />} />
           <Route path="feeddetail" element={<FeedDetail />} />
-          <Route path="mypage" element={<MyPage />} />
+          {/* <Route path="mypage" element={<MyPage />} /> */}
+          <Route path={`page/:hostId`} element={<MyPage />} />
           <Route path="mypageinformation" element={<MyPageInformation />} />
           <Route path="chat" element={<Chat />} />
         </Routes>
