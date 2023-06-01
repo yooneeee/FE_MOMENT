@@ -25,7 +25,7 @@ const Router = () => {
           <Route path="/users/kakao" element={<KakaoLoginRedirect />} />
           <Route path="integratedsignup" element={<IntegratedSignup />} />
           <Route path="emailsignup" element={<EmailSignup />} />
-          <Route path="feeds" element={<Feed />} />
+          <Route path="feed" element={<Feed />} />
           <Route path="board" element={<Board />} />
           <Route path={`page/:hostId`} element={<MyPage />} />
           <Route
