@@ -149,14 +149,16 @@
     font-weight: 600;
 }
 
-.profileBox {
+.profileContainer {
     display: flex;
     align-items: center;
     color: black;
+    justify-content: space-between;
 }
 
 .position {
     color: #787878;
+    margin-bottom: 5px;
 }
 
 .profileImg {
@@ -187,4 +189,22 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.close {
+    padding: 10px;
+    background-color: transparent;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.loveButtonBox {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    align-items: center;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: auto;
 }

@@ -1,25 +1,47 @@
 import React from "react";
 import styled from "styled-components";
 import BoardItem from "../components/BoardItem";
+import { mypage } from "../apis/mypage/mypage";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+// have a unique "key" prop? ㅜㅜㅜ
 
-function MyPage() {
+const MyPage = () => {
+  const { hostId } = useParams();
+  // console.log(hostId);
+
+  const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
+    mypage(hostId)
+  );
+
+  if (isLoading) {
+    return <h1>로딩 중입니다..!</h1>;
+  }
+
+  if (isError) {
+    return <h1>오류ㅜ.ㅜ</h1>;
+  }
+  console.log(data);
   return (
     <PageContainer>
       <ContentContainer>
         <ProfileSection>
-          <ProfilePicture src="https://images.khan.co.kr/article/2022/11/28/news-p.v1.20221128.e8a14e02233b4849bc301cc01d170cc5_P1.jpg" />
+          <ProfilePicture src={data.profileUrl} />
           <ProfileInfo>
             <StFlex>
-              <span>모델</span>
-              <UserNickname>Nickname</UserNickname>
+              <span>{data.role}</span>
+              <UserNickname>{data.nickName}</UserNickname>
             </StFlex>
             <StFlex>
-              <Post>게시물 3</Post>
+              <Post>게시물 {data.photoList.length}</Post>
               <span>|</span>
-              <Recommend>추천 0</Recommend>
+              <Recommend>추천 {data.recommendCnt}</Recommend>
             </StFlex>
             <StFlex>
-              <ChatBtn>채팅</ChatBtn>
+              <Link to={`/mypageinformation/${hostId}`}>
+                <ChatBtn>프로필 편집</ChatBtn>
+              </Link>
             </StFlex>
           </ProfileInfo>
         </ProfileSection>
@@ -27,28 +49,21 @@ function MyPage() {
           <WorkSection>
             <Work>작업</Work>
             <WorkList>
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
-              <WorkItem />
+              {data.photoList.map((item, index) => {
+                return <WorkItem key={index} src={item.photoUrl} />;
+              })}
             </WorkList>
           </WorkSection>
           <Content>
             <Work>내가 쓴 게시물</Work>
-            <BoardItem />
-            <BoardItem />
+            {/* <BoardItem />
+            <BoardItem /> */}
           </Content>
         </Container>
       </ContentContainer>
     </PageContainer>
   );
-}
+};
 
 export default MyPage;
 
@@ -138,7 +153,7 @@ const ChatBtn = styled.button`
 const ProfilePicture = styled.img`
   width: 200px;
   height: 200px;
-  object-fit: fill;
+  object-fit: cover;
   border-radius: 50%;
 `;
 
@@ -197,7 +212,10 @@ const WorkList = styled.div`
 const WorkItem = styled.div`
   width: 100%;
   padding-top: 100%;
-  background-color: lightgray;
+  background-image: ${(props) => `url(${props.src})`};
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
   @media (max-width: 480px) {
     height: 200px;
