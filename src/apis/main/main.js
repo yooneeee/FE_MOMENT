@@ -5,7 +5,6 @@ const main = async () => {
     const { data } = await instance.get("/home");
     return data.eachRoleUsersList;
   } catch (error) {
-    alert(error);
     throw error;
   }
 };

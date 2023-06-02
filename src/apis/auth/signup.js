@@ -10,7 +10,6 @@ const signupAxios = async (formData) => {
     const response = await instance.post(`/users/signup`, formData, config);
     return response.data;
   } catch (error) {
-    alert(error);
     throw error;
   }
 };
@@ -21,7 +20,6 @@ const sendEmailAxios = async (email) => {
     console.log(response);
     return response.data;
   } catch (error) {
-    alert(error);
     throw error;
   }
 };
@@ -31,7 +29,6 @@ const checkEmailAxios = async ({ email, code }) => {
     const response = await instance.post("/emails/check", { email, code });
     return response.data;
   } catch (error) {
-    alert(error);
     throw error;
   }
 };

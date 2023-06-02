@@ -10,7 +10,6 @@ const createFeedAxios = async (formData) => {
     const response = await instance.post("/feeds/upload", formData, config);
     return response.data;
   } catch (error) {
-    alert(error);
     throw error;
   }
 };

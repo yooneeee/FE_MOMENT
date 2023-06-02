@@ -16,7 +16,6 @@ const sendRoleAxios = async (role) => {
     console.log("response", response);
     return response.data;
   } catch (error) {
-    alert(error);
     throw error;
   }
 };
