@@ -1,81 +1,57 @@
 import React, { useState } from "react";
+import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
+import { unstable_HistoryRouter } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 function MyPageTabs() {
   const { hostId } = useParams();
   // console.log("첫번째", hostId);
-
   const navigate = useNavigate();
-  const [entireClicked, setEntireClicked] = useState(true);
-  const [feedClicked, setFeedClicked] = useState();
-  const [boardClicked, setBoardClicked] = useState();
-  const [chatClicked, setChatClicked] = useState();
+  const [isActive, setIsActive] = useState();
 
-  const underlineButton = (buttonName) => {
-    switch (buttonName) {
-      case "entire":
-        setEntireClicked(true);
-        setFeedClicked(false);
-        setBoardClicked(false);
-        setChatClicked(false);
-        break;
-      case "feed":
-        setEntireClicked(false);
-        setFeedClicked(true);
-        setBoardClicked(false);
-        setChatClicked(false);
-        break;
-      case "board":
-        setEntireClicked(false);
-        setFeedClicked(false);
-        setBoardClicked(true);
-        setChatClicked(false);
-        break;
-      case "chat":
-        setEntireClicked(false);
-        setFeedClicked(false);
-        setBoardClicked(false);
-        setChatClicked(true);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const entireHandler = () => {
-    underlineButton("entire");
-    navigate(`/page/${hostId}`);
-  };
-  const feedHandler = () => {
-    underlineButton("feed");
-    navigate(`/mypagefeed/${hostId}`);
-  };
-  const boardHandler = () => {
-    underlineButton("board");
-    navigate(`/mypageboard/${hostId}`);
-  };
-  const chatHandler = () => {
-    underlineButton("chat");
+  const activeClickHandler = (item) => {
+    setIsActive(item);
   };
 
   return (
     <TabsStyles>
       <MaueBar>
-        <TabButton isClicked={entireClicked} onClick={entireHandler}>
+        <TabButton
+          className={isActive === "전체보기" ? "active" : ""}
+          onClick={() => {
+            activeClickHandler("전체보기");
+            navigate(`/page/${hostId}`);
+          }}
+        >
           전체보기
         </TabButton>
+        <Link to={`/mypagefeed/${hostId}`}>
+          <TabButton
+            className={isActive === "내 피드" ? "active" : ""}
+            onClick={() => {
+              activeClickHandler("내 피드");
+            }}
+          >
+            내 피드
+          </TabButton>
+        </Link>
         <TabButton
-          isClicked={feedClicked}
-          isFeedClicked={feedClicked}
-          onClick={feedHandler}
+          className={isActive === "내 게시글" ? "active" : ""}
+          onClick={() => {
+            activeClickHandler("내 게시글");
+            navigate(`/mypageboard/${hostId}`);
+          }}
         >
-          내 피드
-        </TabButton>
-        <TabButton isClicked={boardClicked} onClick={boardHandler}>
           내 게시글
         </TabButton>
-        <TabButton isClicked={chatClicked} onClick={chatHandler}>
+        <TabButton
+          className={isActive === "채팅목록" ? "active" : ""}
+          onClick={() => {
+            activeClickHandler("채팅목록");
+          }}
+        >
           채팅목록
         </TabButton>
       </MaueBar>
@@ -89,7 +65,7 @@ const TabsStyles = styled.div`
   width: 100%;
   background: #f5f5f5;
   border: 1px solid #666666;
-  height: 50px;
+  height: 70px;
   display: flex;
   align-items: center;
   padding: 0 19%;
@@ -113,11 +89,11 @@ const TabButton = styled.button`
   outline: none;
   background: none;
   text-decoration: none;
-  /* border-bottom: ${(props) =>
-    props.isClicked ? "2px solid black" : "none"}; */
-  font-weight: ${(props) =>
-    props.isClicked || props.isFeedClicked ? "900" : "none"};
-  color: ${(props) =>
-    props.isClicked || props.isFeedClicked ? "#ff0000" : "none"};
-  /* text-decoration: ${(props) => (props.isClicked ? "underline" : "none")}; */
+  color: #999999;
+  font-size: 15px;
+
+  &.active {
+    color: #000000;
+    font-weight: 900;
+  }
 `;
