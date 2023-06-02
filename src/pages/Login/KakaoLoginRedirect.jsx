@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { authKakaoLogin, sendRoleAxios } from "../../apis/auth/authKakaoLogin";
 import { useDispatch } from "react-redux";
-import { loginSuccess, setUser } from "../../redux/modules/user";
+import { loginSuccess, setUser, setUserRole } from "../../redux/modules/user";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 
 function KakaoLoginRedirect() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ function KakaoLoginRedirect() {
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("");
   const [active, setActive] = useState(role !== "");
+  const [hasRole, setHasRole] = useState(false);
   const dispatch = useDispatch();
   const { data, isError } = useQuery("authKakaoLogin", async () => {
     try {
@@ -28,12 +30,14 @@ function KakaoLoginRedirect() {
     setRole(selectedRole);
   }, []);
   const MemoizedSelectionButton = React.memo(SelectionButton);
-  const redirectHandler = () => {
+  const redirectHandler = async () => {
     if (data) {
-      setLoading(false);
-      setModal(true);
-      /*  alert("로그인 성공");
-      dispatch(loginSuccess());*/
+      if (data.data.role !== null) {
+        setHasRole(true);
+      } else {
+        setLoading(false);
+        setModal(true);
+      }
       dispatch(
         setUser({
           nickName: data.data.nickName,
@@ -42,34 +46,60 @@ function KakaoLoginRedirect() {
           userId: data.data.userId,
         })
       );
-      /*     navigate("/main"); */
     } else if (isError) {
-      alert("로그인 실패");
+      Swal.fire({
+        icon: "error",
+        title: "로그인 실패!",
+        text: `로그인이 실패되었습니다. 다시 확인해 주세요.`,
+        confirmButtonText: "확인",
+      });
       navigate("/login");
     }
-    return false;
+    setLoading(true);
   };
   useEffect(() => {
     redirectHandler();
   }, [data, isError]);
+  useEffect(() => {
+    if (hasRole) {
+      setModal(false);
+      Swal.fire({
+        icon: "success",
+        title: "로그인 성공!",
+        text: `[${data.data.nickName}]님 로그인되었습니다✨`,
+        confirmButtonText: "확인",
+      });
+
+      dispatch(loginSuccess());
+      navigate("/main");
+    }
+  }, [hasRole]);
+
   const sendRoleMutation = useMutation(sendRoleAxios, {
     onSuccess: () => {
       closeModal();
-      alert("회원님의 회원가입이 완료되었습니다!");
+      /*  alert("회원가입이 완료되었습니다✨"); */
+      Swal.fire({
+        icon: "success",
+        title: "회원가입 성공!",
+        text: `[${data.data.nickName}]님 회원가입이 완료되었습니다✨`,
+        confirmButtonText: "확인",
+      });
       dispatch(loginSuccess());
       navigate("/main");
     },
     onError: () => {
-      alert("회원님의 역할 전송을 실패했습니다!");
+      alert("역할 전송을 실패했습니다!");
     },
   });
 
   const closeModal = () => {
     setModal(false);
   };
-  const roleButtonHandler = () => {
-    sendRoleMutation.mutate({ role });
-    console.log(role);
+  const roleButtonHandler = (e) => {
+    e.preventDefault();
+    sendRoleMutation.mutate(role);
+    dispatch(setUserRole({ role: role }));
   };
 
   const activeHandler = () => {
@@ -81,10 +111,10 @@ function KakaoLoginRedirect() {
 
   return (
     <>
-      {/*  <LoadingSpinner /> */}
+      {loading && <LoadingSpinner />}
       {modal && (
         <div>
-          <Outside onClick={closeModal} />
+          <Outside />
           <ModalWrap>
             <ModalHeader>
               <p>직업을 선택해주세요</p>
@@ -180,7 +210,7 @@ const ModalWrap = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
+  z-index: 1000;
   background-color: white;
   border-radius: 12px;
 `;

@@ -28,8 +28,12 @@ export const userSlice = createSlice({
       state.role = action.payload.role;
       state.userId = action.payload.userId;
     },
+    setUserRole: (state, action) => {
+      state.role = action.payload.role;
+    },
   },
 });
 
-export const { loginSuccess, logoutSuccess, setUser } = userSlice.actions;
+export const { loginSuccess, logoutSuccess, setUser, setUserRole } =
+  userSlice.actions;
 export default userSlice.reducer;
