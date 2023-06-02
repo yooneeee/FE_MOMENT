@@ -5,6 +5,7 @@ import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import MyPageTabs from "../components/MyPageTabs";
 // have a unique "key" prop? ㅜㅜㅜ
 
 const MyPage = () => {
@@ -24,46 +25,49 @@ const MyPage = () => {
   }
   console.log(data);
   return (
-    <PageContainer>
-      <ContentContainer>
-        <ProfileSection>
-          <ProfilePicture src={data.profileUrl} />
-          <ProfileInfo>
-            <StFlex>
-              <span>{data.role}</span>
-              <UserNickname>{data.nickName}</UserNickname>
-            </StFlex>
-            <StFlex>
-              <Post>피드 {data.photoList.length}</Post>
-              <span>|</span>
-              <Recommend>게시글 {data.boardCnt}</Recommend>
-            </StFlex>
-            <Post>추천 {data.totalPhotoLoveCnt}</Post>
-            <StFlex>
-              <Link to={`/mypageinformation/${hostId}`}>
-                <ChatBtn>프로필 편집</ChatBtn>
-              </Link>
-            </StFlex>
-          </ProfileInfo>
-        </ProfileSection>
-        <Container>
-          <WorkSection>
-            <Work>작업</Work>
-            <WorkList>
-              {data.photoList.map((item, index) => {
-                return <WorkItem key={index} src={item.photoUrl} />;
-              })}
-            </WorkList>
-          </WorkSection>
-          <Content>
-            <Work>내가 쓴 게시물</Work>
-            {/* {data.boardList.map((item, index) => {
+    <>
+      <MyPageTabs />
+      <PageContainer>
+        <ContentContainer>
+          <ProfileSection>
+            <ProfilePicture src={data.profileUrl} />
+            <ProfileInfo>
+              <StFlex>
+                <span>{data.role}</span>
+                <UserNickname>{data.nickName}</UserNickname>
+              </StFlex>
+              <StFlex>
+                <Post>피드 {data.photoList.length}</Post>
+                <span>|</span>
+                <Recommend>게시글 {data.boardCnt}</Recommend>
+              </StFlex>
+              <Post>추천🧡 {data.totalPhotoLoveCnt}</Post>
+              <StFlex>
+                <Link to={`/mypageinformation/${hostId}`}>
+                  <ChatBtn>프로필 편집</ChatBtn>
+                </Link>
+              </StFlex>
+            </ProfileInfo>
+          </ProfileSection>
+          <Container>
+            <WorkSection>
+              <Work>작업</Work>
+              <WorkList>
+                {data.photoList.map((item, index) => {
+                  return <WorkItem key={index} src={item.photoUrl} />;
+                })}
+              </WorkList>
+            </WorkSection>
+            <Content>
+              <Work>내가 쓴 게시물</Work>
+              {/* {data.boardList.map((item, index) => {
               return <BoardItem key={index} src={item.boardImgUrl} />;
             })} */}
-          </Content>
-        </Container>
-      </ContentContainer>
-    </PageContainer>
+            </Content>
+          </Container>
+        </ContentContainer>
+      </PageContainer>
+    </>
   );
 };
 
