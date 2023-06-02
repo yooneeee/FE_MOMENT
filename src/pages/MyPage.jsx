@@ -23,7 +23,7 @@ const MyPage = () => {
   if (isError) {
     return <h1>오류ㅜ.ㅜ</h1>;
   }
-  console.log(data);
+  // console.log(data);
   return (
     <>
       <MyPageTabs />
@@ -51,7 +51,7 @@ const MyPage = () => {
           </ProfileSection>
           <Container>
             <WorkSection>
-              <Work>작업</Work>
+              <Work>나의 작업물</Work>
               <WorkList>
                 {data.photoList.map((item, index) => {
                   return <WorkItem key={index} src={item.photoUrl} />;
@@ -60,9 +60,9 @@ const MyPage = () => {
             </WorkSection>
             <Content>
               <Work>내가 쓴 게시물</Work>
-              {/* {data.boardList.map((item, index) => {
-              return <BoardItem key={index} src={item.boardImgUrl} />;
-            })} */}
+              {data.boardList.map((item) => {
+                return <BoardItem key={item.boardId} item={item} />;
+              })}
             </Content>
           </Container>
         </ContentContainer>
