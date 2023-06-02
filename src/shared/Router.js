@@ -13,6 +13,8 @@ import MyPage from "../pages/MyPage";
 import MyPageInformation from "../pages/MyPageInformation";
 import Chat from "../pages/Chat";
 import KakaoLoginRedirect from "../pages/Login/KakaoLoginRedirect";
+import MyPageFeed from "../pages/MyPageFeed";
+import MyPageBoard from "../pages/MyPageBoard";
 
 const Router = () => {
   return (
@@ -25,13 +27,15 @@ const Router = () => {
           <Route path="/users/kakao" element={<KakaoLoginRedirect />} />
           <Route path="integratedsignup" element={<IntegratedSignup />} />
           <Route path="emailsignup" element={<EmailSignup />} />
-          <Route path="feed" element={<Feed />} />
+          <Route path="feeds" element={<Feed />} />
           <Route path="board" element={<Board />} />
           <Route path={`page/:hostId`} element={<MyPage />} />
           <Route
             path={`mypageinformation/:hostId`}
             element={<MyPageInformation />}
           />
+          <Route path={`mypagefeed/:hostId`} element={<MyPageFeed />} />
+          <Route path={`mypageboard/:hostId`} element={<MyPageBoard />} />
           <Route path="chat" element={<Chat />} />
         </Routes>
       </Layout>
