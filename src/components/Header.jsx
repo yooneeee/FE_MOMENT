@@ -7,6 +7,7 @@ import { useMutation } from "react-query";
 import { logoutAxios } from "../apis/auth/login";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "../redux/modules/user";
+import Swal from "sweetalert2";
 
 function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
@@ -83,7 +84,12 @@ function Header() {
 
   const logoutMutation = useMutation(logoutAxios, {
     onSuccess: () => {
-      alert("로그아웃 되었습니다.");
+      Swal.fire({
+        icon: "success",
+        title: "로그아웃 성공!",
+        text: `[${nickName}]님 로그아웃되었습니다✨`,
+        confirmButtonText: "확인",
+      });
       navigate("/");
     },
     onError: (error) => {

@@ -11,8 +11,9 @@ const authKakaoLogin = async (code) => {
 };
 
 const sendRoleAxios = async (role) => {
+  console.log("role", role);
   try {
-    const response = await instance.post("/users/kakao/role", role);
+    const response = await instance.post(`/users/kakao/role?role=${role}`);
     console.log("response", response);
     return response.data;
   } catch (error) {
