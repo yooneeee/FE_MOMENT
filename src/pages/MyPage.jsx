@@ -17,11 +17,11 @@ const MyPage = () => {
   );
 
   if (isLoading) {
-    return <h1>로딩 중입니다..!</h1>;
+    return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
   }
 
   if (isError) {
-    return <h1>오류ㅜ.ㅜ</h1>;
+    return <h1>오류(⊙ˍ⊙)</h1>;
   }
   // console.log(data);
   return (
