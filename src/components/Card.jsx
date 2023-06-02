@@ -38,6 +38,7 @@ const CardDesign = styled.div`
   color: white;
   border-radius: 5px;
   flex-grow: 1;
+  padding: 10px 5px 3px 5px;
 `;
 
 const CardHeader = styled.div`
@@ -60,7 +61,7 @@ const UserPostion = styled.div`
 `;
 
 const UserNickName = styled.div`
-  font-size: 23px;
+  font-size: 18px;
 `;
 
 const CardProfileImgContainer = styled.div`
@@ -68,6 +69,7 @@ const CardProfileImgContainer = styled.div`
   gap: 20px;
   justify-content: center;
   padding-bottom: 15px;
+  margin-top: 10px;
 `;
 
 const CardProfileImg = styled.div`
