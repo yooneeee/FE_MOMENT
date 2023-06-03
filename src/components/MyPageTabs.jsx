@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
-import { unstable_HistoryRouter } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -10,6 +9,8 @@ function MyPageTabs() {
   // console.log("첫번째", hostId);
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState();
+
+  // const [entireClicked, setEntireClicked] = useState();
 
   const activeClickHandler = (item) => {
     setIsActive(item);
