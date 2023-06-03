@@ -53,14 +53,14 @@ const MyPage = () => {
             <WorkSection>
               <Work>나의 작업물</Work>
               <WorkList>
-                {data.photoList.map((item, index) => {
+                {data.photoList.slice(0, 10).map((item, index) => {
                   return <WorkItem key={index} src={item.photoUrl} />;
                 })}
               </WorkList>
             </WorkSection>
             <Content>
               <Work>내가 쓴 게시물</Work>
-              {data.boardList.map((item) => {
+              {data.boardList.slice(0, 2).map((item) => {
                 return <BoardItem key={item.boardId} item={item} />;
               })}
             </Content>
