@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-function BoardItem({ item }) {
+function BoardItem({ item, onClick }) {
   return (
-    <Item key={item.boardId}>
+    <Item key={item.boardId} onClick={onClick}>
       <ImageContainer img={item.boardImgUrl} />
       <ContentContainer>
         <Title>{item.title}</Title>
@@ -31,6 +31,7 @@ const Item = styled.div`
   background-color: #f9f9f9;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
+  cursor: pointer;
 
   @media (min-width: 768px) {
     flex-direction: row;
