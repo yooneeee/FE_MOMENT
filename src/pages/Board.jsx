@@ -1,33 +1,66 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import BoardItem from "../components/BoardItem";
 import { useQuery } from "react-query";
 import { getBoard } from "../apis/create/getBoard";
+import { useNavigate } from "react-router-dom";
 
 function Board() {
-  const { isError, isLoading, data } = useQuery("getBoard", getBoard);
+  const [activeNavItem, setActiveNavItem] = useState("Model");
+  const navigate = useNavigate();
 
+  const { isError, isLoading, data } = useQuery(
+    ["getBoard", activeNavItem],
+    () => getBoard(activeNavItem)
+  );
+
+  console.log(data);
   if (isLoading) {
-    return;
+    return null;
   }
 
   if (isError) {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
+
+  const handleNavItemClick = (item) => {
+    setActiveNavItem(item);
+  };
+
   return (
     <Container>
       <Header>
         <Navbar>
           <span>게시판</span>
           <NavItems>
-            <NavItem>Model</NavItem>
-            <NavItem>Photo</NavItem>
+            <NavItem
+              className={activeNavItem === "Model" ? "active" : ""}
+              onClick={() => {
+                handleNavItemClick("Model");
+              }}
+            >
+              Model
+            </NavItem>
+            <NavItem
+              className={activeNavItem === "Photographer" ? "active" : ""}
+              onClick={() => handleNavItemClick("Photographer")}
+            >
+              Photographer
+            </NavItem>
           </NavItems>
         </Navbar>
       </Header>
       <Content>
         {data.map((item) => {
-          return <BoardItem item={item} key={item.boardId} />;
+          return (
+            <BoardItem
+              onClick={() => {
+                navigate(`${item.boardId}`);
+              }}
+              item={item}
+              key={item.boardId}
+            />
+          );
         })}
       </Content>
     </Container>
@@ -41,19 +74,27 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 const Navbar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
 `;
+
 const NavItems = styled.nav`
   display: flex;
   gap: 20px;
+  color: #999999;
 `;
 
 const NavItem = styled.div`
   cursor: pointer;
+  padding: 5px 5px 5px 5px;
+
+  &.active {
+    color: black;
+  }
 `;
 
 const Header = styled.header`

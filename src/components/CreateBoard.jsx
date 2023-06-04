@@ -8,6 +8,7 @@ import { createBoardAxios } from "../apis/board/createBoard";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
+import UserDataComponent from "./UserDataComponent";
 
 const CreateBoard = (props) => {
   // 해시태그 기능
@@ -81,6 +82,7 @@ const CreateBoard = (props) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [title, onChangeTitleHandler] = useInput();
   const [content, onChangeContentHandler] = useInput();
+  const loginUserData = UserDataComponent(); // 나의 유저 데이터 받아오는 코드
 
   // 이미지 미리보기
   const handleFileChange = (e) => {
@@ -195,10 +197,10 @@ const CreateBoard = (props) => {
 
             <div className="inputSection">
               <div className="profileBox">
-                <img src="img/monkey_test.jpeg" className="profileImg" />
+                <img src={loginUserData.profileImg} className="profileImg" />
                 <div>
-                  <p className="position">Photo</p>
-                  <p>Jun</p>
+                  <p className="position">{loginUserData.role}</p>
+                  <p>{loginUserData.nickName}</p>
                 </div>
               </div>
               <textarea

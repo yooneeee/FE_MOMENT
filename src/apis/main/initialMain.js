@@ -6,7 +6,6 @@ const initialMain = async () => {
     console.log(data);
     return data.photoList;
   } catch (error) {
-    alert(error);
     throw error;
   }
 };

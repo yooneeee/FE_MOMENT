@@ -15,6 +15,7 @@ import Chat from "../pages/Chat";
 import KakaoLoginRedirect from "../pages/Login/KakaoLoginRedirect";
 import MyPageFeed from "../pages/MyPageFeed";
 import MyPageBoard from "../pages/MyPageBoard";
+import BoardDetail from "../pages/BoardDetail";
 
 const Router = () => {
   return (
@@ -37,6 +38,7 @@ const Router = () => {
           <Route path={`mypagefeed/:hostId`} element={<MyPageFeed />} />
           <Route path={`mypageboard/:hostId`} element={<MyPageBoard />} />
           <Route path="chat" element={<Chat />} />
+          <Route path={`board/:boardId`} element={<BoardDetail />} />
         </Routes>
       </Layout>
     </BrowserRouter>

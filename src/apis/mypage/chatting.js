@@ -6,7 +6,6 @@ const Chatting = async (userId) => {
     console.log(data);
     // return data
   } catch (error) {
-    alert(error);
     throw error;
   }
 };
