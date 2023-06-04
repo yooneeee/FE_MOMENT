@@ -34,7 +34,6 @@ const mypageInformationAxios = async ({ hostId, formData }) => {
 const mypageFeedDelete = async (photoId) => {
   try {
     const response = await instance.delete(`/page/${photoId}`);
-    console.log("삭제", response);
     return response.data;
   } catch (error) {
     throw error;
