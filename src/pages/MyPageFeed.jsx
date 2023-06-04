@@ -14,8 +14,6 @@ function MyPageFeed() {
   const queryClient = useQueryClient();
 
   const [editButtons, setEditButtons] = useState([]);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [selectedPhotoId, setSelectedPhotoId] = useState(null);
 
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
@@ -25,7 +23,6 @@ function MyPageFeed() {
   const deleteMutation = useMutation(mypageFeedDelete, {
     onSuccess: () => {
       queryClient.invalidateQueries(["mypage", mypage]);
-      // alert("삭제 완료!");
       setEditButtons([]);
     },
     onError: (error) => {
@@ -40,8 +37,14 @@ function MyPageFeed() {
 
   const deleteButtonHandler = (photoId) => {
     try {
+      if (
+        !window.confirm(
+          "삭제하시면 복구할 수 없습니다. 정말로 삭제하시겠습니까?"
+        )
+      ) {
+        return;
+      }
       deleteMutation.mutate(photoId);
-      setShowConfirmation(true);
       toggleButtonClose(photoId);
     } catch (error) {}
   };
@@ -73,16 +76,6 @@ function MyPageFeed() {
     const updatedEditButtons = [...editButtons];
     updatedEditButtons[index] = false;
     setEditButtons(updatedEditButtons);
-  };
-
-  const confirmDelete = (PhotoId) => {
-    deleteMutation.mutate(PhotoId);
-    setShowConfirmation(false);
-  };
-
-  const cancelDelete = () => {
-    setSelectedPhotoId(null);
-    setShowConfirmation(false);
   };
 
   return (
@@ -123,15 +116,6 @@ function MyPageFeed() {
                 );
               })}
             </WorkList>
-            {showConfirmation && (
-              <ConfirmationDialog>
-                <ConfirmationText>사진을 삭제하시겠습니까?</ConfirmationText>
-                <ConfirmationButton onClick={confirmDelete}>
-                  예
-                </ConfirmationButton>
-                <CancelButton onClick={cancelDelete}>아니오</CancelButton>
-              </ConfirmationDialog>
-            )}
           </WorkSection>
         </ContentContainer>
       </PageContainer>
