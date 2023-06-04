@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
