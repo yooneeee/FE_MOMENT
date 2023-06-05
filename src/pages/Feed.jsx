@@ -58,10 +58,8 @@ function Feed() {
 }
 
 export default Feed;
-
 const FeedContainer = styled.div`
-  width: 70%;
-  background: #eee;
+  width: 80%;
   margin: auto;
   height: auto;
   display: flex;
@@ -69,8 +67,9 @@ const FeedContainer = styled.div`
 `;
 
 const Cards = styled.div`
-  width: 33.3%;
+  width: 32%;
   background: black;
+  margin: 5px;
 `;
 
 const CardsImg = styled.div`
