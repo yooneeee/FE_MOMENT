@@ -3,13 +3,14 @@ import styled from "styled-components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate } from "react-router-dom";
 
 function Card({ user }) {
-  const photoList = Array.isArray(user.photoList)
+  /*   const photoList = Array.isArray(user.photoList)
     ? user.photoList.map((item, index) => ({ ...item, index }))
     : [];
-  console.log("포토리스트", photoList);
-
+  console.log("포토리스트", photoList); */
+  const navigate = useNavigate();
   const settings = {
     dots: false,
     infinite: true,
@@ -35,7 +36,12 @@ function Card({ user }) {
         </Styled_Slide>
       </SliderWrapper>
       <CardHeader>
-        <ProfileImg src={user.profileUrl}></ProfileImg>
+        <ProfileImg
+          src={user.profileUrl}
+          onClick={() => {
+            navigate(`/page/${user.userId}`);
+          }}
+        ></ProfileImg>
         <div>
           <UserPostion> {user.role} </UserPostion>
           <UserNickName>{user.nickName}</UserNickName>
