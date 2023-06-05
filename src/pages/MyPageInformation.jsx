@@ -5,10 +5,13 @@ import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import UserDataComponent from "../components/UserDataComponent";
 import DeleteUser from "../components/DeleteUser";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/modules/user";
 
 const MyPageInformation = () => {
   const { hostId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const loginUserData = UserDataComponent();
 
   const [image, setImage] = useState(loginUserData.profileImg);
@@ -18,7 +21,6 @@ const MyPageInformation = () => {
   const [newNick, setNewNick] = useState("");
   const [newPw, setNewPw] = useState("");
   const [newRole, setNewRole] = useState("");
-
   const [deleteUserModal, setDeleteUserModal] = useState(false);
 
   /* 프로필 이미지 선택 */
@@ -48,6 +50,13 @@ const MyPageInformation = () => {
     onSuccess: (response) => {
       alert("수정 완료(❁´◡`❁)", response);
       navigate(`/page/${hostId}`);
+      dispatch(
+        setUser({
+          nickName: newNick,
+          profileImg: image,
+          role: newRole,
+        })
+      );
     },
     onError: (error) => {
       alert("수정 실패o(TヘTo)", error);
@@ -71,10 +80,7 @@ const MyPageInformation = () => {
       "update",
       new Blob([JSON.stringify(update)], { type: "application/json" })
     );
-    console.log("마지막", file);
     file && formData.append("profile", file);
-    console.log(hostId);
-    console.log(formData);
     mutation.mutate({ hostId, formData });
   };
 
@@ -252,6 +258,9 @@ const WithdrawalButton = styled.button`
   text-decoration: underline;
   color: #858585;
   margin-top: 40px;
+  &:hover {
+    color: #1b1b1b;
+  }
 `;
 
 const TwoButtonContainer = styled.div`
