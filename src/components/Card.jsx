@@ -113,6 +113,7 @@ const UserPostion = styled.div`
 
 const UserNickName = styled.div`
   font-size: 18px;
+
   @media (max-width: 1024px) {
     font-size: 14px;
   }
@@ -120,6 +121,14 @@ const UserNickName = styled.div`
 
 const SliderWrapper = styled.div`
   position: relative;
+`;
+
+const CardProfileImgContainer = styled.div`
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding-bottom: 15px;
+  margin-top: 10px;
 `;
 
 const CardProfileImg = styled.div`

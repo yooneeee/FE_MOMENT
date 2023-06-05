@@ -330,7 +330,6 @@ const ProfileImg = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background-color: #a3ffff;
 `;
 const ProfileText = styled.div`
   margin-top: 10px;

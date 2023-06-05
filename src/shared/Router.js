@@ -12,6 +12,7 @@ import MyPage from "../pages/MyPage";
 import MyPageInformation from "../pages/MyPageInformation";
 import Chat from "../pages/Chat";
 import KakaoLoginRedirect from "../pages/Login/KakaoLoginRedirect";
+import BoardDetail from "../pages/BoardDetail";
 
 const Router = () => {
   return (
@@ -32,6 +33,7 @@ const Router = () => {
             element={<MyPageInformation />}
           />
           <Route path="chat" element={<Chat />} />
+          <Route path={`board/:boardId`} element={<BoardDetail />} />
         </Routes>
       </Layout>
     </BrowserRouter>

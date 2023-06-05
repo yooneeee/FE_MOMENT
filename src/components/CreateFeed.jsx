@@ -7,6 +7,7 @@ import { createFeedAxios } from "../apis/feed/createFeedAxios";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
+import UserDataComponent from "./UserDataComponent";
 
 const CreateFeed = (props) => {
   const { open, close } = props;
@@ -15,6 +16,7 @@ const CreateFeed = (props) => {
   const [content, onChangeContentHandler] = useInput();
   const modalRef = useRef(null);
   const navigate = useNavigate();
+  const loginUserData = UserDataComponent(); // 나의 유저 데이터 받아오는 코드
 
   // 이미지 미리보기
   const handleFileChange = (e) => {
@@ -117,10 +119,10 @@ const CreateFeed = (props) => {
 
             <div className="inputSection">
               <div className="profileBox">
-                <img src="img/monkey_test.jpeg" className="profileImg" />
+                <img src={loginUserData.profileImg} className="profileImg" />
                 <div>
-                  <p className="position">Photo</p>
-                  <p>Jun</p>
+                  <p className="position">{loginUserData.role}</p>
+                  <p>{loginUserData.nickName}</p>
                 </div>
               </div>
               <textarea
