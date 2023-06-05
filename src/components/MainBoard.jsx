@@ -1,19 +1,24 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 function MainBoard({ board }) {
+  const navigate = useNavigate();
   if (!board) {
     return null;
   }
   return (
-    <CardDesign>
+    <CardDesign
+      onClick={() => {
+        navigate(`/board/${board.boardId}`);
+      }}
+    >
       <CardProfileImg src={board.boardImgUrl} />
       <CardContent>
         <UserInfo>
           <UserName>{board.nickName}</UserName>
           <UserPosition>{board.role}</UserPosition>
         </UserInfo>
-
         <BoardTitle>{board.title}</BoardTitle>
       </CardContent>
     </CardDesign>
