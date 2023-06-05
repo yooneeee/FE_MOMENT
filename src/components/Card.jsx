@@ -1,44 +1,95 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function Card({ user }) {
+  const photoList = Array.isArray(user.photoList)
+    ? user.photoList.map((item, index) => ({ ...item, index }))
+    : [];
+  console.log("포토리스트", photoList);
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
+  };
+
   if (!user) {
     return null;
   }
   return (
     <CardDesign>
+      <SliderWrapper>
+        <Styled_Slide {...settings}>
+          {user.photoList?.map((item) => (
+            <CardProfileImg key={item.photoUrl} src={item.photoUrl} />
+          ))}
+        </Styled_Slide>
+      </SliderWrapper>
       <CardHeader>
         <ProfileImg src={user.profileUrl}></ProfileImg>
-
         <div>
           <UserPostion> {user.role} </UserPostion>
           <UserNickName>{user.nickName}</UserNickName>
         </div>
       </CardHeader>
-      <CardProfileImgContainer>
-        {user.photoList?.map((item) => (
-          <CardProfileImg key={item.photoUrl} src={item.photoUrl} />
-        ))}
-        {[...Array(Math.max(0, 3 - (user.photoList?.length || 0)))].map(
-          (_, index) => (
-            <CardProfileImgPlaceholder key={index} />
-          )
-        )}
-      </CardProfileImgContainer>
     </CardDesign>
   );
 }
 
 export default Card;
 
+const Styled_Slide = styled(Slider)`
+  position: relative;
+  z-index: 1;
+  .slick-prev,
+  .slick-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    font-size: 20px;
+  }
+  .slick-prev {
+    left: 3px;
+  }
+  .slick-next {
+    right: 3px;
+  }
+`;
+
 const CardDesign = styled.div`
   background: black;
-  width: 31%;
-  height: auto;
+  width: 100%;
   color: white;
   border-radius: 5px;
   flex-grow: 1;
-  padding: 10px 5px 3px 5px;
+
+  @media (min-width: 768px) {
+    width: calc(25% - 20px);
+    margin: 10px;
+  }
+
+  @media (min-width: 1024px) {
+    width: calc(25% - 20px);
+    margin: 10px;
+  }
+
+  @media (min-width: 1440px) {
+    width: calc(25% - 20px);
+    margin: 10px;
+  }
 `;
 
 const CardHeader = styled.div`
@@ -62,6 +113,14 @@ const UserPostion = styled.div`
 
 const UserNickName = styled.div`
   font-size: 18px;
+
+  @media (max-width: 1024px) {
+    font-size: 14px;
+  }
+`;
+
+const SliderWrapper = styled.div`
+  position: relative;
 `;
 
 const CardProfileImgContainer = styled.div`
@@ -73,26 +132,33 @@ const CardProfileImgContainer = styled.div`
 `;
 
 const CardProfileImg = styled.div`
-  width: calc(30% - 6.67px);
-  height: 0;
-  padding-bottom: calc(30% - 6.67px);
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
   background-image: url(${(props) => props.src});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: 5px;
+  cursor: pointer;
 `;
 
-const CardProfileImgPlaceholder = styled.div`
-  width: calc(30% - 6.67px);
-  height: 0;
-  padding-bottom: calc(30% - 6.67px);
-  border-radius: 5px;
-  background-color: #e9e9e9;
+const ArrowButton = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  color: #999999;
-  font-size: 16px;
+  cursor: pointer;
+  z-index: 2;
 `;
+
+const PrevArrow = ({ onClick }) => (
+  <ArrowButton className="slick-prev" onClick={onClick}></ArrowButton>
+);
+
+const NextArrow = ({ onClick }) => (
+  <ArrowButton className="slick-next" onClick={onClick}></ArrowButton>
+);
