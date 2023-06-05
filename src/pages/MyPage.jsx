@@ -5,6 +5,7 @@ import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
 // have a unique "key" prop? ㅜㅜㅜ
 
 const MyPage = () => {
@@ -16,7 +17,7 @@ const MyPage = () => {
   );
 
   if (isLoading) {
-    return <h1>로딩 중입니다..!</h1>;
+    return <LoadingSpinner />;
   }
 
   if (isError) {
