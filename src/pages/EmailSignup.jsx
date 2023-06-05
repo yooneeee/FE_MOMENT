@@ -183,7 +183,12 @@ function EmailSignup() {
   // 이메일 인증번호 확인
   const emailVerifyNumCheckHandler = () => {
     if (!code) {
-      alert("인증번호를 입력해주세요!");
+      Swal.fire({
+        icon: "warning",
+        title: "인증번호 오류!",
+        text: `인증번호를 입력해주세요!`,
+        confirmButtonText: "확인",
+      });
     } else {
       checkEmailMutation.mutate({ email, code });
     }
@@ -209,12 +214,22 @@ function EmailSignup() {
 
     if (signupActive) {
       /*  if (!isemailChecking) {
-        alert("이메일 인증을 완료해주세요!");
+       Swal.fire({
+        icon: "warning",
+        title: "회원가입 실패!",
+        text: `이메일 인증을 완료해주세요✨`,
+        confirmButtonText: "확인",
+      });
         return;
       } */
       signupMutation.mutate(formData);
     } else {
-      alert("회원정보를 모두 입력해주세요!");
+      Swal.fire({
+        icon: "error",
+        title: "회원가입 실패!",
+        text: `회원정보를 모두 입력해주세요✨`,
+        confirmButtonText: "확인",
+      });
     }
   };
   useEffect(() => {
