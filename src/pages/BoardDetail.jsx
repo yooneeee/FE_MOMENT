@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getBoardDetailAxios } from "../apis/board/getBoardDetailAxios";
 
@@ -10,6 +10,7 @@ function BoardDetail() {
   const formRef = useRef(null);
   const formRangeRef = useRef(null);
   const params = useParams();
+  const navigate = useNavigate();
 
   // 스크롤 시 따라다니는 Form
   useEffect(() => {
@@ -39,13 +40,13 @@ function BoardDetail() {
     }
   }, [currentPosition]);
 
-  // 서버 통신
   const { isError, isLoading, data } = useQuery(
-    ["getBoardDetailAxios", getBoardDetailAxios],
+    ["getBoardDetailAxios", params.boardId],
     () => getBoardDetailAxios(params.boardId)
   );
 
   console.log(data);
+
   if (isLoading) {
     return null;
   }
@@ -57,22 +58,16 @@ function BoardDetail() {
   return (
     <Container>
       <FlexContainer>
-        <BoardImg img={data.photoUrl} />
+        <BoardImg img={data.profileUrl} />
         <MainContentContainer>
           <Title>작가 말</Title>
           <MainContentBody>{data.contents}</MainContentBody>
 
           <Title name="작품">작가 작품</Title>
           <WorksContainer>
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
-            <WorkItem />
+            {data.feedImgUrl.map((item) => {
+              return <WorkItem img={item.photoUrl} key={item.photoId} />;
+            })}
           </WorksContainer>
         </MainContentContainer>
       </FlexContainer>
@@ -80,20 +75,32 @@ function BoardDetail() {
       <StyledForm ref={formRef}>
         <Form>
           <FormBody>
-            <Title>서울에서 작업하실 모델 찾아요!</Title>
+            <Title>{data.title}</Title>
             <ProfileBox>
-              <ProfileImg src={data.profileUrl}></ProfileImg>
+              <ProfileImg
+                src={data.profileUrl}
+                onClick={() => {
+                  navigate(`/page/${data.hostId}`);
+                }}
+              ></ProfileImg>
 
               <UserDataBox>
                 <UserPostion> {data.role} </UserPostion>
                 <UserNickName>{data.nickName}</UserNickName>
               </UserDataBox>
-              <ProfileVisitButton>프로필 방문</ProfileVisitButton>
+              <ProfileVisitButton
+                onClick={() => {
+                  navigate(`/page/${data.hostId}`);
+                }}
+              >
+                프로필 방문
+              </ProfileVisitButton>
             </ProfileBox>
 
             <HashTagContainer>
-              <HashTag>#김채원</HashTag>
-              <HashTag>#르세라핌</HashTag>
+              {data.tag_boardList.map((item) => {
+                return <HashTag key={item}>{item}</HashTag>;
+              })}
             </HashTagContainer>
 
             <ListTitle>촬영장소</ListTitle>
@@ -193,6 +200,7 @@ const ProfileImg = styled.img`
   height: 50px;
   border-radius: 70%;
   object-fit: cover;
+  cursor: pointer;
 `;
 
 const UserDataBox = styled.div`
@@ -283,7 +291,7 @@ const WorksContainer = styled.div`
 const WorkItem = styled.div`
   width: 200px;
   height: 200px;
-  background-image: url("/img/profile_12.jpeg");
+  background-image: url(${(props) => props.img});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
