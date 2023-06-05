@@ -9,6 +9,7 @@ import {
   sendEmailAxios,
   signupAxios,
 } from "../apis/auth/signup";
+import Swal from "sweetalert2";
 
 function EmailSignup() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ function EmailSignup() {
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [nickNameErrorMessage, setNickNameMessage] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState(false);
   const [passwordCheckErrorMessage, setPasswordCheckErrorMessage] =
@@ -38,7 +40,12 @@ function EmailSignup() {
 
   const signupMutation = useMutation(signupAxios, {
     onSuccess: () => {
-      alert("회원가입이 완료되었습니다✨");
+      Swal.fire({
+        icon: "success",
+        title: "회원가입 완료!",
+        text: `Moment에 오신 것을 환영합니다✨`,
+        confirmButtonText: "확인",
+      });
       setNickName("");
       setEmail("");
       setGender("");
@@ -51,28 +58,58 @@ function EmailSignup() {
   const sendEmailMutation = useMutation(sendEmailAxios, {
     onSuccess: () => {
       setIsSendEmail(true);
-      alert("회원님의 이메일로 인증번호를 전송했습니다!");
+      Swal.fire({
+        icon: "success",
+        title: "인증번호 전송!",
+        text: `회원님의 이메일로 인증번호를 전송을 성공했습니다!✨`,
+        confirmButtonText: "확인",
+      });
     },
     onError: () => {
       setIsSendEmail(false);
-      alert("회원님의 이메일로 인증번호를 전송을 실패했습니다!");
+      Swal.fire({
+        icon: "error",
+        title: "인증번호 전송 실패!",
+        text: `회원님의 이메일로 인증번호를 전송을 실패했습니다😥
+         다시 시도해보세요!`,
+        confirmButtonText: "확인",
+      });
     },
   });
 
   const checkEmailMutation = useMutation(checkEmailAxios, {
     onSuccess: () => {
       setIsEmailChecking(true);
-      alert("이메일 인증에 성공하셨습니다!");
+      Swal.fire({
+        icon: "success",
+        title: "이메일인증 성공!",
+        text: `이메일 인증에 성공하셨습니다!✨`,
+        confirmButtonText: "확인",
+      });
     },
     onError: () => {
       setIsEmailChecking(false);
-      alert("인증번호를 다시 확인해보세요!");
+      Swal.fire({
+        icon: "error",
+        title: "이메일인증 실패!",
+        text: `인증번호를 다시 한 번 확인해보세요!`,
+        confirmButtonText: "확인",
+      });
     },
   });
   // 이메일, 패스워드 정규식
   const emailRegex =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
+  // 닉네임 에러 메세지
+  const nickNameError = useMemo(() => {
+    if (nickName.length > 8) {
+      setNickNameMessage(true);
+      return "닉네임은 8글자를 넘지 않아야합니다.";
+    } else {
+      return "";
+    }
+  }, [nickName]);
 
   // 이메일 에러 메세지
   const emailError = useMemo(() => {
@@ -209,6 +246,7 @@ function EmailSignup() {
             onChange={(e) => setNickName(e.target.value)}
           />
         </InputWrap>
+        {nickNameErrorMessage && <ErrorMessage>{nickNameError}</ErrorMessage>}
         <InputTitle>직업</InputTitle>
         <ButtonContainer>
           <MemoizedSelectionButton
