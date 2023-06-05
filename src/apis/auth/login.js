@@ -19,4 +19,16 @@ const logoutAxios = async () => {
   }
 };
 
-export { loginAxios, logoutAxios };
+const deleteUserAxios = async (formData) => {
+  console.log(formData);
+  try {
+    const response = await instance.post(`/users/hard`, formData);
+    console.log(response);
+    return response;
+  } catch (error) {
+    alert(error);
+    console.log(error);
+  }
+};
+
+export { loginAxios, logoutAxios, deleteUserAxios };
