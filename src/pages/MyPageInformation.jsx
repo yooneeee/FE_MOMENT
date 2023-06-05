@@ -1,15 +1,17 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { mypageInformationAxios } from "../apis/mypage/mypage";
 import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import UserDataComponent from "../components/UserDataComponent";
 
 const MyPageInformation = () => {
   const { hostId } = useParams();
   const navigate = useNavigate();
+  const loginUserData = UserDataComponent();
 
-  const [image, setImage] = useState("/img/profileImg.jpg");
-  console.log(image);
+  const [image, setImage] = useState(loginUserData.profileImg);
+  // console.log(image);
   const fileInput = useRef();
 
   const [newNick, setNewNick] = useState("");
@@ -21,7 +23,7 @@ const MyPageInformation = () => {
     const file = e.target.files[0];
     // 파일 처리 로직 추가
     // 이미지 업로드 후 이미지 변경 로직
-    setImage(file);
+    // setImage(file);
     console.log("프로필", file);
     if (file) {
       const reader = new FileReader();
