@@ -3,10 +3,11 @@ import { instance } from "../axios";
 const main = async () => {
   try {
     const { data } = await instance.get("/home");
-    return data.eachRoleUsersList;
+    return data;
+    /*   return data.eachRoleUsersList; */
   } catch (error) {
-    alert(error);
-    throw error;
+    /*     alert(error); */
+    console.log(error);
   }
 };
 
