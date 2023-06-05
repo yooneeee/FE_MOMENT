@@ -167,6 +167,7 @@
     object-fit: cover;
     padding: 15px;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 .contentInput {
