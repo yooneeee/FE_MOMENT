@@ -133,6 +133,7 @@ function Header() {
         ) : (
           <>
             {/*    화면크기 768px보다 클 때 */}
+
             <HeaderButton
               onClick={() => {
                 navigate("/feeds");
@@ -254,7 +255,7 @@ function Header() {
         <ToggleMenu>
           <MenuButton
             onClick={() => {
-              navigate("/feed");
+              navigate("/feeds");
               toggleMenuClose();
               toggleWriteMenuClose();
               toggleProfileMenuClose();
@@ -399,6 +400,7 @@ const HeaderStyles = styled.div`
   left: 0;
   top: 0;
   left: 0;
+  z-index: 10;
 `;
 
 const HeaderTitle = styled.p`
