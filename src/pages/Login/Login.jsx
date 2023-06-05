@@ -16,6 +16,7 @@ import { loginAxios } from "../../apis/auth/login";
 import { useDispatch } from "react-redux";
 import { loginSuccess, setUser } from "../../redux/modules/user";
 import { REST_API_KEY, REDIRECT_URI } from "./KakaoLoginData";
+import Swal from "sweetalert2";
 
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
@@ -27,14 +28,19 @@ function Login() {
   const dispatch = useDispatch();
 
   const loginActiveHandler = () => {
-    return email.includes("@") && password.length >= 8
+    return email.includes("@") && password.length >= 7
       ? setLoginActive(true)
       : setLoginActive(false);
   };
 
   const loginMutation = useMutation(loginAxios, {
     onSuccess: (response) => {
-      alert("로그인 성공!");
+      Swal.fire({
+        icon: "success",
+        title: "로그인 성공!",
+        text: `[${response.nickName}]님 로그인되었습니다✨`,
+        confirmButtonText: "확인",
+      });
       console.log(response);
       dispatch(loginSuccess());
       dispatch(
@@ -51,7 +57,13 @@ function Login() {
       resetPassword();
     },
     onError: (error) => {
-      alert("아이디와 비밀번호를 다시 확인해주세요!");
+      Swal.fire({
+        icon: "error",
+        title: "로그인 실패!",
+        text: `아이디와 비밀번호를 다시 확인해주세요!`,
+        confirmButtonText: "확인",
+      });
+
       resetPassword();
     },
   });
