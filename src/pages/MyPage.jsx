@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import MyPageTabs from "../components/MyPageTabs";
 import MyPageProfile from "../components/MyPageProfile";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const MyPage = () => {
   const { hostId } = useParams();
@@ -18,6 +19,7 @@ const MyPage = () => {
 
   if (isLoading) {
     return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
+    return <LoadingSpinner />;
   }
 
   if (isError) {

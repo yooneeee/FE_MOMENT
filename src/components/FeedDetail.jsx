@@ -8,6 +8,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useMutation } from "react-query";
 import heartAxios from "../apis/feed/heartAxios";
 import HeartButton from "./HeartButton";
+import { useNavigate } from "react-router-dom";
 
 // 다른 화면 클릭 후 피드 페이지 클릭 시 화면 재 렌더링 되는 버그 있음
 
@@ -15,6 +16,7 @@ const FeedDetail = (props) => {
   const { open, close, photoId } = props;
   const modalRef = useRef(null);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // 모달창 바깥을 눌렀을 때 모달 close
   const handleOutsideClick = (e) => {
@@ -81,7 +83,13 @@ const FeedDetail = (props) => {
 
             <div className="inputSection">
               <div className="profileContainer">
-                <img src={data.profileUrl} className="profileImg" />
+                <img
+                  src={data.profileUrl}
+                  className="profileImg"
+                  onClick={() => {
+                    navigate(`/page/${data.hostId}`);
+                  }}
+                />
                 <div>
                   <p className="position">{data.role}</p>
                   <p>{data.nickName}</p>
@@ -101,10 +109,6 @@ const FeedDetail = (props) => {
               </div>
             </div>
           </div>
-
-          {/* <button className="close" onClick={close}>
-            X
-          </button> */}
         </section>
       ) : null}
     </div>
