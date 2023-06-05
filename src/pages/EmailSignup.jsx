@@ -10,6 +10,7 @@ import {
   signupAxios,
 } from "../apis/auth/signup";
 import Swal from "sweetalert2";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 function EmailSignup() {
   const navigate = useNavigate();
@@ -37,6 +38,31 @@ function EmailSignup() {
   const [code, setCode] = useState("");
   const [isSendEmail, setIsSendEmail] = useState(false);
   const [isemailChecking, setIsEmailChecking] = useState(false);
+
+  const [passwordType, setPasswordType] = useState({
+    type: "password",
+    visible: false,
+  });
+  const [passwordCheckType, setPasswordCheckType] = useState({
+    type: "password",
+    visible: false,
+  });
+  const passwordTypeHandler = (e) => {
+    setPasswordType(() => {
+      if (!passwordType.visible) {
+        return { type: "text", visible: true };
+      }
+      return { type: "password", visible: false };
+    });
+  };
+  const passwordCheckTypeHandler = (e) => {
+    setPasswordCheckType(() => {
+      if (!passwordCheckType.visible) {
+        return { type: "text", visible: true };
+      }
+      return { type: "password", visible: false };
+    });
+  };
 
   const signupMutation = useMutation(signupAxios, {
     onSuccess: () => {
@@ -350,7 +376,7 @@ function EmailSignup() {
         <InputTitle>비밀번호</InputTitle>
         <InputWrap>
           <Input
-            type="password"
+            type={passwordType.type}
             name="password"
             value={password}
             placeholder="비밀번호를 입력해주세요"
@@ -358,18 +384,32 @@ function EmailSignup() {
               setPassword(e.target.value);
             }}
           />
+          <span onClick={passwordTypeHandler}>
+            {passwordType.visible ? (
+              <AiOutlineEye />
+            ) : (
+              <AiOutlineEyeInvisible />
+            )}
+          </span>
         </InputWrap>
         {passwordErrorMessage && <ErrorMessage>{passwordError}</ErrorMessage>}
         <InputTitle>비밀번호 확인</InputTitle>
         <InputWrap>
           <Input
-            type="password"
+            type={passwordCheckType.type}
             placeholder="비밀번호를 다시 입력해주세요."
             value={passwordCheck}
             onChange={(e) => {
               setPasswordCheck(e.target.value);
             }}
           />
+          <span onClick={passwordCheckTypeHandler}>
+            {passwordCheckType.visible ? (
+              <AiOutlineEye />
+            ) : (
+              <AiOutlineEyeInvisible />
+            )}
+          </span>
         </InputWrap>
         {passwordCheckErrorMessage && (
           <ErrorMessage>{passwordCheckError}</ErrorMessage>

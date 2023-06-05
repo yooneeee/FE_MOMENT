@@ -16,6 +16,8 @@ import { loginAxios } from "../../apis/auth/login";
 import { useDispatch } from "react-redux";
 import { loginSuccess, setUser } from "../../redux/modules/user";
 import { REST_API_KEY, REDIRECT_URI } from "./KakaoLoginData";
+import { AiOutlineEye } from "react-icons/ai";
+import { AiOutlineEyeInvisible } from "react-icons/ai";
 import Swal from "sweetalert2";
 
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
@@ -25,8 +27,20 @@ function Login() {
   const [email, onChangeEmailHandler, resetEmail] = useInput("");
   const [password, onChangePasswordHandler, resetPassword] = useInput("");
   const [loginActive, setLoginActive] = useState(false);
+  const [passwordType, setPasswordType] = useState({
+    type: "password",
+    visible: false,
+  });
   const dispatch = useDispatch();
-
+  //password type 변경하는 함수
+  const passwordTypeHandler = (e) => {
+    setPasswordType(() => {
+      if (!passwordType.visible) {
+        return { type: "text", visible: true };
+      }
+      return { type: "password", visible: false };
+    });
+  };
   const loginActiveHandler = () => {
     return email.includes("@") && password.length >= 7
       ? setLoginActive(true)
@@ -98,12 +112,19 @@ function Login() {
         <InputTitle>비밀번호</InputTitle>
         <InputWrap>
           <Input
-            type="password"
+            type={passwordType.type}
             name="password"
             value={password}
             onChange={onChangePasswordHandler}
             placeholder="비밀번호를 입력해주세요."
           />
+          <span onClick={passwordTypeHandler}>
+            {passwordType.visible ? (
+              <AiOutlineEye />
+            ) : (
+              <AiOutlineEyeInvisible />
+            )}
+          </span>
         </InputWrap>
         <ButtonWrap>
           <EmailButton
