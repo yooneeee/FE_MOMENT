@@ -49,11 +49,11 @@ function MyPageFeed() {
     } catch (error) {}
   };
 
-  useEffect(() => {
-    if (deleteMutation.isSuccess) {
-      queryClient.refetchQueries(["mypage", mypage]);
-    }
-  }, [deleteMutation.isSuccess, queryClient]);
+  // useEffect(() => {
+  //   if (deleteMutation.isSuccess) {
+  //     queryClient.refetchQueries(["mypage", mypage]);
+  //   }
+  // }, [deleteMutation.isSuccess, queryClient]);
 
   if (isLoading) {
     return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
@@ -125,10 +125,6 @@ function MyPageFeed() {
 
 export default MyPageFeed;
 
-const ConfirmationDialog = styled.div``;
-const ConfirmationText = styled.div``;
-const ConfirmationButton = styled.button``;
-const CancelButton = styled.button``;
 const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 88px;
@@ -240,7 +236,6 @@ const WorkItem = styled.div`
   &:hover ${EditButton} {
     display: block;
   }
-
   @media (max-width: 480px) {
     height: 200px;
   }
