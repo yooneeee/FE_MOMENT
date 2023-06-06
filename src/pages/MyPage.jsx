@@ -4,7 +4,6 @@ import BoardItem from "../components/BoardItem";
 import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import MyPageTabs from "../components/MyPageTabs";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -13,8 +12,12 @@ const MyPage = () => {
   const { hostId } = useParams();
   // console.log(hostId);
 
-  const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
-    mypage(hostId)
+  const { isError, isLoading, data } = useQuery(
+    ["mypage", mypage, hostId],
+    () => mypage(hostId),
+    {
+      enabled: hostId !== undefined,
+    }
   );
 
   if (isLoading) {
