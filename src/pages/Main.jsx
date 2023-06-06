@@ -26,18 +26,8 @@ function Main() {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    /*     prevArrow: <PrevArrow />,
-    nextArrow: <NextArrow />, */
   };
-  const sendPasswordMutation = useMutation(deleteUserAxios, {
-    onSuccess: () => {
-      alert("회원탈퇴 성공!");
-      navigate("/");
-    },
-    onError: (error) => {
-      alert("회원탈퇴를 실패했습니다!");
-    },
-  });
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -125,28 +115,18 @@ const MainContainer = styled.div`
     margin: auto 100px;
   } */
 `;
+
 const SliderWrapper = styled.div`
   position: relative;
   background-color: #fff;
+  overflow-x: hidden;
 `;
+
 const Styled_Slide = styled(Slider)`
   position: relative;
   opacity: 100%;
   border: none;
   z-index: 1;
-  .slick-prev,
-  .slick-next {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 2;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    border-radius: 50%;
-    font-size: 20px;
-  }
 `;
 const MainImg = styled.img`
   width: 100%;
