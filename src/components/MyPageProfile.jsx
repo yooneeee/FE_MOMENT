@@ -8,28 +8,26 @@ import { Chatting } from "../apis/mypage/chatting";
 import { useSelector } from "react-redux";
 
 const MyPageProfile = () => {
-  const { hostId } = useParams();
-  // const { userId } = useParams();
+  const { hostId, receiverId } = useParams();
   const userId = useSelector((state) => state.user.userId);
-  // console.log("유저", userId);
-  // console.log("호스트", hostId);
+  console.log("리시브", receiverId);
 
   const {
     isError: isErrorMypage,
     isLoading: isLoadingMypage,
     data: mypageData,
-  } = useQuery(["mypage", mypage, hostId], () => mypage(hostId), {
+  } = useQuery(["mypage", hostId], () => mypage(hostId), {
     // hostId가 정의되어 있을 때만 데이터 요청
     enabled: hostId !== undefined,
   });
-  // console.log("데이터1", mypageData);
+  console.log("데이터1", mypageData);
 
   const {
     isError: isErrorChatting,
     isLoading: isLoadingChatting,
     data: mypageChatting,
-  } = useQuery(["Chatting", Chatting], () => Chatting(userId));
-  console.log("데이터2", mypageChatting);
+  } = useQuery(["Chatting", Chatting], () => Chatting(receiverId));
+  console.log("데이터", mypageChatting);
 
   if (isLoadingMypage) {
     return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
@@ -40,6 +38,8 @@ const MyPageProfile = () => {
   }
   if (mypageData) {
     const isMyPage = parseInt(userId) === parseInt(hostId);
+    const chatHostId = mypageData.hostId;
+    console.log("호스트아이디", chatHostId);
     console.log("유저", userId);
     console.log("호스트", hostId);
 
@@ -60,15 +60,15 @@ const MyPageProfile = () => {
           <StFlex2>
             {isMyPage ? (
               <>
-                <Link to={`/mypageinformation/${hostId}`}>
+                <Link to={`/mypageinformation/${userId}`}>
                   <ChatBtn>프로필 편집</ChatBtn>
                 </Link>
-                <Link to={`/chattest/${userId}`}>
+                <Link to={`/chattest/${hostId}`}>
                   <ChatBtn>채팅하기</ChatBtn>
                 </Link>
               </>
             ) : (
-              <Link to={`/chattest/${userId}`}>
+              <Link to={`/chattest/${chatHostId}`}>
                 <ChatBtn>채팅하기</ChatBtn>
               </Link>
             )}
