@@ -8,10 +8,27 @@ import { deleteUserAxios } from "../apis/auth/login";
 import { useNavigate } from "react-router-dom";
 import BoardItem from "../components/BoardItem";
 import MainBoard from "../components/MainBoard";
+import banner1 from "../assets/img/배너1.png";
+import banner2 from "../assets/img/배너2.png";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function Main() {
   const { isLoading, isError, data } = useQuery("main", main);
   const navigate = useNavigate();
+  const banners = [banner1, banner2];
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    /*     prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />, */
+  };
   const sendPasswordMutation = useMutation(deleteUserAxios, {
     onSuccess: () => {
       alert("회원탈퇴 성공!");
@@ -47,7 +64,14 @@ function Main() {
   return (
     <>
       <MainContainer>
-        <MainImg src="img/mainImg_test.jpeg"></MainImg>
+        <SliderWrapper>
+          <Styled_Slide {...settings}>
+            {banners.map((item) => (
+              <MainImg key={item} src={item} />
+            ))}
+          </Styled_Slide>
+        </SliderWrapper>
+        {/* <MainImg src={banner2}></MainImg> */}
         <MainBody>
           {/* 당신을 위한 맞춤 추천 카테고리 */}
           <CategoryContainer>
@@ -101,7 +125,29 @@ const MainContainer = styled.div`
     margin: auto 100px;
   } */
 `;
-
+const SliderWrapper = styled.div`
+  position: relative;
+  background-color: #fff;
+`;
+const Styled_Slide = styled(Slider)`
+  position: relative;
+  opacity: 100%;
+  border: none;
+  z-index: 1;
+  .slick-prev,
+  .slick-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    font-size: 20px;
+  }
+`;
 const MainImg = styled.img`
   width: 100%;
   margin-bottom: 30px;
@@ -135,8 +181,11 @@ const MoreButton = styled.div`
 `;
 
 const CardContainer = styled.div`
-  display: flex;
+  /*   display: flex;
   flex-wrap: wrap;
+  gap: 30px;*/
+  display: flex;
+  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개의 컬럼 */
   gap: 30px;
 `;
 const BoardContainer = styled.div`
