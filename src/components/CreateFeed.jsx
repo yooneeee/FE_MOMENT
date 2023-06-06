@@ -130,14 +130,24 @@ const CreateFeed = (props) => {
 
   // 저장하기 버튼 클릭
   const saveButtonHandler = () => {
-    if (!selectedFile) {
-      alert("사진을 선택해주세요");
+    if (!selectedFile || !content || hashTags == []) {
+      alert("모든 내용을 입력해주세요!");
       return;
     }
 
     const formData = new FormData();
-    formData.append("imageFile", selectedFile);
-    formData.append("contents", content);
+    formData.append(
+      "contents",
+      new Blob([JSON.stringify(content)], { type: "application/json" })
+    );
+    formData.append(
+      "photoHashTag",
+      new Blob([JSON.stringify(hashTags)], { type: "application/json" })
+    );
+    formData.append(
+      "imageFile",
+      new Blob([JSON.stringify(selectedFile)], { type: "application/json" })
+    );
 
     createFeedMutation.mutate(formData);
   };
