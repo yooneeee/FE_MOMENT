@@ -16,10 +16,12 @@ import KakaoLoginRedirect from "../pages/Login/KakaoLoginRedirect";
 import MyPageFeed from "../pages/MyPageFeed";
 import MyPageBoard from "../pages/MyPageBoard";
 import BoardDetail from "../pages/BoardDetail";
+import ScrollToTop from "../components/ScrollToTop";
 
 const Router = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<Start />} />
