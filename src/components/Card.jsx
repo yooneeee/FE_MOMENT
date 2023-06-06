@@ -5,6 +5,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineHeart } from "react-icons/ai";
+import defaultImg from "../assets/img/2.jpg";
+
 function Card({ user }) {
   const navigate = useNavigate();
   const settings = {
@@ -19,11 +21,38 @@ function Card({ user }) {
     nextArrow: <NextArrow />,
   };
 
-  if (!user) {
-    return null;
+  if (!user || !user.photoList || user.photoList.length === 0) {
+    // photoList가 비어있을 때 기본 이미지
+    return (
+      <CardDesign
+        onClick={() => {
+          navigate(`/page/${user.userId}`);
+        }}
+      >
+        <SliderWrapper>
+          <Styled_Slide>
+            <CardProfileImg src={defaultImg} />
+          </Styled_Slide>
+        </SliderWrapper>
+        <CardHeader>
+          <ProfileImg src={user.profileUrl}></ProfileImg>
+          <FlexWrap>
+            <UserNickName>{user.nickName}</UserNickName>
+            <UserPosition>
+              <HeartIcon />
+              <UserPositionText>{user.totalLoveCnt}</UserPositionText>
+            </UserPosition>
+          </FlexWrap>
+        </CardHeader>
+      </CardDesign>
+    );
   }
   return (
-    <CardDesign>
+    <CardDesign
+      onClick={() => {
+        navigate(`/page/${user.userId}`);
+      }}
+    >
       <SliderWrapper>
         <Styled_Slide {...settings}>
           {user.photoList.map((item) => (
@@ -32,12 +61,7 @@ function Card({ user }) {
         </Styled_Slide>
       </SliderWrapper>
       <CardHeader>
-        <ProfileImg
-          src={user.profileUrl}
-          onClick={() => {
-            navigate(`/page/${user.userId}`);
-          }}
-        ></ProfileImg>
+        <ProfileImg src={user.profileUrl}></ProfileImg>
         <FlexWrap>
           <UserNickName>{user.nickName}</UserNickName>
           <UserPosition>
@@ -154,11 +178,13 @@ const CardProfileImg = styled.div`
   width: 100%;
   padding-bottom: 100%;
   border-radius: 12.69px;
-  background-image: url(${(props) => props.src});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
+  background-color: ${(props) => (props.src ? "transparent" : "#583232")};
+  background-image: ${(props) =>
+    props.src ? `url(${props.src})` : `url(${defaultImg})`};
 `;
 
 const ArrowButton = styled.div`

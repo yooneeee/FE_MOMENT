@@ -18,7 +18,7 @@ function MainBoard({ board }) {
         navigate(`/board/${board.boardId}`);
       }}
     >
-      <CardProfileImg src={board.boardImgUrl} />
+      <CardProfileImg src={board.boardImgUrl} alt="Profile Image" />
       <CardContent>
         <UserInfo>
           <UserProfile src={board.profileImgUrl}></UserProfile>
@@ -124,11 +124,14 @@ const BoardDate = styled.span``;
 
 const CardProfileImg = styled.div`
   width: 100%;
+  height: 0;
   padding-bottom: 100%;
   border-radius: 12.69px;
+  object-fit: cover;
   background-image: url(${(props) => props.src});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  background-color: #bbbbbb;
   cursor: pointer;
 `;

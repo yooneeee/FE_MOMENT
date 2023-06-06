@@ -18,6 +18,7 @@ export const CenteredContent = styled.div`
 `;
 export const TitleLogo = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin-bottom: 50px;
   margin-left: auto;
