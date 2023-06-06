@@ -4,12 +4,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
-
+import { AiOutlineHeart } from "react-icons/ai";
 function Card({ user }) {
-  /*   const photoList = Array.isArray(user.photoList)
-    ? user.photoList.map((item, index) => ({ ...item, index }))
-    : [];
-  console.log("포토리스트", photoList); */
   const navigate = useNavigate();
   const settings = {
     dots: false,
@@ -30,7 +26,7 @@ function Card({ user }) {
     <CardDesign>
       <SliderWrapper>
         <Styled_Slide {...settings}>
-          {user.photoList?.map((item) => (
+          {user.photoList.map((item) => (
             <CardProfileImg key={item.photoUrl} src={item.photoUrl} />
           ))}
         </Styled_Slide>
@@ -42,10 +38,13 @@ function Card({ user }) {
             navigate(`/page/${user.userId}`);
           }}
         ></ProfileImg>
-        <div>
-          <UserPostion> {user.role} </UserPostion>
+        <FlexWrap>
           <UserNickName>{user.nickName}</UserNickName>
-        </div>
+          <UserPosition>
+            <HeartIcon />
+            <UserPositionText>{user.totalLoveCnt}</UserPositionText>
+          </UserPosition>
+        </FlexWrap>
       </CardHeader>
     </CardDesign>
   );
@@ -53,8 +52,23 @@ function Card({ user }) {
 
 export default Card;
 
+const UserPosition = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const HeartIcon = styled(AiOutlineHeart)`
+  font-size: 16px;
+  margin-right: 4px;
+`;
+
+const UserPositionText = styled.span`
+  font-size: 16px;
+`;
 const Styled_Slide = styled(Slider)`
   position: relative;
+  opacity: 100%;
+  border: none;
   z-index: 1;
   .slick-prev,
   .slick-next {
@@ -78,25 +92,23 @@ const Styled_Slide = styled(Slider)`
 `;
 
 const CardDesign = styled.div`
-  background: black;
   width: 100%;
-  color: white;
   border-radius: 5px;
   flex-grow: 1;
-
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.05);
+  }
   @media (min-width: 768px) {
     width: calc(25% - 20px);
-    margin: 10px;
   }
 
   @media (min-width: 1024px) {
     width: calc(25% - 20px);
-    margin: 10px;
   }
 
   @media (min-width: 1440px) {
     width: calc(25% - 20px);
-    margin: 10px;
   }
 `;
 
@@ -104,23 +116,26 @@ const CardHeader = styled.div`
   display: flex;
   align-items: center;
 `;
-
 const ProfileImg = styled.img`
-  width: 70px;
-  height: 70px;
-  border-radius: 70%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   object-fit: cover;
-  padding: 15px;
+  padding: 10px;
   flex-shrink: 0;
 `;
 
-const UserPostion = styled.div`
-  color: #a9a9a9;
-  font-size: 14px;
+const FlexWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
 `;
 
 const UserNickName = styled.div`
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
 
   @media (max-width: 1024px) {
     font-size: 14px;
@@ -129,20 +144,14 @@ const UserNickName = styled.div`
 
 const SliderWrapper = styled.div`
   position: relative;
-`;
-
-const CardProfileImgContainer = styled.div`
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  padding-bottom: 15px;
-  margin-top: 10px;
+  background-color: #fff;
 `;
 
 const CardProfileImg = styled.div`
   position: relative;
   width: 100%;
   padding-bottom: 100%;
+  border-radius: 12.69px;
   background-image: url(${(props) => props.src});
   background-size: cover;
   background-repeat: no-repeat;

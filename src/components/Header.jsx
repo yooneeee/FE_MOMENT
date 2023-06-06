@@ -407,7 +407,7 @@ const HeaderStyles = styled.div`
   height: 50px;
   display: flex;
   align-items: center;
-  padding-left: 20px;
+  padding: 0 100px;
   color: white;
   font-weight: 600;
   position: fixed;

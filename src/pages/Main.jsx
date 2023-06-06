@@ -6,23 +6,28 @@ import { main } from "../apis/main/main";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { deleteUserAxios } from "../apis/auth/login";
 import { useNavigate } from "react-router-dom";
-import { useInput } from "../hooks/useInput";
 import BoardItem from "../components/BoardItem";
 import MainBoard from "../components/MainBoard";
+import banner1 from "../assets/img/배너1.png";
+import banner2 from "../assets/img/배너2.png";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function Main() {
   const { isLoading, isError, data } = useQuery("main", main);
   const navigate = useNavigate();
-  const [password, onChangePasswordHandler] = useInput();
-  const sendPasswordMutation = useMutation(deleteUserAxios, {
-    onSuccess: () => {
-      alert("회원탈퇴 성공!");
-      navigate("/");
-    },
-    onError: (error) => {
-      alert("회원탈퇴를 실패했습니다!");
-    },
-  });
+  const banners = [banner1, banner2];
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -46,29 +51,30 @@ function Main() {
   const board = data.boardList;
   console.log("data", data);
 
-  const deleteUserHandler = () => {
-    const formData = new FormData();
-    console.log(password);
-    formData.append("password", password);
-    sendPasswordMutation.mutate(formData);
-  };
-
   return (
     <>
       <MainContainer>
-        <MainImg src="img/mainImg_test.jpeg"></MainImg>
+        <SliderWrapper>
+          <Styled_Slide {...settings}>
+            {banners.map((item) => (
+              <MainImg key={item} src={item} />
+            ))}
+          </Styled_Slide>
+        </SliderWrapper>
+        {/* <MainImg src={banner2}></MainImg> */}
         <MainBody>
           {/* 당신을 위한 맞춤 추천 카테고리 */}
           <CategoryContainer>
             <CardGroupName>
-              <CardName onClick={deleteUserHandler}>For You</CardName>
+              <CardName>For You</CardName>
               <MoreButton
                 onClick={() => {
                   navigate("/feeds");
                 }}
               >
-                더보기
+                더보기 ▶
               </MoreButton>
+              {/*          <BiSolidRightArrow /> */}
             </CardGroupName>
             <CardContainer>
               {recommendataion?.map((item) => {
@@ -78,20 +84,20 @@ function Main() {
           </CategoryContainer>
           <CategoryContainer>
             <CardGroupName>
-              <CardName>지금 촬영을 원하는 작업자를 소개</CardName>
+              <CardName>Join with me</CardName>
               <MoreButton
                 onClick={() => {
                   navigate("/board");
                 }}
               >
-                더보기
+                더보기 ▶
               </MoreButton>
             </CardGroupName>
-            <CardContainer>
+            <BoardContainer>
               {board?.map((item) => {
                 return <MainBoard key={item.boardId} board={item} />;
               })}
-            </CardContainer>
+            </BoardContainer>
           </CategoryContainer>
         </MainBody>
       </MainContainer>
@@ -101,20 +107,35 @@ function Main() {
 
 export default Main;
 const MainContainer = styled.div`
-  margin: auto 50px;
+  /*  margin: auto 50px;
   @media (min-width: 1000px) {
     margin: auto 100px;
   }
   @media (min-width: 1200px) {
-    margin: auto 300px;
-  }
+    margin: auto 100px;
+  } */
 `;
 
+const SliderWrapper = styled.div`
+  position: relative;
+  background-color: #fff;
+  overflow-x: hidden;
+`;
+
+const Styled_Slide = styled(Slider)`
+  position: relative;
+  opacity: 100%;
+  border: none;
+  z-index: 1;
+`;
 const MainImg = styled.img`
   width: 100%;
+  margin-bottom: 30px;
 `;
 
-const MainBody = styled.div``;
+const MainBody = styled.div`
+  margin: auto 100px;
+`;
 
 const CategoryContainer = styled.div`
   margin-bottom: 40px;
@@ -134,13 +155,21 @@ const CardName = styled.p`
 
 const MoreButton = styled.div`
   border: none;
-  color: #0096c6;
+  color: #515151;
   cursor: pointer;
   font-weight: 600;
 `;
 
 const CardContainer = styled.div`
-  display: flex;
+  /*   display: flex;
   flex-wrap: wrap;
+  gap: 30px;*/
+  display: flex;
+  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개의 컬럼 */
+  gap: 30px;
+`;
+const BoardContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개의 컬럼 */
   gap: 30px;
 `;
