@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import styled from "styled-components";
-import FeedDetail from "../components/FeedDetail";
 import "../css/App.css";
-import { useQuery } from "react-query";
 import { getFeedAxios } from "../apis/feed/getFeedAxios";
 import { useInfiniteQuery } from "react-query";
 import { useRef } from "react";
 import { useObserver } from "../components/useObserver";
 import LoadingSpinner from "../components/LoadingSpinner";
+import FeedCard from "../components/FeedCard";
+import FeedDetail from "../components/FeedDetail";
 
 function Feed() {
   // 모달 제어
@@ -20,9 +20,6 @@ function Feed() {
   const closeFeedDetail = (photoId) => {
     setFeedDetailOpen((prevOpen) => prevOpen.filter((id) => id !== photoId));
   };
-
-  // 서버 통신
-  // const { isLoading, isError, data } = useQuery("getFeedAxios", getFeedAxios);
 
   const { isLoading, isError, data, fetchNextPage, refetch } = useInfiniteQuery(
     "getFeedAxios",
@@ -72,16 +69,16 @@ function Feed() {
           .flatMap((page) => page.photoList)
           .map((item) => {
             const isOpen = feedDetailOpen.includes(item.photoId);
+            console.log(item);
             return (
-              <React.Fragment key={item.photoId}>
-                <Cards>
-                  <CardsImg
-                    src={item.photoUrl}
-                    onClick={() => {
-                      openFeedDetail(item.photoId);
-                    }}
-                  />
-                </Cards>
+              <>
+                <FeedCard
+                  key={item.photoId}
+                  data={item}
+                  onClick={() => {
+                    openFeedDetail(item.photoId);
+                  }}
+                />
                 {isOpen && (
                   <FeedDetail
                     open={() => openFeedDetail(item.photoId)}
@@ -89,10 +86,9 @@ function Feed() {
                     photoId={item.photoId}
                   />
                 )}
-              </React.Fragment>
+              </>
             );
           })}
-        <div ref={bottom}></div>
       </FeedContainer>
     </>
   );
@@ -100,15 +96,16 @@ function Feed() {
 
 export default Feed;
 const FeedContainer = styled.div`
-  width: 80%;
-  margin: auto;
-  height: auto;
+  padding: 20px 10px 20px 10px;
+  margin: auto 100px;
   display: flex;
   flex-wrap: wrap;
+  gap: 60px;
+  /* background-color: green; */
 `;
 
 const Cards = styled.div`
-  width: 32%;
+  width: 24%;
   background: black;
   margin: 5px;
 `;
@@ -123,3 +120,5 @@ const CardsImg = styled.div`
   background-position: center;
   cursor: pointer;
 `;
+
+//////////////////////////////////////
