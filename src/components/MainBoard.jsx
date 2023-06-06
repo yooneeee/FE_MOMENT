@@ -90,7 +90,7 @@ const MeetingInfo = styled.div`
   font-weight: bold;
   gap: 20px;
   align-items: center;
-  font-size: 16px;
+  font-size: 12px;
   color: #858585;
 `;
 const UserProfile = styled.img`
