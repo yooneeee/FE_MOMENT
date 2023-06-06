@@ -18,10 +18,9 @@ const logoutAxios = async () => {
   }
 };
 
-const deleteUserAxios = async (formData) => {
-  console.log(formData);
+const deleteUserAxios = async () => {
   try {
-    const response = await instance.post(`/users/hard`, formData);
+    const response = await instance.delete(`/users/hard`);
     console.log(response);
     return response;
   } catch (error) {
