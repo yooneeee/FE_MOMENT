@@ -109,17 +109,37 @@ function Header() {
       ismobile={windowWidth <= 768 ? "true" : "false"}
       ref={headerRef}
     >
-      <HeaderTitle
-        onClick={() => {
-          navigate("/main");
-          toggleMenuClose();
-          toggleWriteMenuClose();
-        }}
-      >
-        Moment
-      </HeaderTitle>
+      <LeftMenu>
+        <HeaderTitle
+          onClick={() => {
+            navigate("/main");
+            toggleMenuClose();
+            toggleWriteMenuClose();
+          }}
+        >
+          Moment
+        </HeaderTitle>
+        <HeaderButton
+          onClick={() => {
+            navigate("/feeds");
+            toggleWriteMenuClose();
+            toggleProfileMenuClose();
+          }}
+        >
+          피드
+        </HeaderButton>
+        <HeaderButton
+          onClick={() => {
+            navigate("/board");
+            toggleWriteMenuClose();
+            toggleProfileMenuClose();
+          }}
+        >
+          게시판
+        </HeaderButton>
+      </LeftMenu>
+
       <ButtonBox>
-        {/*    화면크기 768px보다 작을 때 */}
         {windowWidth <= 768 ? (
           <MenuButton
             onClick={() => {
@@ -132,26 +152,6 @@ function Header() {
           </MenuButton>
         ) : (
           <>
-            {/*    화면크기 768px보다 클 때 */}
-
-            <HeaderButton
-              onClick={() => {
-                navigate("/feeds");
-                toggleWriteMenuClose();
-                toggleProfileMenuClose();
-              }}
-            >
-              피드
-            </HeaderButton>
-            <HeaderButton
-              onClick={() => {
-                navigate("/board");
-                toggleWriteMenuClose();
-                toggleProfileMenuClose();
-              }}
-            >
-              게시판
-            </HeaderButton>
             {isLoggedIn ? (
               <>
                 <HeaderButton
@@ -200,7 +200,7 @@ function Header() {
           </>
         )}
       </ButtonBox>
-      {/* 프로필 모달 열렸을 때 */}
+
       {isProfileMenuOpen && (
         <ToggleProfileMenu>
           <MenuButton
@@ -225,7 +225,7 @@ function Header() {
           </MenuButton>
         </ToggleProfileMenu>
       )}
-      {/* 글쓰기 모달 열렸을 때 */}
+
       {isWriteMenuOpen && (
         <ToggleWriteMenu>
           <MenuButton
@@ -250,7 +250,7 @@ function Header() {
           </MenuButton>
         </ToggleWriteMenu>
       )}
-      {/* 화면크기 작아졌을 때 메뉴 모달 열렸을 때 */}
+
       {isMenuOpen && (
         <ToggleMenu>
           <MenuButton
@@ -385,7 +385,22 @@ const MenuButton = styled.button`
 const MenuIcon = styled.span`
   font-size: 20px;
 `;
+const LeftMenu = styled.div`
+  display: flex;
+`;
 
+const HeaderTitle = styled.p`
+  font-size: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 20px;
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-right: 30px;
+`;
 const HeaderStyles = styled.div`
   width: 100%;
   background: black;
@@ -401,19 +416,7 @@ const HeaderStyles = styled.div`
   top: 0;
   left: 0;
   z-index: 10;
-`;
-
-const HeaderTitle = styled.p`
-  font-size: 25px;
-  font-weight: 600;
-  cursor: pointer;
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-left: auto;
-  margin-right: 30px;
+  justify-content: space-between;
 `;
 
 const HeaderButton = styled.button`

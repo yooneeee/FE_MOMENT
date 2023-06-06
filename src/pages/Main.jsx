@@ -94,19 +94,6 @@ function Main() {
             </CardContainer>
           </CategoryContainer>
         </MainBody>
-        <DeleteUserForm>
-          <label>비밀번호</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            placeholder="비밀번호를 입력해주세요"
-            onChange={onChangePasswordHandler}
-          />
-          <button type="button" onClick={deleteUserHandler}>
-            회원탈퇴
-          </button>
-        </DeleteUserForm>
       </MainContainer>
     </>
   );
@@ -157,76 +144,3 @@ const CardContainer = styled.div`
   flex-wrap: wrap;
   gap: 30px;
 `;
-
-const DeleteUserForm = styled.form`
-  margin-top: 30px;
-  label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  input {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  button {
-    background-color: red;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-  }
-`;
-
-/* return (
-  <>
-    <div>
-      <MainImg src="img/mainImg_test.jpeg"></MainImg>
-    </div>
-
-    <MainBody>
-     
-      <CategoryContainer>
-        <CardGroupName>
-          <CardName>For You</CardName>
-          <MoreButton>더보기</MoreButton>
-        </CardGroupName>
-
-        <CardContainer>
-          {data?.map((item) => {
-            return <Card key={item.userId} user={item} />;
-          })}
-        </CardContainer>
-      </CategoryContainer>
-
-    
-      <CategoryContainer>
-        <CardGroupName>
-          <CardName>Model</CardName>
-          <MoreButton>더보기</MoreButton>
-        </CardGroupName>
-
-        <CardContainer>
-          <Card />
-          <Card />
-          <Card />
-        </CardContainer>
-      </CategoryContainer>
-
-      
-      <CategoryContainer>
-        <CardGroupName>
-          <CardName>Photographer</CardName>
-          <MoreButton>더보기</MoreButton>
-        </CardGroupName>
-
-        <CardContainer>
-          <Card />
-          <Card />
-          <Card />
-        </CardContainer>
-      </CategoryContainer>
-    </MainBody>
-  </>
-); */
