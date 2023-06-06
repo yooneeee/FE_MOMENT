@@ -80,8 +80,12 @@ const CreateBoard = (props) => {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const [title, onChangeTitleHandler] = useInput();
-  const [content, onChangeContentHandler] = useInput();
+  const [title, onChangeTitleHandler] = useInput("");
+  const [content, onChangeContentHandler] = useInput("");
+  const [location, onChangeLocationHandler] = useInput("");
+  const [pay, onChangePayHandler] = useInput("");
+  const [apply, onChangeApplyHandler] = useInput("");
+  const [deadLine, onChangeDeadLineHandler] = useInput("");
   const loginUserData = UserDataComponent(); // 나의 유저 데이터 받아오는 코드
 
   // 이미지 미리보기
@@ -132,7 +136,7 @@ const CreateBoard = (props) => {
 
   // 저장하기 버튼 클릭
   const saveButtonHandler = () => {
-    if (!selectedFile || !content) {
+    if (!selectedFile || !location || !pay || !apply || !deadLine || !title) {
       alert("사진과 내용을 모두 입력해주세요");
       return;
     }
@@ -140,8 +144,12 @@ const CreateBoard = (props) => {
     const formData = new FormData();
 
     const boardRequestDto = {
-      title: title,
-      contents: content,
+      title,
+      content,
+      location,
+      pay,
+      apply,
+      deadLine,
       locationTags: hashTags,
     };
 
@@ -160,8 +168,8 @@ const CreateBoard = (props) => {
     >
       {open ? (
         <section ref={modalRef}>
-          <header>
-            <p className="headerTitle">새 게시글 만들기</p>
+          <div className="header">
+            <div className="headerTitle">새 게시글 만들기</div>
             <div className="headerRightBox">
               <button className="saveButton" onClick={saveButtonHandler}>
                 저장하기
@@ -170,7 +178,7 @@ const CreateBoard = (props) => {
                 <AiOutlineClose />
               </button>
             </div>
-          </header>
+          </div>
 
           <div className="container">
             <main className="main-body">
@@ -203,21 +211,50 @@ const CreateBoard = (props) => {
                   <p>{loginUserData.nickName}</p>
                 </div>
               </div>
-              <textarea
-                className="titleInput"
-                placeholder="제목 입력..."
+
+              <InputTitle>제목</InputTitle>
+              <ContentInput
+                placeholder="제목을 입력해주세요"
                 value={title}
                 onChange={onChangeTitleHandler}
-              ></textarea>
-              <textarea
-                className="contentInput"
-                placeholder="문구 입력..."
+              ></ContentInput>
+
+              <InputTitle>내용</InputTitle>
+              <ContentInput
+                placeholder="내용을 입력해주세요"
                 value={content}
                 onChange={onChangeContentHandler}
-              ></textarea>
+              ></ContentInput>
+              <InputTitle>촬영 장소</InputTitle>
+              <ContentInput
+                placeholder="장소를 입력해주세요"
+                value={location}
+                onChange={onChangeLocationHandler}
+              />
+
+              <InputTitle>페이</InputTitle>
+              <ContentInput
+                placeholder="페이 조건을 입력해주세요"
+                value={pay}
+                onChange={onChangePayHandler}
+              />
+
+              <InputTitle>지원 방법</InputTitle>
+              <ContentInput
+                placeholder="지원 방법을 입력해주세요"
+                value={apply}
+                onChange={onChangeApplyHandler}
+              />
+
+              <InputTitle>모집 마감일</InputTitle>
+              <ContentInput
+                type="date"
+                value={deadLine}
+                onChange={onChangeDeadLineHandler}
+              />
 
               <HashTageContainer>
-                <InputTitle>해시태그</InputTitle>
+                <HashTagInputTitle>해시태그</HashTagInputTitle>
                 <HashTag>
                   {hashTags.map((hashTag) => (
                     <Tag key={hashTag} onClick={() => removeHashTag(hashTag)}>
@@ -246,7 +283,8 @@ const CreateBoard = (props) => {
 export default CreateBoard;
 
 const HashTageContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 30px;
+  margin-left: 5px;
 `;
 
 const HashTag = styled.div`
@@ -282,6 +320,19 @@ const HashTagInput = styled.input`
 `;
 
 const InputTitle = styled.div`
+  margin: 20px 0px 0px 15px;
+`;
+
+const HashTagInputTitle = styled.div`
   padding-bottom: 10px;
   padding-left: 6px;
+`;
+
+const ContentInput = styled.input`
+  height: 30px;
+  width: 94%;
+  margin: 6px 0px 0px 15px;
+  border: none;
+  outline: none;
+  font-size: 15px;
 `;
