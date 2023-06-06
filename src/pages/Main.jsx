@@ -21,11 +21,11 @@ function Main() {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
+    speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 6000,
   };
 
   if (isLoading) {
@@ -106,6 +106,7 @@ function Main() {
 }
 
 export default Main;
+
 const MainContainer = styled.div`
   /*  margin: auto 50px;
   @media (min-width: 1000px) {
@@ -128,6 +129,7 @@ const Styled_Slide = styled(Slider)`
   border: none;
   z-index: 1;
 `;
+
 const MainImg = styled.img`
   width: 100%;
   margin-bottom: 30px;

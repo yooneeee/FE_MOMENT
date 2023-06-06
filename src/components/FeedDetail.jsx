@@ -9,8 +9,7 @@ import { useMutation } from "react-query";
 import heartAxios from "../apis/feed/heartAxios";
 import HeartButton from "./HeartButton";
 import { useNavigate } from "react-router-dom";
-
-// 다른 화면 클릭 후 피드 페이지 클릭 시 화면 재 렌더링 되는 버그 있음
+import styled from "styled-components";
 
 const FeedDetail = (props) => {
   const { open, close, photoId } = props;
@@ -68,12 +67,12 @@ const FeedDetail = (props) => {
     <div className={open ? "openModal feed-datail-modal" : "feed-datail-modal"}>
       {open ? (
         <section ref={modalRef}>
-          <header>
+          {/* <header>
             <p className="headerTitle">피드</p>
             <button className="close" onClick={close}>
               <AiOutlineClose />
             </button>
-          </header>
+          </header> */}
           <div className="container">
             <main className="main-body">
               <div className="imgContainer">
@@ -82,6 +81,11 @@ const FeedDetail = (props) => {
             </main>
 
             <div className="inputSection">
+              <div className="closeButton">
+                <button className="close" onClick={close}>
+                  <AiOutlineClose />
+                </button>
+              </div>
               <div className="profileContainer">
                 <img
                   src={data.profileUrl}
@@ -104,9 +108,16 @@ const FeedDetail = (props) => {
                 </div>
               </div>
 
-              <div className="contentArea">
-                <p>{data.contents === "undefined" ? null : data.contents}</p>
-              </div>
+              <ContentArea>
+                <Content>
+                  {data.contents === "undefined" ? null : data.contents}
+                </Content>
+              </ContentArea>
+
+              <HashTagContainer>
+                <HashTag>#모델지망</HashTag>
+                <HashTag>#모델지망</HashTag>
+              </HashTagContainer>
             </div>
           </div>
         </section>
@@ -116,3 +127,34 @@ const FeedDetail = (props) => {
 };
 
 export default FeedDetail;
+
+const HashTagContainer = styled.div`
+  margin-top: 20px;
+  padding: 10px 0 10px 0;
+  display: flex;
+  gap: 5px;
+  margin-left: 5px;
+`;
+
+const HashTag = styled.div`
+  background-color: #483767;
+  color: white;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 40px;
+`;
+
+const ContentArea = styled.div`
+  margin: 20px 10px 10px 10px;
+  width: 300px;
+  font-size: 18px;
+  font-weight: 500;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+`;
+
+const Content = styled.p`
+  width: 100%;
+  white-space: pre-wrap; /* Add this line */
+`;

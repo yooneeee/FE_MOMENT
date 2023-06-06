@@ -58,10 +58,10 @@ function BoardDetail() {
   return (
     <Container>
       <FlexContainer>
-        <BoardImg img={data.profileUrl} />
+        <BoardImg img={data.boardImgUrl} />
         <MainContentContainer>
           <Title>작가 말</Title>
-          <MainContentBody>{data.contents}</MainContentBody>
+          <MainContentBody>{data.content}</MainContentBody>
 
           <Title name="작품">작가 작품</Title>
           <WorksContainer>
@@ -88,13 +88,16 @@ function BoardDetail() {
                 <UserPostion> {data.role} </UserPostion>
                 <UserNickName>{data.nickName}</UserNickName>
               </UserDataBox>
-              <ProfileVisitButton
-                onClick={() => {
-                  navigate(`/page/${data.hostId}`);
-                }}
-              >
-                프로필 방문
-              </ProfileVisitButton>
+              <ButtonContainer>
+                <ProfileVisitButton>채팅하기</ProfileVisitButton>
+                <ProfileVisitButton
+                  onClick={() => {
+                    navigate(`/page/${data.hostId}`);
+                  }}
+                >
+                  프로필 방문
+                </ProfileVisitButton>
+              </ButtonContainer>
             </ProfileBox>
 
             <HashTagContainer>
@@ -102,18 +105,14 @@ function BoardDetail() {
                 return <HashTag key={item}>{item}</HashTag>;
               })}
             </HashTagContainer>
-
             <ListTitle>촬영장소</ListTitle>
-            <ListContent>서울 서대문구 명지대 1길 18</ListContent>
+            <ListContent>{data.location}</ListContent>
             <ListTitle>급여 조건</ListTitle>
-            <ListContent>별도 협의</ListContent>
+            <ListContent>{data.pay}</ListContent>
             <ListTitle>지원 방법</ListTitle>
-            <ListContent>
-              채팅 지원, 이메일 지원(khj981116@gmail.com)
-            </ListContent>
+            <ListContent>{data.apply}</ListContent>
             <ListTitle>모집 마감일</ListTitle>
-            <ListContent>2023.07.03</ListContent>
-            <ChatButton>채팅하기</ChatButton>
+            <ListContent>{data.deadLine}</ListContent>
           </FormBody>
         </Form>
       </StyledForm>
@@ -162,8 +161,6 @@ const Form = styled.div`
   border-radius: 5px;
   margin-left: auto;
 
-  /////////////////
-
   /* Hide the scrollbar */
   ::-webkit-scrollbar {
     width: 0.8em;
@@ -204,7 +201,7 @@ const ProfileImg = styled.img`
 `;
 
 const UserDataBox = styled.div`
-  padding-left: 10px;
+  padding-left: 15px;
 `;
 
 const UserPostion = styled.div`
@@ -216,6 +213,12 @@ const UserPostion = styled.div`
 const UserNickName = styled.div`
   font-size: 16px;
   font-weight: 500;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  margin-left: auto;
+  gap: 10px;
 `;
 
 const ProfileVisitButton = styled.button`
@@ -233,7 +236,7 @@ const ProfileVisitButton = styled.button`
 `;
 
 const HashTagContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 40px;
   padding: 10px 0 10px 0;
   display: flex;
   gap: 5px;
@@ -248,27 +251,11 @@ const HashTag = styled.div`
 
 const ListTitle = styled.div`
   color: #777777;
-  margin-top: 40px;
+  margin-top: 30px;
 `;
 
 const ListContent = styled.div`
   margin-top: 20px;
-`;
-
-const ChatButton = styled.button`
-  width: 100%;
-  padding: 20px;
-  margin-top: 45px;
-  font-size: 17px;
-  font-weight: 500;
-  background-color: transparent;
-  border-radius: 10px;
-  border: 1px solid #7e7e7e;
-  &:hover {
-    background-color: #8c8c8c;
-    border-color: #fff;
-    color: #fff;
-  }
 `;
 
 const MainContentContainer = styled.div`

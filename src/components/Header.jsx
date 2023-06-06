@@ -119,24 +119,26 @@ function Header() {
         >
           Moment
         </HeaderTitle>
-        <HeaderButton
-          onClick={() => {
-            navigate("/feeds");
-            toggleWriteMenuClose();
-            toggleProfileMenuClose();
-          }}
-        >
-          피드
-        </HeaderButton>
-        <HeaderButton
-          onClick={() => {
-            navigate("/board");
-            toggleWriteMenuClose();
-            toggleProfileMenuClose();
-          }}
-        >
-          게시판
-        </HeaderButton>
+        <CategoryBox>
+          <HeaderButton
+            onClick={() => {
+              navigate("/feeds");
+              toggleWriteMenuClose();
+              toggleProfileMenuClose();
+            }}
+          >
+            피드
+          </HeaderButton>
+          <HeaderButton
+            onClick={() => {
+              navigate("/board");
+              toggleWriteMenuClose();
+              toggleProfileMenuClose();
+            }}
+          >
+            게시판
+          </HeaderButton>
+        </CategoryBox>
       </LeftMenu>
 
       <ButtonBox>
@@ -370,6 +372,13 @@ const ToggleWriteMenu = styled.div`
     right: 120px;
   }
 `;
+
+const CategoryBox = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-left: 20px;
+`;
+
 const MenuButton = styled.button`
   display: block;
   padding: 8px;
