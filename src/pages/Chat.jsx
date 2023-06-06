@@ -5,35 +5,35 @@ import SockJS from "sockjs-client";
 import { Chatting } from "../apis/mypage/chatting";
 import { useQuery } from "react-query";
 import { instance } from "../apis/axios";
+import axios from "axios";
 
 function Chat() {
-  // const { isLoading, isError, data } = useQuery("Chatting", Chatting);
-  // console.log(data);
+  const { userId } = useParams();
+  // console.log(userId);
 
-  // if (isLoading) {
-  //   return <h1>로딩 중입니다..!</h1>;
-  // }
-
-  // if (isError) {
-  //   return <h1>{isError}</h1>;
-  // }
   const [chatList, setChatList] = useState([]);
-  const [chat, setChat] = useState("");
+  const [message, setMessage] = useState("");
+  // const senderId = 2;
+  // const receicerId = 3;
+  // const chatRoomId = 1;
 
-  const { apply_id } = useParams();
+  const { chatRoomId } = useParams();
   const client = useRef({});
 
-  // const connect = () => {
-  //   client.current = new StompJs.Client({
-  //     brokerURL: "ws://15.165.14.7/ws-edit",
-  //     onConnect: () => {
-  //       console.log("success");
-  //       subscribe();
-  //     },
-  //   });
+  // Chatting 함수 호출
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await Chatting(userId);
+        console.log(data);
+        // data를 사용하여 필요한 작업 수행
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  //   client.current.activate(); // 소켓 연결을 해주는 method
-  // };
+    fetchData();
+  }, [userId]);
 
   const connect = () => {
     const socket = new SockJS("http://15.165.14.7/ws-edit");
@@ -46,22 +46,31 @@ function Chat() {
   };
   // console.log(client.current);
 
-  const publish = (chat) => {
+  const publish = (message) => {
     if (!client.current.connected) return;
 
     client.current.publish({
-      destination: "/pub/chat",
+      destination: "/pub/chat/send",
       body: JSON.stringify({
-        applyId: apply_id,
-        chat: chat,
+        // applyId: apply_id,
+        message,
+        // senderId,
+        // receicerId,
+        chatRoomId,
       }),
     });
 
-    setChat("");
+    setMessage("");
   };
 
+  // const subscribe = () => {
+  //   client.current.subscribe(`/sub/chat/room/${chatRoomId}`,  => {
+
+  //     setChatList(JSON.parsre);
+  //   });
+  // };
   const subscribe = () => {
-    client.current.subscribe("/sub/chat/room" + apply_id, (body) => {
+    client.current.subscribe(`/sub/chat/room/${chatRoomId}`, (body) => {
       const json_body = JSON.parse(body.body);
       setChatList((_chat_list) => [..._chat_list, json_body]);
     });
@@ -73,20 +82,21 @@ function Chat() {
 
   const handleChange = (event) => {
     // 채팅 입력 시 state에 값 설정
-    setChat(event.target.value);
+    setMessage(event.target.value);
   };
   const handleSubmit = (event) => {
     // 보내기 버튼 눌렀을 때 publish
     event.preventDefault();
 
-    publish(chat);
+    publish(message);
   };
 
   // 프로필 이미지 가져오기
   const getProfileImage = async (userId) => {
     try {
       const response = await instance.get(`/chatRoom/enter/${userId}`);
-      return response.data.profileImageUrl;
+      console.log(response);
+      return response.data.receiverProfileImg;
     } catch (error) {
       console.log(error);
       return null;
@@ -97,7 +107,7 @@ function Chat() {
   const getNickname = async (userId) => {
     try {
       const response = await instance.get(`/chatRoom/enter/${userId}`);
-      return response.data.nickname;
+      return response.data.receiverNickName;
     } catch (error) {
       console.log(error);
       return null;
@@ -149,7 +159,7 @@ function Chat() {
             type={"text"}
             name={"chatInput"}
             onChange={handleChange}
-            value={chat}
+            value={message}
           />
         </div>
         <input type={"submit"} value={"의견 보내기"} />
