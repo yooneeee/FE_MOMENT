@@ -8,8 +8,72 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import UserDataComponent from "./UserDataComponent";
+import styled from "styled-components";
 
 const CreateFeed = (props) => {
+  // 해시태그 기능
+  const [inputHashTag, setInputHashTag] = useState("");
+  const [hashTags, setHashTags] = useState([]);
+
+  const isEmptyValue = (value) => {
+    if (!value.length) {
+      return true;
+    }
+    return false;
+  };
+
+  const addHashTag = (e) => {
+    const allowedCommand = ["Comma", "Enter", "Space", "NumpadEnter"];
+    if (!allowedCommand.includes(e.code)) return;
+
+    if (isEmptyValue(e.target.value.trim())) {
+      return setInputHashTag("");
+    }
+
+    let newHashTag = e.target.value.trim();
+    const regExp = /[\{\}\[\]\/?.;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
+    if (regExp.test(newHashTag)) {
+      newHashTag = newHashTag.replace(regExp, "");
+    }
+    if (newHashTag.includes(",")) {
+      newHashTag = newHashTag.split(",").join("");
+    }
+
+    if (isEmptyValue(newHashTag)) return;
+
+    if (hashTags.length >= 3) return;
+
+    if (!newHashTag.startsWith("#")) {
+      newHashTag = `#${newHashTag}`;
+    }
+
+    setHashTags((prevHashTags) => {
+      return [...new Set([...prevHashTags, newHashTag])];
+    });
+
+    setInputHashTag("");
+  };
+
+  const removeHashTag = (tag) => {
+    setHashTags((prevHashTags) =>
+      prevHashTags.filter((hashTag) => hashTag !== tag)
+    );
+  };
+
+  const keyDownHandler = (e) => {
+    if (e.code !== "Enter" && e.code !== "NumpadEnter") return;
+    e.preventDefault();
+
+    const regExp = /^[a-z|A-Z|가-힣|ㄱ-ㅎ|ㅏ-ㅣ|0-9| \t|]+$/g;
+    if (!regExp.test(e.target.value)) {
+      setInputHashTag("");
+    }
+  };
+
+  const changeHashTagInput = (e) => {
+    setInputHashTag(e.target.value);
+  };
+  ///////////////////////////////////////////////////////
   const { open, close } = props;
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -82,8 +146,8 @@ const CreateFeed = (props) => {
     <div className={open ? "openModal create-feed-modal" : "create-feed-modal"}>
       {open ? (
         <section ref={modalRef}>
-          <header>
-            <p className="headerTitle">새 피드 만들기</p>
+          <div className="header">
+            <div className="headerTitle">새 피드 만들기</div>
             <div className="headerRightBox">
               <button className="saveButton" onClick={saveButtonHandler}>
                 저장하기
@@ -92,7 +156,7 @@ const CreateFeed = (props) => {
                 <AiOutlineClose />
               </button>
             </div>
-          </header>
+          </div>
 
           <div className="container">
             <main className="main-body">
@@ -131,12 +195,28 @@ const CreateFeed = (props) => {
                 value={content}
                 onChange={onChangeContentHandler}
               ></textarea>
+
+              <HashTageContainer>
+                <HashTagInputTitle>해시태그</HashTagInputTitle>
+                <HashTag>
+                  {hashTags.map((hashTag) => (
+                    <Tag key={hashTag} onClick={() => removeHashTag(hashTag)}>
+                      {hashTag}
+                    </Tag>
+                  ))}
+
+                  <HashTagInput
+                    value={inputHashTag}
+                    onChange={changeHashTagInput}
+                    onKeyUp={addHashTag}
+                    onKeyDown={keyDownHandler}
+                    placeholder="#해시태그를 등록해보세요. (최대 3개)"
+                    className="hashTagInput"
+                  />
+                </HashTag>
+              </HashTageContainer>
             </div>
           </div>
-
-          {/* <button className="close" onClick={close}>
-            X
-          </button> */}
         </section>
       ) : null}
     </div>
@@ -144,3 +224,45 @@ const CreateFeed = (props) => {
 };
 
 export default CreateFeed;
+
+const HashTageContainer = styled.div`
+  margin-top: 50px;
+  margin-left: 5px;
+`;
+
+const HashTag = styled.div`
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 100%;
+  border: 2px solid $GRAY;
+  border-radius: 10px;
+  padding: 5px;
+  gap: 5px;
+  margin-top: 10px;
+`;
+
+const Tag = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  background: #1e90ff;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background: #4a88db;
+  }
+`;
+
+const HashTagInput = styled.input`
+  outline: none;
+  border: none;
+  font-size: 16px;
+  padding: 5px;
+  width: 100%;
+`;
+
+const HashTagInputTitle = styled.div`
+  padding-bottom: 10px;
+  padding-left: 6px;
+`;
