@@ -56,7 +56,7 @@ function Main() {
   return (
     <>
       <MainContainer>
-        <MainImg src="img/mainImg_test.jpeg"></MainImg>
+        <MainImg src="/img/1번-수정.png"></MainImg>
         <MainBody>
           {/* 당신을 위한 맞춤 추천 카테고리 */}
           <CategoryContainer>
@@ -113,13 +113,14 @@ function Main() {
 }
 
 export default Main;
+
 const MainContainer = styled.div`
   margin: auto 50px;
   @media (min-width: 1000px) {
     margin: auto 100px;
   }
   @media (min-width: 1200px) {
-    margin: auto 300px;
+    margin: auto 100px;
   }
 `;
 
