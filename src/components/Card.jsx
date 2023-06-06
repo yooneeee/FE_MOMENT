@@ -10,11 +10,11 @@ function Card({ user }) {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
+    speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 6000,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
   };
@@ -42,7 +42,9 @@ function Card({ user }) {
           <UserNickName>{user.nickName}</UserNickName>
           <UserPosition>
             <HeartIcon />
-            <UserPositionText>{user.totalLoveCnt}</UserPositionText>
+            <UserPositionText>
+              {user.totalLoveCnt || user.loveCnt}
+            </UserPositionText>
           </UserPosition>
         </FlexWrap>
       </CardHeader>
@@ -96,9 +98,9 @@ const CardDesign = styled.div`
   border-radius: 5px;
   flex-grow: 1;
   cursor: pointer;
-  &:hover {
-    transform: scale(1.05);
-  }
+  /* &:hover {
+    transform: scale(1.01);
+  } */
   @media (min-width: 768px) {
     width: calc(25% - 20px);
   }
