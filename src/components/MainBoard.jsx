@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { AiOutlineHeart } from "react-icons/ai";
 
 function MainBoard({ board }) {
   const navigate = useNavigate();
@@ -23,8 +24,10 @@ function MainBoard({ board }) {
           <UserProfile src={board.profileImgUrl}></UserProfile>
           <FlexWrap>
             <UserName>{board.nickName}</UserName>
-            {/*  <UserPosition>{board.role}</UserPosition> */}
-            <UserPosition>♡{board.totalLoveCnt}</UserPosition>
+            <UserPosition>
+              <HeartIcon />
+              <UserPositionText>{board.totalLoveCnt}</UserPositionText>
+            </UserPosition>
           </FlexWrap>
         </UserInfo>
         <BoardTitle>{board.title}</BoardTitle>
@@ -91,8 +94,8 @@ const MeetingInfo = styled.div`
   color: #858585;
 `;
 const UserProfile = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
@@ -100,8 +103,18 @@ const UserProfile = styled.img`
 `;
 const UserName = styled.span``;
 
-const UserPosition = styled.span``;
+const UserPosition = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const HeartIcon = styled(AiOutlineHeart)`
+  font-size: 16px;
+  margin-right: 4px;
+`;
 
+const UserPositionText = styled.span`
+  font-size: 16px;
+`;
 const BoardTitle = styled.span`
   font-size: 18px;
   font-weight: bold;
