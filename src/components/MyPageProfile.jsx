@@ -4,46 +4,80 @@ import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Chatting } from "../apis/mypage/chatting";
+import { useSelector } from "react-redux";
 
 const MyPageProfile = () => {
   const { hostId } = useParams();
-  // console.log(hostId);
+  // const { userId } = useParams();
+  const userId = useSelector((state) => state.user.userId);
+  // console.log("유저", userId);
+  // console.log("호스트", hostId);
 
-  const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
-    mypage(hostId)
-  );
+  const {
+    isError: isErrorMypage,
+    isLoading: isLoadingMypage,
+    data: mypageData,
+  } = useQuery(["mypage", mypage, hostId], () => mypage(hostId), {
+    // hostId가 정의되어 있을 때만 데이터 요청
+    enabled: hostId !== undefined,
+  });
+  // console.log("데이터1", mypageData);
 
-  if (isLoading) {
+  const {
+    isError: isErrorChatting,
+    isLoading: isLoadingChatting,
+    data: mypageChatting,
+  } = useQuery(["Chatting", Chatting], () => Chatting(userId));
+  console.log("데이터2", mypageChatting);
+
+  if (isLoadingMypage) {
     return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
   }
 
-  if (isError) {
+  if (isErrorMypage) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  return (
-    <ProfileSection>
-      <ProfilePicture src={data.profileUrl} />
-      <ProfileInfo>
-        <StFlex>
-          <span>{data.role}</span>
-          <UserNickname>{data.nickName}</UserNickname>
-        </StFlex>
-        <StFlex>
-          <Post>피드 {data.photoList.length}</Post>
-          <span>|</span>
-          <Recommend>게시글 {data.boardCnt}</Recommend>
-        </StFlex>
-        <Post>추천🧡 {data.totalPhotoLoveCnt}</Post>
-        <StFlex>
-          <Link to={`/mypageinformation/${hostId}`}>
-            <ChatBtn>프로필 편집</ChatBtn>
-          </Link>
-        </StFlex>
-      </ProfileInfo>
-    </ProfileSection>
-  );
-};
+  if (mypageData) {
+    const isMyPage = parseInt(userId) === parseInt(hostId);
+    console.log("유저", userId);
+    console.log("호스트", hostId);
 
+    return (
+      <ProfileSection>
+        <ProfilePicture src={mypageData.profileUrl} />
+        <ProfileInfo>
+          <StFlex>
+            <span>{mypageData.role}</span>
+            <UserNickname>{mypageData.nickName}</UserNickname>
+          </StFlex>
+          <StFlex>
+            <Post>피드 {mypageData.photoList.length}</Post>
+            <span>|</span>
+            <Recommend>게시글 {mypageData.boardCnt}</Recommend>
+          </StFlex>
+          <Post>추천🧡 {mypageData.totalPhotoLoveCnt}</Post>
+          <StFlex2>
+            {isMyPage ? (
+              <>
+                <Link to={`/mypageinformation/${hostId}`}>
+                  <ChatBtn>프로필 편집</ChatBtn>
+                </Link>
+                <Link to={`/chattest/${userId}`}>
+                  <ChatBtn>채팅하기</ChatBtn>
+                </Link>
+              </>
+            ) : (
+              <Link to={`/chattest/${userId}`}>
+                <ChatBtn>채팅하기</ChatBtn>
+              </Link>
+            )}
+          </StFlex2>
+        </ProfileInfo>
+      </ProfileSection>
+    );
+  }
+};
 export default MyPageProfile;
 
 const ProfileSection = styled.div`
@@ -128,4 +162,10 @@ const StFlex = styled.div`
   align-items: center;
   justify-content: center;
   padding: 10px;
+`;
+
+const StFlex2 = styled(StFlex)`
+  flex-direction: column;
+  margin-top: 20px;
+  gap: 3px;
 `;
