@@ -1,10 +1,9 @@
 import { instance } from "../axios";
 
-const getFeedAxios = async () => {
+const getFeedAxios = async ({ pageParam = 0 }) => {
   try {
-    const { data } = await instance.get("/feeds");
-    console.log(data.photoList);
-    return data.photoList;
+    const { data } = await instance.get(`/feeds?page=${pageParam}&size=`);
+    return data;
   } catch (error) {
     throw error;
   }
