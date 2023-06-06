@@ -7,6 +7,10 @@ function MainBoard({ board }) {
   if (!board) {
     return null;
   }
+  const date = new Date(board.createdTime);
+  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+  const formattedDate = date.toLocaleDateString(undefined, options); // yyyy.MM.dd 형식으로 포맷팅
+
   return (
     <CardDesign
       onClick={() => {
@@ -16,10 +20,18 @@ function MainBoard({ board }) {
       <CardProfileImg src={board.boardImgUrl} />
       <CardContent>
         <UserInfo>
-          <UserName>{board.nickName}</UserName>
-          <UserPosition>{board.role}</UserPosition>
+          <UserProfile src={board.profileImgUrl}></UserProfile>
+          <FlexWrap>
+            <UserName>{board.nickName}</UserName>
+            {/*  <UserPosition>{board.role}</UserPosition> */}
+            <UserPosition>♡{board.totalLoveCnt}</UserPosition>
+          </FlexWrap>
         </UserInfo>
         <BoardTitle>{board.title}</BoardTitle>
+        <MeetingInfo>
+          <BoardLocation>{board.location}</BoardLocation>
+          <BoardDate>{formattedDate}</BoardDate>
+        </MeetingInfo>
       </CardContent>
     </CardDesign>
   );
@@ -28,15 +40,17 @@ function MainBoard({ board }) {
 export default MainBoard;
 
 const CardDesign = styled.div`
-  background: #585858;
-  color: white;
+  color: black;
   border-radius: 5px;
   flex-grow: 1;
-
-  @media (min-width: 768px) {
-    width: calc(25% - 20px);
-    margin: 10px;
+  width: 100%;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.05);
   }
+  /*     width: calc(25% - 20px);
+    margin: 10px;
+  } 
 
   @media (min-width: 1024px) {
     width: calc(25% - 20px);
@@ -46,7 +60,7 @@ const CardDesign = styled.div`
   @media (min-width: 1440px) {
     width: calc(25% - 20px);
     margin: 10px;
-  }
+  }*/
 `;
 
 const CardContent = styled.div`
@@ -55,29 +69,50 @@ const CardContent = styled.div`
 
 const UserInfo = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
-`;
-
-const UserName = styled.span`
+  margin-bottom: 20px;
   font-size: 16px;
   font-weight: bold;
 `;
 
-const UserPosition = styled.div`
-  color: #a9a9a9;
-  font-size: 12px;
-  margin-bottom: 8px;
+const FlexWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
 `;
+const MeetingInfo = styled.div`
+  margin-top: 12px;
+  display: flex;
+  font-weight: bold;
+  gap: 20px;
+  align-items: center;
+  font-size: 16px;
+  color: #858585;
+`;
+const UserProfile = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin-right: 10px;
+`;
+const UserName = styled.span``;
+
+const UserPosition = styled.span``;
 
 const BoardTitle = styled.span`
   font-size: 18px;
+  font-weight: bold;
 `;
+const BoardLocation = styled.span``;
+const BoardDate = styled.span``;
 
 const CardProfileImg = styled.div`
   width: 100%;
   padding-bottom: 100%;
+  border-radius: 12.69px;
   background-image: url(${(props) => props.src});
   background-size: cover;
   background-repeat: no-repeat;
