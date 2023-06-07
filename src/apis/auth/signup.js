@@ -10,7 +10,7 @@ const signupAxios = async (formData) => {
     const response = await instance.post(`/users/signup`, formData, config);
     return response.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 // 이메일 인증코드 보내기API, method: post, url: /emails/auth
@@ -20,7 +20,7 @@ const sendEmailAxios = async (email) => {
     console.log(response);
     return response.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 // 이메일 인증코드 확인API, method: post, url: /emails/check

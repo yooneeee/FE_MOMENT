@@ -93,6 +93,16 @@ function EmailSignup() {
       setPasswordCheck("");
       navigate("/login");
     },
+    onError: (error) => {
+      console.log("에러", error);
+      Swal.fire({
+        icon: "warning",
+        title: "닉네임 중복!",
+        text: `중복된 닉네임이 존재합니다! 
+        다른 닉네임을 설정해주세요🙏`,
+        confirmButtonText: "확인",
+      });
+    },
   });
   const sendEmailMutation = useMutation(sendEmailAxios, {
     onSuccess: () => {
@@ -109,8 +119,7 @@ function EmailSignup() {
       Swal.fire({
         icon: "error",
         title: "인증번호 전송 실패!",
-        text: `회원님의 이메일로 인증번호를 전송을 실패했습니다😥
-         다시 시도해보세요!`,
+        text: `이미 가입된 이메일입니다.😥`,
         confirmButtonText: "확인",
       });
     },
