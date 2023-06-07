@@ -33,7 +33,7 @@ function BoardItem({ item, onClick }) {
         </PhotographerInfo>
         <HashTagContainer>
           {item.tag_boardList.map((tags) => {
-            return <HashTag>#{tags}</HashTag>;
+            return <HashTag>{tags}</HashTag>;
           })}
         </HashTagContainer>
         <MeetInfo>
