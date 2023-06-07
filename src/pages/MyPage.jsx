@@ -4,7 +4,6 @@ import BoardItem from "../components/BoardItem";
 import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import MyPageTabs from "../components/MyPageTabs";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -29,7 +28,7 @@ const MyPage = () => {
   console.log(data);
   return (
     <>
-      <MyPageTabs mine={mine} />
+      {mine && <MyPageTabs mine={mine} />}
       <PageContainer>
         <ContentContainer>
           <MyPageProfile mine={mine} />
