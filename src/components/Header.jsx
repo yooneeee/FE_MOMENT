@@ -140,7 +140,6 @@ function Header() {
           </HeaderButton>
         </CategoryBox>
       </LeftMenu>
-
       <ButtonBox>
         {windowWidth <= 768 ? (
           <MenuButton
@@ -304,17 +303,6 @@ function Header() {
           {isLoggedIn ? (
             <>
               <MenuButton
-                onClick={() => {
-                  toggleWriteMenuClose();
-                  setIsProfileMenuOpen(!isProfileMenuOpen);
-                }}
-              >
-                <ProfileContainer>
-                  <ProfileImg src={profileImg}></ProfileImg>
-                  <ProfileName>{nickName}</ProfileName>
-                </ProfileContainer>
-              </MenuButton>
-              <MenuButton
                 name={"mypage"}
                 onClick={() => {
                   navigate(`/page/${userId}`);
@@ -368,8 +356,8 @@ function Header() {
 const ToggleMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 0;
-  background-color: black;
+  right: 0px;
+  background-color: white;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -387,7 +375,7 @@ const ToggleWriteMenu = styled.div`
   z-index: 100;
   @media (max-width: 768px) {
     top: 105px;
-    right: 120px;
+    right: 80px;
   }
 `;
 
@@ -395,6 +383,9 @@ const CategoryBox = styled.div`
   display: flex;
   gap: 20px;
   margin-left: 20px;
+  @media (max-width: 768px) {
+    gap: 0;
+  }
 `;
 
 const MenuButton = styled.button`
@@ -446,6 +437,9 @@ const HeaderStyles = styled.div`
   z-index: 10;
   justify-content: space-between;
   box-shadow: 0px 0.1px 5px gray;
+  @media (max-width: 768px) {
+    padding: 0 50px 0 80px;
+  }
 `;
 
 const HeaderButton = styled.button`
@@ -457,6 +451,9 @@ const HeaderButton = styled.button`
   align-items: center;
   color: black;
   display: flex;
+  @media (max-width: 768px) {
+    width: 56px;
+  }
 `;
 
 const ProfileImg = styled.img`
