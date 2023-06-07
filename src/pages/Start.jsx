@@ -96,6 +96,10 @@ const Des = styled.p`
   font-weight: 900;
   color: #2f2f2f;
   text-shadow: 2px 2px 6px gray;
+  @media (max-width: 1470px) {
+    font-size: 33px;
+    width: 260px;
+  }
 `;
 
 const StartButton = styled.button`
@@ -109,6 +113,11 @@ const StartButton = styled.button`
   font-weight: bold;
   margin-top: 60px;
   box-shadow: 2px 2px 2px gray;
+  @media (max-width: 480px) {
+    width: 140px;
+    height: 56px;
+    font-size: 16px;
+  }
 `;
 
 const ContentContainer = styled.div`
@@ -116,16 +125,10 @@ const ContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  /*   height: calc(
-    100vh - 60px
-  ); */ /* 전체 높이에서 (네비게이션 바의 높이+패딩)를 빼서 설정 */
-  box-sizing: border-box;
+  height: calc(100vh - 60px);
   overflow: hidden;
-  @media (min-width: 769px) {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
+  flex-direction: row;
+  justify-content: space-between;
 `;
 const DescriptionContainer = styled.div`
   display: flex;
@@ -137,22 +140,32 @@ const DescriptionContainer = styled.div`
   font-size: 30px;
   font-weight: bold;
   text-shadow: 2px 2px 6px gray;
-  @media (max-width: 768px) {
-    order: 1;
+  @media (max-width: 1565px) {
+    margin: 0 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-basis: 100%;
-    gap: 40px;
+    font-size: 24px;
+  }
+  @media (max-width: 480px) {
+    margin: 0 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 100%;
+    font-size: 24px;
   }
 `;
-
 const ImageContainer1 = styled.div`
   display: flex;
   flex-direction: column;
   gap: 50px;
   justify-content: flex-start;
   padding-bottom: 100px;
-
   img {
     filter: brightness(60%);
+    height: 480px;
   }
 `;
 
@@ -162,6 +175,10 @@ const ImageContainer2 = styled.div`
   gap: 50px;
   padding-top: 200px;
   margin-right: 20px;
+  img {
+    width: 306px;
+    height: 480px;
+  }
 `;
 
 const ImageContainer3 = styled.div`
@@ -170,6 +187,10 @@ const ImageContainer3 = styled.div`
   gap: 50px;
   padding-top: 100px;
   margin-right: 20px;
+  img {
+    width: 306px;
+    height: 480px;
+  }
 `;
 
 const ImageContainer4 = styled.div`
@@ -179,6 +200,7 @@ const ImageContainer4 = styled.div`
   padding-bottom: 40px;
   img {
     filter: brightness(60%);
+    height: 480px;
   }
 `;
 

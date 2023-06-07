@@ -399,8 +399,10 @@ const LeftMenu = styled.div`
 `;
 
 const HeaderTitle = styled.p`
+  display: flex;
   font-size: 25px;
   font-weight: 600;
+  align-items: center;
   cursor: pointer;
   margin-right: 20px;
 `;
