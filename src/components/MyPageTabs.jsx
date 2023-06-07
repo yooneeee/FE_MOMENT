@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import styled from "styled-components";
 
-function MyPageTabs({ pageName, mine }) {
+function MyPageTabs({ pageName }) {
   const { hostId } = useParams();
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState("");
