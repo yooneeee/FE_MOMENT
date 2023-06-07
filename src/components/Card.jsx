@@ -24,17 +24,17 @@ function Card({ user }) {
   if (!user || !user.photoList || user.photoList.length === 0) {
     // photoList가 비어있을 때 기본 이미지
     return (
-      <CardDesign
-        onClick={() => {
-          navigate(`/page/${user.userId}`);
-        }}
-      >
+      <CardDesign>
         <SliderWrapper>
           <Styled_Slide>
             <CardProfileImg src={defaultImg} />
           </Styled_Slide>
         </SliderWrapper>
-        <CardHeader>
+        <CardHeader
+          onClick={() => {
+            navigate(`/page/${user.userId}`);
+          }}
+        >
           <ProfileImg src={user.profileUrl}></ProfileImg>
           <FlexWrap>
             <UserNickName>{user.nickName}</UserNickName>
@@ -48,11 +48,7 @@ function Card({ user }) {
     );
   }
   return (
-    <CardDesign
-      onClick={() => {
-        navigate(`/page/${user.userId}`);
-      }}
-    >
+    <CardDesign>
       <SliderWrapper>
         <Styled_Slide {...settings}>
           {user.photoList.map((item) => (
@@ -60,7 +56,11 @@ function Card({ user }) {
           ))}
         </Styled_Slide>
       </SliderWrapper>
-      <CardHeader>
+      <CardHeader
+        onClick={() => {
+          navigate(`/page/${user.userId}`);
+        }}
+      >
         <ProfileImg src={user.profileUrl}></ProfileImg>
         <FlexWrap>
           <UserNickName>{user.nickName}</UserNickName>
