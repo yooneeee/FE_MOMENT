@@ -379,7 +379,7 @@ const ToggleMenu = styled.div`
 const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 100%;
-  right: 100px;
+  right: 75px;
   background-color: white;
   padding: 10px;
   display: flex;
@@ -428,8 +428,8 @@ const HeaderTitle = styled.p`
 const ButtonBox = styled.div`
   display: flex;
   gap: 20px;
-  margin-right: 30px;
 `;
+
 const HeaderStyles = styled.div`
   width: 100%;
   background: white;
@@ -474,7 +474,7 @@ const ProfileImg = styled.img`
 const ToggleProfileMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 190px;
+  right: 150px;
   background-color: white;
   padding: 10px;
   display: flex;

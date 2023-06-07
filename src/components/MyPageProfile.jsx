@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 
 const MyPageProfile = () => {
   const { hostId } = useParams();
-  // console.log(hostId);
 
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
