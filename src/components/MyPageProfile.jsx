@@ -47,6 +47,7 @@ const MyPageProfile = () => {
 export default MyPageProfile;
 
 const ProfileSection = styled.div`
+  width: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
