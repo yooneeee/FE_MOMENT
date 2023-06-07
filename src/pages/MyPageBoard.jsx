@@ -30,7 +30,9 @@ function MyPageBoard() {
       <MyPageTabs pageName={"내 게시글"} />
       <PageContainer>
         <ContentContainer>
-          <MyPageProfile />
+          <ProfileContainer>
+            <MyPageProfile />
+          </ProfileContainer>
           <Container>
             <Content>
               <Work>내가 쓴 게시물</Work>
@@ -55,6 +57,9 @@ const PageContainer = styled.div`
   align-items: center;
   background-color: #f5f5f5;
   padding: 20px;
+`;
+const ProfileContainer = styled.div`
+  width: 550px;
 `;
 const Container = styled.div`
   width: 100%;

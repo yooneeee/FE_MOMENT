@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 import MyPageTabs from "../components/MyPageTabs";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { useState } from "react";
 
 const MyPage = () => {
   const { hostId } = useParams();
@@ -31,6 +30,7 @@ const MyPage = () => {
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
+
           <Container>
             <WorkSection>
               <Work>나의 작업물</Work>
@@ -65,7 +65,9 @@ const PageContainer = styled.div`
   padding: 20px;
 `;
 
-const ProfileContainer = styled.div``;
+const ProfileContainer = styled.div`
+  width: 550px;
+`;
 
 const Container = styled.div`
   width: 100%;

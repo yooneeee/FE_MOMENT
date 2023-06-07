@@ -84,7 +84,9 @@ function MyPageFeed() {
       <MyPageTabs pageName={"내 피드"} />
       <PageContainer>
         <ContentContainer>
-          <MyPageProfile />
+          <ProfileContainer>
+            <MyPageProfile />
+          </ProfileContainer>
           <WorkSection>
             <Work>나의 작업물</Work>
             <WorkList>
@@ -140,6 +142,9 @@ const ToggleWriteMenu = styled.div`
     top: 105px;
     right: 120px;
   }
+`;
+const ProfileContainer = styled.div`
+  width: 400px;
 `;
 const EditButton = styled.button`
   position: absolute;
