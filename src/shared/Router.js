@@ -5,7 +5,7 @@ import Main from "../pages/Main";
 import Login from "../pages/Login/Login";
 import Layout from "./Layout";
 import Feed from "../pages/Feed";
-import FeedDetail from "../components/FeedDetail";
+// import FeedDetail from "../components/FeedDetail";
 import Board from "../pages/Board";
 import IntegratedSignup from "../pages/IntegratedSignup";
 import EmailSignup from "../pages/EmailSignup";
@@ -40,8 +40,8 @@ const Router = () => {
           <Route path={`mypageboard/:hostId`} element={<MyPageBoard />} />
           <Route path="chat" element={<Chat />} />
           <Route path={`board/:boardId`} element={<BoardDetail />} />
-          <Route path={`chattest/:hostId`} element={<ChatTest />} />
-          {/* <Route path="chattest" element={<ChatTest />} /> */}
+          {/* <Route path={`chattest/:hostId`} element={<ChatTest />} /> */}
+          <Route path={`chattest/:receiverId`} element={<ChatTest />} />
         </Routes>
       </Layout>
     </BrowserRouter>
