@@ -27,16 +27,15 @@ function MyPageTabs() {
         >
           전체보기
         </TabButton>
-        <Link to={`/mypagefeed/${hostId}`}>
-          <TabButton
-            className={isActive === "내 피드" ? "active" : ""}
-            onClick={() => {
-              activeClickHandler("내 피드");
-            }}
-          >
-            내 피드
-          </TabButton>
-        </Link>
+        <TabButton
+          className={isActive === "내 피드" ? "active" : ""}
+          onClick={() => {
+            activeClickHandler("내 피드");
+            navigate(`/mypagefeed/${hostId}`);
+          }}
+        >
+          내 피드
+        </TabButton>
         <TabButton
           className={isActive === "내 게시글" ? "active" : ""}
           onClick={() => {
@@ -64,11 +63,11 @@ export default MyPageTabs;
 const TabsStyles = styled.div`
   width: 100%;
   background: #f5f5f5;
-  border: 1px solid #666666;
-  height: 70px;
+  border-bottom: 1px solid #d9d9d9;
+  height: 50px;
   display: flex;
   align-items: center;
-  padding: 0 19%;
+  padding-left: 80px;
   font-weight: 600;
   top: 0;
   left: 0;
