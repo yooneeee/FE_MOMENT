@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
@@ -8,7 +8,13 @@ import { Link } from "react-router-dom";
 const MyPageProfile = ({ mine }) => {
   const { hostId } = useParams();
   // console.log(hostId);
+  const [isMine, setIsMine] = useState(mine);
 
+  useEffect(() => {
+    setIsMine(mine);
+  }, [mine]);
+
+  console.log("mine", mine);
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
   );
@@ -35,15 +41,13 @@ const MyPageProfile = ({ mine }) => {
         </StFlex>
         <Post>추천 {data.totalPhotoLoveCnt}</Post>
         <StFlex>
-          {mine ? (
+          {isMine && (
             <Link
               to={`/mypageinformation/${hostId}`}
               state={{ checkKakaoId: data.checkKakaoId }}
             >
               <ChatBtn>프로필 편집</ChatBtn>
             </Link>
-          ) : (
-            <></>
           )}
         </StFlex>
       </ProfileInfo>
