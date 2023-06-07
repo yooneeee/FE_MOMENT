@@ -7,12 +7,37 @@ import { useParams } from "react-router-dom";
 import MyPageTabs from "../components/MyPageTabs";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
+import FeedDetail from "../components/FeedDetail";
+import { useState } from "react";
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const MyPage = () => {
   const { hostId } = useParams();
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
   );
+
+  // 모달 제어
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [feedDetailOpen, setFeedDetailOpen] = useState([]);
+
+  const openFeedDetail = (photoId) => {
+    if (isLoggedIn) {
+      setFeedDetailOpen((prevOpen) => [...prevOpen, photoId]);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "회원 전용 서비스!",
+        text: `로그인이 필요한 서비스입니다🙏`,
+        confirmButtonText: "확인",
+      });
+    }
+  };
+
+  const closeFeedDetail = (photoId) => {
+    setFeedDetailOpen((prevOpen) => prevOpen.filter((id) => id !== photoId));
+  };
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -36,7 +61,25 @@ const MyPage = () => {
               <Work>나의 작업물</Work>
               <WorkList>
                 {data.photoList.slice(0, 10).map((item, index) => {
-                  return <WorkItem key={index} src={item.photoUrl} />;
+                  const isOpen = feedDetailOpen.includes(item.photoId);
+                  return (
+                    <>
+                      <WorkItem
+                        key={index}
+                        src={item.photoUrl}
+                        onClick={() => {
+                          openFeedDetail(item.photoId);
+                        }}
+                      />
+                      {isOpen && (
+                        <FeedDetail
+                          open={() => openFeedDetail(item.photoId)}
+                          close={() => closeFeedDetail(item.photoId)}
+                          photoId={item.photoId}
+                        />
+                      )}
+                    </>
+                  );
                 })}
               </WorkList>
             </WorkSection>
