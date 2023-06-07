@@ -156,8 +156,6 @@ const EditButton = styled.button`
   padding: 8px;
 `;
 const Button = styled.button`
-  /* display: block; */
-  /* width: 100%; */
   width: 100px;
   margin-left: 58px;
   padding: 8px;
@@ -232,6 +230,7 @@ const WorkItem = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
+  border-radius: 7px;
 
   &:hover ${EditButton} {
     display: block;
