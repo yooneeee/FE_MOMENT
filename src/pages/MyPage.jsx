@@ -13,7 +13,7 @@ const MyPage = () => {
   // console.log(hostId);
 
   const { isError, isLoading, data } = useQuery(
-    ["mypage", mypage, hostId],
+    ["mypage", hostId],
     () => mypage(hostId),
     {
       enabled: hostId !== undefined,
