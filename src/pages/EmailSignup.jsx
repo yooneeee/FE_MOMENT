@@ -11,6 +11,7 @@ import {
 } from "../apis/auth/signup";
 import Swal from "sweetalert2";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import TermsofService from "../components/TermsofService";
 
 function EmailSignup() {
   const navigate = useNavigate();
@@ -38,6 +39,17 @@ function EmailSignup() {
   const [code, setCode] = useState("");
   const [isSendEmail, setIsSendEmail] = useState(false);
   const [isemailChecking, setIsEmailChecking] = useState(false);
+
+  const [checkModal, setCheckModal] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  const chechModalClose = () => {
+    setCheckModal(false);
+  };
 
   const [passwordType, setPasswordType] = useState({
     type: "password",
@@ -69,7 +81,8 @@ function EmailSignup() {
       Swal.fire({
         icon: "success",
         title: "회원가입 완료!",
-        text: `Moment에 오신 것을 환영합니다✨`,
+        text: `Moment에 오신 것을 환영합니다✨
+        로그인 후 다양한 서비스를 이용하실 수 있습니다.`,
         confirmButtonText: "확인",
       });
       setNickName("");
@@ -237,8 +250,18 @@ function EmailSignup() {
       "signup",
       new Blob([JSON.stringify(signup)], { type: "application/json" })
     );
+    console.log(isChecked);
 
     if (signupActive) {
+      if (!isChecked) {
+        Swal.fire({
+          icon: "warning",
+          title: "회원가입 실패!",
+          text: `모먼트 가입 약관에 동의해주세요✨`,
+          confirmButtonText: "확인",
+        });
+        return;
+      }
       /*  if (!isemailChecking) {
        Swal.fire({
         icon: "warning",
@@ -266,6 +289,7 @@ function EmailSignup() {
       <CenteredContent>
         <TitleLogo>
           <Title>Moment</Title>
+          <SubTitle>이메일로 가입하기</SubTitle>
         </TitleLogo>
         <StImageUpload>
           <InputTitle>프로필 사진을 선택해 주세요.</InputTitle>
@@ -414,6 +438,22 @@ function EmailSignup() {
         {passwordCheckErrorMessage && (
           <ErrorMessage>{passwordCheckError}</ErrorMessage>
         )}
+        <CheckContainer>
+          <CheckboxLabel>
+            <Checkbox type="checkbox" onChange={() => handleCheckboxChange()} />
+            <CheckboxText>모먼트 가입 약관에 모두 동의합니다.</CheckboxText>
+          </CheckboxLabel>
+
+          <CheckButton
+            onClick={() => {
+              setCheckModal(true);
+            }}
+            type="button"
+          >
+            확인하기
+          </CheckButton>
+        </CheckContainer>
+        {checkModal && <TermsofService chechModalClose={chechModalClose} />}
         <BottomButtonWrap>
           <BottomButton
             type="button"
@@ -431,6 +471,11 @@ function EmailSignup() {
 
 export default EmailSignup;
 
+const SubTitle = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+`;
+
 const CenteredContent = styled.form`
   flex: 1 0 auto;
   margin: 0px auto;
@@ -442,7 +487,6 @@ const CenteredContent = styled.form`
   justify-content: center;
 `;
 
-/* 버튼 선택 */
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -461,7 +505,7 @@ const SelectionButton = styled.button`
 
   &:active,
   &:focus {
-    background-color: #000000; /* 선택 시 배경색 변경 */
+    background-color: #000000;
     color: white;
   }
 `;
@@ -470,7 +514,6 @@ const InputGroup = styled.div`
   display: flex;
   align-items: center;
 `;
-/* 메일 확인, 인증 버튼 */
 const MailCheckButton = styled.button`
   margin: 0 10px;
   width: 16%;
@@ -482,14 +525,12 @@ const MailCheckButton = styled.button`
   color: white;
   cursor: pointer;
 
-  /* 요소가 비활성화 상태일 때 */
   &:disabled {
     background-color: #dadada;
     color: white;
   }
 `;
 
-/* 회원가입, 취소 버튼 */
 const BottomButton = styled.button`
   width: 35%;
   height: 48px;
@@ -501,7 +542,6 @@ const BottomButton = styled.button`
   margin-bottom: 16px;
   cursor: pointer;
 
-  /* 요소가 비활성화 상태일 때 */
   &:disabled {
     background-color: #dadada;
     color: white;
@@ -538,4 +578,36 @@ export const StProfile = styled.div`
   border: 1px solid #ccc;
   border-radius: 50%;
   background: ${(props) => `url(${props.image}) no-repeat 50% /cover`};
+`;
+
+const CheckContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const CheckButton = styled.button`
+  border: none;
+  background-color: transparent;
+  margin-left: 10px;
+  font-size: 15px;
+  text-decoration: underline;
+  color: #858585;
+  &:hover {
+    color: #1b1b1b;
+  }
+`;
+
+const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+`;
+
+const CheckboxText = styled.span`
+  flex-grow: 1;
+`;
+
+const Checkbox = styled.input`
+  margin-right: 12px;
 `;
