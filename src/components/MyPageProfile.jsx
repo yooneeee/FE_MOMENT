@@ -58,9 +58,9 @@ const ProfileSection = styled.div`
   border: 1px solid #ddd;
   background-color: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin-right: 40px;
-  margin-bottom: 20px;
+  margin-left: -50px;
   flex-shrink: 0;
+  position: fixed;
 
   @media (max-width: 768px) {
     align-items: center;
