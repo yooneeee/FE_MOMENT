@@ -142,7 +142,6 @@ const CardDesign = styled.div`
   width: 100%;
   border-radius: 5px;
   flex-grow: 1;
-  cursor: pointer;
   /* &:hover {
     transform: scale(1.01);
   } */
@@ -162,6 +161,7 @@ const CardDesign = styled.div`
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 const ProfileImg = styled.img`
   width: 60px;
@@ -202,7 +202,6 @@ const CardProfileImg = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  cursor: pointer;
   background-color: ${(props) => (props.src ? "transparent" : "#583232")};
   background-image: ${(props) =>
     props.src ? `url(${props.src})` : `url(${defaultImg})`};

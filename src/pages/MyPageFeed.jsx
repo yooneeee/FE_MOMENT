@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import MyPageTabs from "../components/MyPageTabs";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { mypage } from "../apis/mypage/mypage";
 import { mypageFeedDelete } from "../apis/mypage/mypage";
@@ -9,12 +9,14 @@ import { FiSettings } from "react-icons/fi";
 import { BiDownArrow } from "react-icons/bi";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
+import Swal from "sweetalert2";
 
 function MyPageFeed() {
-  const { hostId, photoId } = useParams();
+  const { hostId } = useParams();
   const queryClient = useQueryClient();
 
   const [editButtons, setEditButtons] = useState([]);
+  const toggleWriteMenuRef = useRef(null);
 
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
@@ -25,6 +27,12 @@ function MyPageFeed() {
     onSuccess: () => {
       queryClient.invalidateQueries(["mypage", mypage]);
       setEditButtons([]);
+      Swal.fire({
+        icon: "success",
+        title: "피드 삭제!",
+        text: `피드가 정상적으로 삭제되었습니다✨`,
+        confirmButtonText: "확인",
+      });
     },
     onError: (error) => {
       console.log(error);
@@ -32,8 +40,9 @@ function MyPageFeed() {
   });
 
   /* 삭제, 수정 버튼 */
-  const modifyButton = () => {
+  const modifyButton = (e, index) => {
     alert("수정");
+    toggleButtonClose(index);
   };
 
   const deleteButtonHandler = (photoId) => {
@@ -46,15 +55,26 @@ function MyPageFeed() {
         return;
       }
       deleteMutation.mutate(photoId);
-      toggleButtonClose(photoId);
+      /*    toggleButtonClose(index); */
     } catch (error) {}
   };
 
-  // useEffect(() => {
-  //   if (deleteMutation.isSuccess) {
-  //     queryClient.refetchQueries(["mypage", mypage]);
-  //   }
-  // }, [deleteMutation.isSuccess, queryClient]);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        toggleWriteMenuRef.current &&
+        !toggleWriteMenuRef.current.contains(event.target)
+      ) {
+        setEditButtons([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -106,8 +126,10 @@ function MyPageFeed() {
                       <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
                     </EditButton>
                     {editButtons[index] && (
-                      <ToggleWriteMenu>
-                        <Button onClick={modifyButton}>수정</Button>
+                      <ToggleWriteMenu ref={toggleWriteMenuRef}>
+                        <Button onClick={(e) => modifyButton(e, index)}>
+                          수정
+                        </Button>
                         <Button
                           onClick={() => deleteButtonHandler(item.photoId)}
                         >
@@ -139,8 +161,8 @@ const ToggleWriteMenu = styled.div`
   align-items: center;
 
   @media (max-width: 768px) {
-    top: 105px;
-    right: 120px;
+    top: 80px;
+    left: 5px;
   }
 `;
 const ProfileContainer = styled.div`
@@ -152,12 +174,10 @@ const EditButton = styled.button`
   left: 30px;
   transform: translate(-50%, -50%);
   display: none;
-
   background-color: #ffffff;
   border: none;
   border-radius: 8px;
   font-weight: 900;
-
   padding: 8px;
 `;
 const Button = styled.button`
@@ -169,6 +189,9 @@ const Button = styled.button`
   border: none;
   border-radius: 8px;
   font-weight: 900;
+  @media (max-width: 768px) {
+    width: 60px;
+  }
 `;
 
 const PageContainer = styled.div`
@@ -230,6 +253,7 @@ const WorkList = styled.div`
 const WorkItem = styled.div`
   width: 100%;
   padding-top: 100%;
+  border-radius: 7px;
   background-image: ${(props) => `url(${props.src})`};
   background-size: cover;
   background-position: center;
