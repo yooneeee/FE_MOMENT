@@ -4,9 +4,7 @@ import Card from "../components/Card";
 import { useMutation, useQuery } from "react-query";
 import { main } from "../apis/main/main";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { deleteUserAxios } from "../apis/auth/login";
 import { useNavigate } from "react-router-dom";
-import BoardItem from "../components/BoardItem";
 import MainBoard from "../components/MainBoard";
 import banner1 from "../assets/img/배너1.png";
 import banner2 from "../assets/img/배너2.png";
@@ -28,13 +26,6 @@ function Main() {
     autoplaySpeed: 6000,
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (isError) {
-    return <h1>{isError}</h1>;
-  }
   if (isLoading) {
     return <LoadingSpinner />;
   }
