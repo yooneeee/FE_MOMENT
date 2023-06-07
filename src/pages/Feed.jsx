@@ -3,8 +3,6 @@ import styled from "styled-components";
 import "../css/App.css";
 import { getFeedAxios } from "../apis/feed/getFeedAxios";
 import { useInfiniteQuery } from "react-query";
-import { useRef } from "react";
-import { useObserver } from "../components/useObserver";
 import LoadingSpinner from "../components/LoadingSpinner";
 import FeedCard from "../components/FeedCard";
 import FeedDetail from "../components/FeedDetail";
