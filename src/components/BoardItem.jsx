@@ -33,7 +33,7 @@ function BoardItem({ item, onClick }) {
         </PhotographerInfo>
         <HashTagContainer>
           {item.tag_boardList.map((tags) => {
-            return <HashTag>#{tags}</HashTag>;
+            return <HashTag>{tags}</HashTag>;
           })}
         </HashTagContainer>
         <MeetInfo>
@@ -112,7 +112,7 @@ const PhotographerRole = styled.div`
 const MeetInfo = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 60px;
+  margin-top: 50px;
   @media (max-width: 768px) {
     margin-top: 20px;
   }

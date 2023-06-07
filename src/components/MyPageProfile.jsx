@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 
 const MyPageProfile = ({ mine }) => {
   const { hostId } = useParams();
-  // console.log(hostId);
   const [isMine, setIsMine] = useState(mine);
 
   useEffect(() => {
@@ -58,6 +57,7 @@ const MyPageProfile = ({ mine }) => {
 export default MyPageProfile;
 
 const ProfileSection = styled.div`
+  width: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,9 +66,9 @@ const ProfileSection = styled.div`
   border: 1px solid #ddd;
   background-color: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin-right: 40px;
-  margin-bottom: 20px;
+  margin-left: -50px;
   flex-shrink: 0;
+  position: fixed;
 
   @media (max-width: 768px) {
     align-items: center;

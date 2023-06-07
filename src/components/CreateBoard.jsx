@@ -130,11 +130,12 @@ const CreateBoard = (props) => {
       Swal.fire({
         icon: "success",
         title: "게시물 생성 완료!",
-        text: `게시물이 생성되었습니다✨`,
+        text: `게시글 생성이 완료됐습니다✨`,
         confirmButtonText: "확인",
       });
       queryClient.invalidateQueries("getBoardAxios");
       close();
+      navigate("/board");
     },
     onError: (error) => {
       console.log(error);

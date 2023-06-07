@@ -101,10 +101,12 @@ function MyPageBoard() {
 
   return (
     <>
-      <MyPageTabs />
+      <MyPageTabs pageName={"내 게시글"} />
       <PageContainer>
         <ContentContainer>
-          <MyPageProfile />
+          <ProfileContainer>
+            <MyPageProfile />
+          </ProfileContainer>
           <Container>
             <Content>
               <Work>내가 쓴 게시물</Work>
@@ -158,6 +160,9 @@ const PageContainer = styled.div`
   background-color: #f5f5f5;
   padding: 20px;
 `;
+const ProfileContainer = styled.div`
+  width: 550px;
+`;
 const Container = styled.div`
   width: 100%;
 `;
@@ -168,7 +173,7 @@ const ContentContainer = styled.div`
   justify-content: flex-start;
   width: 100%;
   max-width: 1200px;
-  margin-top: 80px;
+  margin-top: 40px;
   @media (min-width: 769px) {
     flex-direction: row;
     align-items: flex-start;
@@ -183,7 +188,7 @@ const Work = styled.h2`
 
 const Content = styled.div`
   flex-grow: 1;
-  margin: 30px;
+  margin-left: 1rem;
 `;
 
 const ToggleWriteMenu = styled.div`

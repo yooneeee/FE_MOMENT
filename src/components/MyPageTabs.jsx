@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
-function MyPageTabs({ mine }) {
+function MyPageTabs({ pageName, mine }) {
   const { hostId } = useParams();
-  // console.log("첫번째", hostId);
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState("");
-
-  // const [entireClicked, setEntireClicked] = useState();
 
   const activeClickHandler = (item) => {
     setIsActive(item);
@@ -19,34 +15,34 @@ function MyPageTabs({ mine }) {
     <TabsStyles>
       <MaueBar>
         <TabButton
-          className={isActive === "전체보기" ? "active" : ""}
+          className={pageName === "전체보기" ? "active" : ""}
           onClick={() => {
-            activeClickHandler("전체보기");
             navigate(`/page/${hostId}`);
+            activeClickHandler("전체보기");
           }}
         >
           전체보기
         </TabButton>
         <TabButton
-          className={isActive === "내 피드" ? "active" : ""}
+          className={pageName === "내 피드" ? "active" : ""}
           onClick={() => {
-            activeClickHandler("내 피드");
             navigate(`/mypagefeed/${hostId}`);
+            activeClickHandler("내 피드");
           }}
         >
           내 피드
         </TabButton>
         <TabButton
-          className={isActive === "내 게시글" ? "active" : ""}
+          className={pageName === "내 게시글" ? "active" : ""}
           onClick={() => {
-            activeClickHandler("내 게시글");
             navigate(`/mypageboard/${hostId}`);
+            activeClickHandler("내 게시글");
           }}
         >
           내 게시글
         </TabButton>
         <TabButton
-          className={isActive === "채팅목록" ? "active" : ""}
+          className={pageName === "채팅목록" ? "active" : ""}
           onClick={() => {
             activeClickHandler("채팅목록");
           }}
