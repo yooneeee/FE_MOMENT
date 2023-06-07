@@ -8,62 +8,60 @@ import { Chatting } from "../apis/mypage/chatting";
 import { useSelector } from "react-redux";
 
 const MyPageProfile = () => {
-  const { hostId, receiverId } = useParams();
+  const { hostId } = useParams();
+  const { receiverId } = useParams();
+  // const parsedHostId = parseInt(hostId);
+  // const parsedReceiverId = parseInt(receiverId);
+
   const userId = useSelector((state) => state.user.userId);
-  console.log("리시브", receiverId);
+  // console.log("리시브", receiverId);
+  console.log("호스트1", hostId);
 
-  const {
-    isError: isErrorMypage,
-    isLoading: isLoadingMypage,
-    data: mypageData,
-  } = useQuery(["mypage", hostId], () => mypage(hostId), {
-    // hostId가 정의되어 있을 때만 데이터 요청
-    enabled: hostId !== undefined,
-  });
-  console.log("데이터1", mypageData);
+  const { isError, isLoading, data } = useQuery(
+    ["mypage", hostId],
+    () => mypage(hostId),
+    {
+      // hostId가 정의되어 있을 때만 데이터 요청
+      enabled: hostId !== undefined,
+    }
+  );
+  console.log("데이터1", data);
 
-  const {
-    isError: isErrorChatting,
-    isLoading: isLoadingChatting,
-    data: mypageChatting,
-  } = useQuery(["Chatting", Chatting], () => Chatting(receiverId));
-  console.log("데이터", mypageChatting);
-
-  if (isLoadingMypage) {
+  if (isLoading) {
     return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
   }
 
-  if (isErrorMypage) {
+  if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  if (mypageData) {
+  if (data) {
     const isMyPage = parseInt(userId) === parseInt(hostId);
-    const chatHostId = mypageData.hostId;
-    console.log("호스트아이디", chatHostId);
+    const chatHostId = data.hostId;
+    console.log("호스트설정아이디", chatHostId);
     console.log("유저", userId);
-    console.log("호스트", hostId);
+    console.log("호스트2", hostId);
 
     return (
       <ProfileSection>
-        <ProfilePicture src={mypageData.profileUrl} />
+        <ProfilePicture src={data.profileUrl} />
         <ProfileInfo>
           <StFlex>
-            <span>{mypageData.role}</span>
-            <UserNickname>{mypageData.nickName}</UserNickname>
+            <span>{data.role}</span>
+            <UserNickname>{data.nickName}</UserNickname>
           </StFlex>
           <StFlex>
-            <Post>피드 {mypageData.photoList.length}</Post>
+            <Post>피드 {data.photoList.length}</Post>
             <span>|</span>
-            <Recommend>게시글 {mypageData.boardCnt}</Recommend>
+            <Recommend>게시글 {data.boardCnt}</Recommend>
           </StFlex>
-          <Post>추천🧡 {mypageData.totalPhotoLoveCnt}</Post>
+          <Post>추천🧡 {data.totalPhotoLoveCnt}</Post>
           <StFlex2>
             {isMyPage ? (
               <>
                 <Link to={`/mypageinformation/${userId}`}>
                   <ChatBtn>프로필 편집</ChatBtn>
                 </Link>
-                <Link to={`/chattest/${hostId}`}>
+                <Link to={`/chattest/${chatHostId}`}>
                   <ChatBtn>채팅하기</ChatBtn>
                 </Link>
               </>
