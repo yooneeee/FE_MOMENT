@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "../css/App.css";
 import { getFeedAxios } from "../apis/feed/getFeedAxios";
@@ -8,6 +8,7 @@ import { useObserver } from "../components/useObserver";
 import LoadingSpinner from "../components/LoadingSpinner";
 import FeedCard from "../components/FeedCard";
 import FeedDetail from "../components/FeedDetail";
+import { useInView } from "react-intersection-observer";
 
 function Feed() {
   // 모달 제어
@@ -21,7 +22,7 @@ function Feed() {
     setFeedDetailOpen((prevOpen) => prevOpen.filter((id) => id !== photoId));
   };
 
-  const { isLoading, isError, data, fetchNextPage, refetch } = useInfiniteQuery(
+  const { isLoading, isError, data, fetchNextPage } = useInfiniteQuery(
     "getFeedAxios",
     getFeedAxios,
     {
@@ -41,13 +42,18 @@ function Feed() {
   };
 
   // 화면의 바닥 ref를 위한 useRef
-
   const bottom = useRef();
 
   // 초기 렌더링 시 bottom이 null 값이 잡힘
   useEffect(() => {
     console.log(bottom.current);
   }, [bottom]);
+
+  // const { ref, inView, entry } = useInView();
+
+  // useEffect(() => {
+  //   if (ref && data?.hasMorePages) fetchNextPage();
+  // }, [ref]);
 
   useObserver({
     target: bottom,
@@ -62,6 +68,8 @@ function Feed() {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
 
+  console.log(data);
+
   return (
     <>
       <FeedContainer>
@@ -69,7 +77,6 @@ function Feed() {
           .flatMap((page) => page.photoList)
           .map((item) => {
             const isOpen = feedDetailOpen.includes(item.photoId);
-            console.log(item);
             return (
               <>
                 <FeedCard
@@ -89,6 +96,7 @@ function Feed() {
               </>
             );
           })}
+        <div ref={bottom}></div>
       </FeedContainer>
     </>
   );
