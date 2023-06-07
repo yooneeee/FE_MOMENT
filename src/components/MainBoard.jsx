@@ -2,9 +2,12 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AiOutlineHeart } from "react-icons/ai";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 function MainBoard({ board }) {
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   if (!board) {
     return null;
   }
@@ -15,7 +18,16 @@ function MainBoard({ board }) {
   return (
     <CardDesign
       onClick={() => {
-        navigate(`/board/${board.boardId}`);
+        if (isLoggedIn) {
+          navigate(`/board/${board.boardId}`);
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "회원 전용 서비스!",
+            text: `더 많은 서비스를 이용하시려면 로그인해주세요🙏`,
+            confirmButtonText: "확인",
+          });
+        }
       }}
     >
       <CardProfileImg src={board.boardImgUrl} alt="Profile Image" />

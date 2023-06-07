@@ -4,11 +4,14 @@ import BoardItem from "../components/BoardItem";
 import { useQuery } from "react-query";
 import { getBoard } from "../apis/create/getBoard";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 function Board() {
   const [activeNavItem, setActiveNavItem] = useState("Model");
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
   const { isError, isLoading, data } = useQuery(
     ["getBoard", activeNavItem],
@@ -56,7 +59,16 @@ function Board() {
           return (
             <BoardItem
               onClick={() => {
-                navigate(`${item.boardId}`);
+                if (isLoggedIn) {
+                  navigate(`${item.boardId}`);
+                } else {
+                  Swal.fire({
+                    icon: "warning",
+                    title: "회원 전용 서비스!",
+                    text: `로그인이 필요한 서비스입니다🙏`,
+                    confirmButtonText: "확인",
+                  });
+                }
               }}
               item={item}
               key={item.boardId}

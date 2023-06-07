@@ -5,30 +5,44 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { initialMain } from "../apis/main/initialMain";
 import LoadingSpinner from "../components/LoadingSpinner";
+import start1 from "../assets/img/Rectangle 312.png";
+import start2 from "../assets/img/Rectangle 313.png";
+import start3 from "../assets/img/Rectangle 243.png";
+import start4 from "../assets/img/Rectangle 307.png";
+import start5 from "../assets/img/Rectangle 308.png";
+import start6 from "../assets/img/Rectangle 309.png";
+import start7 from "../assets/img/Rectangle 310.png";
+import start8 from "../assets/img/Rectangle 311.png";
 
 function Start() {
   const navigate = useNavigate();
-  // 서버 통신
   const { isLoading, isError, data } = useQuery("initialMain", initialMain);
-
   if (isLoading) {
     return <LoadingSpinner />;
   }
-
   if (isError) {
     return <h1>{isError}</h1>;
   }
+  const img1 = [start1, start2];
+  const img2 = [start3, start4];
+  const img3 = [start5, start6];
+  const img4 = [start7, start8];
+
   return (
     <PageContainer>
       <NavigationBar>
         <InitialNav />
       </NavigationBar>
       <ContentContainer>
+        <ImageContainer1>
+          {img1.map((image) => (
+            <PostImage key={image} src={image} />
+          ))}
+        </ImageContainer1>
+
         <DescriptionContainer>
-          <p>누구나 모델과 사진 작가가 될 수 있다!</p>
-          <Des>
-            만나는 순간, 사진 찍는 순간, 당신의 모든 순간 모먼트와 함께 하세요.
-          </Des>
+          <p>당신의 모든 순간 모먼트와 함께</p>
+          <Des>모델과 사진작가 매칭 플랫폼</Des>
           <StartButton
             onClick={() => {
               navigate("/Main");
@@ -37,11 +51,22 @@ function Start() {
             지금 시작하기
           </StartButton>
         </DescriptionContainer>
-        <PostListSection>
-          {data.map((item) => {
-            return <PostImage key={item.photoUrl} src={item.photoUrl} />;
-          })}
-        </PostListSection>
+
+        <ImageContainer2>
+          {img2.map((image) => (
+            <PostImage key={image} src={image} />
+          ))}
+        </ImageContainer2>
+        <ImageContainer3>
+          {img3.map((image) => (
+            <PostImage key={image} src={image} />
+          ))}
+        </ImageContainer3>
+        <ImageContainer4>
+          {img4.map((image) => (
+            <PostImage key={image} src={image} />
+          ))}
+        </ImageContainer4>
       </ContentContainer>
     </PageContainer>
   );
@@ -51,7 +76,7 @@ export default Start;
 
 const PageContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 100px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,89 +91,122 @@ const NavigationBar = styled.nav`
 `;
 
 const Des = styled.p`
-  font-size: 30px;
-  color: #333;
+  margin-top: 20px;
+  font-size: 60px;
+  font-weight: 900;
+  color: #2f2f2f;
+  text-shadow: 2px 2px 6px gray;
+  @media (max-width: 1470px) {
+    font-size: 33px;
+    width: 260px;
+  }
 `;
 
 const StartButton = styled.button`
   border: none;
-  padding: 20px 50px;
-  border-radius: 60px;
-  background-color: #000000;
+  width: 190px;
+  height: 78px;
+  border-radius: 10px;
+  background-color: #483767;
   color: white;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: bold;
+  margin-top: 60px;
+  box-shadow: 2px 2px 2px gray;
+  @media (max-width: 480px) {
+    width: 140px;
+    height: 56px;
+    font-size: 16px;
+  }
 `;
 
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px; /* 네비게이션 바 높이(50px) 여백 */
-  padding: 10px;
-  height: calc(
-    100vh - 60px
-  ); /* 전체 높이에서 (네비게이션 바의 높이+패딩)를 빼서 설정 */
-  box-sizing: border-box;
-
-  @media (min-width: 769px) {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
+  width: 100%;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 const DescriptionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 80px;
+  align-items: flex-start;
+  margin: 0 100px;
   flex-basis: 50%;
   text-align: center;
-  font-size: 50px;
+  font-size: 30px;
   font-weight: bold;
-
-  @media (max-width: 768px) {
-    order: 1;
+  text-shadow: 2px 2px 6px gray;
+  @media (max-width: 1565px) {
+    margin: 0 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-basis: 100%;
-    gap: 40px;
+    font-size: 24px;
+  }
+  @media (max-width: 480px) {
+    margin: 0 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 100%;
+    font-size: 24px;
+  }
+`;
+const ImageContainer1 = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  justify-content: flex-start;
+  padding-bottom: 100px;
+  img {
+    filter: brightness(60%);
+    height: 480px;
   }
 `;
 
-const PostListSection = styled.div`
-  flex-basis: 50%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;
-  padding: 10px;
-
-  @media (max-width: 768px) {
-    order: 1;
-    flex-basis: 100%;
-    grid-template-columns: repeat(2, 1fr); /* 모바일에서 2열로 변경 */
-    justify-items: center;
-    margin-top: 20px;
+const ImageContainer2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding-top: 200px;
+  margin-right: 20px;
+  img {
+    width: 306px;
+    height: 480px;
   }
+`;
 
-  @media (max-width: 480px) {
-    grid-template-columns: repeat(
-      1,
-      1fr
-    ); /* 화면이 480px 이하일 때, 1열로 변경 */
+const ImageContainer3 = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding-top: 100px;
+  margin-right: 20px;
+  img {
+    width: 306px;
+    height: 480px;
+  }
+`;
+
+const ImageContainer4 = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding-bottom: 40px;
+  img {
+    filter: brightness(60%);
+    height: 480px;
   }
 `;
 
 const PostImage = styled.img`
-  width: calc(100%);
-  height: calc((100vh - 100px) / 3);
-  object-fit: cover;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    height: calc((100vh - 100px) / 3);
-  }
-
-  @media (max-width: 480px) {
-    width: 100%;
-    height: calc((100vh - 100px) / 2);
-  }
+  width: 100%;
+  height: auto;
+  max-width: 306px;
+  max-height: 480px;
 `;
