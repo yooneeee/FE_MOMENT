@@ -8,10 +8,12 @@ import { Link } from "react-router-dom";
 import MyPageTabs from "../components/MyPageTabs";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useSelector } from "react-redux";
 
 const MyPage = () => {
   const { hostId } = useParams();
-  // console.log(hostId);
+  const userId = useSelector((state) => state.user.userId);
+  const mine = hostId == userId;
 
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
@@ -24,16 +26,16 @@ const MyPage = () => {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  // console.log(data);
+  console.log(data);
   return (
     <>
       <MyPageTabs />
       <PageContainer>
         <ContentContainer>
-          <MyPageProfile />
+          <MyPageProfile mine={mine} />
           <Container>
             <WorkSection>
-              <Work>나의 작업물</Work>
+              <Work>{mine ? "나의 작업물" : `${data.nickName}의 작업물`}</Work>
               <WorkList>
                 {data.photoList.slice(0, 10).map((item, index) => {
                   return <WorkItem key={index} src={item.photoUrl} />;
@@ -41,7 +43,9 @@ const MyPage = () => {
               </WorkList>
             </WorkSection>
             <Content>
-              <Work>내가 쓴 게시물</Work>
+              <Work>
+                {mine ? "내가 쓴 게시물" : `${data.nickName}'s 게시물`}
+              </Work>
               {data.boardList.slice(0, 2).map((item) => {
                 return <BoardItem key={item.boardId} item={item} />;
               })}
