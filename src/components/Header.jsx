@@ -232,20 +232,38 @@ function Header() {
         <ToggleWriteMenu>
           <MenuButton
             onClick={() => {
-              openFeedModal();
-              toggleWriteMenuClose();
-              toggleProfileMenuClose();
-              toggleMenuClose();
+              if (isLoggedIn) {
+                openFeedModal();
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                toggleMenuClose();
+              } else {
+                Swal.fire({
+                  icon: "warning",
+                  title: "회원 전용 서비스!",
+                  text: `로그인이 필요한 서비스입니다🙏`,
+                  confirmButtonText: "확인",
+                });
+              }
             }}
           >
             피드 작성
           </MenuButton>
           <MenuButton
             onClick={() => {
-              openBoardModal();
-              toggleWriteMenuClose();
-              toggleProfileMenuClose();
-              toggleMenuClose();
+              if (isLoggedIn) {
+                openBoardModal();
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                toggleMenuClose();
+              } else {
+                Swal.fire({
+                  icon: "warning",
+                  title: "회원 전용 서비스!",
+                  text: `로그인이 필요한 서비스입니다🙏`,
+                  confirmButtonText: "확인",
+                });
+              }
             }}
           >
             게시글 작성
