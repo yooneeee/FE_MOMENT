@@ -127,8 +127,8 @@ const CreateBoard = (props) => {
   const createBoardMutation = useMutation(createBoardAxios, {
     onSuccess: () => {
       alert("게시글 생성이 완료됐습니다");
-      queryClient.invalidateQueries("getBoardAxios");
       close();
+      navigate("/board");
     },
     onError: (error) => {
       console.log(error);
