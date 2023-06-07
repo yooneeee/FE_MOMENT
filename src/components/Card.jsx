@@ -6,9 +6,12 @@ import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineHeart } from "react-icons/ai";
 import defaultImg from "../assets/img/2.jpg";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 function Card({ user }) {
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const settings = {
     dots: false,
     infinite: true,
@@ -32,7 +35,16 @@ function Card({ user }) {
         </SliderWrapper>
         <CardHeader
           onClick={() => {
-            navigate(`/page/${user.userId}`);
+            if (isLoggedIn) {
+              navigate(`/page/${user.userId}`);
+            } else {
+              Swal.fire({
+                icon: "warning",
+                title: "회원 전용 서비스!",
+                text: `더 많은 서비스를 이용하시려면 로그인해주세요🙏`,
+                confirmButtonText: "확인",
+              });
+            }
           }}
         >
           <ProfileImg src={user.profileUrl}></ProfileImg>
@@ -58,7 +70,16 @@ function Card({ user }) {
       </SliderWrapper>
       <CardHeader
         onClick={() => {
-          navigate(`/page/${user.userId}`);
+          if (isLoggedIn) {
+            navigate(`/page/${user.userId}`);
+          } else {
+            Swal.fire({
+              icon: "warning",
+              title: "회원 전용 서비스!",
+              text: `더 많은 서비스를 이용하시려면 로그인해주세요🙏`,
+              confirmButtonText: "확인",
+            });
+          }
         }}
       >
         <ProfileImg src={user.profileUrl}></ProfileImg>
