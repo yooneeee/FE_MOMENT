@@ -35,7 +35,10 @@ const MyPageProfile = () => {
         </StFlex>
         <Post>추천🧡 {data.totalPhotoLoveCnt}</Post>
         <StFlex>
-          <Link to={`/mypageinformation/${hostId}`}>
+          <Link
+            to={`/mypageinformation/${hostId}`}
+            state={{ checkKakaoId: data.checkKakaoId }}
+          >
             <ChatBtn>프로필 편집</ChatBtn>
           </Link>
         </StFlex>

@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { mypageInformationAxios } from "../apis/mypage/mypage";
 import { useMutation } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import UserDataComponent from "../components/UserDataComponent";
 import DeleteUser from "../components/DeleteUser";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,8 @@ const MyPageInformation = () => {
   const dispatch = useDispatch();
   const loginUserData = UserDataComponent();
 
+  const location = useLocation();
+  const checkKakaoId = location.state.checkKakaoId;
   const [image, setImage] = useState(loginUserData.profileImg);
   // console.log(image);
   const fileInput = useRef();
@@ -135,25 +137,32 @@ const MyPageInformation = () => {
           </TextColumn>
         </Box>
         <Line1 />
-        <Box>
-          <Text>
-            <span>신규 비밀번호</span>
-          </Text>
-          <TextColumn>
-            <Column>
-              <HiddenInput
-                type="password"
-                placeholder="신규 비밀번호 입력"
-                name="password"
-                value={newPw}
-                onChange={(e) => {
-                  setNewPw(e.target.value);
-                }}
-              />
-            </Column>
-          </TextColumn>
-        </Box>
-        <Line1 />
+        {checkKakaoId ? (
+          <div></div>
+        ) : (
+          <>
+            <Box>
+              <Text>
+                <span>신규 비밀번호</span>
+              </Text>
+              <TextColumn>
+                <Column>
+                  <HiddenInput
+                    type="password"
+                    placeholder="신규 비밀번호 입력"
+                    name="password"
+                    value={newPw}
+                    onChange={(e) => {
+                      setNewPw(e.target.value);
+                    }}
+                  />
+                </Column>
+              </TextColumn>
+            </Box>
+            <Line1 />
+          </>
+        )}
+
         <Box>
           <Text>
             <span>Role</span>
