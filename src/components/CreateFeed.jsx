@@ -136,18 +136,12 @@ const CreateFeed = (props) => {
     }
 
     const formData = new FormData();
-    formData.append(
-      "contents",
-      new Blob([JSON.stringify(content)], { type: "application/json" })
-    );
+    formData.append("contents", content);
     formData.append(
       "photoHashTag",
       new Blob([JSON.stringify(hashTags)], { type: "application/json" })
     );
-    formData.append(
-      "imageFile",
-      new Blob([JSON.stringify(selectedFile)], { type: "application/json" })
-    );
+    formData.append("imageFile", selectedFile);
 
     createFeedMutation.mutate(formData);
   };
