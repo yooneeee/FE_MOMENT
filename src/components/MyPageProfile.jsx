@@ -60,9 +60,6 @@ const MyPageProfile = () => {
                 >
                   <ChatBtn>프로필 편집</ChatBtn>
                 </Link>
-                <Link to={`/chattest/${chatHostId}`}>
-                  <ChatBtn>채팅하기</ChatBtn>
-                </Link>
               </>
             ) : (
               <Link to={`/chattest/${chatHostId}`}>
