@@ -4,6 +4,7 @@ import BoardItem from "../components/BoardItem";
 import { useQuery } from "react-query";
 import { getBoard } from "../apis/create/getBoard";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function Board() {
   const [activeNavItem, setActiveNavItem] = useState("Model");
@@ -16,7 +17,7 @@ function Board() {
 
   console.log(data);
   if (isLoading) {
-    return null;
+    return <LoadingSpinner />;
   }
 
   if (isError) {
