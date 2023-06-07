@@ -10,7 +10,7 @@ import FeedCard from "../components/FeedCard";
 import FeedDetail from "../components/FeedDetail";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { useInView } from "react-intersection-observer";
+/* import { useInView } from "react-intersection-observer"; */
 
 function Feed() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
