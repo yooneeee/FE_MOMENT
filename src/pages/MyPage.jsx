@@ -64,9 +64,11 @@ const PageContainer = styled.div`
   background-color: #f5f5f5;
   padding: 20px;
 `;
+
 const Container = styled.div`
   width: 100%;
 `;
+
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -114,6 +116,7 @@ const WorkList = styled.div`
 `;
 
 const WorkItem = styled.div`
+  cursor: pointer;
   width: 100%;
   padding-top: 100%;
   border-radius: 7px;
