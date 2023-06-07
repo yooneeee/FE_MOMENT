@@ -29,7 +29,7 @@ const MyPage = () => {
   console.log(data);
   return (
     <>
-      <MyPageTabs />
+      <MyPageTabs mine={mine} />
       <PageContainer>
         <ContentContainer>
           <MyPageProfile mine={mine} />

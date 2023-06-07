@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-function MyPageTabs() {
+function MyPageTabs({ mine }) {
   const { hostId } = useParams();
   // console.log("첫번째", hostId);
   const navigate = useNavigate();
@@ -14,6 +14,9 @@ function MyPageTabs() {
   const activeClickHandler = (item) => {
     setIsActive(item);
   };
+  if (!mine) {
+    return null;
+  }
 
   return (
     <TabsStyles>
