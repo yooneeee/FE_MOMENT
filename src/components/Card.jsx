@@ -102,7 +102,7 @@ const Styled_Slide = styled(Slider)`
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 2;
+    z-index: 11;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
