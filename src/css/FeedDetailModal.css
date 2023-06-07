@@ -17,7 +17,7 @@
 
 .feed-datail-modal>section {
     width: 90%;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     border-radius: 0.3rem;
     background-color: #fff;
@@ -96,15 +96,15 @@
 
 /* 인풋 들어가는 부분 */
 .inputSection {
-    min-width: 480px;
+    min-width: 350px;
     min-height: 700px;
-    padding: 20px;
+    padding: 10px;
 }
 
 .btn-upload {
     width: 150px;
     height: 30px;
-    background: #1E90FF;
+    background: #483767;
     border: none;
     border-radius: 10px;
     font-weight: 500;
@@ -115,7 +115,7 @@
     color: white;
 
     &:hover {
-        background: rgb(77, 77, 77);
+        background: #5f5374;
         color: #fff;
     }
 }
@@ -154,6 +154,7 @@
     align-items: center;
     color: black;
     justify-content: space-between;
+    border-bottom: 1px solid #eee;
 }
 
 .position {
@@ -170,20 +171,6 @@
     flex-shrink: 0;
 }
 
-.contentArea {
-    margin-left: 5px;
-    width: 98%;
-    height: 50%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 18px;
-    font-weight: 500;
-    resize: none;
-    border: none;
-    outline: none;
-}
-
 .feedDetailImg {
     width: 100%;
     background-size: cover;
@@ -191,8 +178,13 @@
     background-position: center;
 }
 
+.closeButton {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0px;
+}
+
 .close {
-    padding: 10px;
     background-color: transparent;
     font-weight: 700;
     font-size: 16px;
@@ -207,4 +199,5 @@
     padding: 10px;
     border-radius: 10px;
     margin-left: auto;
+    margin-right: 5px;
 }

@@ -5,7 +5,7 @@ import styled from "styled-components";
 function LoadingSpinner() {
   return (
     <Background>
-      <img src={Spinner} alt="loading-spinner"></img>
+      <SpinnerImg src={Spinner} alt="loading-spinner"></SpinnerImg>
     </Background>
   );
 }
@@ -23,4 +23,10 @@ export const Background = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
+export const SpinnerImg = styled.img`
+  width: 50px;
+  height: 50px;
+`;
+
 export default LoadingSpinner;

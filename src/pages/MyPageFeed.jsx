@@ -8,6 +8,7 @@ import { mypageFeedDelete } from "../apis/mypage/mypage";
 import { FiSettings } from "react-icons/fi";
 import { BiDownArrow } from "react-icons/bi";
 import MyPageProfile from "../components/MyPageProfile";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function MyPageFeed() {
   const { hostId, photoId } = useParams();
@@ -56,7 +57,7 @@ function MyPageFeed() {
   // }, [deleteMutation.isSuccess, queryClient]);
 
   if (isLoading) {
-    return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
+    return <LoadingSpinner />;
   }
 
   if (isError) {
@@ -99,8 +100,8 @@ function MyPageFeed() {
                         }
                       }}
                     >
-                      <FiSettings size={18} />
-                      <BiDownArrow size={18} />
+                      <FiSettings size={14} />
+                      <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
                     </EditButton>
                     {editButtons[index] && (
                       <ToggleWriteMenu>
@@ -230,7 +231,6 @@ const WorkItem = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   position: relative;
 
   &:hover ${EditButton} {

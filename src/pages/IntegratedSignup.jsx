@@ -34,6 +34,18 @@ function IntegratedSignup() {
         <Text2>
           통합회원으로 <span>모먼트</span>를 간편하게 이용하세요
         </Text2>
+        <KakaoLoginButton type="button" onClick={kakaoSignupButtonHandler}>
+          <KakaoLogoContainer>
+            <KakaoLogoImage src="img/KakaoLogoImage.png" alt="카카오 로고" />
+          </KakaoLogoContainer>
+          <ButtonText>카카오로 3초만에 가입하기</ButtonText>
+        </KakaoLoginButton>
+
+        <TextWithLines>
+          <Line />
+          <Text3>또는</Text3>
+          <Line />
+        </TextWithLines>
         <EmailButton>
           <ButtonText
             name={"emailsignup"}
@@ -44,17 +56,6 @@ function IntegratedSignup() {
             이메일로 가입하기
           </ButtonText>
         </EmailButton>
-        <TextWithLines>
-          <Line />
-          <Text3>또는</Text3>
-          <Line />
-        </TextWithLines>
-        <KakaoLoginButton type="button" onClick={kakaoSignupButtonHandler}>
-          <KakaoLogoContainer>
-            <KakaoLogoImage src="img/KakaoLogoImage.png" alt="카카오 로고" />
-          </KakaoLogoContainer>
-          <ButtonText>카카오로 3초만에 가입하기</ButtonText>
-        </KakaoLoginButton>
         <Text4>
           이미 모먼트 계정이 있으신가요?
           <LoginButton

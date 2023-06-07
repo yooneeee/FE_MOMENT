@@ -9,13 +9,9 @@ import { useSelector } from "react-redux";
 
 const MyPageProfile = () => {
   const { hostId } = useParams();
-  const { receiverId } = useParams();
-  // const parsedHostId = parseInt(hostId);
-  // const parsedReceiverId = parseInt(receiverId);
 
   const userId = useSelector((state) => state.user.userId);
-  // console.log("리시브", receiverId);
-  console.log("호스트1", hostId);
+  // console.log("호스트1", hostId);
 
   const { isError, isLoading, data } = useQuery(
     ["mypage", hostId],
@@ -37,16 +33,16 @@ const MyPageProfile = () => {
   if (data) {
     const isMyPage = parseInt(userId) === parseInt(hostId);
     const chatHostId = data.hostId;
-    console.log("호스트설정아이디", chatHostId);
-    console.log("유저", userId);
-    console.log("호스트2", hostId);
+    // console.log("호스트설정아이디", chatHostId);
+    // console.log("유저", userId);
+    // console.log("호스트2", hostId);
 
     return (
       <ProfileSection>
         <ProfilePicture src={data.profileUrl} />
         <ProfileInfo>
           <StFlex>
-            <span>{data.role}</span>
+            <UserRole>{data.role}</UserRole>
             <UserNickname>{data.nickName}</UserNickname>
           </StFlex>
           <StFlex>
@@ -54,11 +50,14 @@ const MyPageProfile = () => {
             <span>|</span>
             <Recommend>게시글 {data.boardCnt}</Recommend>
           </StFlex>
-          <Post>추천🧡 {data.totalPhotoLoveCnt}</Post>
-          <StFlex2>
+          <Post>추천 {data.totalPhotoLoveCnt}</Post>
+          <StFlex>
             {isMyPage ? (
               <>
-                <Link to={`/mypageinformation/${userId}`}>
+                <Link
+                  to={`/mypageinformation/${hostId}`}
+                  state={{ checkKakaoId: data.checkKakaoId }}
+                >
                   <ChatBtn>프로필 편집</ChatBtn>
                 </Link>
                 <Link to={`/chattest/${chatHostId}`}>
@@ -70,7 +69,7 @@ const MyPageProfile = () => {
                 <ChatBtn>채팅하기</ChatBtn>
               </Link>
             )}
-          </StFlex2>
+          </StFlex>
         </ProfileInfo>
       </ProfileSection>
     );
@@ -101,25 +100,26 @@ const ProfileSection = styled.div`
 
 const ProfileInfo = styled.div`
   font-size: 19px;
-  font-weight: bold;
+  font-weight: 550;
   text-align: center;
   writing-mode: horizontal-tb;
+  margin-top: 15px;
 `;
 
 const ChatBtn = styled.button`
   border: none;
   padding: 10px 40px;
   font-size: 16px;
-  font-weight: bold;
-  border-radius: 20px;
-  background-color: #c9ccd1;
+  font-weight: 500;
+  border-radius: 10px;
+  background-color: #483767;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
   margin-top: 15px;
 
   &:hover {
-    background-color: #202020;
+    background-color: #5f5374;
   }
 
   @media (min-width: 769px) {
@@ -135,6 +135,10 @@ const ChatBtn = styled.button`
   }
 `;
 
+const UserRole = styled.div`
+  color: #666;
+`;
+
 const ProfilePicture = styled.img`
   width: 200px;
   height: 200px;
@@ -145,12 +149,10 @@ const ProfilePicture = styled.img`
 const UserNickname = styled.span``;
 
 const Recommend = styled.span`
-  color: #666;
   font-size: 16px;
 `;
 
 const Post = styled.div`
-  color: #666;
   font-size: 16px;
 `;
 

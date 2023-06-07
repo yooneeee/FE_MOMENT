@@ -109,17 +109,39 @@ function Header() {
       ismobile={windowWidth <= 768 ? "true" : "false"}
       ref={headerRef}
     >
-      <HeaderTitle
-        onClick={() => {
-          navigate("/main");
-          toggleMenuClose();
-          toggleWriteMenuClose();
-        }}
-      >
-        Moment
-      </HeaderTitle>
+      <LeftMenu>
+        <HeaderTitle
+          onClick={() => {
+            navigate("/main");
+            toggleMenuClose();
+            toggleWriteMenuClose();
+          }}
+        >
+          Moment
+        </HeaderTitle>
+        <CategoryBox>
+          <HeaderButton
+            onClick={() => {
+              navigate("/feeds");
+              toggleWriteMenuClose();
+              toggleProfileMenuClose();
+            }}
+          >
+            피드
+          </HeaderButton>
+          <HeaderButton
+            onClick={() => {
+              navigate("/board");
+              toggleWriteMenuClose();
+              toggleProfileMenuClose();
+            }}
+          >
+            게시판
+          </HeaderButton>
+        </CategoryBox>
+      </LeftMenu>
+
       <ButtonBox>
-        {/*    화면크기 768px보다 작을 때 */}
         {windowWidth <= 768 ? (
           <MenuButton
             onClick={() => {
@@ -132,26 +154,6 @@ function Header() {
           </MenuButton>
         ) : (
           <>
-            {/*    화면크기 768px보다 클 때 */}
-
-            <HeaderButton
-              onClick={() => {
-                navigate("/feeds");
-                toggleWriteMenuClose();
-                toggleProfileMenuClose();
-              }}
-            >
-              피드
-            </HeaderButton>
-            <HeaderButton
-              onClick={() => {
-                navigate("/board");
-                toggleWriteMenuClose();
-                toggleProfileMenuClose();
-              }}
-            >
-              게시판
-            </HeaderButton>
             {isLoggedIn ? (
               <>
                 <HeaderButton
@@ -200,7 +202,7 @@ function Header() {
           </>
         )}
       </ButtonBox>
-      {/* 프로필 모달 열렸을 때 */}
+
       {isProfileMenuOpen && (
         <ToggleProfileMenu>
           <MenuButton
@@ -225,32 +227,50 @@ function Header() {
           </MenuButton>
         </ToggleProfileMenu>
       )}
-      {/* 글쓰기 모달 열렸을 때 */}
+
       {isWriteMenuOpen && (
         <ToggleWriteMenu>
           <MenuButton
             onClick={() => {
-              openFeedModal();
-              toggleWriteMenuClose();
-              toggleProfileMenuClose();
-              toggleMenuClose();
+              if (isLoggedIn) {
+                openFeedModal();
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                toggleMenuClose();
+              } else {
+                Swal.fire({
+                  icon: "warning",
+                  title: "회원 전용 서비스!",
+                  text: `로그인이 필요한 서비스입니다🙏`,
+                  confirmButtonText: "확인",
+                });
+              }
             }}
           >
             피드 작성
           </MenuButton>
           <MenuButton
             onClick={() => {
-              openBoardModal();
-              toggleWriteMenuClose();
-              toggleProfileMenuClose();
-              toggleMenuClose();
+              if (isLoggedIn) {
+                openBoardModal();
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                toggleMenuClose();
+              } else {
+                Swal.fire({
+                  icon: "warning",
+                  title: "회원 전용 서비스!",
+                  text: `로그인이 필요한 서비스입니다🙏`,
+                  confirmButtonText: "확인",
+                });
+              }
             }}
           >
             게시글 작성
           </MenuButton>
         </ToggleWriteMenu>
       )}
-      {/* 화면크기 작아졌을 때 메뉴 모달 열렸을 때 */}
+
       {isMenuOpen && (
         <ToggleMenu>
           <MenuButton
@@ -359,8 +379,8 @@ const ToggleMenu = styled.div`
 const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 100%;
-  right: 0;
-  background-color: black;
+  right: 100px;
+  background-color: white;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -370,12 +390,19 @@ const ToggleWriteMenu = styled.div`
     right: 120px;
   }
 `;
+
+const CategoryBox = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-left: 20px;
+`;
+
 const MenuButton = styled.button`
   display: block;
   padding: 8px;
   border: none;
   background: none;
-  color: white;
+  color: black;
   cursor: pointer;
   &:hover {
     opacity: 40%;
@@ -385,15 +412,31 @@ const MenuButton = styled.button`
 const MenuIcon = styled.span`
   font-size: 20px;
 `;
+const LeftMenu = styled.div`
+  display: flex;
+`;
 
+const HeaderTitle = styled.p`
+  display: flex;
+  font-size: 25px;
+  font-weight: 600;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 20px;
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-right: 30px;
+`;
 const HeaderStyles = styled.div`
   width: 100%;
-  background: black;
+  background: white;
   height: 50px;
   display: flex;
   align-items: center;
-  padding-left: 20px;
-  color: white;
+  padding: 0 100px;
   font-weight: 600;
   position: fixed;
   top: 0;
@@ -401,19 +444,8 @@ const HeaderStyles = styled.div`
   top: 0;
   left: 0;
   z-index: 10;
-`;
-
-const HeaderTitle = styled.p`
-  font-size: 25px;
-  font-weight: 600;
-  cursor: pointer;
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-left: auto;
-  margin-right: 30px;
+  justify-content: space-between;
+  box-shadow: 0px 0.1px 5px gray;
 `;
 
 const HeaderButton = styled.button`
@@ -423,7 +455,7 @@ const HeaderButton = styled.button`
   border: none;
   background: none;
   align-items: center;
-  color: white;
+  color: black;
   display: flex;
 `;
 
@@ -442,8 +474,8 @@ const ProfileImg = styled.img`
 const ToggleProfileMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 88px;
-  background-color: black;
+  right: 190px;
+  background-color: white;
   padding: 10px;
   display: flex;
   flex-direction: column;

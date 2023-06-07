@@ -1,15 +1,22 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { mypageInformationAxios } from "../apis/mypage/mypage";
 import { useMutation } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import UserDataComponent from "../components/UserDataComponent";
+import DeleteUser from "../components/DeleteUser";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/modules/user";
+import Swal from "sweetalert2";
 
 const MyPageInformation = () => {
   const { hostId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const loginUserData = UserDataComponent();
 
+  const location = useLocation();
+  const checkKakaoId = location.state.checkKakaoId;
   const [image, setImage] = useState(loginUserData.profileImg);
   // console.log(image);
   const fileInput = useRef();
@@ -17,6 +24,7 @@ const MyPageInformation = () => {
   const [newNick, setNewNick] = useState("");
   const [newPw, setNewPw] = useState("");
   const [newRole, setNewRole] = useState("");
+  const [deleteUserModal, setDeleteUserModal] = useState(false);
 
   /* 프로필 이미지 선택 */
   const fileSelectHandler = (e) => {
@@ -43,11 +51,34 @@ const MyPageInformation = () => {
   /* 서버 통신 */
   const mutation = useMutation(mypageInformationAxios, {
     onSuccess: (response) => {
-      alert("수정 완료(❁´◡`❁)", response);
+      Swal.fire({
+        icon: "success",
+        title: "수정 완료(❁´◡`❁)",
+        text: `회원정보가 정상적으로 수정되었습니다!`,
+        confirmButtonText: "확인",
+      });
       navigate(`/page/${hostId}`);
+      dispatch(
+        setUser({
+          nickName: newNick,
+          profileImg: image,
+          role: newRole,
+        })
+      );
     },
+
     onError: (error) => {
-      alert("수정 실패o(TヘTo)", error);
+      console.log("에러", error);
+      if (error.status == 409) {
+        Swal.fire({
+          icon: "warning",
+          title: "닉네임 중복!",
+          text: `중복된 닉네임이 존재합니다!다른 닉네임을 설정해주세요🙏`,
+          confirmButtonText: "확인",
+        });
+      } else {
+        alert("수정 실패o(TヘTo)");
+      }
     },
   });
 
@@ -68,11 +99,16 @@ const MyPageInformation = () => {
       "update",
       new Blob([JSON.stringify(update)], { type: "application/json" })
     );
-    console.log("마지막", file);
     file && formData.append("profile", file);
-    console.log(hostId);
-    console.log(formData);
     mutation.mutate({ hostId, formData });
+  };
+
+  const deleteUser = () => {
+    setDeleteUserModal(true);
+  };
+
+  const handleModalClose = () => {
+    setDeleteUserModal(false);
   };
 
   return (
@@ -118,25 +154,32 @@ const MyPageInformation = () => {
           </TextColumn>
         </Box>
         <Line1 />
-        <Box>
-          <Text>
-            <span>신규 비밀번호</span>
-          </Text>
-          <TextColumn>
-            <Column>
-              <HiddenInput
-                type="password"
-                placeholder="신규 비밀번호 입력"
-                name="password"
-                value={newPw}
-                onChange={(e) => {
-                  setNewPw(e.target.value);
-                }}
-              />
-            </Column>
-          </TextColumn>
-        </Box>
-        <Line1 />
+        {checkKakaoId ? (
+          <div></div>
+        ) : (
+          <>
+            <Box>
+              <Text>
+                <span>신규 비밀번호</span>
+              </Text>
+              <TextColumn>
+                <Column>
+                  <HiddenInput
+                    type="password"
+                    placeholder="신규 비밀번호 입력"
+                    name="password"
+                    value={newPw}
+                    onChange={(e) => {
+                      setNewPw(e.target.value);
+                    }}
+                  />
+                </Column>
+              </TextColumn>
+            </Box>
+            <Line1 />
+          </>
+        )}
+
         <Box>
           <Text>
             <span>Role</span>
@@ -172,9 +215,12 @@ const MyPageInformation = () => {
           <ChangeButtonContainer>
             <ChangeButton type="submit">정보변경</ChangeButton>
           </ChangeButtonContainer>
-          <WithdrawalButton type="button">회원탈퇴할게요</WithdrawalButton>
+          <WithdrawalButton type="button" onClick={deleteUser}>
+            회원탈퇴할게요
+          </WithdrawalButton>
         </TwoButtonContainer>
       </form>
+      {deleteUserModal && <DeleteUser handleModalClose={handleModalClose} />}
     </Container>
   );
 };
@@ -238,6 +284,9 @@ const WithdrawalButton = styled.button`
   text-decoration: underline;
   color: #858585;
   margin-top: 40px;
+  &:hover {
+    color: #1b1b1b;
+  }
 `;
 
 const TwoButtonContainer = styled.div`

@@ -3,41 +3,95 @@ import styled from "styled-components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate } from "react-router-dom";
+import { AiOutlineHeart } from "react-icons/ai";
+import defaultImg from "../assets/img/2.jpg";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 function Card({ user }) {
-  const photoList = Array.isArray(user.photoList)
-    ? user.photoList.map((item, index) => ({ ...item, index }))
-    : [];
-  console.log("포토리스트", photoList);
-
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
+    speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 6000,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
   };
 
-  if (!user) {
-    return null;
+  if (!user || !user.photoList || user.photoList.length === 0) {
+    // photoList가 비어있을 때 기본 이미지
+    return (
+      <CardDesign>
+        <SliderWrapper>
+          <Styled_Slide>
+            <CardProfileImg src={defaultImg} />
+          </Styled_Slide>
+        </SliderWrapper>
+        <CardHeader
+          onClick={() => {
+            if (isLoggedIn) {
+              navigate(`/page/${user.userId}`);
+            } else {
+              Swal.fire({
+                icon: "warning",
+                title: "회원 전용 서비스!",
+                text: `더 많은 서비스를 이용하시려면 로그인해주세요🙏`,
+                confirmButtonText: "확인",
+              });
+            }
+          }}
+        >
+          <ProfileImg src={user.profileUrl}></ProfileImg>
+          <FlexWrap>
+            <UserNickName>{user.nickName}</UserNickName>
+            <UserPosition>
+              <HeartIcon />
+              <UserPositionText>{user.totalLoveCnt}</UserPositionText>
+            </UserPosition>
+          </FlexWrap>
+        </CardHeader>
+      </CardDesign>
+    );
   }
   return (
     <CardDesign>
       <SliderWrapper>
         <Styled_Slide {...settings}>
-          {user.photoList?.map((item) => (
+          {user.photoList.map((item) => (
             <CardProfileImg key={item.photoUrl} src={item.photoUrl} />
           ))}
         </Styled_Slide>
       </SliderWrapper>
-      <CardHeader>
+      <CardHeader
+        onClick={() => {
+          if (isLoggedIn) {
+            navigate(`/page/${user.userId}`);
+          } else {
+            Swal.fire({
+              icon: "warning",
+              title: "회원 전용 서비스!",
+              text: `더 많은 서비스를 이용하시려면 로그인해주세요🙏`,
+              confirmButtonText: "확인",
+            });
+          }
+        }}
+      >
         <ProfileImg src={user.profileUrl}></ProfileImg>
-        <div>
-          <UserPostion> {user.role} </UserPostion>
+        <FlexWrap>
           <UserNickName>{user.nickName}</UserNickName>
-        </div>
+          <UserPosition>
+            <HeartIcon />
+            <UserPositionText>
+              {user.totalLoveCnt || user.loveCnt}
+            </UserPositionText>
+          </UserPosition>
+        </FlexWrap>
       </CardHeader>
     </CardDesign>
   );
@@ -45,8 +99,23 @@ function Card({ user }) {
 
 export default Card;
 
+const UserPosition = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const HeartIcon = styled(AiOutlineHeart)`
+  font-size: 16px;
+  margin-right: 4px;
+`;
+
+const UserPositionText = styled.span`
+  font-size: 16px;
+`;
 const Styled_Slide = styled(Slider)`
   position: relative;
+  opacity: 100%;
+  border: none;
   z-index: 1;
   .slick-prev,
   .slick-next {
@@ -54,7 +123,7 @@ const Styled_Slide = styled(Slider)`
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 2;
+    z-index: 11;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -70,25 +139,23 @@ const Styled_Slide = styled(Slider)`
 `;
 
 const CardDesign = styled.div`
-  background: black;
   width: 100%;
-  color: white;
   border-radius: 5px;
   flex-grow: 1;
-
+  cursor: pointer;
+  /* &:hover {
+    transform: scale(1.01);
+  } */
   @media (min-width: 768px) {
     width: calc(25% - 20px);
-    margin: 10px;
   }
 
   @media (min-width: 1024px) {
     width: calc(25% - 20px);
-    margin: 10px;
   }
 
   @media (min-width: 1440px) {
     width: calc(25% - 20px);
-    margin: 10px;
   }
 `;
 
@@ -96,23 +163,26 @@ const CardHeader = styled.div`
   display: flex;
   align-items: center;
 `;
-
 const ProfileImg = styled.img`
-  width: 70px;
-  height: 70px;
-  border-radius: 70%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   object-fit: cover;
-  padding: 15px;
+  padding: 10px;
   flex-shrink: 0;
 `;
 
-const UserPostion = styled.div`
-  color: #a9a9a9;
-  font-size: 14px;
+const FlexWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
 `;
 
 const UserNickName = styled.div`
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
 
   @media (max-width: 1024px) {
     font-size: 14px;
@@ -121,25 +191,21 @@ const UserNickName = styled.div`
 
 const SliderWrapper = styled.div`
   position: relative;
-`;
-
-const CardProfileImgContainer = styled.div`
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  padding-bottom: 15px;
-  margin-top: 10px;
+  background-color: #fff;
 `;
 
 const CardProfileImg = styled.div`
   position: relative;
   width: 100%;
   padding-bottom: 100%;
-  background-image: url(${(props) => props.src});
+  border-radius: 12.69px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
+  background-color: ${(props) => (props.src ? "transparent" : "#583232")};
+  background-image: ${(props) =>
+    props.src ? `url(${props.src})` : `url(${defaultImg})`};
 `;
 
 const ArrowButton = styled.div`
