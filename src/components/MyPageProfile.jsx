@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-const MyPageProfile = () => {
+const MyPageProfile = ({ mine }) => {
   const { hostId } = useParams();
   // console.log(hostId);
 
@@ -35,12 +35,16 @@ const MyPageProfile = () => {
         </StFlex>
         <Post>추천 {data.totalPhotoLoveCnt}</Post>
         <StFlex>
-          <Link
-            to={`/mypageinformation/${hostId}`}
-            state={{ checkKakaoId: data.checkKakaoId }}
-          >
-            <ChatBtn>프로필 편집</ChatBtn>
-          </Link>
+          {mine ? (
+            <Link
+              to={`/mypageinformation/${hostId}`}
+              state={{ checkKakaoId: data.checkKakaoId }}
+            >
+              <ChatBtn>프로필 편집</ChatBtn>
+            </Link>
+          ) : (
+            <></>
+          )}
         </StFlex>
       </ProfileInfo>
     </ProfileSection>
