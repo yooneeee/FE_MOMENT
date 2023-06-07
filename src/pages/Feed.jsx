@@ -36,29 +36,15 @@ function Feed() {
     }
   );
 
-  // intersect
-  const onIntersect = ([entry]) => {
-    entry.isIntersecting && fetchNextPage();
-  };
-
-  // 화면의 바닥 ref를 위한 useRef
-  const bottom = useRef();
-
-  // 초기 렌더링 시 bottom이 null 값이 잡힘
-  useEffect(() => {
-    console.log(bottom.current);
-  }, [bottom]);
-
-  // const { ref, inView, entry } = useInView();
-
-  // useEffect(() => {
-  //   if (ref && data?.hasMorePages) fetchNextPage();
-  // }, [ref]);
-
-  useObserver({
-    target: bottom,
-    onIntersect,
+  const [bottomObserverRef, bottomInView] = useInView({
+    threshold: 0,
   });
+
+  useEffect(() => {
+    if (bottomInView) {
+      fetchNextPage();
+    }
+  }, [bottomInView, fetchNextPage]);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -96,7 +82,7 @@ function Feed() {
               </>
             );
           })}
-        <div ref={bottom}></div>
+        <div ref={bottomObserverRef}></div>
       </FeedContainer>
     </>
   );
