@@ -104,7 +104,7 @@
 .btn-upload {
     width: 150px;
     height: 30px;
-    background: #1E90FF;
+    background: #483767;
     border: none;
     border-radius: 10px;
     font-weight: 500;
@@ -115,7 +115,7 @@
     color: white;
 
     &:hover {
-        background: rgb(77, 77, 77);
+        background: #5f5374;
         color: #fff;
     }
 }
