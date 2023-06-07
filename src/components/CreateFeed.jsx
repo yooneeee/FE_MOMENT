@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import UserDataComponent from "./UserDataComponent";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 
 const CreateFeed = (props) => {
   // 해시태그 기능
@@ -119,7 +120,12 @@ const CreateFeed = (props) => {
   // 서버 통신
   const createFeedMutation = useMutation(createFeedAxios, {
     onSuccess: () => {
-      alert("피드 생성이 완료됐습니다");
+      Swal.fire({
+        icon: "success",
+        title: "피드 생성 완료!",
+        text: `피드가 생성되었습니다✨`,
+        confirmButtonText: "확인",
+      });
       close();
       navigate("/feeds");
     },
@@ -131,10 +137,14 @@ const CreateFeed = (props) => {
   // 저장하기 버튼 클릭
   const saveButtonHandler = () => {
     if (!selectedFile || !content || hashTags == []) {
-      alert("모든 내용을 입력해주세요!");
+      Swal.fire({
+        icon: "error",
+        title: "피드 생성 실패!",
+        text: `모든 내용을 입력해주세요🙏`,
+        confirmButtonText: "확인",
+      });
       return;
     }
-
     const formData = new FormData();
     formData.append(
       "contents",
