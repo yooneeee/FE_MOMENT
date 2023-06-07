@@ -48,9 +48,9 @@ const CardDesign = styled.div`
   flex-grow: 1;
   width: 100%;
   cursor: pointer;
-  &:hover {
+  /* &:hover {
     transform: scale(1.05);
-  }
+  } */
   /*     width: calc(25% - 20px);
     margin: 10px;
   } 
