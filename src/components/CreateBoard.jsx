@@ -5,7 +5,7 @@ import enableScroll from "./EnableScroll";
 import styled from "styled-components";
 import { useInput } from "../hooks/useInput";
 import { createBoardAxios } from "../apis/board/createBoard";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import UserDataComponent from "./UserDataComponent";
@@ -87,6 +87,7 @@ const CreateBoard = (props) => {
   const [apply, onChangeApplyHandler] = useInput("");
   const [deadLine, onChangeDeadLineHandler] = useInput("");
   const loginUserData = UserDataComponent(); // 나의 유저 데이터 받아오는 코드
+  const queryClient = useQueryClient();
 
   // 이미지 미리보기
   const handleFileChange = (e) => {
@@ -126,8 +127,8 @@ const CreateBoard = (props) => {
   const createBoardMutation = useMutation(createBoardAxios, {
     onSuccess: () => {
       alert("게시글 생성이 완료됐습니다");
+      queryClient.invalidateQueries("getBoardAxios");
       close();
-      navigate("/board");
     },
     onError: (error) => {
       console.log(error);
@@ -150,13 +151,14 @@ const CreateBoard = (props) => {
       pay,
       apply,
       deadLine,
-      locationTags: hashTags,
+      boardHashTag: hashTags,
     };
 
     formData.append(
       "boardRequestDto",
       new Blob([JSON.stringify(boardRequestDto)], { type: "application/json" })
     );
+
     formData.append("boardImg", selectedFile);
 
     createBoardMutation.mutate(formData);
@@ -301,13 +303,13 @@ const HashTag = styled.div`
 const Tag = styled.div`
   display: inline-flex;
   flex-direction: row;
-  background: #1e90ff;
+  background: #483767;
   color: white;
   padding: 5px;
   border-radius: 5px;
   cursor: pointer;
   &:hover {
-    background: #4a88db;
+    background: #5f5374;
   }
 `;
 

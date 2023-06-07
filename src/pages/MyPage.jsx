@@ -18,7 +18,6 @@ const MyPage = () => {
   );
 
   if (isLoading) {
-    return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
     return <LoadingSpinner />;
   }
 
@@ -117,6 +116,7 @@ const WorkList = styled.div`
 const WorkItem = styled.div`
   width: 100%;
   padding-top: 100%;
+  border-radius: 7px;
   background-image: ${(props) => `url(${props.src})`};
   background-size: cover;
   background-position: center;

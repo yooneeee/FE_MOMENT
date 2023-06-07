@@ -45,6 +45,7 @@ const FeedDetail = (props) => {
   const likeButtonMutation = useMutation(heartAxios, {
     onSuccess: () => {
       queryClient.invalidateQueries("feedDetailAxios");
+      queryClient.invalidateQueries("getFeedAxios");
     },
     onError: (error) => {
       console.log(error);
@@ -115,8 +116,9 @@ const FeedDetail = (props) => {
               </ContentArea>
 
               <HashTagContainer>
-                <HashTag>#모델지망</HashTag>
-                <HashTag>#모델지망</HashTag>
+                {data.tag_photoList.map((item) => {
+                  return <HashTag>{item}</HashTag>;
+                })}
               </HashTagContainer>
             </div>
           </div>

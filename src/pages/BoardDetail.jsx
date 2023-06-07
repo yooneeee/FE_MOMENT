@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getBoardDetailAxios } from "../apis/board/getBoardDetailAxios";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function BoardDetail() {
   const [currentPosition, setCurrentPosition] = useState(70);
@@ -48,7 +49,7 @@ function BoardDetail() {
   console.log(data);
 
   if (isLoading) {
-    return null;
+    return <LoadingSpinner />;
   }
 
   if (isError) {
@@ -218,13 +219,14 @@ const UserNickName = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   margin-left: auto;
-  gap: 10px;
+  gap: 5px;
 `;
 
 const ProfileVisitButton = styled.button`
   margin-left: auto;
   padding: 12px;
-  background-color: transparent;
+  background-color: #514073;
+  color: white;
   border: 1px solid #7e7e7e;
   border-radius: 10px;
 
@@ -236,17 +238,17 @@ const ProfileVisitButton = styled.button`
 `;
 
 const HashTagContainer = styled.div`
-  margin-top: 40px;
-  padding: 10px 0 10px 0;
+  padding-top: 20px;
   display: flex;
   gap: 5px;
 `;
 
 const HashTag = styled.div`
-  background-color: #1e90ff;
+  background-color: #514073;
   color: white;
-  padding: 5px;
-  border-radius: 5px;
+  border: 1px solid black;
+  border-radius: 50px;
+  padding: 7px;
 `;
 
 const ListTitle = styled.div`

@@ -12,7 +12,7 @@ function FeedCard({ data, onClick, openFeedDetail }) {
   const queryClient = useQueryClient();
   const likeButtonMutation = useMutation(heartAxios, {
     onSuccess: () => {
-      queryClient.invalidateQueries("feedDetailAxios");
+      queryClient.invalidateQueries("getFeedAxios");
     },
     onError: (error) => {
       console.log(error);
@@ -52,7 +52,12 @@ function FeedCard({ data, onClick, openFeedDetail }) {
           </UserPositionText> */}
           <UserNickName>{data.nickName}</UserNickName>
           <UserPosition>
-            <HeartButton like={data.checkLove} onClick={likeButtonHandler} />
+            <HeartButton
+              like={data.loveCheck}
+              onClick={() => {
+                likeButtonHandler(data.photoId);
+              }}
+            />
             <HeartCount>{data.loveCnt}</HeartCount>
           </UserPosition>
         </FlexWrap>
@@ -61,7 +66,9 @@ function FeedCard({ data, onClick, openFeedDetail }) {
         {data.content === "undefined" ? null : data.content}
       </ContentBox>
       <HashTagContainer>
-        <HashTag>#모델지망</HashTag>
+        {data.tag_photoList.map((item) => {
+          return <HashTag>{item}</HashTag>;
+        })}
       </HashTagContainer>
     </CardDesign>
   );
@@ -81,7 +88,8 @@ const HashTagContainer = styled.div`
 `;
 
 const HashTag = styled.div`
-  background-color: transparent;
+  background-color: #514073;
+  color: white;
   border: 1px solid black;
   border-radius: 50px;
   padding: 7px;

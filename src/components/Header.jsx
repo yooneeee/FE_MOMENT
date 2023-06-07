@@ -380,7 +380,7 @@ const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 100%;
   right: 100px;
-  background-color: black;
+  background-color: white;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -402,7 +402,7 @@ const MenuButton = styled.button`
   padding: 8px;
   border: none;
   background: none;
-  color: white;
+  color: black;
   cursor: pointer;
   &:hover {
     opacity: 40%;
@@ -432,12 +432,11 @@ const ButtonBox = styled.div`
 `;
 const HeaderStyles = styled.div`
   width: 100%;
-  background: black;
+  background: white;
   height: 50px;
   display: flex;
   align-items: center;
   padding: 0 100px;
-  color: white;
   font-weight: 600;
   position: fixed;
   top: 0;
@@ -446,6 +445,7 @@ const HeaderStyles = styled.div`
   left: 0;
   z-index: 10;
   justify-content: space-between;
+  box-shadow: 0px 0.1px 5px gray;
 `;
 
 const HeaderButton = styled.button`
@@ -455,7 +455,7 @@ const HeaderButton = styled.button`
   border: none;
   background: none;
   align-items: center;
-  color: white;
+  color: black;
   display: flex;
 `;
 
@@ -475,7 +475,7 @@ const ToggleProfileMenu = styled.div`
   position: absolute;
   top: 50px;
   right: 190px;
-  background-color: black;
+  background-color: white;
   padding: 10px;
   display: flex;
   flex-direction: column;

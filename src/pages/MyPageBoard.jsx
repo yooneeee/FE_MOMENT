@@ -6,6 +6,7 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { mypage } from "../apis/mypage/mypage";
 import MyPageProfile from "../components/MyPageProfile";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function MyPageBoard() {
   const { hostId } = useParams();
@@ -16,7 +17,7 @@ function MyPageBoard() {
   );
 
   if (isLoading) {
-    return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
+    return <LoadingSpinner />;
   }
 
   if (isError) {

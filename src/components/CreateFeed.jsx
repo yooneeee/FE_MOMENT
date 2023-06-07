@@ -254,13 +254,13 @@ const HashTag = styled.div`
 const Tag = styled.div`
   display: inline-flex;
   flex-direction: row;
-  background: #1e90ff;
+  background: #483767;
   color: white;
   padding: 5px;
   border-radius: 5px;
   cursor: pointer;
   &:hover {
-    background: #4a88db;
+    background: #483767;
   }
 `;
 

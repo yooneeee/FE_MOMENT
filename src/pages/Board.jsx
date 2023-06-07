@@ -6,6 +6,7 @@ import { getBoard } from "../apis/create/getBoard";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function Board() {
   const [activeNavItem, setActiveNavItem] = useState("Model");
@@ -19,7 +20,7 @@ function Board() {
 
   console.log(data);
   if (isLoading) {
-    return null;
+    return <LoadingSpinner />;
   }
 
   if (isError) {
