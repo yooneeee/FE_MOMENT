@@ -81,7 +81,7 @@ function MyPageFeed() {
 
   return (
     <>
-      <MyPageTabs />
+      <MyPageTabs pageName={"내 피드"} />
       <PageContainer>
         <ContentContainer>
           <MyPageProfile />
@@ -156,8 +156,6 @@ const EditButton = styled.button`
   padding: 8px;
 `;
 const Button = styled.button`
-  /* display: block; */
-  /* width: 100%; */
   width: 100px;
   margin-left: 58px;
   padding: 8px;
@@ -185,7 +183,7 @@ const ContentContainer = styled.div`
   justify-content: flex-start;
   width: 100%;
   max-width: 1200px;
-  margin-top: 80px;
+  margin-top: 40px;
   @media (min-width: 769px) {
     flex-direction: row;
     align-items: flex-start;
@@ -194,7 +192,7 @@ const ContentContainer = styled.div`
 
 const WorkSection = styled.div`
   flex-grow: 1;
-  margin: 30px;
+  margin-left: 1rem;
 `;
 
 const Work = styled.h2`
@@ -232,6 +230,7 @@ const WorkItem = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
+  border-radius: 7px;
 
   &:hover ${EditButton} {
     display: block;

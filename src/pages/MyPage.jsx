@@ -7,10 +7,10 @@ import { useParams } from "react-router-dom";
 import MyPageTabs from "../components/MyPageTabs";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useState } from "react";
 
 const MyPage = () => {
   const { hostId } = useParams();
-  // console.log(hostId);
 
   const { isError, isLoading, data } = useQuery(
     ["mypage", hostId],
@@ -30,10 +30,12 @@ const MyPage = () => {
   // console.log(data);
   return (
     <>
-      <MyPageTabs />
+      <MyPageTabs pageName={"전체보기"} />
       <PageContainer>
         <ContentContainer>
-          <MyPageProfile />
+          <ProfileContainer>
+            <MyPageProfile />
+          </ProfileContainer>
           <Container>
             <WorkSection>
               <Work>나의 작업물</Work>
@@ -44,7 +46,7 @@ const MyPage = () => {
               </WorkList>
             </WorkSection>
             <Content>
-              <Work>내가 쓴 게시물</Work>
+              <WorkBoard>내가 쓴 게시물</WorkBoard>
               {data.boardList.slice(0, 2).map((item) => {
                 return <BoardItem key={item.boardId} item={item} />;
               })}
@@ -67,9 +69,13 @@ const PageContainer = styled.div`
   background-color: #f5f5f5;
   padding: 20px;
 `;
+
+const ProfileContainer = styled.div``;
+
 const Container = styled.div`
   width: 100%;
 `;
+
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -77,7 +83,7 @@ const ContentContainer = styled.div`
   justify-content: flex-start;
   width: 100%;
   max-width: 1200px;
-  margin-top: 80px;
+  margin-top: 40px;
   @media (min-width: 769px) {
     flex-direction: row;
     align-items: flex-start;
@@ -86,13 +92,19 @@ const ContentContainer = styled.div`
 
 const WorkSection = styled.div`
   flex-grow: 1;
-  margin: 30px;
+  margin-left: 30px;
 `;
 
 const Work = styled.h2`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 1rem;
+`;
+
+const WorkBoard = styled.h2`
+  font-size: 24px;
+  font-weight: bold;
+  margin: 100px 0 1rem 0;
 `;
 
 const WorkList = styled.div`
@@ -117,6 +129,7 @@ const WorkList = styled.div`
 `;
 
 const WorkItem = styled.div`
+  cursor: pointer;
   width: 100%;
   padding-top: 100%;
   border-radius: 7px;
@@ -132,4 +145,41 @@ const WorkItem = styled.div`
 const Content = styled.div`
   flex-grow: 1;
   margin: 30px;
+`;
+
+const TabsStyles = styled.div`
+  width: 100%;
+  background: #f5f5f5;
+  border-bottom: 1px solid #d9d9d9;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding-left: 80px;
+  font-weight: 600;
+  top: 0;
+  left: 0;
+  top: 0;
+  left: 0;
+`;
+const MaueBar = styled.div`
+  display: flex;
+  width: 100%;
+  /* max-width: 800px; */
+`;
+const TabButton = styled.button`
+  margin-right: 15px;
+  flex: 1;
+  max-width: 100px;
+  padding: 11px;
+  border: none;
+  outline: none;
+  background: none;
+  text-decoration: none;
+  color: #999999;
+  font-size: 15px;
+
+  &.active {
+    color: #000000;
+    font-weight: 900;
+  }
 `;
