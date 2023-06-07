@@ -8,14 +8,26 @@ import { useObserver } from "../components/useObserver";
 import LoadingSpinner from "../components/LoadingSpinner";
 import FeedCard from "../components/FeedCard";
 import FeedDetail from "../components/FeedDetail";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import { useInView } from "react-intersection-observer";
 
 function Feed() {
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
 
   const openFeedDetail = (photoId) => {
-    setFeedDetailOpen((prevOpen) => [...prevOpen, photoId]);
+    if (isLoggedIn) {
+      setFeedDetailOpen((prevOpen) => [...prevOpen, photoId]);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "회원 전용 서비스!",
+        text: `로그인이 필요한 서비스입니다🙏`,
+        confirmButtonText: "확인",
+      });
+    }
   };
 
   const closeFeedDetail = (photoId) => {

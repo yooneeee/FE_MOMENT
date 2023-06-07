@@ -6,9 +6,12 @@ import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineHeart } from "react-icons/ai";
 import defaultImg from "../assets/img/2.jpg";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 function Card({ user }) {
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const settings = {
     dots: false,
     infinite: true,
@@ -24,17 +27,26 @@ function Card({ user }) {
   if (!user || !user.photoList || user.photoList.length === 0) {
     // photoList가 비어있을 때 기본 이미지
     return (
-      <CardDesign
-        onClick={() => {
-          navigate(`/page/${user.userId}`);
-        }}
-      >
+      <CardDesign>
         <SliderWrapper>
           <Styled_Slide>
             <CardProfileImg src={defaultImg} />
           </Styled_Slide>
         </SliderWrapper>
-        <CardHeader>
+        <CardHeader
+          onClick={() => {
+            if (isLoggedIn) {
+              navigate(`/page/${user.userId}`);
+            } else {
+              Swal.fire({
+                icon: "warning",
+                title: "회원 전용 서비스!",
+                text: `더 많은 서비스를 이용하시려면 로그인해주세요🙏`,
+                confirmButtonText: "확인",
+              });
+            }
+          }}
+        >
           <ProfileImg src={user.profileUrl}></ProfileImg>
           <FlexWrap>
             <UserNickName>{user.nickName}</UserNickName>
@@ -48,11 +60,7 @@ function Card({ user }) {
     );
   }
   return (
-    <CardDesign
-      onClick={() => {
-        navigate(`/page/${user.userId}`);
-      }}
-    >
+    <CardDesign>
       <SliderWrapper>
         <Styled_Slide {...settings}>
           {user.photoList.map((item) => (
@@ -60,7 +68,20 @@ function Card({ user }) {
           ))}
         </Styled_Slide>
       </SliderWrapper>
-      <CardHeader>
+      <CardHeader
+        onClick={() => {
+          if (isLoggedIn) {
+            navigate(`/page/${user.userId}`);
+          } else {
+            Swal.fire({
+              icon: "warning",
+              title: "회원 전용 서비스!",
+              text: `더 많은 서비스를 이용하시려면 로그인해주세요🙏`,
+              confirmButtonText: "확인",
+            });
+          }
+        }}
+      >
         <ProfileImg src={user.profileUrl}></ProfileImg>
         <FlexWrap>
           <UserNickName>{user.nickName}</UserNickName>
@@ -102,7 +123,7 @@ const Styled_Slide = styled(Slider)`
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 2;
+    z-index: 11;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);

@@ -25,8 +25,7 @@ const mypageInformationAxios = async ({ hostId, formData }) => {
     const response = await instance.put(`/page/${hostId}`, formData, config);
     return response.data;
   } catch (error) {
-    console.log(error);
-    throw error;
+    throw error.response;
   }
 };
 
