@@ -57,16 +57,12 @@ const MyPage = () => {
   console.log(data);
   return (
     <>
-      {/*       {mine && <MyPageTabs  />} */}
-
-      {/* <MyPageProfile mine={mine} /> */}
-      <MyPageTabs pageName={"전체보기"} mine={mine} />
+      {mine && <MyPageTabs pageName={"전체보기"} />}
       <PageContainer>
         <ContentContainer>
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
-
           <Container>
             <WorkSection>
               <Work>{mine ? "나의 작업물" : `${data.nickName}의 작업물`}</Work>
@@ -95,11 +91,9 @@ const MyPage = () => {
               </WorkList>
             </WorkSection>
             <Content>
-              <WorkBoard>
-                {" "}
+              <Work>
                 {mine ? "내가 쓴 게시물" : `${data.nickName}'s 게시물`}
-              </WorkBoard>
-
+              </Work>
               {data.boardList.slice(0, 2).map((item) => {
                 return <BoardItem key={item.boardId} item={item} />;
               })}
