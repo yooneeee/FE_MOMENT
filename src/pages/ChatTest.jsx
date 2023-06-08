@@ -32,7 +32,7 @@ function ChatTest() {
 
   /* STOMP 연결 */
   const connect = () => {
-    const socket = new SockJS("http://15.165.14.7/ws-edit");
+    const socket = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`);
     const stomp = StompJs.Stomp.over(socket);
     stomp.connect({}, () => {
       console.log("웹소켓 연결");
@@ -120,13 +120,7 @@ function ChatTest() {
         <ReceiverProfile src={data.receiverProfileImg} alt="Receiver Profile" />
         <Nickname>{data.receiverNickName}</Nickname>
         {data.chatList.map((chat) => (
-          <ChatBubble
-            key={chat.id}
-            isSender={chat.senderId === userId}
-            isReceiver={chat.receiverId === userId}
-          >
-            {chat.message}
-          </ChatBubble>
+          <p key={chat.id}>{chat.message}</p>
         ))}
         {/* <p>No chat room available</p> */}
         <ChatInputContainer>
