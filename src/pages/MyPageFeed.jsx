@@ -9,6 +9,7 @@ import { FiSettings } from "react-icons/fi";
 import { BiDownArrow } from "react-icons/bi";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
+import Swal from "sweetalert2";
 
 function MyPageFeed() {
   const { hostId, photoId } = useParams();
@@ -36,25 +37,45 @@ function MyPageFeed() {
     alert("수정");
   };
 
+  // const deleteButtonHandler = (photoId) => {
+  //   try {
+  //     if (
+  //       !window.confirm(
+  //         "삭제하시면 복구할 수 없습니다. 정말로 삭제하시겠습니까?"
+  //       )
+  //     ) {
+  //       return;
+  //     }
+  //     deleteMutation.mutate(photoId);
+  //     toggleButtonClose(photoId);
+  //   } catch (error) {}
+  // };
+
   const deleteButtonHandler = (photoId) => {
     try {
-      if (
-        !window.confirm(
-          "삭제하시면 복구할 수 없습니다. 정말로 삭제하시겠습니까?"
-        )
-      ) {
-        return;
-      }
-      deleteMutation.mutate(photoId);
-      toggleButtonClose(photoId);
+      Swal.fire({
+        title: "정말로 삭제 하시겠습니까?",
+        text: "다시 되돌릴 수 없습니다. 신중하세요.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#483767",
+        cancelButtonColor: "#c4c4c4",
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteMutation.mutate(photoId);
+          toggleButtonClose(photoId);
+          Swal.fire({
+            title: "삭제가 완료되었습니다.",
+            icon: "success",
+            confirmButtonColor: "#483767",
+            confirmButtonText: "완료",
+          });
+        }
+      });
     } catch (error) {}
   };
-
-  // useEffect(() => {
-  //   if (deleteMutation.isSuccess) {
-  //     queryClient.refetchQueries(["mypage", mypage]);
-  //   }
-  // }, [deleteMutation.isSuccess, queryClient]);
 
   if (isLoading) {
     return <LoadingSpinner />;
