@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import MyPageTabs from "../components/MyPageTabs";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { mypage } from "../apis/mypage/mypage";
 import { mypageFeedDelete } from "../apis/mypage/mypage";
@@ -9,6 +9,9 @@ import { FiSettings } from "react-icons/fi";
 import { BiDownArrow } from "react-icons/bi";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import FeedDetail from "../components/FeedDetail";
 
 function MyPageFeed() {
   const { hostId, photoId } = useParams();
@@ -19,6 +22,27 @@ function MyPageFeed() {
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
   );
+
+  // 모달 제어
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [feedDetailOpen, setFeedDetailOpen] = useState([]);
+
+  const openFeedDetail = (photoId) => {
+    if (isLoggedIn) {
+      setFeedDetailOpen((prevOpen) => [...prevOpen, photoId]);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "회원 전용 서비스!",
+        text: `로그인이 필요한 서비스입니다🙏`,
+        confirmButtonText: "확인",
+      });
+    }
+  };
+
+  const closeFeedDetail = (photoId) => {
+    setFeedDetailOpen((prevOpen) => prevOpen.filter((id) => id !== photoId));
+  };
 
   /* Delete 서버 */
   const deleteMutation = useMutation(mypageFeedDelete, {
@@ -91,8 +115,23 @@ function MyPageFeed() {
             <Work>나의 작업물</Work>
             <WorkList>
               {data.photoList.map((item, index) => {
+                const isOpen = feedDetailOpen.includes(item.photoId);
                 return (
-                  <WorkItem key={index} src={item.photoUrl}>
+                  <WorkItem
+                    key={index}
+                    src={item.photoUrl}
+                    onClick={() => {
+                      openFeedDetail(item.photoId);
+                    }}
+                  >
+                    {" "}
+                    {isOpen && (
+                      <FeedDetail
+                        open={() => openFeedDetail(item.photoId)}
+                        close={() => closeFeedDetail(item.photoId)}
+                        photoId={item.photoId}
+                      />
+                    )}
                     <EditButton
                       onClick={(e) => {
                         if (editButtons[index]) {
@@ -236,6 +275,7 @@ const WorkItem = styled.div`
   background-repeat: no-repeat;
   position: relative;
   border-radius: 7px;
+  cursor: pointer;
 
   &:hover ${EditButton} {
     display: block;
