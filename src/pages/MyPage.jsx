@@ -3,7 +3,7 @@ import styled from "styled-components";
 import BoardItem from "../components/BoardItem";
 import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MyPageTabs from "../components/MyPageTabs";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 
 const MyPage = () => {
+  const navigate = useNavigate();
   const { hostId } = useParams();
 
   const userId = useSelector((state) => state.user.userId);
@@ -57,16 +58,12 @@ const MyPage = () => {
   console.log(data);
   return (
     <>
-      {/*       {mine && <MyPageTabs  />} */}
-
-      {/* <MyPageProfile mine={mine} /> */}
-      <MyPageTabs pageName={"전체보기"} mine={mine} />
+      {mine && <MyPageTabs pageName={"전체보기"} />}
       <PageContainer>
         <ContentContainer>
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
-
           <Container>
             <WorkSection>
               <Work>{mine ? "나의 작업물" : `${data.nickName}의 작업물`}</Work>
@@ -95,13 +92,19 @@ const MyPage = () => {
               </WorkList>
             </WorkSection>
             <Content>
-              <WorkBoard>
-                {" "}
+              <Work>
                 {mine ? "내가 쓴 게시물" : `${data.nickName}'s 게시물`}
-              </WorkBoard>
-
+              </Work>
               {data.boardList.slice(0, 2).map((item) => {
-                return <BoardItem key={item.boardId} item={item} />;
+                return (
+                  <BoardItem
+                    key={item.boardId}
+                    item={item}
+                    onClick={() => {
+                      navigate(`/board/${item.boardId}`);
+                    }}
+                  />
+                );
               })}
             </Content>
           </Container>

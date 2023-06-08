@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import MyPageTabs from "../components/MyPageTabs";
 import BoardItem from "../components/BoardItem";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { mypage, mypageBoardDelete } from "../apis/mypage/mypage";
 import MyPageProfile from "../components/MyPageProfile";
@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 
 function MyPageBoard() {
   const { hostId } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const [editButtons, setEditButtons] = useState([]);
@@ -125,7 +126,13 @@ function MyPageBoard() {
               {data.boardList.map((item, index) => {
                 return (
                   <BoardItemContainer key={item.boardId}>
-                    <BoardItem key={item.boardId} item={item} />
+                    <BoardItem
+                      key={item.boardId}
+                      item={item}
+                      onClick={() => {
+                        navigate(`/board/${item.boardId}`);
+                      }}
+                    />
                     <EditButton
                       onClick={(e) => {
                         if (editButtons[index]) {
@@ -226,8 +233,8 @@ const EditButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: #ffffff;
-  border: 1px solid black;
+  background-color: transparent;
+  border: none;
   border-radius: 8px;
   font-weight: 900;
   padding: 8px;
