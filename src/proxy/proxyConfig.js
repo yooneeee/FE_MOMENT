@@ -4,14 +4,17 @@ module.exports = (app) => {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: "http://15.165.14.7",
+      target: process.env.REACT_APP_SERVER_URL,
       changeOrigin: true,
     })
   );
   app.use(
     // "/ws-stomp",
     "/ws-edit",
-    createProxyMiddleware({ target: "http://15.165.14.7", ws: true })
+    createProxyMiddleware({
+      target: process.env.REACT_APP_SERVER_URL,
+      ws: true,
+    })
   );
 };
 
