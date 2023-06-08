@@ -12,7 +12,7 @@ const Chatting = async (receiverId) => {
 };
 
 /* 채팅목록 페이지 */
-const Chatlist = async () => {
+const ChattingList = async () => {
   try {
     const { data } = await instance.get(`/chatRoom/list`);
     return data;
@@ -21,4 +21,4 @@ const Chatlist = async () => {
   }
 };
 
-export { Chatting, Chatlist };
+export { Chatting, ChattingList };
