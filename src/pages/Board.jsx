@@ -1,24 +1,49 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import BoardItem from "../components/BoardItem";
-import { useQuery } from "react-query";
 import { getBoard } from "../apis/create/getBoard";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useInfiniteQuery } from "react-query";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 function Board() {
   const [activeNavItem, setActiveNavItem] = useState("Model");
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-  const { isError, isLoading, data } = useQuery(
-    ["getBoard", activeNavItem],
-    () => getBoard(activeNavItem)
+  const handleNavItemClick = (item) => {
+    setActiveNavItem(item);
+  };
+
+  const { isLoading, isError, data, fetchNextPage } = useInfiniteQuery(
+    ["getBoard", activeNavItem], // activeNavItem을 키로 사용하여 캐시 분리
+    ({ pageParam = 0 }) => getBoard({ pageParam, activeNavItem }),
+    {
+      getNextPageParam: (lastPage) => {
+        if (lastPage.last === true) {
+          return;
+        } else {
+          return lastPage.number + 1;
+        }
+      },
+    }
   );
 
-  console.log(data);
+  // 바닥 div 추적
+  const [bottomObserverRef, bottomInView] = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    if (bottomInView) {
+      fetchNextPage();
+    }
+  }, [bottomInView, fetchNextPage]);
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -27,9 +52,7 @@ function Board() {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
 
-  const handleNavItemClick = (item) => {
-    setActiveNavItem(item);
-  };
+  console.log(data);
 
   return (
     <Container>
@@ -55,26 +78,32 @@ function Board() {
         </Navbar>
       </Header>
       <Content>
-        {data.map((item) => {
-          return (
-            <BoardItem
-              onClick={() => {
-                if (isLoggedIn) {
-                  navigate(`${item.boardId}`);
-                } else {
-                  Swal.fire({
-                    icon: "warning",
-                    title: "회원 전용 서비스!",
-                    text: `로그인이 필요한 서비스입니다🙏`,
-                    confirmButtonText: "확인",
-                  });
-                }
-              }}
-              item={item}
-              key={item.boardId}
-            />
-          );
-        })}
+        {data.pages
+          .flatMap((page) => {
+            return page.content;
+          })
+          .map((item) => {
+            return (
+              <BoardItem
+                onClick={() => {
+                  if (isLoggedIn) {
+                    navigate(`${item.boardId}`);
+                  } else {
+                    Swal.fire({
+                      icon: "warning",
+                      title: "회원 전용 서비스!",
+                      text: `로그인이 필요한 서비스입니다🙏`,
+                      confirmButtonText: "확인",
+                    });
+                  }
+                }}
+                item={item}
+                key={item.boardId}
+              />
+            );
+          })}
+
+        <div ref={bottomObserverRef}></div>
       </Content>
     </Container>
   );
