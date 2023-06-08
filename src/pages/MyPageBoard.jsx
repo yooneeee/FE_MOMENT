@@ -233,8 +233,8 @@ const EditButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: #ffffff;
-  border: 1px solid black;
+  background-color: transparent;
+  border: none;
   border-radius: 8px;
   font-weight: 900;
   padding: 8px;
