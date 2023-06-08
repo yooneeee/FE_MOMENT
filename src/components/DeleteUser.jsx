@@ -38,9 +38,6 @@ function DeleteUser({ handleModalClose }) {
     await deleteUserMutation.mutateAsync();
   };
 
-  const handleCancel = () => {
-    handleModalClose();
-  };
   return (
     <ModalContainer>
       <Outside onClick={handleModalClose} />
@@ -78,9 +75,8 @@ function DeleteUser({ handleModalClose }) {
         </ModalContent>
         <ButtonWrap>
           <ConfirmButton disabled={!isChecked} onClick={handleConfirm}>
-            확인
+            탈퇴하기
           </ConfirmButton>
-          <CancelButton onClick={handleCancel}>취소</CancelButton>
         </ButtonWrap>
       </ModalWrap>
     </ModalContainer>
@@ -108,7 +104,8 @@ const Outside = styled.div`
   height: 100%;
 `;
 const ModalWrap = styled.div`
-  width: 400px;
+  width: 520px;
+  height: 430px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -120,6 +117,10 @@ const ModalWrap = styled.div`
   z-index: 10;
   background-color: white;
   border-radius: 12px;
+  @media (max-width: 768px) {
+    width: 400px;
+    height: 480px;
+  }
 `;
 
 const ModalHeader = styled.div`
@@ -127,7 +128,7 @@ const ModalHeader = styled.div`
   width: 100%;
   height: 42px;
   border-bottom: 1px solid #dbdbdb;
-  padding: 0 16px;
+  padding: 20px;
   justify-content: space-between;
   align-items: center;
 `;
@@ -140,11 +141,11 @@ const ModalTitle = styled.p`
 const CloseButton = styled.button`
   background-color: white;
   border: none;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  color: #359fe5;
+  color: #313131;
   &:hover {
-    color: #333;
+    color: #000000;
   }
 `;
 
@@ -153,12 +154,11 @@ const ModalContent = styled.ul`
 `;
 
 const ModalSubtitle = styled.span`
-  margin-bottom: 36px;
   font-weight: bold;
 `;
 const CheckboxList = styled.ul`
   padding-left: 0;
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -189,13 +189,16 @@ const ButtonWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px;
+  padding: 10px;
+  width: 60%;
 `;
 const ConfirmButton = styled.button`
+  width: 100%;
+  height: 50px;
   padding: 8px 16px;
   font-size: 15px;
   font-weight: bold;
-  background-color: ${(props) => (props.disabled ? "#ccc" : "#1a1a1a")};
+  background-color: ${(props) => (props.disabled ? "#ccc" : "#483767")};
   color: white;
   border: none;
   border-radius: 4px;
