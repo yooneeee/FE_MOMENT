@@ -58,7 +58,7 @@ const ProfileSection = styled.div`
   border: 1px solid #ddd;
   background-color: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin-left: -50px;
+  /* margin-left: -50px; */
   flex-shrink: 0;
   position: fixed;
 
