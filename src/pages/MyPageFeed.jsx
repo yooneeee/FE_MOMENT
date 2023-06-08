@@ -50,12 +50,6 @@ function MyPageFeed() {
     onSuccess: () => {
       queryClient.invalidateQueries(["mypage", mypage]);
       setEditButtons([]);
-      Swal.fire({
-        icon: "success",
-        title: "피드 삭제!",
-        text: `피드가 정상적으로 삭제되었습니다✨`,
-        confirmButtonText: "확인",
-      });
     },
     onError: (error) => {
       console.log(error);
@@ -64,23 +58,14 @@ function MyPageFeed() {
 
   /* 삭제, 수정 버튼 */
   const modifyButton = (e, index) => {
-    alert("수정");
+    Swal.fire({
+      text: "준비중인 서비스입니다! 조금만 기다려주세요🙏",
+      icon: "warning",
+      confirmButtonColor: "#483767",
+      confirmButtonText: "확인",
+    });
     toggleButtonClose(index);
   };
-
-  // const deleteButtonHandler = (photoId) => {
-  //   try {
-  //     if (
-  //       !window.confirm(
-  //         "삭제하시면 복구할 수 없습니다. 정말로 삭제하시겠습니까?"
-  //       )
-  //     ) {
-  //       return;
-  //     }
-  //     deleteMutation.mutate(photoId);
-  //     toggleButtonClose(photoId);
-  //   } catch (error) {}
-  // };
 
   const deleteButtonHandler = (photoId) => {
     try {
@@ -93,19 +78,31 @@ function MyPageFeed() {
         cancelButtonColor: "#c4c4c4",
         confirmButtonText: "삭제",
         cancelButtonText: "취소",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          deleteMutation.mutate(photoId);
-          toggleButtonClose(photoId);
-          Swal.fire({
-            title: "삭제가 완료되었습니다.",
-            icon: "success",
-            confirmButtonColor: "#483767",
-            confirmButtonText: "완료",
-          });
+          try {
+            await deleteMutation.mutateAsync(photoId);
+            toggleButtonClose(photoId);
+            Swal.fire({
+              title: "삭제가 완료되었습니다✨",
+              icon: "success",
+              confirmButtonColor: "#483767",
+              confirmButtonText: "완료",
+            });
+          } catch (error) {
+            Swal.fire({
+              title: "삭제 실패!",
+              text: "피드 삭제 중 오류가 발생했습니다.",
+              icon: "error",
+              confirmButtonColor: "#483767",
+              confirmButtonText: "확인",
+            });
+          }
         }
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -169,7 +166,6 @@ function MyPageFeed() {
                       openFeedDetail(item.photoId);
                     }}
                   >
-                    {" "}
                     {isOpen && (
                       <FeedDetail
                         open={() => openFeedDetail(item.photoId)}
@@ -179,11 +175,8 @@ function MyPageFeed() {
                     )}
                     <EditButton
                       onClick={(e) => {
-                        if (editButtons[index]) {
-                          toggleButtonClose(index);
-                        } else {
-                          toggleButtonOpen(index);
-                        }
+                        e.stopPropagation();
+                        toggleButtonOpen(index);
                       }}
                     >
                       <FiSettings size={14} />

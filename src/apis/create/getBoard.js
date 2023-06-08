@@ -1,13 +1,13 @@
 import { instance } from "../axios";
 
-const getBoard = async (role) => {
+const getBoard = async ({ pageParam = 0, activeNavItem }) => {
+  console.log(activeNavItem);
   try {
-    const { data } = await instance.get("/boards");
-    console.log(data);
-    if (role === "Model") {
-      return data.modelBoard.content;
-    } else if (role === "Photographer") {
-      return data.photographerBoard.content;
+    const { data } = await instance.get(`/boards?page=${pageParam}&size=`);
+    if (activeNavItem === "Model") {
+      return data.modelBoard;
+    } else if (activeNavItem === "Photographer") {
+      return data.photographerBoard;
     }
   } catch (error) {
     throw error;
