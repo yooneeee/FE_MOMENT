@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import MyPageTabs from "../components/MyPageTabs";
 import BoardItem from "../components/BoardItem";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { mypage } from "../apis/mypage/mypage";
 import MyPageProfile from "../components/MyPageProfile";
@@ -10,6 +10,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 
 function MyPageBoard() {
   const { hostId } = useParams();
+  const navigate = useNavigate();
   console.log(hostId);
 
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
@@ -37,7 +38,15 @@ function MyPageBoard() {
             <Content>
               <Work>내가 쓴 게시물</Work>
               {data.boardList.map((item) => {
-                return <BoardItem key={item.boardId} item={item} />;
+                return (
+                  <BoardItem
+                    key={item.boardId}
+                    item={item}
+                    onClick={() => {
+                      navigate(`/board/${item.boardId}`);
+                    }}
+                  />
+                );
               })}
             </Content>
           </Container>
