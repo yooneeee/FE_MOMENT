@@ -7,10 +7,16 @@ import { useParams } from "react-router-dom";
 import MyPageTabs from "../components/MyPageTabs";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
+import FeedDetail from "../components/FeedDetail";
 import { useState } from "react";
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const MyPage = () => {
   const { hostId } = useParams();
+
+  const userId = useSelector((state) => state.user.userId);
+  const mine = hostId == userId;
 
   const { isError, isLoading, data } = useQuery(
     ["mypage", hostId],
@@ -20,6 +26,27 @@ const MyPage = () => {
     }
   );
 
+  // 모달 제어
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [feedDetailOpen, setFeedDetailOpen] = useState([]);
+
+  const openFeedDetail = (photoId) => {
+    if (isLoggedIn) {
+      setFeedDetailOpen((prevOpen) => [...prevOpen, photoId]);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "회원 전용 서비스!",
+        text: `로그인이 필요한 서비스입니다🙏`,
+        confirmButtonText: "확인",
+      });
+    }
+  };
+
+  const closeFeedDetail = (photoId) => {
+    setFeedDetailOpen((prevOpen) => prevOpen.filter((id) => id !== photoId));
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -27,26 +54,52 @@ const MyPage = () => {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  // console.log(data);
+  console.log(data);
   return (
     <>
-      <MyPageTabs pageName={"전체보기"} />
+      {/*       {mine && <MyPageTabs  />} */}
+
+      {/* <MyPageProfile mine={mine} /> */}
+      <MyPageTabs pageName={"전체보기"} mine={mine} />
       <PageContainer>
         <ContentContainer>
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
+
           <Container>
             <WorkSection>
-              <Work>나의 작업물</Work>
+              <Work>{mine ? "나의 작업물" : `${data.nickName}의 작업물`}</Work>
               <WorkList>
                 {data.photoList.slice(0, 10).map((item, index) => {
-                  return <WorkItem key={index} src={item.photoUrl} />;
+                  const isOpen = feedDetailOpen.includes(item.photoId);
+                  return (
+                    <>
+                      <WorkItem
+                        key={index}
+                        src={item.photoUrl}
+                        onClick={() => {
+                          openFeedDetail(item.photoId);
+                        }}
+                      />
+                      {isOpen && (
+                        <FeedDetail
+                          open={() => openFeedDetail(item.photoId)}
+                          close={() => closeFeedDetail(item.photoId)}
+                          photoId={item.photoId}
+                        />
+                      )}
+                    </>
+                  );
                 })}
               </WorkList>
             </WorkSection>
             <Content>
-              <WorkBoard>내가 쓴 게시물</WorkBoard>
+              <WorkBoard>
+                {" "}
+                {mine ? "내가 쓴 게시물" : `${data.nickName}'s 게시물`}
+              </WorkBoard>
+
               {data.boardList.slice(0, 2).map((item) => {
                 return <BoardItem key={item.boardId} item={item} />;
               })}
@@ -70,7 +123,9 @@ const PageContainer = styled.div`
   padding: 20px;
 `;
 
-const ProfileContainer = styled.div``;
+const ProfileContainer = styled.div`
+  width: 550px;
+`;
 
 const Container = styled.div`
   width: 100%;
@@ -145,41 +200,4 @@ const WorkItem = styled.div`
 const Content = styled.div`
   flex-grow: 1;
   margin: 30px;
-`;
-
-const TabsStyles = styled.div`
-  width: 100%;
-  background: #f5f5f5;
-  border-bottom: 1px solid #d9d9d9;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  padding-left: 80px;
-  font-weight: 600;
-  top: 0;
-  left: 0;
-  top: 0;
-  left: 0;
-`;
-const MaueBar = styled.div`
-  display: flex;
-  width: 100%;
-  /* max-width: 800px; */
-`;
-const TabButton = styled.button`
-  margin-right: 15px;
-  flex: 1;
-  max-width: 100px;
-  padding: 11px;
-  border: none;
-  outline: none;
-  background: none;
-  text-decoration: none;
-  color: #999999;
-  font-size: 15px;
-
-  &.active {
-    color: #000000;
-    font-weight: 900;
-  }
 `;

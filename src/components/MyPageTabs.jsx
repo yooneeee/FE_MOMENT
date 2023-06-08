@@ -2,13 +2,10 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import styled from "styled-components";
 
-function MyPageTabs({ pageName }) {
+function MyPageTabs({ pageName, mine }) {
   const { hostId } = useParams();
-  // console.log("첫번째", hostId);
   const navigate = useNavigate();
-  const [isActive, setIsActive] = useState();
-
-  // const [entireClicked, setEntireClicked] = useState();
+  const [isActive, setIsActive] = useState("");
 
   const activeClickHandler = (item) => {
     setIsActive(item);

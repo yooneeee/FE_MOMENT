@@ -1,20 +1,81 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import MyPageTabs from "../components/MyPageTabs";
 import BoardItem from "../components/BoardItem";
-import { useParams, Link } from "react-router-dom";
-import { useQuery } from "react-query";
-import { mypage } from "../apis/mypage/mypage";
+import { useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { mypage, mypageBoardDelete } from "../apis/mypage/mypage";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { FiSettings } from "react-icons/fi";
+import { BiDownArrow } from "react-icons/bi";
+import Swal from "sweetalert2";
 
 function MyPageBoard() {
   const { hostId } = useParams();
-  console.log(hostId);
+  const queryClient = useQueryClient();
 
+  const [editButtons, setEditButtons] = useState([]);
+  const toggleWriteMenuRef = useRef(null);
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
   );
+
+  console.log(data);
+
+  /* Delete 서버 */
+  const deleteMutation = useMutation(mypageBoardDelete, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["mypage", mypage]);
+      setEditButtons([]);
+      Swal.fire({
+        icon: "success",
+        title: "게시물 삭제!",
+        text: `게시물이 정상적으로 삭제되었습니다✨`,
+        confirmButtonText: "확인",
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  /* 삭제, 수정 버튼 */
+  const modifyButton = (e, index) => {
+    alert("수정");
+    toggleButtonClose(index);
+  };
+
+  const deleteButtonHandler = (boardId) => {
+    try {
+      if (
+        !window.confirm(
+          "삭제하시면 복구할 수 없습니다. 정말로 삭제하시겠습니까?"
+        )
+      ) {
+        return;
+      }
+      deleteMutation.mutate(boardId);
+      /*    toggleButtonClose(index); */
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        toggleWriteMenuRef.current &&
+        !toggleWriteMenuRef.current.contains(event.target)
+      ) {
+        setEditButtons([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -23,19 +84,62 @@ function MyPageBoard() {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  console.log(data);
+  console.log("mypageboard", data);
+
+  /* 토글버튼 */
+  const toggleButtonOpen = (index) => {
+    const updatedEditButtons = [...editButtons];
+    updatedEditButtons[index] = true;
+    setEditButtons(updatedEditButtons);
+  };
+
+  const toggleButtonClose = (index) => {
+    const updatedEditButtons = [...editButtons];
+    updatedEditButtons[index] = false;
+    setEditButtons(updatedEditButtons);
+  };
 
   return (
     <>
       <MyPageTabs pageName={"내 게시글"} />
       <PageContainer>
         <ContentContainer>
-          <MyPageProfile />
+          <ProfileContainer>
+            <MyPageProfile />
+          </ProfileContainer>
           <Container>
             <Content>
               <Work>내가 쓴 게시물</Work>
-              {data.boardList.map((item) => {
-                return <BoardItem key={item.boardId} item={item} />;
+              {data.boardList.map((item, index) => {
+                return (
+                  <BoardItemContainer key={item.boardId}>
+                    <BoardItem key={item.boardId} item={item} />
+                    <EditButton
+                      onClick={(e) => {
+                        if (editButtons[index]) {
+                          toggleButtonClose(index);
+                        } else {
+                          toggleButtonOpen(index);
+                        }
+                      }}
+                    >
+                      <FiSettings size={14} />
+                      <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
+                    </EditButton>
+                    {editButtons[index] && (
+                      <ToggleWriteMenu ref={toggleWriteMenuRef}>
+                        <Button onClick={(e) => modifyButton(e, index)}>
+                          수정
+                        </Button>
+                        <Button
+                          onClick={() => deleteButtonHandler(item.boardId)}
+                        >
+                          삭제
+                        </Button>
+                      </ToggleWriteMenu>
+                    )}
+                  </BoardItemContainer>
+                );
               })}
             </Content>
           </Container>
@@ -55,6 +159,9 @@ const PageContainer = styled.div`
   align-items: center;
   background-color: #f5f5f5;
   padding: 20px;
+`;
+const ProfileContainer = styled.div`
+  width: 550px;
 `;
 const Container = styled.div`
   width: 100%;
@@ -82,4 +189,45 @@ const Work = styled.h2`
 const Content = styled.div`
   flex-grow: 1;
   margin-left: 1rem;
+`;
+
+const ToggleWriteMenu = styled.div`
+  position: absolute;
+  top: 88px;
+  right: -100px;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    top: 105px;
+    right: 120px;
+  }
+`;
+const BoardItemContainer = styled.div`
+  position: relative;
+`;
+
+const EditButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ffffff;
+  border: 1px solid black;
+  border-radius: 8px;
+  font-weight: 900;
+  padding: 8px;
+  z-index: 1;
+`;
+const Button = styled.button`
+  width: 100px;
+  margin-left: 58px;
+  padding: 8px;
+  margin-bottom: 4px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 900;
 `;
