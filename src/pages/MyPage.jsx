@@ -14,10 +14,16 @@ import { useSelector } from "react-redux";
 
 const MyPage = () => {
   const { hostId } = useParams();
+
   const userId = useSelector((state) => state.user.userId);
   const mine = hostId == userId;
-  const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
-    mypage(hostId)
+
+  const { isError, isLoading, data } = useQuery(
+    ["mypage", hostId],
+    () => mypage(hostId),
+    {
+      enabled: hostId !== undefined,
+    }
   );
 
   // 모달 제어
@@ -57,7 +63,6 @@ const MyPage = () => {
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
-
           <Container>
             <WorkSection>
               <Work>{mine ? "나의 작업물" : `${data.nickName}의 작업물`}</Work>

@@ -1,13 +1,24 @@
 import { instance } from "../axios";
 
-const Chatting = async (userId) => {
+/* 채팅페이지 */
+const Chatting = async (receiverId) => {
   try {
-    const { data } = await instance.get(`/chatRoom/enter/${userId}`);
-    console.log(data);
-    // return data
+    const { data } = await instance.get(`/chatRoom/enter/${receiverId}`);
+    console.log("챗데이터", data);
+    return data;
   } catch (error) {
     throw error;
   }
 };
 
-export { Chatting };
+/* 채팅목록 페이지 */
+const ChattingList = async () => {
+  try {
+    const { data } = await instance.get(`/chatRoom/list`);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { Chatting, ChattingList };
