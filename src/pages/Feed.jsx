@@ -32,12 +32,13 @@ function Feed() {
     setFeedDetailOpen((prevOpen) => prevOpen.filter((id) => id !== photoId));
   };
 
+  // 무한 스크롤
   const { isLoading, isError, data, fetchNextPage } = useInfiniteQuery(
     "getFeedAxios",
     getFeedAxios,
     {
       getNextPageParam: (lastPage) => {
-        if (lastPage.currentPage == lastPage.totalPages) {
+        if (lastPage.currentPage === lastPage.totalPages) {
           return;
         } else {
           return lastPage.currentPage + 1;
@@ -64,7 +65,7 @@ function Feed() {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <>
