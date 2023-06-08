@@ -4,6 +4,7 @@ import { instance } from "../axios";
 const mypage = async (hostId) => {
   try {
     const { data } = await instance.get(`/page/${hostId}`);
+    console.log(data);
     return data;
   } catch (error) {
     throw error;
