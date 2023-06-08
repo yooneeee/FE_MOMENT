@@ -120,15 +120,23 @@ function ChatTest() {
         <ReceiverProfile src={data.receiverProfileImg} alt="Receiver Profile" />
         <Nickname>{data.receiverNickName}</Nickname>
         {data.chatList.map((chat) => (
-          <p key={chat.id}>{chat.message}</p>
+          <ChatBubble
+            key={chat.id}
+            isSender={chat.senderId === userId}
+            isReceiver={chat.receiverId === userId}
+          >
+            {chat.message}
+          </ChatBubble>
         ))}
-        <p>No chat room available</p>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button onClick={sendMessage}>Send</button>
+        {/* <p>No chat room available</p> */}
+        <ChatInputContainer>
+          <ChatInput
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <SendButton onClick={sendMessage}>Send</SendButton>
+        </ChatInputContainer>
       </ChatContainer>
     );
   }
