@@ -15,8 +15,16 @@ import { useSelector } from "react-redux";
 const MyPage = () => {
   const navigate = useNavigate();
   const { hostId } = useParams();
-  const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
-    mypage(hostId)
+
+  const userId = useSelector((state) => state.user.userId);
+  const mine = hostId == userId;
+
+  const { isError, isLoading, data } = useQuery(
+    ["mypage", hostId],
+    () => mypage(hostId),
+    {
+      enabled: hostId !== undefined,
+    }
   );
 
   // 모달 제어
@@ -47,19 +55,18 @@ const MyPage = () => {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  // console.log(data);
+  console.log(data);
   return (
     <>
-      <MyPageTabs pageName={"전체보기"} />
+      {mine && <MyPageTabs pageName={"전체보기"} />}
       <PageContainer>
         <ContentContainer>
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
-
           <Container>
             <WorkSection>
-              <Work>나의 작업물</Work>
+              <Work>{mine ? "나의 작업물" : `${data.nickName}의 작업물`}</Work>
               <WorkList>
                 {data.photoList.slice(0, 10).map((item, index) => {
                   const isOpen = feedDetailOpen.includes(item.photoId);
@@ -85,7 +92,9 @@ const MyPage = () => {
               </WorkList>
             </WorkSection>
             <Content>
-              <WorkBoard>내가 쓴 게시물</WorkBoard>
+              <Work>
+                {mine ? "내가 쓴 게시물" : `${data.nickName}'s 게시물`}
+              </Work>
               {data.boardList.slice(0, 2).map((item) => {
                 return (
                   <BoardItem
@@ -194,41 +203,4 @@ const WorkItem = styled.div`
 const Content = styled.div`
   flex-grow: 1;
   margin: 30px;
-`;
-
-const TabsStyles = styled.div`
-  width: 100%;
-  background: #f5f5f5;
-  border-bottom: 1px solid #d9d9d9;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  padding-left: 80px;
-  font-weight: 600;
-  top: 0;
-  left: 0;
-  top: 0;
-  left: 0;
-`;
-const MaueBar = styled.div`
-  display: flex;
-  width: 100%;
-  /* max-width: 800px; */
-`;
-const TabButton = styled.button`
-  margin-right: 15px;
-  flex: 1;
-  max-width: 100px;
-  padding: 11px;
-  border: none;
-  outline: none;
-  background: none;
-  text-decoration: none;
-  color: #999999;
-  font-size: 15px;
-
-  &.active {
-    color: #000000;
-    font-weight: 900;
-  }
 `;

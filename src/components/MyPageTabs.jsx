@@ -4,11 +4,8 @@ import styled from "styled-components";
 
 function MyPageTabs({ pageName }) {
   const { hostId } = useParams();
-  // console.log("첫번째", hostId);
   const navigate = useNavigate();
-  const [isActive, setIsActive] = useState();
-
-  // const [entireClicked, setEntireClicked] = useState();
+  const [isActive, setIsActive] = useState("");
 
   const activeClickHandler = (item) => {
     setIsActive(item);
@@ -47,6 +44,7 @@ function MyPageTabs({ pageName }) {
         <TabButton
           className={pageName === "채팅목록" ? "active" : ""}
           onClick={() => {
+            navigate("/chatlist");
             activeClickHandler("채팅목록");
           }}
         >

@@ -39,4 +39,14 @@ const mypageFeedDelete = async (photoId) => {
   }
 };
 
-export { mypage, mypageInformationAxios, mypageFeedDelete };
+/* 마이페이지 게시물 삭제 */
+const mypageBoardDelete = async (boardId) => {
+  try {
+    const response = await instance.delete(`/boards/${boardId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { mypage, mypageInformationAxios, mypageFeedDelete, mypageBoardDelete };
