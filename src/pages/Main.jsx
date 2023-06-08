@@ -65,7 +65,6 @@ function Main() {
               >
                 더보기 ▶
               </MoreButton>
-              {/*          <BiSolidRightArrow /> */}
             </CardGroupName>
             <CardContainer>
               {recommendataion?.map((item) => {
@@ -98,15 +97,7 @@ function Main() {
 
 export default Main;
 
-const MainContainer = styled.div`
-  /*  margin: auto 50px;
-  @media (min-width: 1000px) {
-    margin: auto 100px;
-  }
-  @media (min-width: 1200px) {
-    margin: auto 100px;
-  } */
-`;
+const MainContainer = styled.div``;
 
 const SliderWrapper = styled.div`
   position: relative;
@@ -144,6 +135,9 @@ const CardGroupName = styled.div`
 const CardName = styled.p`
   font-size: 25px;
   font-weight: 700;
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
 `;
 
 const MoreButton = styled.div`
@@ -151,18 +145,25 @@ const MoreButton = styled.div`
   color: #515151;
   cursor: pointer;
   font-weight: 600;
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 const CardContainer = styled.div`
-  /*   display: flex;
   flex-wrap: wrap;
-  gap: 30px;*/
   display: flex;
-  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개의 컬럼 */
-  gap: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 const BoardContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개의 컬럼 */
+  grid-template-columns: repeat(4, 1fr);
   gap: 30px;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
