@@ -129,13 +129,11 @@ const UserPositionText = styled.span`
 `;
 const BoardTitle = styled.span`
   font-size: 16px;
-  /* font-weight: bold; */
+  font-weight: 500;
 `;
 const BoardLocation = styled.span``;
 
-const BoardDate = styled.div`
-  margin: 10px 0 0 -20px;
-`;
+const BoardDate = styled.div``;
 
 const CardProfileImg = styled.div`
   width: 100%;

@@ -90,7 +90,24 @@ function Login() {
   }, [email, password]);
 
   const kakaoLoginButtonHandler = () => {
-    window.location.href = KAKAO_AUTH_URL;
+    try {
+      Swal.fire({
+        title: "카카오 간편가입 주의",
+        text: "카카오 로그인시 선택항목에도 모두 동의해주셔야 원활한 서비스 이용이 가능합니다!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#483767",
+        cancelButtonColor: "#c4c4c4",
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = KAKAO_AUTH_URL;
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 
   return (
