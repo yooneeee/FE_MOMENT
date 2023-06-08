@@ -42,7 +42,7 @@ const Router = () => {
           <Route path={`mypageboard/:hostId`} element={<MyPageBoard />} />
           <Route path={`board/:boardId`} element={<BoardDetail />} />
           <Route path={`chattest/:receiverId`} element={<ChatTest />} />
-          <Route path="chatlist" element={<ChatList />} />
+          <Route path={`chatlist/:hostId`} element={<ChatList />} />
         </Routes>
       </Layout>
     </BrowserRouter>
