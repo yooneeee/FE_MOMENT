@@ -78,7 +78,6 @@ function KakaoLoginRedirect() {
   const sendRoleMutation = useMutation(sendRoleAxios, {
     onSuccess: () => {
       closeModal();
-      /*  alert("회원가입이 완료되었습니다✨"); */
       Swal.fire({
         icon: "success",
         title: "회원가입 성공!",
