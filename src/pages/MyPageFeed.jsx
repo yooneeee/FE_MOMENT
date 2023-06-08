@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import MyPageTabs from "../components/MyPageTabs";
 import { useParams } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { mypage } from "../apis/mypage/mypage";
 import { mypageFeedDelete } from "../apis/mypage/mypage";
