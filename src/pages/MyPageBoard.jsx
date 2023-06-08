@@ -70,7 +70,9 @@ function MyPageBoard() {
           });
         }
       });
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   };
 
   useEffect(() => {

@@ -139,12 +139,14 @@ const Styled_Slide = styled(Slider)`
 `;
 
 const CardDesign = styled.div`
+  color: black;
+  border-radius: 5px;
+  flex-grow: 1;
+  cursor: pointer;
   width: 100%;
   border-radius: 5px;
   flex-grow: 1;
-  /* &:hover {
-    transform: scale(1.01);
-  } */
+
   @media (min-width: 768px) {
     width: calc(25% - 20px);
   }
