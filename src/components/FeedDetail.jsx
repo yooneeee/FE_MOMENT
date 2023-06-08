@@ -66,7 +66,7 @@ const FeedDetail = (props) => {
 
   return (
     <div className={open ? "openModal feed-datail-modal" : "feed-datail-modal"}>
-      {open ? (
+      {open && (
         <section ref={modalRef}>
           {/* <header>
             <p className="headerTitle">피드</p>
@@ -123,7 +123,7 @@ const FeedDetail = (props) => {
             </div>
           </div>
         </section>
-      ) : null}
+      )}
     </div>
   );
 };
