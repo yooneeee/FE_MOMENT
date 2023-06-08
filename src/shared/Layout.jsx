@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../components/Header";
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 function Footer() {
   return (
@@ -50,8 +50,8 @@ const FooterStyles = styled.div`
   width: 100%;
   height: 50px;
   display: flex;
-  background: black;
-  color: white;
+  background: white;
+  color: black;
   align-items: center;
   justify-content: center;
   font-size: 12px;

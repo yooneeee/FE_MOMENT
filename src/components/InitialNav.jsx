@@ -1,5 +1,5 @@
 import React from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 function InitialNav() {
@@ -12,7 +12,10 @@ function InitialNav() {
 
       <Navbar>
         <NavItem onClick={() => navigate("/main")}>HOME</NavItem>
-        <NavItem onClick={() => navigate("/login")}>로그인/회원가입</NavItem>
+        <NavItem onClick={() => navigate("/login")}>로그인</NavItem>
+        <NavItem onClick={() => navigate("/integratedsignup")}>
+          회원가입
+        </NavItem>
       </Navbar>
     </HeaderWrapper>
   );

@@ -1,163 +1,305 @@
-import React, { useState, useRef } from "react";
-import { styled } from "styled-components";
+import React, { useState, useRef, useCallback } from "react";
+import styled from "styled-components";
+import { mypageInformationAxios } from "../apis/mypage/mypage";
+import { useMutation } from "react-query";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import UserDataComponent from "../components/UserDataComponent";
+import DeleteUser from "../components/DeleteUser";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/modules/user";
+import Swal from "sweetalert2";
 
-function MyPageInformation() {
-  const [image, setImage] = useState("img/snowball.png");
-  const fileInput = useRef(null);
+const MyPageInformation = () => {
+  const { hostId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const loginUserData = UserDataComponent();
 
-  const [pwIsVisible, setpwIsVisible] = useState(false);
-  const [nickIsVisible, setnickIsVisible] = useState(false);
-  const [ImgIsVisible, setImgIsVisible] = useState(false);
+  const location = useLocation();
+  const checkKakaoId = location.state.checkKakaoId;
+  const [image, setImage] = useState(loginUserData.profileImg);
+  // console.log(image);
+  const fileInput = useRef();
 
-  /* 버튼 클릭시 히든 폼 */
-  const nicknameHandler = () => {
-    setnickIsVisible(!nickIsVisible);
-  };
-  const pwHandler = () => {
-    setpwIsVisible(!pwIsVisible);
-  };
-  const imgHandler = () => {
-    setImgIsVisible(!ImgIsVisible);
-  };
+  const [newNick, setNewNick] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [newRole, setNewRole] = useState("");
+  const [deleteUserModal, setDeleteUserModal] = useState(false);
 
-  /* 취소 버튼 클릭시 되돌아가기 */
-  const nickCancelHandler = () => {
-    setnickIsVisible(false);
-  };
-  const pwcancelHandler = () => {
-    setpwIsVisible(false);
-  };
-  const imgcancelHandler = () => {
-    setImgIsVisible(false);
-    setImage("img/snowball.png");
-  };
-  const basicImgHandler = () => {
-    setImage("img/snowball.png");
-  };
-
+  /* 프로필 이미지 선택 */
   const fileSelectHandler = (e) => {
     const file = e.target.files[0];
     // 파일 처리 로직 추가
     // 이미지 업로드 후 이미지 변경 로직
-    const reader = new FileReader();
-    reader.onload = () => {
-      const uploadedImage = reader.result;
-      setImage(uploadedImage);
+    // setImage(file);
+    console.log("프로필", file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const roleButtonClickHandler = useCallback((selectedRole) => {
+    setNewRole(selectedRole);
+  }, []);
+
+  const MemoizedSelectionButton = React.memo(SelectionButton);
+
+  /* 서버 통신 */
+  const mutation = useMutation(mypageInformationAxios, {
+    onSuccess: (response) => {
+      Swal.fire({
+        icon: "success",
+        title: "수정 완료(❁´◡`❁)",
+        text: `회원정보가 정상적으로 수정되었습니다!`,
+        confirmButtonText: "확인",
+      });
+      navigate(`/page/${hostId}`);
+      dispatch(
+        setUser({
+          nickName: newNick,
+          profileImg: image,
+          role: newRole,
+        })
+      );
+    },
+
+    onError: (error) => {
+      console.log("에러", error);
+      if (error.status == 409) {
+        Swal.fire({
+          icon: "warning",
+          title: "닉네임 중복!",
+          text: `중복된 닉네임이 존재합니다!다른 닉네임을 설정해주세요🙏`,
+          confirmButtonText: "확인",
+        });
+      } else {
+        alert("수정 실패o(TヘTo)");
+      }
+    },
+  });
+
+  /* 정보변경 버튼 클릭 */
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const file = fileInput.current.files[0];
+    console.log("핸들러", file);
+    const formData = new FormData();
+
+    const update = {
+      nickName: newNick,
+      password: newPw,
+      role: newRole,
     };
-    reader.readAsDataURL(file);
+    formData.append(
+      "update",
+      new Blob([JSON.stringify(update)], { type: "application/json" })
+    );
+    file && formData.append("profile", file);
+    mutation.mutate({ hostId, formData });
+  };
+
+  const deleteUser = () => {
+    setDeleteUserModal(true);
+  };
+
+  const handleModalClose = () => {
+    setDeleteUserModal(false);
   };
 
   return (
     <Container>
-      <Box>
-        <Title>
-          기본 회원정보<span>필수</span>
-        </Title>
-        <Line />
-        <Text1>사진</Text1>
-        <ProfileContainer>
-          <ProfileImg
-            src={image}
-            alt="프로필 이미지"
-            //   onClick={() => {
-            //     fileInput.current.click();
-            //   }}
-          />
-        </ProfileContainer>
-        <TextColumn>
-          <ProfileText>
-            {ImgIsVisible ? (
-              <HiddenForm>
-                <UploadButton>
-                  사진선택
-                  <input type="file" onChange={fileSelectHandler}></input>
-                </UploadButton>
-                <BasicImgButton onClick={basicImgHandler}>
-                  기본이미지로 변경
-                </BasicImgButton>
-                <ButtonColumn>
-                  <HiddenFormBtn onClick={imgcancelHandler}>취소</HiddenFormBtn>
-                  <HiddenFormBtn>완료</HiddenFormBtn>
-                </ButtonColumn>
-              </HiddenForm>
-            ) : (
-              <>
-                <span>회원님을 알릴 수 있는 사진을 등록해 주세요.</span>
-                <br />
-                <span>
-                  등록 된 사진은 회원님의 게시물이나 피드에 사용됩니다.
-                </span>
-              </>
-            )}
-          </ProfileText>
-        </TextColumn>
-        {ImgIsVisible ? null : <Button onClick={imgHandler}>사진 변경</Button>}
-      </Box>
-      <Line1 />
-      <Box>
-        <Text>닉네임</Text>
-        <TextColumn>
-          {nickIsVisible ? (
-            <HiddenForm>
-              <HiddenNick>
-                <span>길이는 최대 ~자 이내로 작성해주세요.</span>
-                <br />
-                <span>중복 닉네임 불가합니다.</span>
-              </HiddenNick>
-              <HiddenInput type="text" placeholder="닉네임 입력(최대 ~자)" />
-              <ButtonColumn>
-                <HiddenFormBtn onClick={nickCancelHandler}>취소</HiddenFormBtn>
-                <HiddenFormBtn>완료</HiddenFormBtn>
-              </ButtonColumn>
-            </HiddenForm>
-          ) : (
-            <span>미뇽</span>
-          )}
-        </TextColumn>
-        {nickIsVisible ? null : (
-          <Button onClick={nicknameHandler}>닉네임 변경</Button>
-        )}
-      </Box>
-      <Line1 />
-      <Box>
-        <Text>
-          <span>비밀번호</span>
-        </Text>
-        <TextColumn>
-          {pwIsVisible ? (
-            <HiddenForm>
-              <Column>
-                <span>현재 비밀번호</span>
-                <HiddenInput type="password" />
-              </Column>
-              <Column>
+      <form onSubmit={handleFormSubmit}>
+        <Box>
+          <Title>
+            기본 회원정보<span>필수</span>
+          </Title>
+          <Line />
+          <Text1>사진</Text1>
+          <ProfileContainer>
+            <ProfileImg src={image} />
+          </ProfileContainer>
+          <TextColumn>
+            <ProfileText>
+              <UploadButton>
+                사진선택
+                <input
+                  type="file"
+                  name="profileImg"
+                  accept="image/*"
+                  onChange={fileSelectHandler}
+                  ref={fileInput}
+                ></input>
+              </UploadButton>
+            </ProfileText>
+          </TextColumn>
+        </Box>
+        <Line1 />
+        <Box>
+          <Text>닉네임</Text>
+          <TextColumn>
+            <HiddenInput
+              type="text"
+              placeholder="닉네임 입력(최대 8자)"
+              name="nickName"
+              value={newNick}
+              onChange={(e) => {
+                setNewNick(e.target.value);
+              }}
+            />
+          </TextColumn>
+        </Box>
+        <Line1 />
+        {checkKakaoId ? (
+          <div></div>
+        ) : (
+          <>
+            <Box>
+              <Text>
                 <span>신규 비밀번호</span>
-                <HiddenInput type="password" />
-              </Column>
-              <Column>
-                <span>신규 비밀번호 재 입력</span>
-                <HiddenInput type="password" />
-              </Column>
-              <ButtonColumn>
-                <HiddenFormBtn onClick={pwcancelHandler}>취소</HiddenFormBtn>
-                <HiddenFormBtn>완료</HiddenFormBtn>
-              </ButtonColumn>
-            </HiddenForm>
-          ) : (
-            <span>********</span>
-          )}
-        </TextColumn>
-        {pwIsVisible ? null : (
-          <Button onClick={pwHandler}>비밀번호 변경</Button>
+              </Text>
+              <TextColumn>
+                <Column>
+                  <HiddenInput
+                    type="password"
+                    placeholder="신규 비밀번호 입력"
+                    name="password"
+                    value={newPw}
+                    onChange={(e) => {
+                      setNewPw(e.target.value);
+                    }}
+                  />
+                </Column>
+              </TextColumn>
+            </Box>
+            <Line1 />
+          </>
         )}
-      </Box>
-      <Line1 />
+
+        <Box>
+          <Text>
+            <span>Role</span>
+          </Text>
+          <TextColumn>
+            <ButtonContainer>
+              <MemoizedSelectionButton
+                type="button"
+                onClick={() => roleButtonClickHandler("MODEL")}
+                style={{
+                  backgroundColor: newRole === "MODEL" ? "#000000" : "#ffffff",
+                  color: newRole === "MODEL" ? "#ffffff" : "#000000",
+                }}
+              >
+                모델
+              </MemoizedSelectionButton>
+              <MemoizedSelectionButton
+                type="button"
+                onClick={() => roleButtonClickHandler("PHOTOGRAPHER")}
+                style={{
+                  backgroundColor:
+                    newRole === "PHOTOGRAPHER" ? "#000000" : "#ffffff",
+                  color: newRole === "PHOTOGRAPHER" ? "#ffffff" : "#000000",
+                }}
+              >
+                작가
+              </MemoizedSelectionButton>
+            </ButtonContainer>
+          </TextColumn>
+        </Box>
+        <Line1 />
+        <TwoButtonContainer>
+          <ChangeButtonContainer>
+            <ChangeButton type="submit">정보변경</ChangeButton>
+          </ChangeButtonContainer>
+          <WithdrawalButton type="button" onClick={deleteUser}>
+            회원탈퇴할게요
+          </WithdrawalButton>
+        </TwoButtonContainer>
+      </form>
+      {deleteUserModal && <DeleteUser handleModalClose={handleModalClose} />}
     </Container>
   );
-}
+};
 
 export default MyPageInformation;
 
+/* 버튼 */
+const UploadButton = styled.label`
+  display: inline-block;
+  padding: 10px 75px;
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px #acabab solid;
+  border-radius: 3px;
+  /* margin-left: 45px; */
+
+  &:hover {
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+`;
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0;
+`;
+const SelectionButton = styled.button`
+  background-color: #ffffff;
+  border-radius: 3px;
+  border: 1px #acabab solid;
+  margin-right: 2px;
+  color: #000000;
+  padding: 10px 40px;
+  font-size: 15px;
+  font-weight: 800;
+
+  &:active,
+  &:focus {
+    background-color: #000000; /* 선택 시 배경색 변경 */
+    color: white;
+  }
+`;
+const ChangeButton = styled.button`
+  display: inline-block;
+  padding: 10px 75px;
+  background-color: #ffffff;
+  border-radius: 3px;
+  border: 1px #acabab solid;
+  justify-content: flex-end;
+  margin-right: 185px;
+`;
+const WithdrawalButton = styled.button`
+  border: none;
+  background-color: transparent;
+  margin-left: 10px;
+  font-size: 15px;
+  text-decoration: underline;
+  color: #858585;
+  margin-top: 40px;
+  &:hover {
+    color: #1b1b1b;
+  }
+`;
+
+const TwoButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const ChangeButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -184,6 +326,9 @@ const ProfileContainer = styled.div`
   border-radius: 50%;
   overflow: hidden;
   /* cursor: pointer; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const ProfileImg = styled.img`
   width: 100%;
@@ -194,37 +339,12 @@ const ProfileText = styled.div`
   margin-top: 10px;
   font-weight: 600;
 `;
-const UploadButton = styled.label`
-  display: inline-block;
-  padding: 15px 25px;
-  background-color: #ffffff;
-  color: #000000;
-  border: 1px #b3b3b3 solid;
-  /* border-radius: 4px; */
-  cursor: pointer;
-
-  &:hover {
-    background-color: #e0e0e0;
-  }
-
-  input[type="file"] {
-    display: none;
-  }
-`;
-const BasicImgButton = styled(UploadButton)`
-  margin-left: 5px;
-`;
 
 const Box = styled.div`
   width: 100%;
   margin: 10px auto 0;
 `;
-const HiddenForm = styled.div`
-  padding: 10px;
-`;
-const HiddenNick = styled.div`
-  margin-bottom: 10px;
-`;
+
 const Column = styled.div`
   display: flex;
   justify-content: space-between;
@@ -233,30 +353,22 @@ const Column = styled.div`
 
 const HiddenInput = styled.input`
   width: 100%;
-  max-width: 55%;
-  border: 1px solid #cacaca;
-  padding: 5px 10px;
+  max-width: 65%;
+  border: 1px solid #acabab;
+  border-radius: 3px;
+  padding: 10px 10px;
   outline: none;
 
+  &:focus {
+    border-color: #000000;
+    outline: none; /* 포커스 시 기본 테두리 제거 */
+  }
+
   &::placeholder {
-    color: #cacaca;
+    color: #acabab;
   }
 `;
 
-const ButtonColumn = styled.div`
-  width: 100%;
-  max-width: 33%;
-  display: flex;
-  justify-content: space-between;
-  /* margin: 0 auto 5px; */
-  margin: 0 0 5px;
-`;
-const HiddenFormBtn = styled.button`
-  padding: 8px 19px;
-  border: none;
-  background-color: #d1d1d1;
-  margin-top: 10px;
-`;
 const Text = styled.div`
   float: left;
   width: 100%;
@@ -292,14 +404,7 @@ const TextColumn = styled.div`
     font-size: 15px;
   }
 `;
-const Button = styled.button`
-  max-width: 15%;
-  border: 1px #d1d1d1 solid;
-  /* border-radius: 8px; */
-  background-color: transparent;
-  padding: 7px 5px;
-  font-size: 14px;
-`;
+
 const Line = styled.div`
   border-top: 4px solid #000000;
   width: 100%;

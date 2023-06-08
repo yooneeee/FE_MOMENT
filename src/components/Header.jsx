@@ -1,12 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import CreateBoard from "./CreateBoard";
 import CreateFeed from "./CreateFeed";
+import { useMutation } from "react-query";
+import { logoutAxios } from "../apis/auth/login";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutSuccess } from "../redux/modules/user";
+import Swal from "sweetalert2";
 
 function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
   const [boardModalOpen, setBoardModalOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  // 로그인 여부 확인
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const nickName = useSelector((state) => state.user.nickName);
+  const profileImg = useSelector((state) => state.user.profileImg);
+  const userId = useSelector((state) => state.user.userId);
 
   const openFeedModal = () => {
     setFeedModalOpen(true);
@@ -23,13 +35,15 @@ function Header() {
   const navigate = useNavigate();
   // 현재 창 너비
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  // 메뉴창과, 글 쓰기 state 저장
+  // 메뉴창과, 글 쓰기, 프로필 state 저장
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWriteMenuOpen, setIsWriteMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
   // 헤더 컴포넌트 DOM 요소 참조
   const headerRef = useRef(null);
 
-  //메뉴, 글쓰기 메뉴 토글 여닫는 함수
+  //메뉴, 글쓰기 메뉴, 프로필 메뉴 토글 여닫는 함수
   const toggleMenuClose = () => {
     setIsMenuOpen(false);
   };
@@ -39,17 +53,22 @@ function Header() {
   const toggleWriteMenuClose = () => {
     setIsWriteMenuOpen(false);
   };
+  const toggleProfileMenuClose = () => {
+    setIsProfileMenuOpen(false);
+  };
   //창 너비에 따라 메뉴와 글쓰기 메뉴를 닫는 함수
   const handleResize = () => {
     setWindowWidth(window.innerWidth);
     setIsMenuOpen(false);
     setIsWriteMenuOpen(false);
+    setIsProfileMenuOpen(false);
   };
   //헤더 영역 외의 클릭 이벤트를 처리해 메뉴와 글쓰기 메뉴를 닫는 함수
   const handleClickOutside = (event) => {
     if (headerRef.current && !headerRef.current.contains(event.target)) {
-      setIsMenuOpen(false); // 헤더 밖을 클릭시 메뉴 닫기
-      setIsWriteMenuOpen(false); // 헤더 밖을 클릭시 글쓰기 메뉴 닫기
+      setIsMenuOpen(false);
+      setIsWriteMenuOpen(false);
+      setIsProfileMenuOpen(false);
     }
   };
 
@@ -63,107 +82,202 @@ function Header() {
     };
   }, []);
 
+  const logoutMutation = useMutation(logoutAxios, {
+    onSuccess: () => {
+      Swal.fire({
+        icon: "success",
+        title: "로그아웃 성공!",
+        text: `[${nickName}]님 로그아웃되었습니다✨`,
+        confirmButtonText: "확인",
+      });
+      navigate("/");
+    },
+    onError: (error) => {
+      throw error;
+    },
+  });
+
+  const logoutHandler = async (e) => {
+    sessionStorage.removeItem("Access_key");
+    sessionStorage.removeItem("Refresh_key");
+    await logoutMutation.mutateAsync();
+    dispatch(logoutSuccess());
+    navigate("/");
+  };
   return (
-    <HeaderStyles isMobile={windowWidth <= 768} ref={headerRef}>
-      <HeaderTitle
-        onClick={() => {
-          navigate("/main");
-          toggleMenuClose();
-          toggleWriteMenuClose();
-        }}
-      >
-        Moment
-      </HeaderTitle>
+    <HeaderStyles
+      ismobile={windowWidth <= 768 ? "true" : "false"}
+      ref={headerRef}
+    >
+      <LeftMenu>
+        <HeaderTitle
+          onClick={() => {
+            navigate("/main");
+            toggleMenuClose();
+            toggleWriteMenuClose();
+          }}
+        >
+          Moment
+        </HeaderTitle>
+        <CategoryBox>
+          <HeaderButton
+            onClick={() => {
+              navigate("/feeds");
+              toggleWriteMenuClose();
+              toggleProfileMenuClose();
+            }}
+          >
+            피드
+          </HeaderButton>
+          <HeaderButton
+            onClick={() => {
+              navigate("/board");
+              toggleWriteMenuClose();
+              toggleProfileMenuClose();
+            }}
+          >
+            게시판
+          </HeaderButton>
+        </CategoryBox>
+      </LeftMenu>
       <ButtonBox>
-        {/*    화면크기 768px보다 작을 때 */}
         {windowWidth <= 768 ? (
           <MenuButton
             onClick={() => {
               setIsMenuOpen(!isMenuOpen);
               toggleWriteMenuClose();
+              toggleProfileMenuClose();
             }}
           >
             <MenuIcon>&#9776;</MenuIcon>
           </MenuButton>
         ) : (
           <>
-            {/*    화면크기 768px보다 클 때 */}
-            <HeaderButton
-              onClick={() => {
-                navigate("/feed");
-                toggleWriteMenuClose();
-              }}
-            >
-              피드
-            </HeaderButton>
-            <HeaderButton
-              onClick={() => {
-                navigate("/board");
-                toggleWriteMenuClose();
-              }}
-            >
-              게시판
-            </HeaderButton>
+            {isLoggedIn ? (
+              <>
+                <HeaderButton
+                  onClick={() => {
+                    setIsProfileMenuOpen(!isProfileMenuOpen);
+                    toggleWriteMenuClose();
+                  }}
+                >
+                  <ProfileImg src={profileImg} />
+                  <div>{nickName}</div>
+                </HeaderButton>
+              </>
+            ) : (
+              <>
+                <HeaderButton
+                  name={"login"}
+                  onClick={() => {
+                    navigate("/login");
+                    toggleWriteMenuClose();
+                    toggleProfileMenuClose();
+                  }}
+                >
+                  로그인
+                </HeaderButton>
+                <HeaderButton
+                  name={"integratedsignup"}
+                  onClick={() => {
+                    navigate("/integratedsignup");
+                    toggleWriteMenuClose();
+                    toggleProfileMenuClose();
+                  }}
+                >
+                  회원가입
+                </HeaderButton>
+              </>
+            )}
             <HeaderButton
               name={"Write"}
               onClick={() => {
                 setIsWriteMenuOpen(!isWriteMenuOpen);
+                toggleProfileMenuClose();
               }}
             >
               글쓰기
             </HeaderButton>
-            <HeaderButton
-              name={"login"}
-              onClick={() => {
-                navigate("/login");
-                toggleWriteMenuClose();
-              }}
-            >
-              로그인
-            </HeaderButton>
-            <HeaderButton
-              name={"integratedsignup"}
-              onClick={() => {
-                navigate("/integratedsignup");
-                toggleWriteMenuClose();
-              }}
-            >
-              회원가입
-            </HeaderButton>
           </>
         )}
       </ButtonBox>
-      {/* 글쓰기 모달 열렸을 때 */}
+
+      {isProfileMenuOpen && (
+        <ToggleProfileMenu>
+          <MenuButton
+            name={"mypage"}
+            onClick={() => {
+              navigate(`/page/${userId}`);
+              toggleMenuClose();
+              toggleWriteMenuClose();
+              toggleProfileMenuClose();
+            }}
+          >
+            마이페이지
+          </MenuButton>
+          <MenuButton
+            name={"logout"}
+            onClick={() => {
+              logoutHandler();
+              toggleProfileMenuClose();
+            }}
+          >
+            로그아웃
+          </MenuButton>
+        </ToggleProfileMenu>
+      )}
+
       {isWriteMenuOpen && (
         <ToggleWriteMenu>
           <MenuButton
             onClick={() => {
-              openFeedModal();
-              toggleWriteMenuClose();
-              toggleMenuClose();
+              if (isLoggedIn) {
+                openFeedModal();
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                toggleMenuClose();
+              } else {
+                Swal.fire({
+                  icon: "warning",
+                  title: "회원 전용 서비스!",
+                  text: `로그인이 필요한 서비스입니다🙏`,
+                  confirmButtonText: "확인",
+                });
+              }
             }}
           >
             피드 작성
           </MenuButton>
           <MenuButton
             onClick={() => {
-              openBoardModal();
-              toggleWriteMenuClose();
-              toggleMenuClose();
+              if (isLoggedIn) {
+                openBoardModal();
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                toggleMenuClose();
+              } else {
+                Swal.fire({
+                  icon: "warning",
+                  title: "회원 전용 서비스!",
+                  text: `로그인이 필요한 서비스입니다🙏`,
+                  confirmButtonText: "확인",
+                });
+              }
             }}
           >
             게시글 작성
           </MenuButton>
         </ToggleWriteMenu>
       )}
-      {/* 화면크기 작아졌을 때 메뉴 모달 열렸을 때 */}
+
       {isMenuOpen && (
         <ToggleMenu>
           <MenuButton
             onClick={() => {
-              navigate("/feed");
+              navigate("/feeds");
               toggleMenuClose();
               toggleWriteMenuClose();
+              toggleProfileMenuClose();
             }}
           >
             피드
@@ -173,29 +287,60 @@ function Header() {
               navigate("/board");
               toggleMenuClose();
               toggleWriteMenuClose();
+              toggleProfileMenuClose();
             }}
           >
             게시판
           </MenuButton>
-          <MenuButton onClick={toggleWriteMenuOpen}>글쓰기</MenuButton>
           <MenuButton
             onClick={() => {
-              navigate("/login");
-              toggleMenuClose();
-              toggleWriteMenuClose();
+              toggleWriteMenuOpen();
+              toggleProfileMenuClose();
             }}
           >
-            로그인
+            글쓰기
           </MenuButton>
-          <MenuButton
-            onClick={() => {
-              navigate("/integratedsignup");
-              toggleMenuClose();
-              toggleWriteMenuClose();
-            }}
-          >
-            회원가입
-          </MenuButton>
+          {isLoggedIn ? (
+            <>
+              <MenuButton
+                name={"mypage"}
+                onClick={() => {
+                  navigate(`/page/${userId}`);
+                  toggleMenuClose();
+                  toggleWriteMenuClose();
+                  toggleProfileMenuClose();
+                }}
+              >
+                마이페이지
+              </MenuButton>
+              <MenuButton name={"logout"} onClick={logoutHandler}>
+                로그아웃
+              </MenuButton>
+            </>
+          ) : (
+            <>
+              <MenuButton
+                onClick={() => {
+                  navigate("/login");
+                  toggleMenuClose();
+                  toggleWriteMenuClose();
+                  toggleProfileMenuClose();
+                }}
+              >
+                로그인
+              </MenuButton>
+              <MenuButton
+                onClick={() => {
+                  navigate("/integratedsignup");
+                  toggleMenuClose();
+                  toggleWriteMenuClose();
+                  toggleProfileMenuClose();
+                }}
+              >
+                회원가입
+              </MenuButton>
+            </>
+          )}
         </ToggleMenu>
       )}
       {feedModalOpen && (
@@ -211,8 +356,8 @@ function Header() {
 const ToggleMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 0;
-  background-color: black;
+  right: 0px;
+  background-color: white;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -222,25 +367,34 @@ const ToggleMenu = styled.div`
 const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 100%;
-  right: 170px;
-  background-color: black;
+  right: 75px;
+  background-color: white;
   padding: 10px;
   display: flex;
   flex-direction: column;
   z-index: 100;
   @media (max-width: 768px) {
-    top: 100px;
+    top: 105px;
     right: 80px;
   }
 `;
+
+const CategoryBox = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-left: 20px;
+  @media (max-width: 768px) {
+    gap: 0;
+  }
+`;
+
 const MenuButton = styled.button`
   display: block;
   padding: 8px;
   border: none;
   background: none;
-  color: white;
+  color: black;
   cursor: pointer;
-
   &:hover {
     opacity: 40%;
   }
@@ -249,41 +403,94 @@ const MenuButton = styled.button`
 const MenuIcon = styled.span`
   font-size: 20px;
 `;
+const LeftMenu = styled.div`
+  display: flex;
+`;
+
+const HeaderTitle = styled.p`
+  display: flex;
+  font-size: 25px;
+  font-weight: 600;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 20px;
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  gap: 20px;
+`;
 
 const HeaderStyles = styled.div`
   width: 100%;
-  background: black;
+  background: white;
   height: 50px;
   display: flex;
   align-items: center;
-  padding-left: 20px;
-  color: white;
+  padding: 0 100px;
   font-weight: 600;
   position: fixed;
   top: 0;
   left: 0;
   top: 0;
   left: 0;
-`;
-
-const HeaderTitle = styled.p`
-  font-size: 25px;
-  font-weight: 600;
-  cursor: pointer;
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-left: auto;
-  margin-right: 30px;
+  z-index: 10;
+  justify-content: space-between;
+  box-shadow: 0px 0.1px 5px gray;
+  @media (max-width: 768px) {
+    padding: 0 50px 0 80px;
+  }
 `;
 
 const HeaderButton = styled.button`
   padding: 8px;
+  gap: 10px;
   cursor: pointer;
   border: none;
   background: none;
-  color: white;
+  align-items: center;
+  color: black;
+  display: flex;
+  @media (max-width: 768px) {
+    width: 56px;
+  }
 `;
+
+const ProfileImg = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 70%;
+  object-fit: cover;
+  flex-shrink: 0;
+  @media (max-width: 768px) {
+    width: 22px;
+    height: 22px;
+  }
+`;
+
+const ToggleProfileMenu = styled.div`
+  position: absolute;
+  top: 50px;
+  right: 150px;
+  background-color: white;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  @media (max-width: 768px) {
+    top: 135px;
+    right: 120px;
+  }
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ProfileName = styled.div`
+  margin-left: 8px;
+  font-size: 15px;
+`;
+
 export default Header;

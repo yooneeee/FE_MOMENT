@@ -17,7 +17,7 @@
 
 .create-board-modal>section {
     width: 90%;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     border-radius: 0.3rem;
     background-color: #fff;
@@ -98,13 +98,13 @@
     min-width: 480px;
     min-height: 700px;
     padding: 20px;
-    color: black
+    color: black;
 }
 
 .btn-upload {
     width: 150px;
     height: 30px;
-    background: #1E90FF;
+    background: #483767;
     border: none;
     border-radius: 10px;
     font-weight: 500;
@@ -115,7 +115,7 @@
     color: white;
 
     &:hover {
-        background: rgb(77, 77, 77);
+        background: #5f5374;
         color: #fff;
     }
 }
@@ -126,6 +126,7 @@
 
 .imgContainer {
     width: 720px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -140,13 +141,14 @@
 
 .headerTitle {
     padding: 5px;
-    color: black;
+    margin-left: 6px;
 }
 
 .saveButton {
     padding: 5px;
     background-color: transparent;
     font-weight: 600;
+    margin-left: auto;
 }
 
 .profileBox {
@@ -183,23 +185,42 @@
 }
 
 .titleInput::placeholder {
-    font-weight: 900;
+    font-weight: 600;
     color: #a9a9a9;
 }
 
 .contentInput {
     margin-left: 5px;
     width: 98%;
-    height: 50%;
+    height: 7%;
     padding: 10px;
     border-radius: 5px;
-    font-size: 17px;
+    font-size: 21px;
     font-weight: 500;
     resize: none;
     border: none;
     outline: none;
+    margin-bottom: 10px;
 }
 
 .contentInput::placeholder {
     color: #a9a9a9;
+}
+
+.headerRightBox {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.close {
+    margin-top: 3px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
 }

@@ -1,94 +1,117 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { styled } from "styled-components";
-import FeedDetail from "../components/FeedDetail";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import "../css/App.css";
+import { getFeedAxios } from "../apis/feed/getFeedAxios";
+import { useInfiniteQuery } from "react-query";
+import LoadingSpinner from "../components/LoadingSpinner";
+import FeedCard from "../components/FeedCard";
+import FeedDetail from "../components/FeedDetail";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { useInView } from "react-intersection-observer";
 
 function Feed() {
-  const navigate = useNavigate();
-  const [feedDetailOpen, setFeedDetailOpen] = useState(false);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  // 모달 제어
+  const [feedDetailOpen, setFeedDetailOpen] = useState([]);
 
-  const openFeedDetail = () => {
-    setFeedDetailOpen(true);
+  const openFeedDetail = (photoId) => {
+    if (isLoggedIn) {
+      setFeedDetailOpen((prevOpen) => [...prevOpen, photoId]);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "회원 전용 서비스!",
+        text: `로그인이 필요한 서비스입니다🙏`,
+        confirmButtonText: "확인",
+      });
+    }
   };
 
-  const closeFeedDetail = () => {
-    setFeedDetailOpen(false);
+  const closeFeedDetail = (photoId) => {
+    setFeedDetailOpen((prevOpen) => prevOpen.filter((id) => id !== photoId));
   };
+
+  const { isLoading, isError, data, fetchNextPage } = useInfiniteQuery(
+    "getFeedAxios",
+    getFeedAxios,
+    {
+      getNextPageParam: (lastPage) => {
+        if (lastPage.currentPage == lastPage.totalPages) {
+          return;
+        } else {
+          return lastPage.currentPage + 1;
+        }
+      },
+    }
+  );
+
+  const [bottomObserverRef, bottomInView] = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    if (bottomInView) {
+      fetchNextPage();
+    }
+  }, [bottomInView, fetchNextPage]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return <h1>오류가 발생하였습니다...!</h1>;
+  }
+
+  console.log(data);
 
   return (
-    <FeedContainer>
-      <Cards>
-        <CardsImg
-          src="img/profile_1.jpeg"
-          onClick={() => {
-            openFeedDetail();
-          }}
-        />
-        {feedDetailOpen && (
-          <FeedDetail open={openFeedDetail} close={closeFeedDetail} />
-        )}
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_2.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_3.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_4.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_5.png" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_6.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_7.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_8.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_9.jpg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_10.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_11.webp" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_12.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_13.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_14.jpeg" />
-      </Cards>
-      <Cards>
-        <CardsImg src="img/profile_15.jpeg" />
-      </Cards>
-    </FeedContainer>
+    <>
+      <FeedContainer>
+        {data.pages
+          .flatMap((page) => page.photoList)
+          .map((item) => {
+            const isOpen = feedDetailOpen.includes(item.photoId);
+            return (
+              <>
+                <FeedCard
+                  key={item.photoId}
+                  data={item}
+                  onClick={() => {
+                    openFeedDetail(item.photoId);
+                  }}
+                />
+                {isOpen && (
+                  <FeedDetail
+                    open={() => openFeedDetail(item.photoId)}
+                    close={() => closeFeedDetail(item.photoId)}
+                    photoId={item.photoId}
+                  />
+                )}
+              </>
+            );
+          })}
+        <div ref={bottomObserverRef}></div>
+      </FeedContainer>
+    </>
   );
 }
 
 export default Feed;
-
 const FeedContainer = styled.div`
-  width: 70%;
-  background: #eee;
-  margin: auto;
-  height: auto;
+  padding: 20px 10px 20px 10px;
+  margin: auto 100px;
   display: flex;
   flex-wrap: wrap;
+  gap: 60px;
+  /* background-color: green; */
 `;
 
 const Cards = styled.div`
-  width: 33.3%;
+  width: 24%;
   background: black;
+  margin: 5px;
 `;
 
 const CardsImg = styled.div`
@@ -101,3 +124,5 @@ const CardsImg = styled.div`
   background-position: center;
   cursor: pointer;
 `;
+
+//////////////////////////////////////

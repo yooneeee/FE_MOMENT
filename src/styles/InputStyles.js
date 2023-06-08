@@ -1,6 +1,7 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 export const InputWrap = styled.div`
+  width: 100%;
   display: flex;
   border-radius: 8px;
   padding: 15px;

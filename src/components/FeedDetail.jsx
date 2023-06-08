@@ -2,11 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import "../css/FeedDetailModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
+import { feedDetailAxios } from "../apis/feed/feedDetailAxios";
+import { useQuery, useQueryClient } from "react-query";
+import { AiOutlineClose } from "react-icons/ai";
+import { useMutation } from "react-query";
+import heartAxios from "../apis/feed/heartAxios";
+import HeartButton from "./HeartButton";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const FeedDetail = (props) => {
-  const { open, close } = props;
-  const [file, setFile] = useState("");
+  const { open, close, photoId } = props;
   const modalRef = useRef(null);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // 모달창 바깥을 눌렀을 때 모달 close
   const handleOutsideClick = (e) => {
@@ -26,40 +35,93 @@ const FeedDetail = (props) => {
     };
   }, []);
 
+  // 피드 데이터 받아오기
+  const { isError, isLoading, data } = useQuery(
+    ["feedDetailAxios", feedDetailAxios],
+    () => feedDetailAxios(photoId)
+  );
+
+  // 좋아요 버튼
+  const likeButtonMutation = useMutation(heartAxios, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("feedDetailAxios");
+      queryClient.invalidateQueries("getFeedAxios");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const likeButtonHandler = () => {
+    likeButtonMutation.mutate(photoId);
+  };
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (isError) {
+    return <h1>오류가 발생하였습니다...!</h1>;
+  }
+
   return (
     <div className={open ? "openModal feed-datail-modal" : "feed-datail-modal"}>
       {open ? (
         <section ref={modalRef}>
-          <header>
+          {/* <header>
             <p className="headerTitle">피드</p>
-            <button className="saveButton">저장하기</button>
-          </header>
-
+            <button className="close" onClick={close}>
+              <AiOutlineClose />
+            </button>
+          </header> */}
           <div className="container">
             <main className="main-body">
               <div className="imgContainer">
-                <img src="img/profile_12.jpeg" className="feedDetailImg" />
+                <img src={data.photoUrl} className="feedDetailImg" />
               </div>
             </main>
 
             <div className="inputSection">
-              <div className="profileBox">
-                <img src="img/monkey_test.jpeg" className="profileImg" />
+              <div className="closeButton">
+                <button className="close" onClick={close}>
+                  <AiOutlineClose />
+                </button>
+              </div>
+              <div className="profileContainer">
+                <img
+                  src={data.profileUrl}
+                  className="profileImg"
+                  onClick={() => {
+                    navigate(`/page/${data.hostId}`);
+                  }}
+                />
                 <div>
-                  <p className="position">Photo</p>
-                  <p>Jun</p>
+                  <p className="position">{data.role}</p>
+                  <p>{data.nickName}</p>
+                </div>
+
+                <div className="loveButtonBox">
+                  <HeartButton
+                    like={data.checkLove}
+                    onClick={likeButtonHandler}
+                  />
+                  <div>{data.photoLoveCnt}</div>
                 </div>
               </div>
-              <textarea
-                className="contentInput"
-                placeholder="문구 입력..."
-              ></textarea>
+
+              <ContentArea>
+                <Content>
+                  {data.contents === "undefined" ? null : data.contents}
+                </Content>
+              </ContentArea>
+
+              <HashTagContainer>
+                {data.tag_photoList.map((item) => {
+                  return <HashTag>{item}</HashTag>;
+                })}
+              </HashTagContainer>
             </div>
           </div>
-
-          <button className="close" onClick={close}>
-            X
-          </button>
         </section>
       ) : null}
     </div>
@@ -67,3 +129,34 @@ const FeedDetail = (props) => {
 };
 
 export default FeedDetail;
+
+const HashTagContainer = styled.div`
+  margin-top: 20px;
+  padding: 10px 0 10px 0;
+  display: flex;
+  gap: 5px;
+  margin-left: 5px;
+`;
+
+const HashTag = styled.div`
+  background-color: #483767;
+  color: white;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 40px;
+`;
+
+const ContentArea = styled.div`
+  margin: 20px 10px 10px 10px;
+  width: 300px;
+  font-size: 18px;
+  font-weight: 500;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+`;
+
+const Content = styled.p`
+  width: 100%;
+  white-space: pre-wrap; /* Add this line */
+`;

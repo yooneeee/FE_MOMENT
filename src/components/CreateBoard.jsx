@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import "../css/CreateBoardModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
-import { styled } from "styled-components";
+import styled from "styled-components";
+import { useInput } from "../hooks/useInput";
+import { createBoardAxios } from "../apis/board/createBoard";
+import { useMutation, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { AiOutlineClose } from "react-icons/ai";
+import UserDataComponent from "./UserDataComponent";
+import Swal from "sweetalert2";
 
 const CreateBoard = (props) => {
   // 해시태그 기능
@@ -37,6 +44,10 @@ const CreateBoard = (props) => {
 
     if (hashTags.length >= 3) return;
 
+    if (!newHashTag.startsWith("#")) {
+      newHashTag = `#${newHashTag}`;
+    }
+
     setHashTags((prevHashTags) => {
       return [...new Set([...prevHashTags, newHashTag])];
     });
@@ -66,10 +77,18 @@ const CreateBoard = (props) => {
 
   /////////////////////////////////////////////////////////////
   const { open, close } = props;
-  const [file, setFile] = useState("");
+  const modalRef = useRef(null);
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const modalRef = useRef(null);
+  const [title, onChangeTitleHandler] = useInput("");
+  const [content, onChangeContentHandler] = useInput("");
+  const [location, onChangeLocationHandler] = useInput("");
+  const [pay, onChangePayHandler] = useInput("");
+  const [apply, onChangeApplyHandler] = useInput("");
+  const [deadLine, onChangeDeadLineHandler] = useInput("");
+  const loginUserData = UserDataComponent(); // 나의 유저 데이터 받아오는 코드
+  const queryClient = useQueryClient();
 
   // 이미지 미리보기
   const handleFileChange = (e) => {
@@ -105,16 +124,75 @@ const CreateBoard = (props) => {
     };
   }, []);
 
+  // 서버 통신
+  const createBoardMutation = useMutation(createBoardAxios, {
+    onSuccess: () => {
+      Swal.fire({
+        icon: "success",
+        title: "게시물 생성 완료!",
+        text: `게시글 생성이 완료됐습니다✨`,
+        confirmButtonText: "확인",
+      });
+      queryClient.invalidateQueries("getBoardAxios");
+      close();
+      navigate("/board");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  // 저장하기 버튼 클릭
+  const saveButtonHandler = () => {
+    if (!selectedFile || !location || !pay || !apply || !deadLine || !title) {
+      Swal.fire({
+        icon: "error",
+        title: "게시물 생성 실패!",
+        text: `모든 내용을 입력해주세요🙏`,
+        confirmButtonText: "확인",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+
+    const boardRequestDto = {
+      title,
+      content,
+      location,
+      pay,
+      apply,
+      deadLine,
+      boardHashTag: hashTags,
+    };
+
+    formData.append(
+      "boardRequestDto",
+      new Blob([JSON.stringify(boardRequestDto)], { type: "application/json" })
+    );
+
+    formData.append("boardImg", selectedFile);
+
+    createBoardMutation.mutate(formData);
+  };
+
   return (
     <div
       className={open ? "openModal create-board-modal" : "create-board-modal"}
     >
       {open ? (
         <section ref={modalRef}>
-          <header>
-            <p className="headerTitle">새 게시글 만들기</p>
-            <button className="saveButton">저장하기</button>
-          </header>
+          <div className="header">
+            <div className="headerTitle">새 게시글 만들기</div>
+            <div className="headerRightBox">
+              <button className="saveButton" onClick={saveButtonHandler}>
+                저장하기
+              </button>
+              <button className="close" onClick={close}>
+                <AiOutlineClose />
+              </button>
+            </div>
+          </div>
 
           <div className="container">
             <main className="main-body">
@@ -141,23 +219,56 @@ const CreateBoard = (props) => {
 
             <div className="inputSection">
               <div className="profileBox">
-                <img src="img/monkey_test.jpeg" className="profileImg" />
+                <img src={loginUserData.profileImg} className="profileImg" />
                 <div>
-                  <p className="position">Photo</p>
-                  <p>Jun</p>
+                  <p className="position">{loginUserData.role}</p>
+                  <p>{loginUserData.nickName}</p>
                 </div>
               </div>
-              <textarea
-                className="titleInput"
-                placeholder="제목 입력..."
-              ></textarea>
-              <textarea
-                className="contentInput"
-                placeholder="문구 입력..."
-              ></textarea>
+
+              <InputTitle>제목</InputTitle>
+              <ContentInput
+                placeholder="제목을 입력해주세요"
+                value={title}
+                onChange={onChangeTitleHandler}
+              ></ContentInput>
+
+              <InputTitle>내용</InputTitle>
+              <ContentInput
+                placeholder="내용을 입력해주세요"
+                value={content}
+                onChange={onChangeContentHandler}
+              ></ContentInput>
+              <InputTitle>촬영 장소</InputTitle>
+              <ContentInput
+                placeholder="장소를 입력해주세요"
+                value={location}
+                onChange={onChangeLocationHandler}
+              />
+
+              <InputTitle>페이</InputTitle>
+              <ContentInput
+                placeholder="페이 조건을 입력해주세요"
+                value={pay}
+                onChange={onChangePayHandler}
+              />
+
+              <InputTitle>지원 방법</InputTitle>
+              <ContentInput
+                placeholder="지원 방법을 입력해주세요"
+                value={apply}
+                onChange={onChangeApplyHandler}
+              />
+
+              <InputTitle>모집 마감일</InputTitle>
+              <ContentInput
+                type="date"
+                value={deadLine}
+                onChange={onChangeDeadLineHandler}
+              />
 
               <HashTageContainer>
-                <InputTitle>해시태그</InputTitle>
+                <HashTagInputTitle>해시태그</HashTagInputTitle>
                 <HashTag>
                   {hashTags.map((hashTag) => (
                     <Tag key={hashTag} onClick={() => removeHashTag(hashTag)}>
@@ -177,9 +288,6 @@ const CreateBoard = (props) => {
               </HashTageContainer>
             </div>
           </div>
-          <button className="close" onClick={close}>
-            X
-          </button>
         </section>
       ) : null}
     </div>
@@ -189,7 +297,8 @@ const CreateBoard = (props) => {
 export default CreateBoard;
 
 const HashTageContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 30px;
+  margin-left: 5px;
 `;
 
 const HashTag = styled.div`
@@ -206,18 +315,13 @@ const HashTag = styled.div`
 const Tag = styled.div`
   display: inline-flex;
   flex-direction: row;
-  background: #1e90ff;
+  background: #483767;
   color: white;
   padding: 5px;
   border-radius: 5px;
   cursor: pointer;
-
-  &::before {
-    content: "#";
-  }
-
   &:hover {
-    background: #4a88db;
+    background: #5f5374;
   }
 `;
 
@@ -230,6 +334,19 @@ const HashTagInput = styled.input`
 `;
 
 const InputTitle = styled.div`
+  margin: 20px 0px 0px 15px;
+`;
+
+const HashTagInputTitle = styled.div`
   padding-bottom: 10px;
   padding-left: 6px;
+`;
+
+const ContentInput = styled.input`
+  height: 30px;
+  width: 94%;
+  margin: 6px 0px 0px 15px;
+  border: none;
+  outline: none;
+  font-size: 15px;
 `;
