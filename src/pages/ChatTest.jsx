@@ -37,10 +37,10 @@ function ChatTest() {
   }, []);
 
   /* 스크롤 */
-  useEffect(() => {
-    const scroll = scrollRef.current;
-    scroll.scrollTop = scroll.scrollHeight;
-  }, [chatList]);
+  //   useEffect(() => {
+  //     const scroll = scrollRef.current;
+  //     scroll.scrollTop = scroll.scrollHeight;
+  //   }, [chatList]);
 
   /* STOMP 연결 */
   const connect = () => {
