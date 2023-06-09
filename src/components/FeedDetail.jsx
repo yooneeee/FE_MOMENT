@@ -10,6 +10,7 @@ import heartAxios from "../apis/feed/heartAxios";
 import HeartButton from "./HeartButton";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { mypage } from "../apis/mypage/mypage";
 
 const FeedDetail = (props) => {
   const { open, close, photoId } = props;
@@ -46,6 +47,7 @@ const FeedDetail = (props) => {
     onSuccess: () => {
       queryClient.invalidateQueries("feedDetailAxios");
       queryClient.invalidateQueries("getFeedAxios");
+      queryClient.invalidateQueries("mypage", mypage);
     },
     onError: (error) => {
       console.log(error);
