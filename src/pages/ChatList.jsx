@@ -9,8 +9,7 @@ import Swal from "sweetalert2";
 
 function ChatList() {
   const { isError, isLoading, data } = useQuery("ChattingList", ChattingList);
-  console.log("채팅목록", data);
-  console.log("채팅", data.length);
+  //   console.log("채팅목록", data);
 
   if (isLoading) {
     return <LoadingSpinner />;
