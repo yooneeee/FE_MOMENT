@@ -101,29 +101,12 @@ function Feed() {
 
 export default Feed;
 const FeedContainer = styled.div`
-  padding: 20px 10px 20px 10px;
+  padding: 30px 0 30px 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 50px;
   margin: auto 100px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 60px;
-  /* background-color: green; */
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
-
-const Cards = styled.div`
-  width: 24%;
-  background: black;
-  margin: 5px;
-`;
-
-const CardsImg = styled.div`
-  width: 100%;
-  height: 0;
-  padding-bottom: 100%;
-  background-image: url(${(props) => props.src});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-`;
-
-//////////////////////////////////////
