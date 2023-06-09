@@ -159,12 +159,6 @@ const Work = styled.h2`
   margin-bottom: 1rem;
 `;
 
-const WorkBoard = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
-  margin: 100px 0 1rem 0;
-`;
-
 const WorkList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

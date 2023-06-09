@@ -207,18 +207,3 @@ const ConfirmButton = styled.button`
     background-color: ${(props) => (props.disabled ? "#ccc" : "#1a1a1a")};
   }
 `;
-
-const CancelButton = styled.button`
-  padding: 8px 16px;
-  font-size: 15px;
-  font-weight: bold;
-  background-color: #ccc;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 8px;
-  &:hover {
-    background-color: #999;
-  }
-`;

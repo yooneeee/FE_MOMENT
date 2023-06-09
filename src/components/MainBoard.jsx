@@ -13,7 +13,7 @@ function MainBoard({ board }) {
   }
   const date = new Date(board.createdTime);
   const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-  const formattedDate = date.toLocaleDateString(undefined, options); // yyyy.MM.dd 형식으로 포맷팅
+  const formattedDate = date.toLocaleDateString(undefined, options);
 
   return (
     <CardDesign
@@ -87,7 +87,6 @@ const UserInfo = styled.div`
   align-items: center;
   margin-bottom: 20px;
   font-size: 16px;
-  font-weight: bold;
 `;
 
 const FlexWrap = styled.div`
@@ -113,7 +112,9 @@ const UserProfile = styled.img`
   flex-shrink: 0;
   margin-right: 10px;
 `;
-const UserName = styled.span``;
+const UserName = styled.span`
+  font-weight: bold;
+`;
 
 const UserPosition = styled.div`
   display: flex;

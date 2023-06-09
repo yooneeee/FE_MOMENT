@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "../css/FeedDetailModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
@@ -77,7 +77,11 @@ const FeedDetail = (props) => {
           <div className="container">
             <main className="main-body">
               <div className="imgContainer">
-                <img src={data.photoUrl} className="feedDetailImg" />
+                <img
+                  src={data.photoUrl}
+                  className="feedDetailImg"
+                  alt="피드사진"
+                />
               </div>
             </main>
 
@@ -94,6 +98,7 @@ const FeedDetail = (props) => {
                   onClick={() => {
                     navigate(`/page/${data.hostId}`);
                   }}
+                  alt="프로필사진"
                 />
                 <div>
                   <p className="position">{data.role}</p>
