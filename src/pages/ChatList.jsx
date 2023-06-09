@@ -5,27 +5,35 @@ import { ChattingList } from "../apis/mypage/chatting";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
+import Swal from "sweetalert2";
 
 function ChatList() {
   const { isError, isLoading, data } = useQuery("ChattingList", ChattingList);
-  console.log("채팅목록", data);
-  //   console.log("마지막채팅", data.lastChat);
+  //   console.log("채팅목록", data);
 
   if (isLoading) {
-    // return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
     return <LoadingSpinner />;
   }
 
   if (isError) {
-    console.log("오류", isError);
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
+  //   if (!data) {
+  //     return <h1>채팅목록이 없습니다.</h1>;
+  //   }
+  //   if (data.length === 0) {
+  //     Swal.fire({
+  //       icon: "info",
+  //       title: "채팅목록이 없습니다.",
+  //       text: "새로운 채팅을 시작해보세요!",
+  //     });
+  //   }
 
   return (
     <>
       <MyPageTabs pageName={"채팅목록"} />
       <ChatListContainer>
-        <div>전체 채팅</div>
+        {/* <div>전체 채팅</div> */}
         {data.map((item) => (
           <Link to={`/chattest/${item.receiverId}`} key={item.chatRoomId}>
             <List>
