@@ -9,11 +9,24 @@ import FeedDetail from "../components/FeedDetail";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useInView } from "react-intersection-observer";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 function Feed() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
+  const [showButton, setShowButton] = useState(false);
+
+  const ShowButtonClick = () => {
+    const { scrollY } = window;
+    scrollY > 200 ? setShowButton(true) : setShowButton(false);
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", ShowButtonClick);
+    return () => {
+      window.removeEventListener("scroll", ShowButtonClick);
+    };
+  }, []);
 
   const openFeedDetail = (photoId) => {
     if (isLoggedIn) {
@@ -65,8 +78,6 @@ function Feed() {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
 
-  // console.log(data);
-
   return (
     <>
       <FeedContainer>
@@ -95,6 +106,7 @@ function Feed() {
           })}
         <div ref={bottomObserverRef}></div>
       </FeedContainer>
+      {showButton && <ScrollToTopButton />}
     </>
   );
 }
