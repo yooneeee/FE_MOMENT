@@ -10,8 +10,10 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useInView } from "react-intersection-observer";
 import ScrollToTopButton from "../components/ScrollToTopButton";
+import { useNavigate } from "react-router-dom";
 
 function Feed() {
+  const navigate = useNavigate;
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
@@ -75,7 +77,7 @@ function Feed() {
   }
 
   if (isError) {
-    return <h1>오류가 발생하였습니다...!</h1>;
+    return <h3>에러가 발생하였습니다.</h3>;
   }
 
   return (
@@ -112,6 +114,7 @@ function Feed() {
 }
 
 export default Feed;
+
 const FeedContainer = styled.div`
   padding: 30px 0 30px 0;
   display: grid;

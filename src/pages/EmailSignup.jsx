@@ -259,7 +259,6 @@ function EmailSignup() {
       "signup",
       new Blob([JSON.stringify(signup)], { type: "application/json" })
     );
-    console.log(isChecked);
 
     if (signupActive) {
       if (!isChecked) {
@@ -464,6 +463,7 @@ function EmailSignup() {
         </CheckContainer>
         {checkModal && <TermsofService chechModalClose={chechModalClose} />}
         <BottomButtonWrap>
+          <BottomButton onClick={backButtonHandler}>취소</BottomButton>
           <BottomButton
             type="button"
             onClick={signupButtonHandler}
@@ -471,7 +471,6 @@ function EmailSignup() {
           >
             회원 가입 완료
           </BottomButton>
-          <BottomButton onClick={backButtonHandler}>취소</BottomButton>
         </BottomButtonWrap>
       </CenteredContent>
     </Container>

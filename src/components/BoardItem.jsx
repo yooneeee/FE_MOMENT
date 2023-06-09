@@ -132,7 +132,7 @@ const HashTagContainer = styled.div`
 const HashTag = styled.div`
   background-color: #514073;
   color: white;
-  border: 1px solid black;
+  border: none;
   border-radius: 50px;
   padding: 7px;
 `;
