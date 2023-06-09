@@ -1,203 +1,200 @@
 .feed-datail-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 99;
-    background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  cursor: default;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .feed-datail-modal button {
-    outline: none;
-    cursor: pointer;
-    border: 0;
+  outline: none;
+  cursor: pointer;
+  border: 0;
 }
 
-.feed-datail-modal>section {
-    width: 90%;
-    max-width: 1000px;
-    margin: 0 auto;
-    border-radius: 0.3rem;
-    background-color: #fff;
-    animation: modal-show 0.3s;
-    overflow: hidden;
+.feed-datail-modal > section {
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-radius: 0.3rem;
+  background-color: #fff;
+  animation: modal-show 0.3s;
+  overflow: hidden;
 }
 
-
-.feed-datail-modal>section>header {
-    position: relative;
-    padding: 16px;
-    background-color: transparent;
-    font-weight: 700;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #dee2e6;
-    ;
+.feed-datail-modal > section > header {
+  position: relative;
+  padding: 16px;
+  background-color: transparent;
+  font-weight: 700;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #dee2e6;
 }
 
-
-.feed-datail-modal>section>button {
-    padding: 6px 12px;
-    color: #fff;
-    background-color: transparent;
-    border-radius: 5px;
-    font-size: 20px;
-    font-weight: 800;
-    position: absolute;
-    top: 28px;
-    right: 28px;
+.feed-datail-modal > section > button {
+  padding: 6px 12px;
+  color: #fff;
+  background-color: transparent;
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: 800;
+  position: absolute;
+  top: 28px;
+  right: 28px;
 }
 
 .feed-datail-modal.openModal {
-    display: flex;
-    align-items: center;
-    animation: modal-bg-show 0.3s;
+  display: flex;
+  align-items: center;
+  animation: modal-bg-show 0.3s;
 }
 
 @keyframes modal-show {
-    from {
-        opacity: 0;
-        margin-top: -50px;
-    }
+  from {
+    opacity: 0;
+    margin-top: -50px;
+  }
 
-    to {
-        opacity: 1;
-        margin-top: 0;
-    }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
 }
 
 @keyframes modal-bg-show {
-    from {
-        opacity: 0;
-    }
+  from {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 1;
-    }
+  to {
+    opacity: 1;
+  }
 }
 
 .container {
-    display: flex;
+  display: flex;
 }
 
 /* 사진 들어가는 부분 */
 .main-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 700px;
-    max-height: 700px;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 700px;
+  max-height: 700px;
+  overflow: hidden;
 }
 
 /* 인풋 들어가는 부분 */
 .inputSection {
-    min-width: 350px;
-    min-height: 700px;
-    padding: 10px;
+  min-width: 350px;
+  min-height: 700px;
+  padding: 10px;
 }
 
 .btn-upload {
-    width: 150px;
-    height: 30px;
-    background: #483767;
-    border: none;
-    border-radius: 10px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
+  width: 150px;
+  height: 30px;
+  background: #483767;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
 
-    &:hover {
-        background: #5f5374;
-        color: #fff;
-    }
+  &:hover {
+    background: #5f5374;
+    color: #fff;
+  }
 }
 
 #file {
-    display: none;
+  display: none;
 }
 
 .imgContainer {
-    width: 720px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 720px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .preview-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .headerTitle {
-    padding: 5px;
-    color: black;
+  padding: 5px;
+  color: black;
 }
 
 .saveButton {
-    padding: 5px;
-    background-color: transparent;
-    font-weight: 600;
+  padding: 5px;
+  background-color: transparent;
+  font-weight: 600;
 }
 
 .profileContainer {
-    display: flex;
-    align-items: center;
-    color: black;
-    justify-content: space-between;
-    border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  color: black;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
 }
 
 .position {
-    color: #787878;
-    margin-bottom: 5px;
+  color: #787878;
+  margin-bottom: 5px;
 }
 
 .profileImg {
-    width: 80px;
-    height: 80px;
-    border-radius: 70%;
-    object-fit: cover;
-    padding: 15px;
-    flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 70%;
+  object-fit: cover;
+  padding: 15px;
+  flex-shrink: 0;
 }
 
 .feedDetailImg {
-    width: 100%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .closeButton {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0px;
 }
 
 .close {
-    background-color: transparent;
-    font-weight: 700;
-    font-size: 16px;
+  background-color: transparent;
+  font-weight: 700;
+  font-size: 16px;
 }
 
 .loveButtonBox {
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    align-items: center;
-    border: 1px solid #eee;
-    padding: 10px;
-    border-radius: 10px;
-    margin-left: auto;
-    margin-right: 5px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  align-items: center;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: 5px;
 }

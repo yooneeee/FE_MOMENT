@@ -304,7 +304,7 @@ const WorkList = styled.div`
   margin-top: 16px;
 
   @media (min-width: 1200px) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 
   @media (max-width: 768px) {

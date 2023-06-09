@@ -9,6 +9,7 @@ import FeedDetail from "../components/FeedDetail";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useInView } from "react-intersection-observer";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 import { useNavigate } from "react-router-dom";
 
 function Feed() {
@@ -16,6 +17,18 @@ function Feed() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
+  const [showButton, setShowButton] = useState(false);
+
+  const ShowButtonClick = () => {
+    const { scrollY } = window;
+    scrollY > 200 ? setShowButton(true) : setShowButton(false);
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", ShowButtonClick);
+    return () => {
+      window.removeEventListener("scroll", ShowButtonClick);
+    };
+  }, []);
 
   const openFeedDetail = (photoId) => {
     if (isLoggedIn) {
@@ -95,6 +108,7 @@ function Feed() {
           })}
         <div ref={bottomObserverRef}></div>
       </FeedContainer>
+      {showButton && <ScrollToTopButton />}
     </>
   );
 }
@@ -103,9 +117,11 @@ export default Feed;
 
 const FeedContainer = styled.div`
   padding: 30px 0 30px 0;
-  margin: auto 100px;
   display: grid;
-  gap: 80px;
   grid-template-columns: repeat(4, 1fr);
-  /* background-color: green; */
+  gap: 50px;
+  margin: auto 100px;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;

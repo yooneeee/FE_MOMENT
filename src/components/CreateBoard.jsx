@@ -219,7 +219,11 @@ const CreateBoard = (props) => {
 
             <div className="inputSection">
               <div className="profileBox">
-                <img src={loginUserData.profileImg} className="profileImg" />
+                <img
+                  src={loginUserData.profileImg}
+                  className="profileImg"
+                  alt="프로필이미지"
+                />
                 <div>
                   <p className="position">{loginUserData.role}</p>
                   <p>{loginUserData.nickName}</p>

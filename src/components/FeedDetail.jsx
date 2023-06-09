@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "../css/FeedDetailModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
@@ -10,6 +10,7 @@ import heartAxios from "../apis/feed/heartAxios";
 import HeartButton from "./HeartButton";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { mypage } from "../apis/mypage/mypage";
 
 const FeedDetail = (props) => {
   const { open, close, photoId } = props;
@@ -46,6 +47,7 @@ const FeedDetail = (props) => {
     onSuccess: () => {
       queryClient.invalidateQueries("feedDetailAxios");
       queryClient.invalidateQueries("getFeedAxios");
+      queryClient.invalidateQueries("mypage", mypage);
     },
     onError: (error) => {
       console.log(error);
@@ -71,7 +73,11 @@ const FeedDetail = (props) => {
           <div className="container">
             <main className="main-body">
               <div className="imgContainer">
-                <img src={data.photoUrl} className="feedDetailImg" />
+                <img
+                  src={data.photoUrl}
+                  className="feedDetailImg"
+                  alt="피드사진"
+                />
               </div>
             </main>
 
@@ -88,6 +94,7 @@ const FeedDetail = (props) => {
                   onClick={() => {
                     navigate(`/page/${data.hostId}`);
                   }}
+                  alt="프로필사진"
                 />
                 <div>
                   <p className="position">{data.role}</p>
