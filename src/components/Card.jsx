@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -119,6 +119,7 @@ const Styled_Slide = styled(Slider)`
   z-index: 1;
   .slick-prev,
   .slick-next {
+    display: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,12 +130,20 @@ const Styled_Slide = styled(Slider)`
     transform: translateY(-50%);
     border-radius: 50%;
     font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
   }
   .slick-prev {
     left: 3px;
   }
   .slick-next {
     right: 3px;
+  }
+  &:hover {
+    .slick-prev,
+    .slick-next {
+      opacity: 0.8;
+    }
   }
 `;
 
