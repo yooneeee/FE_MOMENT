@@ -1,36 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { mypage } from "../apis/mypage/mypage";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Chatting } from "../apis/mypage/chatting";
 import { useSelector } from "react-redux";
 
 const MyPageProfile = () => {
   const { hostId } = useParams();
-  // const [isMine, setIsMine] = useState(mine);
-
   const userId = useSelector((state) => state.user.userId);
-  // console.log("호스트1", hostId);
 
   const { isError, isLoading, data } = useQuery(
     ["mypage", hostId],
     () => mypage(hostId),
     {
-      // hostId가 정의되어 있을 때만 데이터 요청
       enabled: hostId !== undefined,
     }
-
-    // useEffect(() => {
-    //   setIsMine(mine);
-    // }, [mine]);
-
-    // console.log("mine", mine);
-    // const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
-    //   mypage(hostId)
   );
-  console.log("데이터1", data);
 
   if (isLoading) {
     return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
@@ -43,39 +29,6 @@ const MyPageProfile = () => {
   if (data) {
     const isMyPage = parseInt(userId) === parseInt(hostId);
     const chatHostId = data.hostId;
-    // console.log("호스트설정아이디", chatHostId);
-    // console.log("유저", userId);
-    // console.log("호스트2", hostId);
-
-    //   return (
-    //     <ProfileSection>
-    //       <ProfilePicture src={data.profileUrl} />
-    //       <ProfileInfo>
-    //         <StFlex>
-    //           <UserRole>{data.role}</UserRole>
-    //           <UserNickname>{data.nickName}</UserNickname>
-    //         </StFlex>
-    //         <StFlex>
-    //           <Post>피드 {data.photoList.length}</Post>
-    //           <span>|</span>
-    //           <Recommend>게시글 {data.boardCnt}</Recommend>
-    //         </StFlex>
-    //         <Post>추천 {data.totalPhotoLoveCnt}</Post>
-    //         <StFlex>
-    //           {isMine && (
-    //             <Link
-    //               to={`/mypageinformation/${hostId}`}
-    //               state={{ checkKakaoId: data.checkKakaoId }}
-    //             >
-    //               <ChatBtn>프로필 편집</ChatBtn>
-    //             </Link>
-    //           )}
-    //         </StFlex>
-    //       </ProfileInfo>
-    //     </ProfileSection>
-    //   );
-    // };
-
     return (
       <ProfileSection>
         <ProfilePicture src={data.profileUrl} />
@@ -123,7 +76,7 @@ const ProfileSection = styled.div`
   border: 1px solid #ddd;
   background-color: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  /* margin-left: -50px; */
+  margin-left: -50px;
   flex-shrink: 0;
   position: fixed;
 
@@ -199,10 +152,4 @@ const StFlex = styled.div`
   align-items: center;
   justify-content: center;
   padding: 10px;
-`;
-
-const StFlex2 = styled(StFlex)`
-  flex-direction: column;
-  margin-top: 20px;
-  gap: 3px;
 `;

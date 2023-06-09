@@ -43,7 +43,12 @@ function MyPageBoard() {
 
   /* 삭제, 수정 버튼 */
   const modifyButton = (e, index) => {
-    alert("수정");
+    Swal.fire({
+      text: "준비중인 서비스입니다! 조금만 기다려주세요🙏",
+      icon: "warning",
+      confirmButtonColor: "#483767",
+      confirmButtonText: "확인",
+    });
     toggleButtonClose(index);
   };
 
@@ -58,21 +63,32 @@ function MyPageBoard() {
         cancelButtonColor: "#c4c4c4",
         confirmButtonText: "삭제",
         cancelButtonText: "취소",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          deleteMutation.mutate(boardId);
-          toggleButtonClose(boardId);
-          Swal.fire({
-            title: "삭제가 완료되었습니다.",
-            icon: "success",
-            confirmButtonColor: "#483767",
-            confirmButtonText: "완료",
-          });
+          try {
+            await deleteMutation.mutateAsync(boardId);
+            toggleButtonClose(boardId);
+            Swal.fire({
+              title: "삭제가 완료되었습니다✨",
+              icon: "success",
+              confirmButtonColor: "#483767",
+              confirmButtonText: "완료",
+            });
+          } catch (error) {
+            Swal.fire({
+              title: "삭제 실패!",
+              text: "게시물 삭제 중 오류가 발생했습니다.",
+              icon: "error",
+              confirmButtonColor: "#483767",
+              confirmButtonText: "확인",
+            });
+          }
         }
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
