@@ -130,7 +130,7 @@ const CreateFeed = (props) => {
       navigate("/feeds");
     },
     onError: (error) => {
-      console.log(error);
+      alert(error);
     },
   });
 

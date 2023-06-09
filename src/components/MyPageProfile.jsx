@@ -30,7 +30,6 @@ const MyPageProfile = () => {
     // const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     //   mypage(hostId)
   );
-  console.log("데이터1", data);
 
   if (isLoading) {
     return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;

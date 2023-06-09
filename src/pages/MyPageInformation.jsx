@@ -18,7 +18,6 @@ const MyPageInformation = () => {
   const location = useLocation();
   const checkKakaoId = location.state.checkKakaoId;
   const [image, setImage] = useState(loginUserData.profileImg);
-  // console.log(image);
   const fileInput = useRef();
 
   const [newNick, setNewNick] = useState("");
@@ -32,7 +31,6 @@ const MyPageInformation = () => {
     // 파일 처리 로직 추가
     // 이미지 업로드 후 이미지 변경 로직
     // setImage(file);
-    console.log("프로필", file);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -87,7 +85,6 @@ const MyPageInformation = () => {
     e.preventDefault();
 
     const file = fileInput.current.files[0];
-    console.log("핸들러", file);
     const formData = new FormData();
 
     const update = {

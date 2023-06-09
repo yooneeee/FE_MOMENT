@@ -138,7 +138,7 @@ const CreateBoard = (props) => {
       navigate("/board");
     },
     onError: (error) => {
-      console.log(error);
+      alert(error);
     },
   });
 
