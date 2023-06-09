@@ -9,11 +9,24 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { useInfiniteQuery } from "react-query";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 function Board() {
   const [activeNavItem, setActiveNavItem] = useState("Model");
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [showButton, setShowButton] = useState(false);
+
+  const ShowButtonClick = () => {
+    const { scrollY } = window;
+    scrollY > 200 ? setShowButton(true) : setShowButton(false);
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", ShowButtonClick);
+    return () => {
+      window.removeEventListener("scroll", ShowButtonClick);
+    };
+  }, []);
 
   const handleNavItemClick = (item) => {
     setActiveNavItem(item);
@@ -105,6 +118,7 @@ function Board() {
 
         <div ref={bottomObserverRef}></div>
       </Content>
+      {showButton && <ScrollToTopButton />}
     </Container>
   );
 }
