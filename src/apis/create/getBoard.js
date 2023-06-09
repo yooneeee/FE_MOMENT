@@ -1,7 +1,6 @@
 import { instance } from "../axios";
 
 const getBoard = async ({ pageParam = 0, activeNavItem }) => {
-  console.log(activeNavItem);
   try {
     const { data } = await instance.get(`/boards?page=${pageParam}&size=`);
     if (activeNavItem === "Model") {

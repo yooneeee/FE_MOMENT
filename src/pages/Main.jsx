@@ -40,7 +40,6 @@ function Main() {
 
   const recommendataion = data.eachRoleUsersList;
   const board = data.boardList;
-  console.log("data", data);
 
   return (
     <>

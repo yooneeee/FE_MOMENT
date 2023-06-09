@@ -22,8 +22,6 @@ function MyPageBoard() {
     mypage(hostId)
   );
 
-  console.log(data);
-
   /* Delete 서버 */
   const deleteMutation = useMutation(mypageBoardDelete, {
     onSuccess: () => {
@@ -113,7 +111,6 @@ function MyPageBoard() {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  console.log("mypageboard", data);
 
   /* 토글버튼 */
   const toggleButtonOpen = (index) => {

@@ -2,9 +2,8 @@ import { instance } from "../axios";
 
 const heartAxios = async (photoId) => {
   try {
-    const response = await instance.post(`/feeds/love/${photoId}`);
-    console.log(response);
-    return response;
+    const { data } = await instance.post(`/feeds/love/${photoId}`);
+    return data;
   } catch (error) {
     throw error;
   }
