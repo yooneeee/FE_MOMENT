@@ -17,7 +17,6 @@ const signupAxios = async (formData) => {
 const sendEmailAxios = async (email) => {
   try {
     const response = await instance.post("/emails/auth", email);
-    console.log(response);
     return response.data;
   } catch (error) {
     throw error.response;

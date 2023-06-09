@@ -10,6 +10,7 @@ import heartAxios from "../apis/feed/heartAxios";
 import HeartButton from "./HeartButton";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { mypage } from "../apis/mypage/mypage";
 
 const FeedDetail = (props) => {
   const { open, close, photoId } = props;
@@ -46,6 +47,7 @@ const FeedDetail = (props) => {
     onSuccess: () => {
       queryClient.invalidateQueries("feedDetailAxios");
       queryClient.invalidateQueries("getFeedAxios");
+      queryClient.invalidateQueries("mypage", mypage);
     },
     onError: (error) => {
       console.log(error);
@@ -68,12 +70,6 @@ const FeedDetail = (props) => {
     <div className={open ? "openModal feed-datail-modal" : "feed-datail-modal"}>
       {open && (
         <section ref={modalRef}>
-          {/* <header>
-            <p className="headerTitle">피드</p>
-            <button className="close" onClick={close}>
-              <AiOutlineClose />
-            </button>
-          </header> */}
           <div className="container">
             <main className="main-body">
               <div className="imgContainer">
@@ -146,7 +142,7 @@ const HashTagContainer = styled.div`
 const HashTag = styled.div`
   background-color: #483767;
   color: white;
-  border: 1px solid black;
+  border: none;
   padding: 10px;
   border-radius: 40px;
 `;

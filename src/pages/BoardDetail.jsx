@@ -46,8 +46,6 @@ function BoardDetail() {
     () => getBoardDetailAxios(params.boardId)
   );
 
-  console.log(data);
-
   if (isLoading) {
     return <LoadingSpinner />;
   }

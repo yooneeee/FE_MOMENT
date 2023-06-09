@@ -129,8 +129,6 @@ function MyPageFeed() {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  console.log("mypagefeed", data);
-  console.log("photo", data.photoList);
 
   /* 토글버튼 */
   const toggleButtonOpen = (index) => {
@@ -184,11 +182,19 @@ function MyPageFeed() {
                     </EditButton>
                     {editButtons[index] && (
                       <ToggleWriteMenu ref={toggleWriteMenuRef}>
-                        <Button onClick={(e) => modifyButton(e, index)}>
+                        <Button
+                          onClick={(e) => {
+                            modifyButton(e, index);
+                            e.stopPropagation();
+                          }}
+                        >
                           수정
                         </Button>
                         <Button
-                          onClick={() => deleteButtonHandler(item.photoId)}
+                          onClick={(e) => {
+                            deleteButtonHandler(item.photoId);
+                            e.stopPropagation();
+                          }}
                         >
                           삭제
                         </Button>
@@ -222,9 +228,11 @@ const ToggleWriteMenu = styled.div`
     left: 5px;
   }
 `;
+
 const ProfileContainer = styled.div`
   width: 400px;
 `;
+
 const EditButton = styled.button`
   position: absolute;
   top: 25px;
@@ -237,6 +245,7 @@ const EditButton = styled.button`
   font-weight: 900;
   padding: 8px;
 `;
+
 const Button = styled.button`
   width: 100px;
   margin-left: 58px;
@@ -295,7 +304,7 @@ const WorkList = styled.div`
   margin-top: 16px;
 
   @media (min-width: 1200px) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 
   @media (max-width: 768px) {

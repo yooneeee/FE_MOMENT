@@ -4,7 +4,6 @@ import { instance } from "../axios";
 const mypage = async (hostId) => {
   try {
     const { data } = await instance.get(`/page/${hostId}`);
-    console.log(data);
     return data;
   } catch (error) {
     throw error;
@@ -18,8 +17,6 @@ const mypageInformationAxios = async ({ hostId, formData }) => {
       "Content-type": "multipart/form-data",
     },
   };
-  // console.log(hostId);
-  // console.log(formData);
 
   try {
     const response = await instance.put(`/page/${hostId}`, formData, config);

@@ -55,7 +55,6 @@ const MyPage = () => {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  console.log(data);
   return (
     <>
       {mine && <MyPageTabs pageName={"전체보기"} />}
