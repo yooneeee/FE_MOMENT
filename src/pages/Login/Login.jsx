@@ -84,6 +84,13 @@ function Login() {
   const loginButtonHandler = () => {
     loginMutation.mutate({ email, password });
   };
+
+  const handleOnkeyPress = (e) => {
+    if (e.key === "Enter") {
+      loginButtonHandler();
+    }
+  };
+
   useEffect(() => {
     loginActiveHandler();
   }, [email, password]);
@@ -122,6 +129,9 @@ function Login() {
             name="email"
             value={email}
             onChange={onChangeEmailHandler}
+            onKeyDown={(e) => {
+              handleOnkeyPress(e);
+            }}
             placeholder="이메일 주소를 입력해주세요"
           />
         </InputWrap>
@@ -132,6 +142,9 @@ function Login() {
             name="password"
             value={password}
             onChange={onChangePasswordHandler}
+            onKeyDown={(e) => {
+              handleOnkeyPress(e);
+            }}
             placeholder="비밀번호를 입력해주세요."
           />
           <span onClick={passwordTypeHandler}>
