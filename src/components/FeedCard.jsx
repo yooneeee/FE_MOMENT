@@ -25,7 +25,7 @@ function FeedCard({ data, onClick, openFeedDetail }) {
   const handleCardClick = () => {
     onClick();
   };
-  const navigate = useNavigate();
+
   return (
     <CardDesign>
       <SliderWrapper>
@@ -37,12 +37,7 @@ function FeedCard({ data, onClick, openFeedDetail }) {
         />
       </SliderWrapper>
       <CardHeader>
-        <ProfileImg
-          src={data.profileImgUrl}
-          onClick={() => {
-            navigate(`/page/${data.hostId}`);
-          }}
-        />
+        <ProfileImg src={data.profileImgUrl} />
         <FlexWrap>
           {/* <UserPositionText>
             {user.totalLoveCnt || user.loveCnt}
