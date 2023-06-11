@@ -10,10 +10,8 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useInView } from "react-intersection-observer";
 import ScrollToTopButton from "../components/ScrollToTopButton";
-import { useNavigate } from "react-router-dom";
 
 function Feed() {
-  const navigate = useNavigate;
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
@@ -122,6 +120,6 @@ const FeedContainer = styled.div`
   gap: 50px;
   margin: auto 100px;
   @media (max-width: 768px) {
-    grid-template-columns: repeat(1, 1fr);
+    gridtemplate-columns: repeat(1, 1fr);
   }
 `;
