@@ -33,7 +33,7 @@ function FeedCard({ data, onClick, openFeedDetail }) {
       });
     }
   };
-  console.log(data);
+
   const handleCardClick = () => {
     onClick();
   };
@@ -82,7 +82,7 @@ const ContentBox = styled.div`
 `;
 
 const HashTagContainer = styled.div`
-  padding: 10px 20px;
+  padding: 10px 17px 20px;
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
@@ -91,7 +91,7 @@ const HashTagContainer = styled.div`
 const HashTag = styled.div`
   background-color: #514073;
   color: white;
-  border: 1px solid black;
+  border: none;
   border-radius: 50px;
   padding: 7px;
   @media (max-width: 1200px) {
@@ -115,7 +115,8 @@ const CardHeader = styled.div`
   display: flex;
   align-items: center;
   margin-top: 10px;
-  padding: 0 20px;
+  /* padding: 0 20px; */
+  padding: 5px 20px 5px 20px;
 `;
 
 const ProfileImg = styled.img`
