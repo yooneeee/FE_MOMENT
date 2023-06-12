@@ -89,10 +89,10 @@ function Login() {
   }, [email, password]);
 
   const enterHandler = (e) => {
-    if (e. key === 'Enter') {
-      loginButtonHandler()
+    if (e.key === "Enter") {
+      loginButtonHandler();
     }
-  }
+  };
 
   const kakaoLoginButtonHandler = () => {
     try {
@@ -138,7 +138,7 @@ function Login() {
             name="password"
             value={password}
             onChange={onChangePasswordHandler}
-            onKeyDown={(e)=>enterHandler(e)}
+            onKeyDown={(e) => enterHandler(e)}
             placeholder="비밀번호를 입력해주세요."
           />
           <span onClick={passwordTypeHandler}>
