@@ -33,7 +33,7 @@ function FeedCard({ data, onClick, openFeedDetail }) {
       });
     }
   };
-
+  console.log(data);
   const handleCardClick = () => {
     onClick();
   };
@@ -72,8 +72,9 @@ function FeedCard({ data, onClick, openFeedDetail }) {
         {data.content === "undefined" ? null : data.content}
       </ContentBox>
       <HashTagContainer>
-        {data.tag_photoList.map((item, index) => {
-          return <HashTag key={index}>{item}</HashTag>;
+        {data.tag_photoList.map((item) => {
+          console.log(item);
+          return <HashTag key={item.tagId}>{item.tag}</HashTag>;
         })}
       </HashTagContainer>
     </CardDesign>
@@ -99,6 +100,12 @@ const HashTag = styled.div`
   border: 1px solid black;
   border-radius: 50px;
   padding: 7px;
+  @media (max-width: 1200px) {
+    font-size: 11px;
+  }
+  @media (max-width: 768px) {
+    font-size: 9px;
+  }
 `;
 
 const CardDesign = styled.div`
@@ -108,17 +115,6 @@ const CardDesign = styled.div`
   width: 100%;
   overflow: hidden;
   box-shadow: rgb(135, 135, 135) 0px 4px 7px;
-  /* @media (min-width: 768px) {
-    width: calc(25% - 20px);
-  }
-
-  @media (min-width: 1024px) {
-    width: calc(25% - 20px);
-  }
-
-  @media (min-width: 1440px) {
-    width: calc(25% - 20px);
-  } */
 `;
 
 const CardHeader = styled.div`
@@ -129,13 +125,17 @@ const CardHeader = styled.div`
 `;
 
 const ProfileImg = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  padding: 10px;
   flex-shrink: 0;
   cursor: pointer;
+  margin-right: 3%;
+  @media (max-width: 768px) {
+    width: 30px;
+    height: 30px;
+  }
 `;
 
 const FlexWrap = styled.div`
@@ -149,10 +149,6 @@ const UserNickName = styled.div`
   font-weight: bold;
   color: black;
   margin-left: 1px;
-
-  @media (max-width: 1024px) {
-    font-size: 14px;
-  }
 `;
 
 const UserPosition = styled.div`
@@ -174,7 +170,6 @@ const CardProfileImg = styled.div`
   width: 100%;
   height: 0;
   padding-bottom: 100%;
-  /*   border-radius: 12.69px; */
   object-fit: cover;
   background-image: url(${(props) => props.src});
   background-size: cover;
@@ -182,5 +177,4 @@ const CardProfileImg = styled.div`
   background-position: center;
   background-color: #bbbbbb;
   cursor: pointer;
-  /*   position: relative; */
 `;
