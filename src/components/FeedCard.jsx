@@ -60,7 +60,7 @@ function FeedCard({ data, onClick, openFeedDetail }) {
       </ContentBox>
       <HashTagContainer>
         {data.tag_photoList.map((item) => {
-          return <HashTag>{item}</HashTag>;
+          return <HashTag key={item.tagId}>{item.tag}</HashTag>;
         })}
       </HashTagContainer>
     </CardDesign>
