@@ -5,9 +5,12 @@ import { useMutation } from "react-query";
 import heartAxios from "../apis/feed/heartAxios";
 import { useQueryClient } from "react-query";
 import HeartButton from "./HeartButton";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 function FeedCard({ data, onClick, openFeedDetail }) {
   // 좋아요 버튼
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const queryClient = useQueryClient();
   const likeButtonMutation = useMutation(heartAxios, {
     onSuccess: () => {
@@ -19,7 +22,16 @@ function FeedCard({ data, onClick, openFeedDetail }) {
   });
 
   const likeButtonHandler = (photoId) => {
-    likeButtonMutation.mutate(photoId);
+    if (isLoggedIn) {
+      likeButtonMutation.mutate(photoId);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "회원 전용 서비스!",
+        text: `로그인이 필요한 서비스입니다🙏`,
+        confirmButtonText: "확인",
+      });
+    }
   };
 
   const handleCardClick = () => {
@@ -64,8 +76,8 @@ function FeedCard({ data, onClick, openFeedDetail }) {
         {data.content === "undefined" ? null : data.content}
       </ContentBox>
       <HashTagContainer>
-        {data.tag_photoList.map((item) => {
-          return <HashTag>{item}</HashTag>;
+        {data.tag_photoList.map((item, index) => {
+          return <HashTag key={index}>{item}</HashTag>;
         })}
       </HashTagContainer>
     </CardDesign>
@@ -96,6 +108,7 @@ const CardDesign = styled.div`
   border-radius: 5px;
   margin-top: 15px;
   flex-grow: 1;
+  width: 100%;
   /* @media (min-width: 768px) {
     width: calc(25% - 20px);
   }
@@ -169,6 +182,5 @@ const CardProfileImg = styled.div`
   background-position: center;
   background-color: #bbbbbb;
   cursor: pointer;
-
-  position: relative;
+  /*   position: relative; */
 `;
