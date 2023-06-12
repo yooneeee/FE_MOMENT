@@ -33,7 +33,7 @@ function FeedCard({ data, onClick, openFeedDetail }) {
       });
     }
   };
-  console.log(data);
+
   const handleCardClick = () => {
     onClick();
   };
@@ -73,7 +73,6 @@ function FeedCard({ data, onClick, openFeedDetail }) {
       </ContentBox>
       <HashTagContainer>
         {data.tag_photoList.map((item) => {
-          console.log(item);
           return <HashTag key={item.tagId}>{item.tag}</HashTag>;
         })}
       </HashTagContainer>
