@@ -136,6 +136,12 @@ function ChatTest() {
       //   chatContainer.scrollTop = chatContainer.scrollHeight;
     }
   };
+  const enterHandler = (e) => {
+    if(e.key === 'Enter') {
+      e.preventDefault();
+      sendMessage()
+    }
+  }
 
   if (!data.chatRoomId) {
     /* 채팅방이 없는 경우 */
@@ -173,6 +179,7 @@ function ChatTest() {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e)=>enterHandler(e)}
             />
             <SendButton onClick={sendMessage}>전송</SendButton>
           </ChatInputContainer>
@@ -213,6 +220,7 @@ function ChatTest() {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e)=>enterHandler(e)}
           />
           <SendButton onClick={sendMessage}>전송</SendButton>
         </ChatInputContainer>
