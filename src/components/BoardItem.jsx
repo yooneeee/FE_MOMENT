@@ -32,8 +32,8 @@ function BoardItem({ item, onClick }) {
           <PhotographerName>{item.nickName}</PhotographerName>
         </PhotographerInfo>
         <HashTagContainer>
-          {item.tag_boardList.map((tags) => {
-            return <HashTag>{tags}</HashTag>;
+          {item.tag_boardList.map((item) => {
+            return <HashTag key={item.tagId}>{item.tag}</HashTag>;
           })}
         </HashTagContainer>
         <MeetInfo>

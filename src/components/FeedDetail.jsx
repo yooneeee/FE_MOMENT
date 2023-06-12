@@ -118,7 +118,7 @@ const FeedDetail = (props) => {
 
               <HashTagContainer>
                 {data.tag_photoList.map((item) => {
-                  return <HashTag>{item}</HashTag>;
+                  return <HashTag key={item.tagId}>{item.tag}</HashTag>;
                 })}
               </HashTagContainer>
             </div>
