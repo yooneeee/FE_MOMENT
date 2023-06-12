@@ -21,7 +21,7 @@ function ChatTest() {
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState("");
   const [chatList, setChatList] = useState([]);
-  const [chatData, setChatData] = useState({ chatRoomId: null });
+  // const [chatData, setChatData] = useState({ chatRoomId: null });
 
   const scrollRef = useRef(null);
   const client = useRef(null);
@@ -37,10 +37,12 @@ function ChatTest() {
   }, []);
 
   /* 스크롤 */
-  //   useEffect(() => {
-  //     const scroll = scrollRef.current;
-  //     scroll.scrollTop = scroll.scrollHeight;
-  //   }, [chatList]);
+  useEffect(() => {
+    if (scrollRef.current) {
+      const chatContainer = scrollRef.current;
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  }, [chatList]);
 
   /* STOMP 연결 */
   const connect = () => {
@@ -62,43 +64,23 @@ function ChatTest() {
     }
   };
 
-  //   // STOMP 메시지 수신 이벤트 핸들링 -> 웹소켓
+  // STOMP 메시지 수신 이벤트 핸들링 -> 웹소켓
   useEffect(() => {
     subscribe();
-  }, [chatList]);
-
+  }, [message]);
   /* STOMP 메시지 수신 이벤트 핸들링
   sub 채팅방 입장 */
   const subscribe = () => {
-    if (!stompClient) return;
-    if (data.chatRoomId) {
-      // 채팅방 존재
-      stompClient.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
-        console.log("변경 전", message);
-        const chatMessage = JSON.parse(message.body);
-        console.log("챗룸 ID", data.chatRoomId);
-        console.log("메세지 바디", chatMessage);
-        setChatList((prevChatList) => [...prevChatList, chatMessage]);
-        console.log("prev", chatMessage);
-        console.log("변경 후", message);
-      });
-    } else {
-      // 채팅방 ID만 전해주기 위한... 첫 채팅을 위한 방 생성, MESSAGE = 챗룸 ID만
-      stompClient.subscribe("/sub/chat/room", (message) => {
-        console.log("변경 전", message);
-        // const chatMessage = JSON.parse(message.body);
-        data.chatRoomId = message.body;
-        // setChatList((prevChatList) => [...prevChatList, chatMessage]);
+    if (!stompClient || !data.chatRoomId) return;
 
-        // const chatRoomId = message.body;
-        // setChatData((prevData) => ({
-        //   ...prevData,
-        //   chatRoomId: chatRoomId,
-        // }));
-
-        console.log("변경 후", message);
-      });
-    }
+    stompClient.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
+      console.log("변경 전", message);
+      const chatMessage = JSON.parse(message.body);
+      console.log("챗룸 ID", data.chatRoomId);
+      setChatList((prevChatList) => [...prevChatList, chatMessage]);
+      console.log("메세지 바디", chatMessage);
+      console.log("변경 후", message);
+    });
   };
 
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
@@ -137,61 +119,17 @@ function ChatTest() {
     }
   };
   const enterHandler = (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
-      sendMessage()
+      sendMessage();
     }
-  }
+  };
 
-  if (!data.chatRoomId) {
-    /* 채팅방이 없는 경우 */
-    return (
-      <>
-        <MyPageTabs />
-        <ChatContainer ref={scrollRef}>
-          {data.chatList.map((chat) => (
-            <React.Fragment key={chat.id}>
-              <ReceiverProfile
-                isSender={chat.senderId === userId}
-                src={
-                  chat.senderId === userId
-                    ? profileImg
-                    : data.receiverProfileImg
-                }
-                alt="Profile"
-              />
-              <Nickname isSender={chat.senderId === userId}>
-                {chat.senderId === userId ? nickName : data.receiverNickName}
-              </Nickname>
-              <ChatBubble
-                key={chat.id}
-                isSender={chat.senderId === userId}
-                isReceiver={chat.receiverId === userId}
-              >
-                {chat.message}
-              </ChatBubble>
-            </React.Fragment>
-          ))}
-        </ChatContainer>
-        <SendContainer>
-          <ChatInputContainer>
-            <ChatInput
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(e)=>enterHandler(e)}
-            />
-            <SendButton onClick={sendMessage}>전송</SendButton>
-          </ChatInputContainer>
-        </SendContainer>
-      </>
-    );
-  }
   return (
     /* 채팅방이 존재 */
     <>
-      <MyPageTabs />
-      <ChatContainer ref={scrollRef}>
+      {/* <MyPageTabs /> */}
+      <ChatContainer>
         {data.chatList.map((chat) => (
           <React.Fragment key={chat.id}>
             <ReceiverProfile
@@ -214,13 +152,13 @@ function ChatTest() {
           </React.Fragment>
         ))}
       </ChatContainer>
-      <SendContainer>
+      <SendContainer ref={scrollRef}>
         <ChatInputContainer>
           <ChatInput
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e)=>enterHandler(e)}
+            onKeyDown={(e) => enterHandler(e)}
           />
           <SendButton onClick={sendMessage}>전송</SendButton>
         </ChatInputContainer>
