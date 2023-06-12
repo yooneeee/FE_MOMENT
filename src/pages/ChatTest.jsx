@@ -21,90 +21,51 @@ function ChatTest() {
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState("");
   const [chatList, setChatList] = useState([]);
-  const [chatData, setChatData] = useState({ chatRoomId: null });
+  // const [chatData, setChatData] = useState({ chatRoomId: null });
 
   const scrollRef = useRef(null);
   const client = useRef(null);
   //   const prevSenderId = null
 
-  /* STOMP 클라이언트 초기화 */
-  useEffect(() => {
-    connect();
-    // 컴포넌트 언마운트 시 STOMP 연결 해제
-    return () => {
-      disconnect();
-    };
-  }, []);
-
-  /* 스크롤 */
-  //   useEffect(() => {
-  //     const scroll = scrollRef.current;
-  //     scroll.scrollTop = scroll.scrollHeight;
-  //   }, [chatList]);
-
-  /* STOMP 연결 */
-  const connect = () => {
-    const socket = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`);
-    const stomp = StompJs.Stomp.over(socket);
-    stomp.connect({}, () => {
-      console.log("웹소켓 연결");
-      setStompClient(stomp);
-      subscribe();
-    });
-    client.current = stomp;
-  };
-
-  /* STOMP 연결 해제 */
-  const disconnect = () => {
-    if (stompClient) {
-      stompClient.disconnect();
-      console.log("웹소켓 연결 해제");
-    }
-  };
-
-  //   // STOMP 메시지 수신 이벤트 핸들링 -> 웹소켓
-  useEffect(() => {
-    subscribe();
-  }, [chatList]);
-
-  /* STOMP 메시지 수신 이벤트 핸들링
-  sub 채팅방 입장 */
-  const subscribe = () => {
-    if (!stompClient) return;
-    if (data.chatRoomId) {
-      // 채팅방 존재
-      stompClient.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
-        console.log("변경 전", message);
-        const chatMessage = JSON.parse(message.body);
-        console.log("챗룸 ID", data.chatRoomId);
-        console.log("메세지 바디", chatMessage);
-        setChatList((prevChatList) => [...prevChatList, chatMessage]);
-        console.log("prev", chatMessage);
-        console.log("변경 후", message);
-      });
-    } else {
-      // 채팅방 ID만 전해주기 위한... 첫 채팅을 위한 방 생성, MESSAGE = 챗룸 ID만
-      stompClient.subscribe("/sub/chat/room", (message) => {
-        console.log("변경 전", message);
-        // const chatMessage = JSON.parse(message.body);
-        data.chatRoomId = message.body;
-        // setChatList((prevChatList) => [...prevChatList, chatMessage]);
-
-        // const chatRoomId = message.body;
-        // setChatData((prevData) => ({
-        //   ...prevData,
-        //   chatRoomId: chatRoomId,
-        // }));
-
-        console.log("변경 후", message);
-      });
-    }
-  };
-
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
   console.log("채팅할사람", data);
+
+  useEffect(() => {
+    if (data?.chatList) {
+      setChatList(data.chatList);
+    }
+  }, [data]);
+
+  console.log("챗리스트:::", data?.chatList);
+
+  /* STOMP 클라이언트 초기화 */
+  // useEffect(() => {
+  //   connect();
+  //   // 컴포넌트 언마운트 시 STOMP 연결 해제
+  //   return () => {
+  //     disconnect();
+  //   };
+  // }, []);
+
+  /* 스크롤 */
+  useEffect(() => {
+    if (scrollRef.current) {
+      const chatContainer = scrollRef.current;
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data && data.chatRoomId) {
+      connect();
+      // 컴포넌트 언마운트 시 STOMP 연결 해제
+      return () => {
+        disconnect();
+      };
+    }
+  }, [data]);
 
   if (isLoading) {
     return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
@@ -115,6 +76,46 @@ function ChatTest() {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
 
+  /* STOMP 연결 */
+  const connect = () => {
+    const socket = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`);
+    const stomp = StompJs.Stomp.over(socket);
+    stomp.connect({}, () => {
+      console.log("웹소켓 연결");
+      setStompClient(stomp);
+      subscribe(stomp);
+    });
+    client.current = stomp;
+  };
+
+  /* STOMP 연결 해제 */
+  const disconnect = () => {
+    if (stompClient) {
+      stompClient?.disconnect();
+      console.log("웹소켓 연결 해제");
+    }
+  };
+
+  // STOMP 메시지 수신 이벤트 핸들링 -> 웹소켓
+  // useEffect(() => {
+  //   subscribe();
+  // }, [stompClient]);
+
+  /* STOMP 메시지 수신 이벤트 핸들링
+  sub 채팅방 입장 */
+  const subscribe = () => {
+    // if (!stompClient || !data.chatRoomId) return;
+
+    stompClient?.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
+      console.log("변경 전", message);
+      const chatMessage = JSON.parse(message.body);
+      console.log("챗룸 ID", data.chatRoomId);
+      setChatList((prevChatList) => [...prevChatList, chatMessage]);
+      console.log("메세지 바디", chatMessage);
+      console.log("변경 후", message);
+    });
+  };
+
   /*  STOMP 메시지 송신
     pub 메세지 보내기 */
   const sendMessage = () => {
@@ -122,77 +123,34 @@ function ChatTest() {
       const chatMessage = {
         message: message,
         senderId: userId,
-        receiverId: data.receiverId,
+        receiverId: receiverId,
         chatRoomId: data.chatRoomId,
       };
       stompClient.send("/pub/chat/send", {}, JSON.stringify(chatMessage));
       console.log("챗", chatMessage);
       setChatList((prevChatList) => [...prevChatList, chatMessage]);
 
-      setMessage("");
+      // 스크롤
+      // if (scrollRef.current) {
+      //   scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      // }
 
-      // 스크롤 조작
-      //   const chatContainer = chatContainerRef.current;
-      //   chatContainer.scrollTop = chatContainer.scrollHeight;
+      setMessage("");
     }
   };
   const enterHandler = (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
-      sendMessage()
+      sendMessage();
     }
-  }
+  };
 
-  if (!data.chatRoomId) {
-    /* 채팅방이 없는 경우 */
-    return (
-      <>
-        <MyPageTabs />
-        <ChatContainer ref={scrollRef}>
-          {data.chatList.map((chat) => (
-            <React.Fragment key={chat.id}>
-              <ReceiverProfile
-                isSender={chat.senderId === userId}
-                src={
-                  chat.senderId === userId
-                    ? profileImg
-                    : data.receiverProfileImg
-                }
-                alt="Profile"
-              />
-              <Nickname isSender={chat.senderId === userId}>
-                {chat.senderId === userId ? nickName : data.receiverNickName}
-              </Nickname>
-              <ChatBubble
-                key={chat.id}
-                isSender={chat.senderId === userId}
-                isReceiver={chat.receiverId === userId}
-              >
-                {chat.message}
-              </ChatBubble>
-            </React.Fragment>
-          ))}
-        </ChatContainer>
-        <SendContainer>
-          <ChatInputContainer>
-            <ChatInput
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(e)=>enterHandler(e)}
-            />
-            <SendButton onClick={sendMessage}>전송</SendButton>
-          </ChatInputContainer>
-        </SendContainer>
-      </>
-    );
-  }
   return (
     /* 채팅방이 존재 */
     <>
-      <MyPageTabs />
+      {/* <MyPageTabs /> */}
       <ChatContainer ref={scrollRef}>
-        {data.chatList.map((chat) => (
+        {chatList.map((chat) => (
           <React.Fragment key={chat.id}>
             <ReceiverProfile
               isSender={chat.senderId === userId}
@@ -220,7 +178,7 @@ function ChatTest() {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e)=>enterHandler(e)}
+            onKeyDown={(e) => enterHandler(e)}
           />
           <SendButton onClick={sendMessage}>전송</SendButton>
         </ChatInputContainer>
@@ -271,7 +229,7 @@ const Nickname = styled.div`
 
 const ChatBubble = styled.div`
   background-color: ${(props) =>
-    props.isSender ? "#DCF8C6" : props.isReceiver ? "#F3F3F3" : "transparent"};
+    props.isSender ? "#d6c9e9" : props.isReceiver ? "#F3F3F3" : "transparent"};
   padding: 8px;
   margin-top: 4px;
   margin-bottom: 20px;
@@ -301,7 +259,7 @@ const ChatInput = styled.input`
 const SendButton = styled.button`
   margin-left: 8px;
   padding: 8px 30px;
-  background-color: #4caf50;
+  background-color: #483767;
   color: #fff;
   border: none;
   border-radius: 4px;

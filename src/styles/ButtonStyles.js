@@ -29,7 +29,7 @@ export const KakaoLogoContainer = styled.div`
 `;
 export const EmailButton = styled.button`
   ${buttonStyles}
-  border: 1px solid ${(props) => (props.disabled ? "#888888" : "#000000")};
+  border: none;
   background-color: ${(props) => (props.disabled ? "#888888" : "#000000")};
   color: ${(props) => (props.disabled ? "#aaaaaa" : "#ffffff")};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
