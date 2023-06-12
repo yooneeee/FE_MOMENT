@@ -157,13 +157,14 @@ function MyPageFeed() {
               {data.photoList.map((item, index) => {
                 const isOpen = feedDetailOpen.includes(item.photoId);
                 return (
-                  <WorkItem
-                    key={index}
-                    src={item.photoUrl}
-                    onClick={() => {
-                      openFeedDetail(item.photoId);
-                    }}
-                  >
+                  <>
+                    <WorkItem
+                      key={index}
+                      src={item.photoUrl}
+                      onClick={() => {
+                        openFeedDetail(item.photoId);
+                      }}
+                    />
                     {isOpen && (
                       <FeedDetail
                         open={() => openFeedDetail(item.photoId)}
@@ -200,7 +201,7 @@ function MyPageFeed() {
                         </Button>
                       </ToggleWriteMenu>
                     )}
-                  </WorkItem>
+                  </>
                 );
               })}
             </WorkList>
