@@ -81,10 +81,12 @@ const ProfileSection = styled.div`
   position: fixed;
 
   @media (max-width: 768px) {
+    position: relative;
     align-items: center;
     margin-right: 0;
     margin-bottom: 30px;
-    width: 70%;
+    width: 100%;
+    margin-left: 0px;
   }
 `;
 

@@ -65,7 +65,7 @@ const MyPage = () => {
           </ProfileContainer>
           <Container>
             <WorkSection>
-              <Work>{mine ? "나의 작업물" : `${data.nickName}의 작업물`}</Work>
+              <Work>{mine ? "나의 작업물" : `${data.nickName}'s 작업물`}</Work>
               <WorkList>
                 {data.photoList.slice(0, 10).map((item, index) => {
                   const isOpen = feedDetailOpen.includes(item.photoId);
@@ -90,9 +90,7 @@ const MyPage = () => {
               </WorkList>
             </WorkSection>
             <Content>
-              <Work>
-                {mine ? "내가 쓴 게시물" : `${data.nickName}'s 게시물`}
-              </Work>
+              <Work>{mine ? "내 게시물" : `${data.nickName}'s 게시물`}</Work>
               {data.boardList.slice(0, 2).map((item) => {
                 return (
                   <BoardItem
@@ -125,7 +123,14 @@ const PageContainer = styled.div`
 `;
 
 const ProfileContainer = styled.div`
-  width: 550px;
+  width: 90%;
+  margin-bottom: 30px;
+
+  @media (min-width: 769px) {
+    width: 550px;
+    margin-bottom: 0;
+    margin-right: 30px;
+  }
 `;
 
 const Container = styled.div`
@@ -148,7 +153,6 @@ const ContentContainer = styled.div`
 
 const WorkSection = styled.div`
   flex-grow: 1;
-  margin-left: 30px;
 `;
 
 const Work = styled.h2`
