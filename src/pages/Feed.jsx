@@ -119,6 +119,12 @@ const FeedContainer = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 50px;
   margin: auto 100px;
+  @media (max-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
   @media (max-width: 768px) {
     gridtemplate-columns: repeat(1, 1fr);
   }

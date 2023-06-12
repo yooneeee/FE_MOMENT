@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Container, TitleLogo, Title } from "../styles/ContainerStyles";
@@ -34,6 +40,7 @@ function EmailSignup() {
   // 이미지 state
   const [profileImg, setProfileImg] = useState(null);
   const [imgUrl, setImgUrl] = useState(null);
+  const fileInput = useRef();
 
   // 이메일 인증 번호 state
   const [code, setCode] = useState("");
@@ -270,15 +277,15 @@ function EmailSignup() {
         });
         return;
       }
-      /*  if (!isemailChecking) {
-       Swal.fire({
-        icon: "warning",
-        title: "회원가입 실패!",
-        text: `이메일 인증을 완료해주세요✨`,
-        confirmButtonText: "확인",
-      });
+      if (!isemailChecking) {
+        Swal.fire({
+          icon: "warning",
+          title: "회원가입 실패!",
+          text: `이메일 인증을 완료해주세요✨`,
+          confirmButtonText: "확인",
+        });
         return;
-      } */
+      }
       signupMutation.mutate(formData);
     } else {
       Swal.fire({
@@ -299,15 +306,19 @@ function EmailSignup() {
           <Title>Moment</Title>
           <SubTitle>이메일로 가입하기</SubTitle>
         </TitleLogo>
+        <InputTitle>프로필 사진</InputTitle>
         <StImageUpload>
-          <InputTitle>프로필 사진을 선택해 주세요.</InputTitle>
           <StProfile image={imgUrl}>IMAGE</StProfile>
-          <input
-            type="file"
-            id="fileUpload"
-            name="profileImg"
-            onChange={addPhoto}
-          ></input>
+          <UploadButton>
+            프로필 사진 추가
+            <input
+              type="file"
+              name="profileImg"
+              accept="image/*"
+              onChange={addPhoto}
+              ref={fileInput}
+            ></input>
+          </UploadButton>
         </StImageUpload>
         <InputTitle>닉네임</InputTitle>
         <InputWrap>
@@ -567,10 +578,12 @@ const ErrorMessage = styled.div`
   flex-wrap: warp;
 `;
 export const StImageUpload = styled.div`
-  padding: 5%;
+  padding: 3%;
   margin-bottom: 3%;
-  border: 1px solid #ccc;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   input {
     padding-top: 3%;
@@ -582,7 +595,7 @@ export const StProfile = styled.div`
   font-size: 0.7rem;
   text-align: center;
   color: #ccc;
-  margin: 10px auto;
+  margin: 10px;
   border: 1px solid #ccc;
   border-radius: 50%;
   background: ${(props) => `url(${props.image}) no-repeat 50% /cover`};
@@ -618,4 +631,22 @@ const CheckboxText = styled.span`
 
 const Checkbox = styled.input`
   margin-right: 12px;
+`;
+const UploadButton = styled.label`
+  display: inline-block;
+  max-width: fit-content;
+  padding: 10px 75px;
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px #acabab solid;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
 `;
