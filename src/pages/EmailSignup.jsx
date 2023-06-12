@@ -331,12 +331,12 @@ function EmailSignup() {
           />
         </InputWrap>
         {nickNameErrorMessage && <ErrorMessage>{nickNameError}</ErrorMessage>}
-        <InputTitle>직업</InputTitle>
+        <InputTitle>포지션</InputTitle>
         <ButtonContainer>
           <MemoizedSelectionButton
             onClick={() => roleButtonClickHandler("MODEL")}
             style={{
-              backgroundColor: role === "MODEL" ? "#000000" : "#ffffff",
+              backgroundColor: role === "MODEL" ? "#483767" : "#ffffff",
               color: role === "MODEL" ? "#ffffff" : "#000000",
             }}
           >
@@ -345,11 +345,11 @@ function EmailSignup() {
           <MemoizedSelectionButton
             onClick={() => roleButtonClickHandler("PHOTOGRAPHER")}
             style={{
-              backgroundColor: role === "PHOTOGRAPHER" ? "#000000" : "#ffffff",
+              backgroundColor: role === "PHOTOGRAPHER" ? "#483767" : "#ffffff",
               color: role === "PHOTOGRAPHER" ? "#ffffff" : "#000000",
             }}
           >
-            작가
+            사진작가
           </MemoizedSelectionButton>
         </ButtonContainer>
         <InputTitle>성별</InputTitle>
@@ -357,7 +357,7 @@ function EmailSignup() {
           <MemoizedSelectionButton
             onClick={() => sexButtonClickHandler("MALE")}
             style={{
-              backgroundColor: gender === "MALE" ? "#000000" : "#ffffff",
+              backgroundColor: gender === "MALE" ? "#483767" : "#ffffff",
               color: gender === "MALE" ? "#ffffff" : "#000000",
             }}
           >
@@ -366,7 +366,7 @@ function EmailSignup() {
           <MemoizedSelectionButton
             onClick={() => sexButtonClickHandler("FEMALE")}
             style={{
-              backgroundColor: gender === "FEMALE" ? "#000000" : "#ffffff",
+              backgroundColor: gender === "FEMALE" ? "#483767" : "#ffffff",
               color: gender === "FEMALE" ? "#ffffff" : "#000000",
             }}
           >
@@ -510,10 +510,12 @@ const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin: 10px 0;
+  gap: 30px;
 `;
 
 const SelectionButton = styled.button`
   background-color: #ffffff;
+  width: 145px;
   border-radius: 3px;
   margin-right: 2px;
   color: #000000;
@@ -521,6 +523,7 @@ const SelectionButton = styled.button`
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
+  border: 1px solid #e2e0e0;
 
   &:active,
   &:focus {
@@ -535,11 +538,12 @@ const InputGroup = styled.div`
 `;
 const MailCheckButton = styled.button`
   margin: 0 10px;
-  width: 16%;
+  padding: 0 10px;
+  width: 20%;
   height: 48px;
   border: none;
   font-weight: 700;
-  background-color: #000000;
+  background-color: #483767;
   border-radius: 64px;
   color: white;
   cursor: pointer;
@@ -555,7 +559,7 @@ const BottomButton = styled.button`
   height: 48px;
   border: none;
   font-weight: 700;
-  background-color: ${(props) => props.bgcolor || "black"};
+  background-color: ${(props) => props.bgcolor || "#000000"};
   border-radius: 64px;
   color: white;
   margin-bottom: 16px;
@@ -579,7 +583,7 @@ const ErrorMessage = styled.div`
 `;
 export const StImageUpload = styled.div`
   padding: 3%;
-  margin-bottom: 3%;
+  /*   margin-bottom: 3%; */
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -595,7 +599,7 @@ export const StProfile = styled.div`
   font-size: 0.7rem;
   text-align: center;
   color: #ccc;
-  margin: 10px;
+  margin: 20px;
   border: 1px solid #ccc;
   border-radius: 50%;
   background: ${(props) => `url(${props.image}) no-repeat 50% /cover`};
@@ -642,7 +646,7 @@ const UploadButton = styled.label`
   border-radius: 3px;
 
   &:hover {
-    background-color: #000000;
+    background-color: #483767;
     color: #ffffff;
   }
 

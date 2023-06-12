@@ -1,10 +1,14 @@
 import { instance } from "../axios";
 
-const getFeedAxios = async ({ pageParam = 0 }) => {
+const getFeedAxios = async ({ pageParam = 0, activeNavItem }) => {
   try {
     const { data } = await instance.get(`/feeds?page=${pageParam}&size=`);
     // console.log(data);
-    return data;
+    if (activeNavItem === "Latest") {
+      return data.photoList1;
+    } else if (activeNavItem === "Popularity") {
+      return data.photoList2;
+    }
   } catch (error) {
     throw error;
   }

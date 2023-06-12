@@ -116,7 +116,7 @@ function KakaoLoginRedirect() {
           <Outside />
           <ModalWrap>
             <ModalHeader>
-              <p>직업을 선택해주세요</p>
+              <p>포지션을 선택해주세요</p>
               <button onClick={closeModal}>x</button>
             </ModalHeader>
             <ButtonContainer>
