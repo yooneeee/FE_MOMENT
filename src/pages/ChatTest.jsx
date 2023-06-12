@@ -51,7 +51,7 @@ function ChatTest() {
     stomp.connect({}, () => {
       console.log("웹소켓 연결");
       setStompClient(stomp);
-      subscribe();
+      subscribe(stomp);
     });
     client.current = stomp;
   };
@@ -65,9 +65,9 @@ function ChatTest() {
   };
 
   // STOMP 메시지 수신 이벤트 핸들링 -> 웹소켓
-  useEffect(() => {
-    subscribe();
-  }, [message]);
+  // useEffect(() => {
+  //   subscribe();
+  // }, [stompClient]);
   /* STOMP 메시지 수신 이벤트 핸들링
   sub 채팅방 입장 */
   const subscribe = () => {
@@ -88,6 +88,14 @@ function ChatTest() {
   );
   console.log("채팅할사람", data);
 
+  useEffect(() => {
+    if (data && data.chatList) {
+      setChatList(data.chatList);
+    }
+  }, [data]);
+
+  console.log("챗리스트:::", data.chatList);
+
   if (isLoading) {
     return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
   }
@@ -104,7 +112,7 @@ function ChatTest() {
       const chatMessage = {
         message: message,
         senderId: userId,
-        receiverId: data.receiverId,
+        receiverId: receiverId,
         chatRoomId: data.chatRoomId,
       };
       stompClient.send("/pub/chat/send", {}, JSON.stringify(chatMessage));
@@ -130,7 +138,7 @@ function ChatTest() {
     <>
       {/* <MyPageTabs /> */}
       <ChatContainer>
-        {data.chatList.map((chat) => (
+        {chatList.map((chat) => (
           <React.Fragment key={chat.id}>
             <ReceiverProfile
               isSender={chat.senderId === userId}
