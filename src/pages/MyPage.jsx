@@ -70,9 +70,8 @@ const MyPage = () => {
                 {data.photoList.slice(0, 10).map((item, index) => {
                   const isOpen = feedDetailOpen.includes(item.photoId);
                   return (
-                    <>
+                    <React.Fragment key={index}>
                       <WorkItem
-                        key={index}
                         src={item.photoUrl}
                         onClick={() => {
                           openFeedDetail(item.photoId);
@@ -85,7 +84,7 @@ const MyPage = () => {
                           photoId={item.photoId}
                         />
                       )}
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </WorkList>

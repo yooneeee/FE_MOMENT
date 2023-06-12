@@ -37,7 +37,7 @@ function FeedCard({ data, onClick, openFeedDetail }) {
   const handleCardClick = () => {
     onClick();
   };
-  const navigate = useNavigate();
+
   return (
     <CardDesign>
       <SliderWrapper>
@@ -49,12 +49,7 @@ function FeedCard({ data, onClick, openFeedDetail }) {
         />
       </SliderWrapper>
       <CardHeader>
-        <ProfileImg
-          src={data.profileImgUrl}
-          onClick={() => {
-            navigate(`/page/${data.hostId}`);
-          }}
-        />
+        <ProfileImg src={data.profileImgUrl} />
         <FlexWrap>
           <UserNickName>{data.nickName}</UserNickName>
           <UserPosition>
@@ -87,7 +82,7 @@ const ContentBox = styled.div`
 `;
 
 const HashTagContainer = styled.div`
-  padding: 10px 20px;
+  padding: 10px 17px 20px;
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
@@ -96,7 +91,7 @@ const HashTagContainer = styled.div`
 const HashTag = styled.div`
   background-color: #514073;
   color: white;
-  border: 1px solid black;
+  border: none;
   border-radius: 50px;
   padding: 7px;
   @media (max-width: 1200px) {
@@ -120,7 +115,8 @@ const CardHeader = styled.div`
   display: flex;
   align-items: center;
   margin-top: 10px;
-  padding: 0 20px;
+  /* padding: 0 20px; */
+  padding: 5px 20px 5px 20px;
 `;
 
 const ProfileImg = styled.img`

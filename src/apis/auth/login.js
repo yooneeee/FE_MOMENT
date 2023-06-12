@@ -21,7 +21,6 @@ const logoutAxios = async () => {
 const deleteUserAxios = async () => {
   try {
     const response = await instance.delete(`/users/hard`);
-    console.log(response);
     return response;
   } catch (error) {
     alert(error);
