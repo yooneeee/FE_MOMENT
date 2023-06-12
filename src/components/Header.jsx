@@ -169,6 +169,8 @@ function Header() {
               <>
                 <HeaderButton
                   name={"login"}
+                  bgcolor="#483767"
+                  color="white"
                   onClick={() => {
                     navigate("/login");
                     toggleWriteMenuClose();
@@ -375,7 +377,7 @@ const ToggleWriteMenu = styled.div`
   z-index: 100;
   @media (max-width: 768px) {
     top: 105px;
-    right: 80px;
+    right: 90px;
   }
 `;
 
@@ -447,9 +449,11 @@ const HeaderButton = styled.button`
   gap: 10px;
   cursor: pointer;
   border: none;
+  border-radius: 3.97px;
   background: none;
   align-items: center;
-  color: black;
+  background-color: ${(props) => props.bgcolor || "white"};
+  color: ${(props) => props.color || "black"};
   display: flex;
   @media (max-width: 768px) {
     width: 56px;
@@ -471,7 +475,7 @@ const ProfileImg = styled.img`
 const ToggleProfileMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 150px;
+  right: 170px;
   background-color: white;
   padding: 10px;
   display: flex;
@@ -481,16 +485,6 @@ const ToggleProfileMenu = styled.div`
     top: 135px;
     right: 120px;
   }
-`;
-
-const ProfileContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const ProfileName = styled.div`
-  margin-left: 8px;
-  font-size: 15px;
 `;
 
 export default Header;
