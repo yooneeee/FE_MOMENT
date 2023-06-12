@@ -101,7 +101,7 @@ function BoardDetail() {
 
             <HashTagContainer>
               {data.tag_boardList.map((item) => {
-                return <HashTag key={item}>{item}</HashTag>;
+                return <HashTag key={item.tagId}>{item.tag}</HashTag>;
               })}
             </HashTagContainer>
             <ListTitle>촬영장소</ListTitle>
