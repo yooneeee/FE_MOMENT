@@ -157,9 +157,8 @@ function MyPageFeed() {
               {data.photoList.map((item, index) => {
                 const isOpen = feedDetailOpen.includes(item.photoId);
                 return (
-                  <>
+                  <React.Fragment key={index}>
                     <WorkItem
-                      key={index}
                       src={item.photoUrl}
                       onClick={() => {
                         openFeedDetail(item.photoId);
@@ -201,7 +200,7 @@ function MyPageFeed() {
                         </Button>
                       </ToggleWriteMenu>
                     )}
-                  </>
+                  </React.Fragment>
                 );
               })}
             </WorkList>
