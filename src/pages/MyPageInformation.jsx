@@ -187,7 +187,7 @@ const MyPageInformation = () => {
                 type="button"
                 onClick={() => roleButtonClickHandler("MODEL")}
                 style={{
-                  backgroundColor: newRole === "MODEL" ? "#000000" : "#ffffff",
+                  backgroundColor: newRole === "MODEL" ? "#483767" : "#ffffff",
                   color: newRole === "MODEL" ? "#ffffff" : "#000000",
                 }}
               >
@@ -198,7 +198,7 @@ const MyPageInformation = () => {
                 onClick={() => roleButtonClickHandler("PHOTOGRAPHER")}
                 style={{
                   backgroundColor:
-                    newRole === "PHOTOGRAPHER" ? "#000000" : "#ffffff",
+                    newRole === "PHOTOGRAPHER" ? "#483767" : "#ffffff",
                   color: newRole === "PHOTOGRAPHER" ? "#ffffff" : "#000000",
                 }}
               >
@@ -235,7 +235,7 @@ const UploadButton = styled.label`
   /* margin-left: 45px; */
 
   &:hover {
-    background-color: #000000;
+    background-color: #483767;
     color: #ffffff;
   }
 

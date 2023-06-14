@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Container, TitleLogo, Title } from "../styles/ContainerStyles";
@@ -34,6 +40,7 @@ function EmailSignup() {
   // 이미지 state
   const [profileImg, setProfileImg] = useState(null);
   const [imgUrl, setImgUrl] = useState(null);
+  const fileInput = useRef();
 
   // 이메일 인증 번호 state
   const [code, setCode] = useState("");
@@ -270,15 +277,15 @@ function EmailSignup() {
         });
         return;
       }
-      /*  if (!isemailChecking) {
-       Swal.fire({
-        icon: "warning",
-        title: "회원가입 실패!",
-        text: `이메일 인증을 완료해주세요✨`,
-        confirmButtonText: "확인",
-      });
+      if (!isemailChecking) {
+        Swal.fire({
+          icon: "warning",
+          title: "회원가입 실패!",
+          text: `이메일 인증을 완료해주세요✨`,
+          confirmButtonText: "확인",
+        });
         return;
-      } */
+      }
       signupMutation.mutate(formData);
     } else {
       Swal.fire({
@@ -299,15 +306,19 @@ function EmailSignup() {
           <Title>Moment</Title>
           <SubTitle>이메일로 가입하기</SubTitle>
         </TitleLogo>
+        <InputTitle>프로필 사진</InputTitle>
         <StImageUpload>
-          <InputTitle>프로필 사진을 선택해 주세요.</InputTitle>
           <StProfile image={imgUrl}>IMAGE</StProfile>
-          <input
-            type="file"
-            id="fileUpload"
-            name="profileImg"
-            onChange={addPhoto}
-          ></input>
+          <UploadButton>
+            프로필 사진 추가
+            <input
+              type="file"
+              name="profileImg"
+              accept="image/*"
+              onChange={addPhoto}
+              ref={fileInput}
+            ></input>
+          </UploadButton>
         </StImageUpload>
         <InputTitle>닉네임</InputTitle>
         <InputWrap>
@@ -320,12 +331,12 @@ function EmailSignup() {
           />
         </InputWrap>
         {nickNameErrorMessage && <ErrorMessage>{nickNameError}</ErrorMessage>}
-        <InputTitle>직업</InputTitle>
+        <InputTitle>포지션</InputTitle>
         <ButtonContainer>
           <MemoizedSelectionButton
             onClick={() => roleButtonClickHandler("MODEL")}
             style={{
-              backgroundColor: role === "MODEL" ? "#000000" : "#ffffff",
+              backgroundColor: role === "MODEL" ? "#483767" : "#ffffff",
               color: role === "MODEL" ? "#ffffff" : "#000000",
             }}
           >
@@ -334,11 +345,11 @@ function EmailSignup() {
           <MemoizedSelectionButton
             onClick={() => roleButtonClickHandler("PHOTOGRAPHER")}
             style={{
-              backgroundColor: role === "PHOTOGRAPHER" ? "#000000" : "#ffffff",
+              backgroundColor: role === "PHOTOGRAPHER" ? "#483767" : "#ffffff",
               color: role === "PHOTOGRAPHER" ? "#ffffff" : "#000000",
             }}
           >
-            작가
+            사진작가
           </MemoizedSelectionButton>
         </ButtonContainer>
         <InputTitle>성별</InputTitle>
@@ -346,7 +357,7 @@ function EmailSignup() {
           <MemoizedSelectionButton
             onClick={() => sexButtonClickHandler("MALE")}
             style={{
-              backgroundColor: gender === "MALE" ? "#000000" : "#ffffff",
+              backgroundColor: gender === "MALE" ? "#483767" : "#ffffff",
               color: gender === "MALE" ? "#ffffff" : "#000000",
             }}
           >
@@ -355,7 +366,7 @@ function EmailSignup() {
           <MemoizedSelectionButton
             onClick={() => sexButtonClickHandler("FEMALE")}
             style={{
-              backgroundColor: gender === "FEMALE" ? "#000000" : "#ffffff",
+              backgroundColor: gender === "FEMALE" ? "#483767" : "#ffffff",
               color: gender === "FEMALE" ? "#ffffff" : "#000000",
             }}
           >
@@ -499,10 +510,12 @@ const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin: 10px 0;
+  gap: 30px;
 `;
 
 const SelectionButton = styled.button`
   background-color: #ffffff;
+  width: 145px;
   border-radius: 3px;
   margin-right: 2px;
   color: #000000;
@@ -510,6 +523,7 @@ const SelectionButton = styled.button`
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
+  border: 1px solid #e2e0e0;
 
   &:active,
   &:focus {
@@ -524,11 +538,12 @@ const InputGroup = styled.div`
 `;
 const MailCheckButton = styled.button`
   margin: 0 10px;
-  width: 16%;
+  padding: 0 10px;
+  width: 20%;
   height: 48px;
   border: none;
   font-weight: 700;
-  background-color: #000000;
+  background-color: #483767;
   border-radius: 64px;
   color: white;
   cursor: pointer;
@@ -544,7 +559,7 @@ const BottomButton = styled.button`
   height: 48px;
   border: none;
   font-weight: 700;
-  background-color: ${(props) => props.bgcolor || "black"};
+  background-color: ${(props) => props.bgcolor || "#000000"};
   border-radius: 64px;
   color: white;
   margin-bottom: 16px;
@@ -567,10 +582,12 @@ const ErrorMessage = styled.div`
   flex-wrap: warp;
 `;
 export const StImageUpload = styled.div`
-  padding: 5%;
-  margin-bottom: 3%;
-  border: 1px solid #ccc;
+  padding: 3%;
+  /*   margin-bottom: 3%; */
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   input {
     padding-top: 3%;
@@ -582,7 +599,7 @@ export const StProfile = styled.div`
   font-size: 0.7rem;
   text-align: center;
   color: #ccc;
-  margin: 10px auto;
+  margin: 20px;
   border: 1px solid #ccc;
   border-radius: 50%;
   background: ${(props) => `url(${props.image}) no-repeat 50% /cover`};
@@ -618,4 +635,22 @@ const CheckboxText = styled.span`
 
 const Checkbox = styled.input`
   margin-right: 12px;
+`;
+const UploadButton = styled.label`
+  display: inline-block;
+  max-width: fit-content;
+  padding: 10px 75px;
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px #acabab solid;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: #483767;
+    color: #ffffff;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
 `;

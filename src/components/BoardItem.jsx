@@ -11,9 +11,12 @@ function BoardItem({ item, onClick }) {
 
     if (timeDiff < 60) {
       return `${timeDiff}분 전`;
-    } else {
+    } else if (timeDiff >= 60 && timeDiff < 1440) {
       const hoursDiff = Math.floor(timeDiff / 60);
       return `${hoursDiff}시간 전`;
+    } else {
+      const daysDiff = Math.floor(timeDiff / 1440);
+      return `${daysDiff}일 전`;
     }
   };
 
@@ -32,8 +35,8 @@ function BoardItem({ item, onClick }) {
           <PhotographerName>{item.nickName}</PhotographerName>
         </PhotographerInfo>
         <HashTagContainer>
-          {item.tag_boardList.map((tags) => {
-            return <HashTag>{tags}</HashTag>;
+          {item.tag_boardList.map((item) => {
+            return <HashTag key={item.tagId}>{item.tag}</HashTag>;
           })}
         </HashTagContainer>
         <MeetInfo>

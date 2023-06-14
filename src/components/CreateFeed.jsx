@@ -4,7 +4,7 @@ import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
 import { useInput } from "../hooks/useInput";
 import { createFeedAxios } from "../apis/feed/createFeedAxios";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import UserDataComponent from "./UserDataComponent";
@@ -82,6 +82,7 @@ const CreateFeed = (props) => {
   const modalRef = useRef(null);
   const navigate = useNavigate();
   const loginUserData = UserDataComponent(); // 나의 유저 데이터 받아오는 코드
+  const queryClient = useQueryClient();
 
   // 이미지 미리보기
   const handleFileChange = (e) => {

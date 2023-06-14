@@ -10,11 +10,16 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useInView } from "react-intersection-observer";
 import ScrollToTopButton from "../components/ScrollToTopButton";
-import { useNavigate } from "react-router-dom";
 
 function Feed() {
-  const navigate = useNavigate;
+  const [activeNavItem, setActiveNavItem] = useState("Latest");
+
+  const handleNavItemClick = (item) => {
+    setActiveNavItem(item);
+  };
+
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
   // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
   const [showButton, setShowButton] = useState(false);
@@ -49,14 +54,15 @@ function Feed() {
 
   // 무한 스크롤
   const { isLoading, isError, data, fetchNextPage } = useInfiniteQuery(
-    "getFeedAxios",
-    getFeedAxios,
+    ["getFeedAxios", activeNavItem],
+    ({ pageParam = 0 }) => getFeedAxios({ pageParam, activeNavItem }),
     {
       getNextPageParam: (lastPage) => {
-        if (lastPage.currentPage === lastPage.totalPages) {
+        // console.log(lastPage);
+        if (lastPage.last === true) {
           return;
         } else {
-          return lastPage.currentPage + 1;
+          return lastPage.number + 1;
         }
       },
     }
@@ -80,17 +86,41 @@ function Feed() {
     return <h3>에러가 발생하였습니다.</h3>;
   }
 
+  console.log(data.pages);
+
   return (
     <>
+      <Header>
+        <Navbar>
+          <span>피드</span>
+          <NavItems>
+            <NavItem
+              className={activeNavItem === "Latest" ? "active" : ""}
+              onClick={() => {
+                handleNavItemClick("Latest");
+              }}
+            >
+              최신순
+            </NavItem>
+            <NavItem
+              className={activeNavItem === "Popularity" ? "active" : ""}
+              onClick={() => handleNavItemClick("Popularity")}
+            >
+              인기순
+            </NavItem>
+          </NavItems>
+        </Navbar>
+      </Header>
       <FeedContainer>
         {data.pages
-          .flatMap((page) => page.photoList)
+          .flatMap((page) => {
+            return page.content;
+          })
           .map((item) => {
             const isOpen = feedDetailOpen.includes(item.photoId);
             return (
-              <>
+              <React.Fragment key={item.photoId}>
                 <FeedCard
-                  key={item.photoId}
                   data={item}
                   onClick={() => {
                     openFeedDetail(item.photoId);
@@ -103,7 +133,7 @@ function Feed() {
                     photoId={item.photoId}
                   />
                 )}
-              </>
+              </React.Fragment>
             );
           })}
         <div ref={bottomObserverRef}></div>
@@ -121,7 +151,42 @@ const FeedContainer = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 50px;
   margin: auto 100px;
+  @media (max-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
   @media (max-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
   }
+`;
+
+const Navbar = styled.nav`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+`;
+
+const NavItems = styled.nav`
+  display: flex;
+  gap: 20px;
+  color: #999999;
+`;
+
+const NavItem = styled.div`
+  cursor: pointer;
+  padding: 5px 5px 5px 5px;
+
+  &.active {
+    color: black;
+  }
+`;
+
+const Header = styled.header`
+  padding: 16px;
+  width: 86%;
+  border-bottom: 1px solid #ddd;
+  margin: auto;
 `;
