@@ -88,7 +88,13 @@ function BoardDetail() {
                 <UserNickName>{data.nickName}</UserNickName>
               </UserDataBox>
               <ButtonContainer>
-                <ProfileVisitButton>채팅하기</ProfileVisitButton>
+                <ProfileVisitButton
+                  onClick={() => {
+                    navigate(`/chattest/${data.hostId}`);
+                  }}
+                >
+                  채팅하기
+                </ProfileVisitButton>
                 <ProfileVisitButton
                   onClick={() => {
                     navigate(`/page/${data.hostId}`);

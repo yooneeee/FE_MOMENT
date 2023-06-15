@@ -106,8 +106,6 @@ function Feed() {
     return <h3>에러가 발생하였습니다.</h3>;
   }
 
-  console.log(data);
-
   return (
     <>
       <Header>
