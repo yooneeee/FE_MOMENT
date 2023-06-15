@@ -58,7 +58,6 @@ function Feed() {
     ({ pageParam = 0 }) => getFeedAxios({ pageParam, activeNavItem }),
     {
       getNextPageParam: (lastPage) => {
-        // console.log(lastPage);
         if (lastPage.last === true) {
           return;
         } else {
@@ -85,8 +84,6 @@ function Feed() {
   if (isError) {
     return <h3>에러가 발생하였습니다.</h3>;
   }
-
-  console.log(data.pages);
 
   return (
     <>
@@ -120,12 +117,14 @@ function Feed() {
             const isOpen = feedDetailOpen.includes(item.photoId);
             return (
               <React.Fragment key={item.photoId}>
-                <FeedCard
-                  data={item}
-                  onClick={() => {
-                    openFeedDetail(item.photoId);
-                  }}
-                />
+                <FeedCardWrapper>
+                  <FeedCard
+                    data={item}
+                    onClick={() => {
+                      openFeedDetail(item.photoId);
+                    }}
+                  />
+                </FeedCardWrapper>
                 {isOpen && (
                   <FeedDetail
                     open={() => openFeedDetail(item.photoId)}
@@ -189,4 +188,23 @@ const Header = styled.header`
   width: 86%;
   border-bottom: 1px solid #ddd;
   margin: auto;
+`;
+
+const FeedCardWrapper = styled.div`
+  /* ...이전 스타일 코드... */
+
+  &:hover,
+  &:focus {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:not(:hover) {
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+  }
 `;
