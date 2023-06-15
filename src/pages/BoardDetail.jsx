@@ -126,6 +126,10 @@ export default BoardDetail;
 const Container = styled.div`
   padding: 20px 150px 20px 150px;
   display: flex;
+
+  @media (max-width: 1320px) {
+    flex-direction: column;
+  }
 `;
 
 const FlexContainer = styled.div`
@@ -144,10 +148,14 @@ const BoardImg = styled.div`
 `;
 
 const StyledForm = styled.div`
-  /* Form styles */
   position: fixed;
   right: 150px;
   transition: top 0.8s ease;
+  @media (max-width: 1320px) {
+    position: relative;
+    right: 0px;
+    margin-top: 20px;
+  }
 `;
 
 const Form = styled.div`
@@ -158,7 +166,7 @@ const Form = styled.div`
   overflow-y: auto;
   background-color: #f5f5f5;
   border-radius: 5px;
-  margin-left: auto;
+  /*   margin-left: auto; */
 
   /* Hide the scrollbar */
   ::-webkit-scrollbar {

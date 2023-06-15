@@ -6,26 +6,25 @@ import { useQuery } from "react-query";
 import { Chatting } from "../apis/mypage/chatting";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import MyPageTabs from "../components/MyPageTabs";
+// import MyPageTabs from "../components/MyPageTabs";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function ChatTest() {
   const { receiverId } = useParams();
   const { hostId } = useParams();
   const { userId, nickName, profileImg } = useSelector((state) => state.user);
-  console.log("받는사람아이디", receiverId);
-  //   console.log("호스트아이디", hostId);
-  console.log("유저아이디", userId);
-  console.log("유저닉네임", nickName);
-  console.log("유저프로필", profileImg);
+  // console.log("받는사람아이디", receiverId);
+  // console.log("호스트아이디", hostId);
+  // console.log("유저아이디", userId);
+  // console.log("유저닉네임", nickName);
+  // console.log("유저프로필", profileImg);
 
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState("");
   const [chatList, setChatList] = useState([]);
-  // const [chatData, setChatData] = useState({ chatRoomId: null });
 
   const scrollRef = useRef(null);
-  const client = useRef(null);
-  //   const prevSenderId = null
+  const client = useRef({});
 
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
@@ -40,15 +39,6 @@ function ChatTest() {
 
   console.log("챗리스트:::", data?.chatList);
 
-  /* STOMP 클라이언트 초기화 */
-  // useEffect(() => {
-  //   connect();
-  //   // 컴포넌트 언마운트 시 STOMP 연결 해제
-  //   return () => {
-  //     disconnect();
-  //   };
-  // }, []);
-
   /* 스크롤 */
   useEffect(() => {
     if (scrollRef.current) {
@@ -58,17 +48,30 @@ function ChatTest() {
   }, []);
 
   useEffect(() => {
+    console.log('유즈이펙트 ::::')
     if (data && data.chatRoomId) {
+      console.log('커넥팅 ::::')
       connect();
       // 컴포넌트 언마운트 시 STOMP 연결 해제
       return () => {
+        console.log('디스커넥팅 ::::')
         disconnect();
       };
     }
   }, [data]);
 
+    /* STOMP 클라이언트 초기화 */
+  // useEffect(() => {
+  //   connect();
+  //   // 컴포넌트 언마운트 시 STOMP 연결 해제
+  //   return () => {
+  //     disconnect();
+  //   };
+  // }, [data]);
+
   if (isLoading) {
-    return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
+    // return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
+    return <LoadingSpinner />
   }
 
   if (isError) {
@@ -76,12 +79,12 @@ function ChatTest() {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
 
-  /* STOMP 연결 */
+  // /* STOMP 연결 */
   const connect = () => {
     const socket = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`);
     const stomp = StompJs.Stomp.over(socket);
     stomp.connect({}, () => {
-      console.log("웹소켓 연결");
+      console.log("웹소켓 연결 ::::");
       setStompClient(stomp);
       subscribe(stomp);
     });
@@ -96,6 +99,35 @@ function ChatTest() {
     }
   };
 
+  // const connect = () => {
+  //   client.current = new StompJs.Client({
+  //     brokerURL: () => new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`),
+  //     onConnect: () => {
+  //       console.log('success');
+
+  //       subscribe();
+  //       publish()
+  //     },
+  //   });
+  //   client.current.activate();
+  // };
+
+  // const publish = () => {
+  //   if (!client.current.connected) return;
+
+  //   client.current.publish({
+  //     destination: '/pub/chat/send',
+  //     body: JSON.stringify({
+  //       message: message,
+  //       senderId: userId,
+  //       receiverId: receiverId,
+  //       chatRoomId: data.chatRoomId,
+  //     }),
+  //   });
+
+  //   setMessage('');
+  // };
+
   // STOMP 메시지 수신 이벤트 핸들링 -> 웹소켓
   // useEffect(() => {
   //   subscribe();
@@ -108,11 +140,15 @@ function ChatTest() {
 
     stompClient?.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
       console.log("변경 전", message);
-      const chatMessage = JSON.parse(message.body);
-      console.log("챗룸 ID", data.chatRoomId);
-      setChatList((prevChatList) => [...prevChatList, chatMessage]);
+      const chatMessage = JSON.parse(message.body)
       console.log("메세지 바디", chatMessage);
+      setChatList((prevChatList) => [...prevChatList, chatMessage]);
       console.log("변경 후", message);
+    // client.current.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
+    //   const json_body = JSON.parse(message.body);
+    //   setChatList((_chat_list) => [
+    //     ..._chat_list, json_body
+    //   ]);
     });
   };
 
@@ -128,7 +164,8 @@ function ChatTest() {
       };
       stompClient.send("/pub/chat/send", {}, JSON.stringify(chatMessage));
       console.log("챗", chatMessage);
-      setChatList((prevChatList) => [...prevChatList, chatMessage]);
+      setChatList((ChatList) => [...ChatList, chatMessage]);
+
 
       // 스크롤
       // if (scrollRef.current) {
@@ -178,7 +215,7 @@ function ChatTest() {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => enterHandler(e)}
+            onKeyPress={(e) => enterHandler(e)}
           />
           <SendButton onClick={sendMessage}>전송</SendButton>
         </ChatInputContainer>
