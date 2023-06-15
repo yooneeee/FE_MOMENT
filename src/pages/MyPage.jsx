@@ -198,5 +198,5 @@ const WorkItem = styled.div`
 `;
 const Content = styled.div`
   flex-grow: 1;
-  margin: 30px;
+  margin-top: 50px;
 `;
