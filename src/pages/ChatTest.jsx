@@ -100,35 +100,6 @@ function ChatTest() {
     }
   };
 
-  // const connect = () => {
-  //   client.current = new StompJs.Client({
-  //     brokerURL: () => new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`),
-  //     onConnect: () => {
-  //       console.log('success');
-
-  //       subscribe();
-  //       publish()
-  //     },
-  //   });
-  //   client.current.activate();
-  // };
-
-  // const publish = () => {
-  //   if (!client.current.connected) return;
-
-  //   client.current.publish({
-  //     destination: '/pub/chat/send',
-  //     body: JSON.stringify({
-  //       message: message,
-  //       senderId: userId,
-  //       receiverId: receiverId,
-  //       chatRoomId: data.chatRoomId,
-  //     }),
-  //   });
-
-  //   setMessage('');
-  // };
-
   // STOMP 메시지 수신 이벤트 핸들링 -> 웹소켓
   // useEffect(() => {
   //   subscribe();
@@ -160,7 +131,7 @@ function ChatTest() {
       };
       stompClient.send("/pub/chat/send", {}, JSON.stringify(chatMessage));
       console.log("챗", chatMessage);
-      setChatList((ChatList) => [...ChatList, chatMessage]);
+      // setChatList((ChatList) => [...ChatList, chatMessage]);
 
       // 스크롤
       // if (scrollRef.current) {
