@@ -41,7 +41,7 @@ function Start() {
         </ImageContainer1>
 
         <DescriptionContainer>
-          <p>당신의 모든 순간 모먼트와 함께</p>
+          <DesTitle>당신의 모든 순간 모먼트와 함께</DesTitle>
           <Des>모델과 사진작가 매칭 플랫폼</Des>
           <StartButton
             onClick={() => {
@@ -90,12 +90,16 @@ const NavigationBar = styled.nav`
   height: 50px;
 `;
 
+const DesTitle = styled.p`
+  font-family: "LINESeedKR-Bd";
+`;
+
 const Des = styled.p`
+  font-family: "LINESeedKR-Bd";
   margin-top: 20px;
-  font-size: 60px;
-  font-weight: 900;
+  font-size: 65px;
+  /* font-weight: 400; */
   color: #2f2f2f;
-  text-shadow: 2px 2px 6px gray;
   @media (max-width: 1470px) {
     font-size: 33px;
     width: 260px;
@@ -130,6 +134,7 @@ const ContentContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
 `;
+
 const DescriptionContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -139,7 +144,7 @@ const DescriptionContainer = styled.div`
   text-align: center;
   font-size: 30px;
   font-weight: bold;
-  text-shadow: 2px 2px 6px gray;
+  /* text-shadow: 1px 1px 1px gray; */
   @media (max-width: 1565px) {
     margin: 0 90px;
     display: flex;
