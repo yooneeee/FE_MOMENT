@@ -74,14 +74,15 @@ const CreateFeed = (props) => {
   const changeHashTagInput = (e) => {
     setInputHashTag(e.target.value);
   };
+
   ///////////////////////////////////////////////////////
+
   const { open, close } = props;
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [content, onChangeContentHandler] = useInput();
   const modalRef = useRef(null);
-  const navigate = useNavigate();
-  const loginUserData = UserDataComponent(); // 나의 유저 데이터 받아오는 코드
+  const loginUserData = UserDataComponent();
   const queryClient = useQueryClient();
 
   // 이미지 미리보기
@@ -181,6 +182,7 @@ const CreateFeed = (props) => {
                     파일 업로드하기
                     <input
                       type="file"
+                      multiple={true}
                       name="file"
                       id="file"
                       onChange={handleFileChange}
