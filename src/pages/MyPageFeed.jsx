@@ -157,13 +157,43 @@ function MyPageFeed() {
               {data.photoList.map((item, index) => {
                 const isOpen = feedDetailOpen.includes(item.photoId);
                 return (
-                  <React.Fragment key={index}>
+                  <>
                     <WorkItem
                       src={item.photoUrl}
                       onClick={() => {
                         openFeedDetail(item.photoId);
                       }}
-                    />
+                    >
+                      <EditButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleButtonOpen(index);
+                        }}
+                      >
+                        <FiSettings size={14} />
+                        <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
+                      </EditButton>
+                      {editButtons[index] && (
+                        <ToggleWriteMenu ref={toggleWriteMenuRef}>
+                          <Button
+                            onClick={(e) => {
+                              modifyButton(e, index);
+                              e.stopPropagation();
+                            }}
+                          >
+                            수정
+                          </Button>
+                          <Button
+                            onClick={(e) => {
+                              deleteButtonHandler(item.photoId);
+                              e.stopPropagation();
+                            }}
+                          >
+                            삭제
+                          </Button>
+                        </ToggleWriteMenu>
+                      )}
+                    </WorkItem>
                     {isOpen && (
                       <FeedDetail
                         open={() => openFeedDetail(item.photoId)}
@@ -171,36 +201,7 @@ function MyPageFeed() {
                         photoId={item.photoId}
                       />
                     )}
-                    <EditButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleButtonOpen(index);
-                      }}
-                    >
-                      <FiSettings size={14} />
-                      <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
-                    </EditButton>
-                    {editButtons[index] && (
-                      <ToggleWriteMenu ref={toggleWriteMenuRef}>
-                        <Button
-                          onClick={(e) => {
-                            modifyButton(e, index);
-                            e.stopPropagation();
-                          }}
-                        >
-                          수정
-                        </Button>
-                        <Button
-                          onClick={(e) => {
-                            deleteButtonHandler(item.photoId);
-                            e.stopPropagation();
-                          }}
-                        >
-                          삭제
-                        </Button>
-                      </ToggleWriteMenu>
-                    )}
-                  </React.Fragment>
+                  </>
                 );
               })}
             </WorkList>
@@ -239,6 +240,8 @@ const EditButton = styled.button`
   left: 30px;
   transform: translate(-50%, -50%);
   display: none;
+  /*   display: flex; */
+  z-index: 100;
   background-color: #ffffff;
   border: none;
   border-radius: 8px;
