@@ -5,7 +5,7 @@ import styled from "styled-components";
 function Footer() {
   return (
     <FooterStyles>
-      <span>copyright @SCC</span>
+      <span>copyright @벼랑위의 포모</span>
     </FooterStyles>
   );
 }
