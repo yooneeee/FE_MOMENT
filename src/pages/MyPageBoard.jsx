@@ -10,6 +10,9 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { FiSettings } from "react-icons/fi";
 import { BiDownArrow } from "react-icons/bi";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
+import CreateBoard from "../components/CreateBoard";
+import EditBoard from "../components/EditBoard";
 
 function MyPageBoard() {
   const { hostId } = useParams();
@@ -21,6 +24,12 @@ function MyPageBoard() {
   const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
   );
+
+  const [boardModalOpen, setBoardModalOpen] = useState(false);
+  const [selectedBoardId, setSelectedBoardId] = useState(null);
+  const openBoardModal = () => {
+    setBoardModalOpen(true);
+  };
 
   /* Delete 서버 */
   const deleteMutation = useMutation(mypageBoardDelete, {
@@ -40,16 +49,10 @@ function MyPageBoard() {
   });
 
   /* 삭제, 수정 버튼 */
-  const modifyButton = (e, index) => {
-    Swal.fire({
-      text: "준비중인 서비스입니다! 조금만 기다려주세요🙏",
-      icon: "warning",
-      confirmButtonColor: "#483767",
-      confirmButtonText: "확인",
-    });
-    toggleButtonClose(index);
+  const editButtonHandler = (boardId) => {
+    setSelectedBoardId(boardId);
+    openBoardModal();
   };
-
   const deleteButtonHandler = (boardId) => {
     try {
       Swal.fire({
@@ -160,7 +163,11 @@ function MyPageBoard() {
                     </EditButton>
                     {editButtons[index] && (
                       <ToggleWriteMenu ref={toggleWriteMenuRef}>
-                        <Button onClick={(e) => modifyButton(e, index)}>
+                        <Button
+                          onClick={() => {
+                            editButtonHandler(item.boardId);
+                          }}
+                        >
                           수정
                         </Button>
                         <Button
@@ -169,6 +176,14 @@ function MyPageBoard() {
                           삭제
                         </Button>
                       </ToggleWriteMenu>
+                    )}
+                    {selectedBoardId === item.boardId && (
+                      <EditBoard
+                        id={item.boardId}
+                        item={item}
+                        open={openBoardModal}
+                        close={() => setSelectedBoardId(null)}
+                      />
                     )}
                   </BoardItemContainer>
                 );
@@ -262,4 +277,5 @@ const Button = styled.button`
   border: none;
   border-radius: 8px;
   font-weight: 900;
+  z-index: 10;
 `;
