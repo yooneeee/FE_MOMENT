@@ -410,6 +410,7 @@ const LeftMenu = styled.div`
 `;
 
 const HeaderTitle = styled.p`
+  font-family: "UhBeeGENWOO";
   display: flex;
   font-size: 25px;
   font-weight: 600;
