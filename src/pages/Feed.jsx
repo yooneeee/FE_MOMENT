@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import "../css/App.css";
 import { getFeedAxios } from "../apis/feed/getFeedAxios";
@@ -13,6 +13,25 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 function Feed() {
   const [activeNavItem, setActiveNavItem] = useState("Latest");
+  const selectedBox = useRef();
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentOpt, setCurrentOpt] = useState("닉네임");
+  let optArr = ["닉네임,해시태그"];
+
+  const BtnDropMenuOpen = (e) => {
+    setIsOpen(!isOpen);
+  };
+  const BtnDropMenuClose = (e) => {
+    if (e.target !== selectedBox.current && isOpen) {
+      setIsOpen(!isOpen);
+    }
+  };
+  const OptClick = (e) => {
+    setCurrentOpt(e);
+    if (isOpen) {
+      setIsOpen(!isOpen);
+    }
+  };
 
   const handleNavItemClick = (item) => {
     setActiveNavItem(item);
@@ -91,6 +110,8 @@ function Feed() {
       <Header>
         <Navbar>
           <span>피드</span>
+          <input type="text"></input>
+          <button type="button">검색</button>
           <NavItems>
             <NavItem
               className={activeNavItem === "Latest" ? "active" : ""}
