@@ -5,7 +5,7 @@ const loginAxios = async ({ email, password }) => {
     const response = await instance.post("/users/login", { email, password });
     return response.data;
   } catch (error) {
-    return Promise.reject(error.response.data.message);
+    return Promise.reject(error);
   }
 };
 

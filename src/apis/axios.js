@@ -41,9 +41,9 @@ instance.interceptors.response.use(
       sessionStorage.setItem("Refresh_key", refreshKeyHeader);
     }
     return response;
-  },
-  function (error) {
-    const errorMessage = error.response.data.errorMessage;
+  }
+  /*  function (error) {
+    const errorMessage = error.response.data;
     console.log(errorMessage);
     if (errorMessage === "리프레시 토큰이 없습니다.") {
       sessionStorage.removeItem("Access_key");
@@ -51,7 +51,7 @@ instance.interceptors.response.use(
       alert("토큰 유효기간이 만료되어 초기 페이지로 이동합니다.");
       window.location.href = "/";
     }
-  }
+  } */
 );
 
 export { instance };

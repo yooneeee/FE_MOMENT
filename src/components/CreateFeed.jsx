@@ -128,7 +128,7 @@ const CreateFeed = (props) => {
         confirmButtonText: "확인",
       });
       close();
-      navigate("/feeds");
+      queryClient.invalidateQueries("getFeedAxios");
     },
     onError: (error) => {
       alert(error);
