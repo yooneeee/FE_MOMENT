@@ -10,6 +10,8 @@ import { AiOutlineClose } from "react-icons/ai";
 import UserDataComponent from "./UserDataComponent";
 import styled from "styled-components";
 import Swal from "sweetalert2";
+import { TbBoxMultiple } from "react-icons/tb";
+import { AiOutlinePlus } from "react-icons/ai";
 
 const CreateFeed = (props) => {
   // 해시태그 기능
@@ -76,10 +78,10 @@ const CreateFeed = (props) => {
   };
 
   ///////////////////////////////////////////////////////
-
   const { open, close } = props;
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [uploadToggleBtn, setUploadToggleBtn] = useState(false);
   const [content, onChangeContentHandler] = useInput();
   const modalRef = useRef(null);
   const loginUserData = UserDataComponent();
@@ -195,6 +197,32 @@ const CreateFeed = (props) => {
                     className="preview-image"
                   />
                 )}
+                {uploadToggleBtn && (
+                  <UploadToggleContainer>
+                    <ImgContainer>
+                      {previewImage !== null ? (
+                        <ImgBox>
+                          <UploadImg img={previewImage} />
+                        </ImgBox>
+                      ) : null}
+                      <PlusButton>
+                        <AiOutlinePlus
+                          size={"17px"}
+                          onClick={() => {
+                            alert("사진추가");
+                          }}
+                        />
+                      </PlusButton>
+                    </ImgContainer>
+                  </UploadToggleContainer>
+                )}
+                <MultipleUpload
+                  onClick={() => {
+                    setUploadToggleBtn(!uploadToggleBtn);
+                  }}
+                >
+                  <TbBoxMultiple size={"25px"} />
+                </MultipleUpload>
               </div>
             </main>
 
@@ -286,4 +314,56 @@ const HashTagInput = styled.input`
 const HashTagInputTitle = styled.div`
   padding-bottom: 10px;
   padding-left: 6px;
+`;
+
+const MultipleUpload = styled.button`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0 20px 28px 0;
+  padding: 7px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(58, 58, 58, 0.5);
+  color: white;
+`;
+
+const UploadToggleContainer = styled.div`
+  display: flex;
+  position: absolute;
+  background-color: rgba(58, 58, 58, 0.5);
+  bottom: 0;
+  margin-bottom: 90px;
+  right: 0;
+  margin-right: 20px;
+  padding: 15px;
+  border-radius: 5px;
+`;
+
+const ImgContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+`;
+
+const ImgBox = styled.div`
+  width: 100px;
+  height: 100px;
+`;
+
+const UploadImg = styled.div`
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-image: ${(props) => `url(${props.img})`};
+`;
+
+const PlusButton = styled.button`
+  border-radius: 50%;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
 `;
