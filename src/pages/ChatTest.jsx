@@ -48,19 +48,19 @@ function ChatTest() {
   }, []);
 
   useEffect(() => {
-    console.log('유즈이펙트 ::::')
+    console.log("유즈이펙트 ::::");
     if (data && data.chatRoomId) {
-      console.log('커넥팅 ::::')
+      console.log("커넥팅 ::::");
       connect();
       // 컴포넌트 언마운트 시 STOMP 연결 해제
       return () => {
-        console.log('디스커넥팅 ::::')
+        console.log("디스커넥팅 ::::");
         disconnect();
       };
     }
   }, [data]);
 
-    /* STOMP 클라이언트 초기화 */
+  /* STOMP 클라이언트 초기화 */
   // useEffect(() => {
   //   connect();
   //   // 컴포넌트 언마운트 시 STOMP 연결 해제
@@ -71,7 +71,7 @@ function ChatTest() {
 
   if (isLoading) {
     // return <h1>로딩 중입니다(oﾟvﾟ)ノ</h1>;
-    return <LoadingSpinner />
+    return <LoadingSpinner />;
   }
 
   if (isError) {
@@ -81,8 +81,9 @@ function ChatTest() {
 
   // /* STOMP 연결 */
   const connect = () => {
-    const socket = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`);
-    const stomp = StompJs.Stomp.over(socket);
+    const socketFactory = () =>
+      new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`);
+    const stomp = StompJs.Stomp.over(socketFactory);
     stomp.connect({}, () => {
       console.log("웹소켓 연결 ::::");
       setStompClient(stomp);
@@ -140,15 +141,10 @@ function ChatTest() {
 
     stompClient?.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
       console.log("변경 전", message);
-      const chatMessage = JSON.parse(message.body)
+      const chatMessage = JSON.parse(message.body);
       console.log("메세지 바디", chatMessage);
       setChatList((prevChatList) => [...prevChatList, chatMessage]);
       console.log("변경 후", message);
-    // client.current.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
-    //   const json_body = JSON.parse(message.body);
-    //   setChatList((_chat_list) => [
-    //     ..._chat_list, json_body
-    //   ]);
     });
   };
 
@@ -165,7 +161,6 @@ function ChatTest() {
       stompClient.send("/pub/chat/send", {}, JSON.stringify(chatMessage));
       console.log("챗", chatMessage);
       setChatList((ChatList) => [...ChatList, chatMessage]);
-
 
       // 스크롤
       // if (scrollRef.current) {
@@ -188,7 +183,7 @@ function ChatTest() {
       {/* <MyPageTabs /> */}
       <ChatContainer ref={scrollRef}>
         {chatList.map((chat) => (
-          <React.Fragment key={chat.id}>
+          <React.Fragment key={chat.uuid}>
             <ReceiverProfile
               isSender={chat.senderId === userId}
               src={
