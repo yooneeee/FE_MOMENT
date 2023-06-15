@@ -109,6 +109,18 @@ const CardDesign = styled.div`
   width: 100%;
   overflow: hidden;
   box-shadow: rgb(135, 135, 135) 0px 4px 7px;
+
+  &:hover {
+    transform: translateY(-10px);
+    transition: transform 1s ease;
+    box-shadow: rgb(135, 135, 135) 0px 6px 10px;
+  }
+
+  &:not(:hover) {
+    transform: translateY(0);
+    transition: transform 1s ease;
+    box-shadow: rgb(135, 135, 135) 0px 4px 7px;
+  }
 `;
 
 const CardHeader = styled.div`
