@@ -13,6 +13,7 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 function Feed() {
   const [activeNavItem, setActiveNavItem] = useState("Latest");
+
   const selectedBox = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const [currentOpt, setCurrentOpt] = useState("닉네임");
@@ -77,6 +78,7 @@ function Feed() {
     ({ pageParam = 0 }) => getFeedAxios({ pageParam, activeNavItem }),
     {
       getNextPageParam: (lastPage) => {
+        console.log(lastPage);
         if (lastPage.last === true) {
           return;
         } else {
@@ -109,8 +111,8 @@ function Feed() {
       <Header>
         <Navbar>
           <span>피드</span>
-          <input type="text"></input>
-          <button type="button">검색</button>
+          {/*           <input type="text"></input>
+          <button type="button">검색</button> */}
           <NavItems>
             <NavItem
               className={activeNavItem === "Latest" ? "active" : ""}
@@ -130,32 +132,26 @@ function Feed() {
         </Navbar>
       </Header>
       <FeedContainer>
-        {data.pages
-          .flatMap((page) => {
-            return page.content;
-          })
-          .map((item) => {
-            const isOpen = feedDetailOpen.includes(item.photoId);
-            return (
-              <React.Fragment key={item.photoId}>
-                <FeedCardWrapper>
-                  <FeedCard
-                    data={item}
-                    onClick={() => {
-                      openFeedDetail(item.photoId);
-                    }}
-                  />
-                </FeedCardWrapper>
-                {isOpen && (
-                  <FeedDetail
-                    open={() => openFeedDetail(item.photoId)}
-                    close={() => closeFeedDetail(item.photoId)}
-                    photoId={item.photoId}
-                  />
-                )}
-              </React.Fragment>
-            );
-          })}
+        {data.pages[0].content.map((item) => {
+          const isOpen = feedDetailOpen.includes(item.photoId);
+          return (
+            <React.Fragment key={item.photoId}>
+              <FeedCard
+                data={item}
+                onClick={() => {
+                  openFeedDetail(item.photoId);
+                }}
+              />
+              {isOpen && (
+                <FeedDetail
+                  open={() => openFeedDetail(item.photoId)}
+                  close={() => closeFeedDetail(item.photoId)}
+                  photoId={item.photoId}
+                />
+              )}
+            </React.Fragment>
+          );
+        })}
         <div ref={bottomObserverRef}></div>
       </FeedContainer>
       {showButton && <ScrollToTopButton />}
@@ -209,23 +205,4 @@ const Header = styled.header`
   width: 86%;
   border-bottom: 1px solid #ddd;
   margin: auto;
-`;
-
-const FeedCardWrapper = styled.div`
-  /* ...이전 스타일 코드... */
-
-  &:hover,
-  &:focus {
-    transform: scale(1.05);
-    transition: transform 0.3s ease-in-out;
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-
-  &:not(:hover) {
-    transform: scale(1);
-    transition: transform 0.3s ease-in-out;
-  }
 `;
