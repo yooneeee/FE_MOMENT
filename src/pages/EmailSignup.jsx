@@ -121,12 +121,13 @@ function EmailSignup() {
         confirmButtonText: "확인",
       });
     },
-    onError: () => {
+    onError: (error) => {
+      console.log(error);
       setIsSendEmail(false);
       Swal.fire({
         icon: "error",
         title: "인증번호 전송 실패!",
-        text: `이미 가입된 이메일입니다.😥`,
+        /*      text: `이미 가입된 이메일입니다.😥`, */
         confirmButtonText: "확인",
       });
     },

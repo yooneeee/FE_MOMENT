@@ -19,7 +19,7 @@ const sendEmailAxios = async (email) => {
     const response = await instance.post("/emails/auth", email);
     return response.data;
   } catch (error) {
-    throw error.response;
+    throw error;
   }
 };
 // 이메일 인증코드 확인API, method: post, url: /emails/check
