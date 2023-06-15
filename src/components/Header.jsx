@@ -117,7 +117,7 @@ function Header() {
             toggleWriteMenuClose();
           }}
         >
-          Moment
+          <MainLogo src="/img/mainlogo2.png" />
         </HeaderTitle>
         <CategoryBox>
           <HeaderButton
@@ -410,6 +410,7 @@ const LeftMenu = styled.div`
 `;
 
 const HeaderTitle = styled.p`
+  font-family: "UhBeeGENWOO";
   display: flex;
   font-size: 25px;
   font-weight: 600;
@@ -475,7 +476,7 @@ const ProfileImg = styled.img`
 const ToggleProfileMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 170px;
+  right: 150px;
   background-color: white;
   padding: 10px;
   display: flex;
@@ -485,6 +486,10 @@ const ToggleProfileMenu = styled.div`
     top: 135px;
     right: 120px;
   }
+`;
+
+const MainLogo = styled.img`
+  width: 50px;
 `;
 
 export default Header;

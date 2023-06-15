@@ -150,8 +150,7 @@ const HashTag = styled.div`
 const ContentArea = styled.div`
   margin: 20px 10px 10px 10px;
   width: 300px;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 17px;
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: break-word;

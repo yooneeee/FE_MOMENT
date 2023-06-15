@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import "../css/App.css";
 import { getFeedAxios } from "../apis/feed/getFeedAxios";
@@ -13,6 +13,26 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 function Feed() {
   const [activeNavItem, setActiveNavItem] = useState("Latest");
+
+  const selectedBox = useRef();
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentOpt, setCurrentOpt] = useState("닉네임");
+  let optArr = ["닉네임,해시태그"];
+
+  const BtnDropMenuOpen = (e) => {
+    setIsOpen(!isOpen);
+  };
+  const BtnDropMenuClose = (e) => {
+    if (e.target !== selectedBox.current && isOpen) {
+      setIsOpen(!isOpen);
+    }
+  };
+  const OptClick = (e) => {
+    setCurrentOpt(e);
+    if (isOpen) {
+      setIsOpen(!isOpen);
+    }
+  };
 
   const handleNavItemClick = (item) => {
     setActiveNavItem(item);
@@ -58,7 +78,7 @@ function Feed() {
     ({ pageParam = 0 }) => getFeedAxios({ pageParam, activeNavItem }),
     {
       getNextPageParam: (lastPage) => {
-        // console.log(lastPage);
+        console.log(lastPage);
         if (lastPage.last === true) {
           return;
         } else {
@@ -86,13 +106,13 @@ function Feed() {
     return <h3>에러가 발생하였습니다.</h3>;
   }
 
-  console.log(data.pages);
-
   return (
     <>
       <Header>
         <Navbar>
           <span>피드</span>
+          {/*           <input type="text"></input>
+          <button type="button">검색</button> */}
           <NavItems>
             <NavItem
               className={activeNavItem === "Latest" ? "active" : ""}
@@ -112,30 +132,26 @@ function Feed() {
         </Navbar>
       </Header>
       <FeedContainer>
-        {data.pages
-          .flatMap((page) => {
-            return page.content;
-          })
-          .map((item) => {
-            const isOpen = feedDetailOpen.includes(item.photoId);
-            return (
-              <React.Fragment key={item.photoId}>
-                <FeedCard
-                  data={item}
-                  onClick={() => {
-                    openFeedDetail(item.photoId);
-                  }}
+        {data.pages[0].content.map((item) => {
+          const isOpen = feedDetailOpen.includes(item.photoId);
+          return (
+            <React.Fragment key={item.photoId}>
+              <FeedCard
+                data={item}
+                onClick={() => {
+                  openFeedDetail(item.photoId);
+                }}
+              />
+              {isOpen && (
+                <FeedDetail
+                  open={() => openFeedDetail(item.photoId)}
+                  close={() => closeFeedDetail(item.photoId)}
+                  photoId={item.photoId}
                 />
-                {isOpen && (
-                  <FeedDetail
-                    open={() => openFeedDetail(item.photoId)}
-                    close={() => closeFeedDetail(item.photoId)}
-                    photoId={item.photoId}
-                  />
-                )}
-              </React.Fragment>
-            );
-          })}
+              )}
+            </React.Fragment>
+          );
+        })}
         <div ref={bottomObserverRef}></div>
       </FeedContainer>
       {showButton && <ScrollToTopButton />}

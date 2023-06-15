@@ -70,6 +70,9 @@ const TabsStyles = styled.div`
   left: 0;
   top: 0;
   left: 0;
+  @media (max-width: 768px) {
+    padding-left: 0px;
+  }
 `;
 const MaueBar = styled.div`
   display: flex;
@@ -91,5 +94,8 @@ const TabButton = styled.button`
   &.active {
     color: #000000;
     font-weight: 900;
+  }
+  @media (max-width: 768px) {
+    margin-right: 10px;
   }
 `;

@@ -46,4 +46,20 @@ const mypageBoardDelete = async (boardId) => {
   }
 };
 
-export { mypage, mypageInformationAxios, mypageFeedDelete, mypageBoardDelete };
+/* 마이페이지 게시물 수정 */
+const mypageBoardEditAxios = async ({ boardId, editData }) => {
+  try {
+    const response = await instance.put(`/boards/${boardId}`, editData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export {
+  mypage,
+  mypageInformationAxios,
+  mypageFeedDelete,
+  mypageBoardDelete,
+  mypageBoardEditAxios,
+};
