@@ -78,7 +78,7 @@ function Feed() {
     ({ pageParam = 0 }) => getFeedAxios({ pageParam, activeNavItem }),
     {
       getNextPageParam: (lastPage) => {
-        console.log(lastPage);
+        // console.log(lastPage);
         if (lastPage.last === true) {
           return;
         } else {
@@ -132,26 +132,30 @@ function Feed() {
         </Navbar>
       </Header>
       <FeedContainer>
-        {data.pages[0].content.map((item) => {
-          const isOpen = feedDetailOpen.includes(item.photoId);
-          return (
-            <React.Fragment key={item.photoId}>
-              <FeedCard
-                data={item}
-                onClick={() => {
-                  openFeedDetail(item.photoId);
-                }}
-              />
-              {isOpen && (
-                <FeedDetail
-                  open={() => openFeedDetail(item.photoId)}
-                  close={() => closeFeedDetail(item.photoId)}
-                  photoId={item.photoId}
+        {data.pages
+          .flatMap((page) => {
+            return page.content;
+          })
+          .map((item) => {
+            const isOpen = feedDetailOpen.includes(item.photoId);
+            return (
+              <React.Fragment key={item.photoId}>
+                <FeedCard
+                  data={item}
+                  onClick={() => {
+                    openFeedDetail(item.photoId);
+                  }}
                 />
-              )}
-            </React.Fragment>
-          );
-        })}
+                {isOpen && (
+                  <FeedDetail
+                    open={() => openFeedDetail(item.photoId)}
+                    close={() => closeFeedDetail(item.photoId)}
+                    photoId={item.photoId}
+                  />
+                )}
+              </React.Fragment>
+            );
+          })}
         <div ref={bottomObserverRef}></div>
       </FeedContainer>
       {showButton && <ScrollToTopButton />}
