@@ -156,7 +156,7 @@ function ChatTest() {
         chatRoomId: data.chatRoomId,
       };
       stompClient.send("/pub/chat/send", {}, JSON.stringify(chatMessage));
-      console.log("챗", chatMessage);
+      // console.log("챗", chatMessage);
       // setChatList((ChatList) => [...ChatList, chatMessage]);
 
       // 스크롤
