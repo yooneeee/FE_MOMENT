@@ -14,6 +14,7 @@ const ChatTest = () => {
 
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [overLimit, setOverLimit] = useState(false);
 
   const client = useRef({});
   const scrollRef = useRef();
@@ -109,6 +110,7 @@ const ChatTest = () => {
     });
 
     setMessage("");
+    setOverLimit(false);
   };
 
   const enterHandler = (e, message) => {
@@ -164,13 +166,21 @@ const ChatTest = () => {
       )}
       <div ref={scrollRef}></div>
       <SendContainer>
+        {overLimit && <span>1000자를 초과하였습니다!</span>}
         <ChatInputContainer>
           <ChatInput
             rows={message.split("\n").length || 1} // 줄바꿈의 수에 따라 row를 조절
             type={"text"}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행하라
+            onChange={(e) => {
+              if (e.target.value.length <= 1000) {
+                setMessage(e.target.value);
+                setOverLimit(false); // 길이 제한이 초과되지 않았으므로 경고를 숨김
+              } else {
+                setOverLimit(true); // 길이 제한이 초과되었으므로 경고를 표시
+              }
+            }}
+            // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행
             onKeyPress={(e) => enterHandler(e, message)}
           />
           <SendButton onClick={() => publish(message)}>전송</SendButton>
@@ -204,6 +214,9 @@ const SendContainer = styled.div`
   margin: 10px auto;
 
   /* position: relative; */
+  span {
+    color: red;
+  }
 `;
 
 const MessageContainer = styled.div`
