@@ -19,10 +19,10 @@ const ChatTest = () => {
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
-  console.log("채팅할사람", data);
+  // console.log("채팅할사람", data);
 
   const chatRoomId = data?.chatRoomId;
-  console.log("모먼트", data?.chatRoomId);
+  // console.log("모먼트", data?.chatRoomId);
 
   useEffect(() => {
     if (data?.chatList) {
@@ -36,7 +36,7 @@ const ChatTest = () => {
         new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`), // proxy를 통한 접속
 
       debug: function (str) {
-        console.log(str);
+        // console.log(str);
       },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
@@ -45,7 +45,7 @@ const ChatTest = () => {
         subscribe();
       },
       onStompError: (frame) => {
-        console.error(frame);
+        // console.error(frame);
       },
     });
 
