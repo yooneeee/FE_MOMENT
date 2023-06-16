@@ -20,8 +20,7 @@ import { AiOutlineEyeInvisible } from "react-icons/ai";
 import Swal from "sweetalert2";
 
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
-// console.log(process.env.REST_API_KEY);
-// console.log(process.env.REDIRECT_URI);
+
 function Login() {
   const navigate = useNavigate();
   const [email, onChangeEmailHandler, resetEmail] = useInput("");
