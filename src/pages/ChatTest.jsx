@@ -43,7 +43,7 @@ const ChatTest = () => {
         new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`), // proxy를 통한 접속
 
       debug: function (str) {
-        console.log(str);
+        // console.log(str);
       },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
@@ -52,7 +52,7 @@ const ChatTest = () => {
         subscribe();
       },
       onStompError: (frame) => {
-        console.error(frame);
+        // console.error(frame);
       },
     });
 

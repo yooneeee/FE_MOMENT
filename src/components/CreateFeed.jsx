@@ -262,13 +262,13 @@ const CreateFeed = (props) => {
                 )}
                 <MultipleUpload
                   onClick={() => {
-                    // setUploadToggleBtn(!uploadToggleBtn);
-                    Swal.fire({
-                      icon: "error",
-                      title: "현재 준비 중인 기능입니다.",
-                      text: `곧 완성될 수 있도록 최선을 다하겠습니다.`,
-                      confirmButtonText: "확인",
-                    });
+                    setUploadToggleBtn(!uploadToggleBtn);
+                    // Swal.fire({
+                    //   icon: "error",
+                    //   title: "현재 준비 중인 기능입니다.",
+                    //   text: `곧 완성될 수 있도록 최선을 다하겠습니다.`,
+                    //   confirmButtonText: "확인",
+                    // });
                   }}
                 >
                   <TbBoxMultiple size={"25px"} />
