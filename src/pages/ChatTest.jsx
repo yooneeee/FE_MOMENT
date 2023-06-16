@@ -19,11 +19,14 @@ const ChatTest = () => {
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
-  // console.log("채팅할사람", data);
+  console.log("채팅할사람", data);
+
+  const chatRoomId = data?.chatRoomId;
+  console.log("모먼트", data?.chatRoomId);
 
   useEffect(() => {
     if (data?.chatList) {
-      setChatMessages(data.chatList);
+      setChatMessages(data?.chatList);
     }
   }, [data]);
 
@@ -54,28 +57,44 @@ const ChatTest = () => {
   };
 
   const subscribe = () => {
-    client.current.subscribe(
-      `/sub/chat/room/${data.chatRoomId}`,
-      ({ body }) => {
-        setChatMessages((_chatMessages) => [
-          ..._chatMessages,
-          JSON.parse(body),
-        ]);
-      }
-    );
+    if (data?.chatRoomId) {
+      client.current?.subscribe(
+        `/sub/chat/room/${data.chatRoomId}`,
+        ({ body }) => {
+          setChatMessages((_chatMessages) => [
+            ..._chatMessages,
+            JSON.parse(body),
+          ]);
+        }
+      );
+    }
   };
 
-  useEffect(() => {
-    connect();
+  // useEffect(() => {
+  //   connect();
 
-    return () => disconnect();
-  }, []);
+  //   return () => disconnect();
+  // }, []);
+  // useEffect(() => {
+  //   if (data) {
+  //     // Check if data has been loaded
+  //     connect();
+  //   }
+  //   return () => disconnect();
+  // }, [data]);
+  useEffect(() => {
+    if (data?.chatRoomId) {
+      // chatRoomId가 존재할 때만 connect 함수 실행
+      connect();
+      return () => disconnect(); // 컴포넌트 unmount 시점에 disconnect
+    }
+  }, [data?.chatRoomId]);
 
   if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (isError) {
+  if (isError || !data) {
     // console.log("오류", isError);
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
