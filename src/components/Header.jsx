@@ -393,7 +393,7 @@ const ToggleMenu = styled.div`
 const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 100%;
-  right: 75px;
+  right: 55px;
   background-color: white;
   padding: 10px;
   display: flex;

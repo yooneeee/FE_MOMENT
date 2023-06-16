@@ -74,7 +74,7 @@ const FeedDetail = (props) => {
             <main className="main-body">
               <div className="imgContainer">
                 <img
-                  src={data.photoUrl}
+                  src={data.photoUrls[0]}
                   className="feedDetailImg"
                   alt="피드사진"
                 />
