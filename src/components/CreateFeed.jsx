@@ -79,28 +79,55 @@ const CreateFeed = (props) => {
 
   ///////////////////////////////////////////////////////
   const { open, close } = props;
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState([]);
+  const [previewImage, setPreviewImage] = useState([]);
   const [uploadToggleBtn, setUploadToggleBtn] = useState(false);
+  const [mainImageIndex, setMainImageIndex] = useState(0);
   const [content, onChangeContentHandler] = useInput();
   const modalRef = useRef(null);
   const loginUserData = UserDataComponent();
   const queryClient = useQueryClient();
 
-  // 이미지 미리보기
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
+    const files = e.target.files;
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setPreviewImage(null);
-    }
+    const fileArray = Array.from(files);
+
+    setSelectedFile([...selectedFile, ...fileArray]);
+
+    fileArray.forEach((file) => {
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setPreviewImage((prevImages) => [...prevImages, reader.result]);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  // console.log(selectedFile);
+  // console.log(previewImage);
+
+  const handleDeletePhoto = (index) => {
+    setSelectedFile((prevSelectedFile) => {
+      const newSelectedFile = [...prevSelectedFile];
+      newSelectedFile.splice(index, 1);
+      return newSelectedFile;
+    });
+
+    setPreviewImage((prevPreviewImage) => {
+      const newPreviewImage = [...prevPreviewImage];
+      newPreviewImage.splice(index, 1);
+      return newPreviewImage;
+    });
+
+    // 메인 이미지 인덱스 변경
+    setMainImageIndex((index) => index - 1);
+  };
+
+  const handleImageClick = (index) => {
+    setMainImageIndex(index);
   };
 
   // 모달창 바깥을 눌렀을 때 모달 close
@@ -155,7 +182,10 @@ const CreateFeed = (props) => {
       "photoHashTag",
       new Blob([JSON.stringify(hashTags)], { type: "application/json" })
     );
-    formData.append("imageFile", selectedFile);
+
+    selectedFile.forEach((file) => {
+      formData.append("imageFile", file);
+    });
 
     createFeedMutation.mutate(formData);
   };
@@ -179,12 +209,12 @@ const CreateFeed = (props) => {
           <div className="container">
             <main className="main-body">
               <div className="imgContainer">
-                {!previewImage ? (
+                {previewImage == "" ? (
                   <label htmlFor="file" className="btn-upload">
                     파일 업로드하기
                     <input
                       type="file"
-                      multiple={true}
+                      multiple
                       name="file"
                       id="file"
                       onChange={handleFileChange}
@@ -192,7 +222,7 @@ const CreateFeed = (props) => {
                   </label>
                 ) : (
                   <img
-                    src={previewImage}
+                    src={previewImage[mainImageIndex]}
                     alt="Preview"
                     className="preview-image"
                   />
@@ -200,17 +230,31 @@ const CreateFeed = (props) => {
                 {uploadToggleBtn && (
                   <UploadToggleContainer>
                     <ImgContainer>
-                      {previewImage !== null ? (
-                        <ImgBox>
-                          <UploadImg img={previewImage} />
-                        </ImgBox>
-                      ) : null}
-                      <PlusButton>
-                        <AiOutlinePlus
-                          size={"17px"}
-                          onClick={() => {
-                            alert("사진추가");
-                          }}
+                      {previewImage !== null &&
+                        previewImage.map((item, index) => (
+                          <ImgBox
+                            key={index}
+                            onClick={() => handleImageClick(index)}
+                          >
+                            <UploadImg img={item}>
+                              <DeletePhotoButton
+                                onClick={() => {
+                                  handleDeletePhoto(index);
+                                }}
+                              >
+                                <AiOutlineClose />
+                              </DeletePhotoButton>
+                            </UploadImg>
+                          </ImgBox>
+                        ))}
+                      <PlusButton htmlFor="file">
+                        <AiOutlinePlus size={"20px"} />
+                        <input
+                          type="file"
+                          multiple
+                          name="file"
+                          id="file"
+                          onChange={handleFileChange}
                         />
                       </PlusButton>
                     </ImgContainer>
@@ -218,7 +262,13 @@ const CreateFeed = (props) => {
                 )}
                 <MultipleUpload
                   onClick={() => {
-                    setUploadToggleBtn(!uploadToggleBtn);
+                    // setUploadToggleBtn(!uploadToggleBtn);
+                    Swal.fire({
+                      icon: "error",
+                      title: "현재 준비 중인 기능입니다.",
+                      text: `곧 완성될 수 있도록 최선을 다하겠습니다.`,
+                      confirmButtonText: "확인",
+                    });
                   }}
                 >
                   <TbBoxMultiple size={"25px"} />
@@ -332,7 +382,7 @@ const MultipleUpload = styled.button`
 const UploadToggleContainer = styled.div`
   display: flex;
   position: absolute;
-  background-color: rgba(58, 58, 58, 0.5);
+  background-color: rgba(22, 22, 22, 0.7);
   bottom: 0;
   margin-bottom: 90px;
   right: 0;
@@ -352,18 +402,38 @@ const ImgContainer = styled.div`
 const ImgBox = styled.div`
   width: 100px;
   height: 100px;
+  cursor: pointer;
 `;
 
 const UploadImg = styled.div`
+  position: relative;
   height: 100%;
   background-position: center;
   background-size: cover;
   background-image: ${(props) => `url(${props.img})`};
 `;
 
-const PlusButton = styled.button`
+const PlusButton = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   padding: 5px;
   width: 40px;
   height: 40px;
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  cursor: pointer;
+`;
+
+const DeletePhotoButton = styled.button`
+  padding: 5px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(58, 58, 58, 0.5);
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
 `;
