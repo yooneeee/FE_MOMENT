@@ -12,23 +12,30 @@ const ChatTest = () => {
   const { receiverId } = useParams();
   const { userId, nickName, profileImg } = useSelector((state) => state.user);
 
-  const client = useRef({});
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [overLimit, setOverLimit] = useState(false);
+
+  const client = useRef({});
+  const scrollRef = useRef();
 
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
   // console.log("채팅할사람", data);
 
-  const chatRoomId = data?.chatRoomId;
-  // console.log("모먼트", data?.chatRoomId);
-
   useEffect(() => {
     if (data?.chatList) {
       setChatMessages(data?.chatList);
     }
   }, [data]);
+
+  /* 메세지 입력시, 채팅방 들어왔을 때 스크롤 이동 */
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMessages]);
 
   const connect = () => {
     client.current = new StompJs.Client({
@@ -70,18 +77,6 @@ const ChatTest = () => {
     }
   };
 
-  // useEffect(() => {
-  //   connect();
-
-  //   return () => disconnect();
-  // }, []);
-  // useEffect(() => {
-  //   if (data) {
-  //     // Check if data has been loaded
-  //     connect();
-  //   }
-  //   return () => disconnect();
-  // }, [data]);
   useEffect(() => {
     if (data?.chatRoomId) {
       // chatRoomId가 존재할 때만 connect 함수 실행
@@ -95,12 +90,12 @@ const ChatTest = () => {
   }
 
   if (isError || !data) {
-    // console.log("오류", isError);
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
 
   const publish = (message) => {
-    if (!client.current.connected) {
+    if (!client.current.connected || !message.trim()) {
+      // message.trim()으로 메시지 앞뒤의 공백 제거 후 내용이 있는지 확인
       return;
     }
 
@@ -115,31 +110,49 @@ const ChatTest = () => {
     });
 
     setMessage("");
+    setOverLimit(false);
+  };
+
+  const enterHandler = (e, message) => {
+    if (e.shiftKey && e.which === 13) {
+      setMessage(message + "\n");
+      e.preventDefault();
+    }
+    // Enter 키를 누르면 메시지 전송
+    else if (!e.shiftKey && e.which === 13) {
+      publish(message);
+    }
   };
 
   return (
     <>
       {chatMessages && chatMessages.length > 0 && (
         <ChatContainer>
-          {/* {chatMessages.map((_chatMessage, index) => (
-            <li key={index}>{_chatMessage.message}</li>
-          ))} */}
           {chatMessages.map((_chatMessage, index) => (
             <React.Fragment key={_chatMessage.uuid}>
-              <ReceiverProfile
-                isSender={_chatMessage.senderId === userId}
-                src={
-                  _chatMessage.senderId === userId
-                    ? profileImg
-                    : data.receiverProfileImg
-                }
-                alt="Profile"
-              />
-              <Nickname isSender={_chatMessage.senderId === userId}>
-                {_chatMessage.senderId === userId
-                  ? nickName
-                  : data.receiverNickName}
-              </Nickname>
+              {_chatMessage.senderId !== userId && (
+                <MessageContainer>
+                  {/* <ReceiverProfile
+                  isSender={_chatMessage.senderId === userId}
+                  src={
+                    _chatMessage.senderId === userId
+                      ? profileImg
+                      : data.receiverProfileImg
+                  }
+                  alt="Profile"
+                /> */}
+                  <ReceiverProfile
+                    src={data.receiverProfileImg}
+                    alt="Profile"
+                  />
+                  {/* <Nickname isSender={_chatMessage.senderId === userId}>
+                  {_chatMessage.senderId === userId
+                    ? nickName
+                    : data.receiverNickName}
+                </Nickname> */}
+                  <Nickname>{data.receiverNickName}</Nickname>
+                </MessageContainer>
+              )}
               <ChatBubble
                 key={index}
                 isSender={_chatMessage.senderId === userId}
@@ -151,14 +164,24 @@ const ChatTest = () => {
           ))}
         </ChatContainer>
       )}
+      <div ref={scrollRef}></div>
       <SendContainer>
+        {overLimit && <span>1000자를 초과하였습니다!</span>}
         <ChatInputContainer>
           <ChatInput
+            rows={message.split("\n").length || 1} // 줄바꿈의 수에 따라 row를 조절
             type={"text"}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            // onKeyPress={(e) => enterHandler(e)}
-            onKeyPress={(e) => e.which === 13 && publish(message)}
+            onChange={(e) => {
+              if (e.target.value.length <= 1000) {
+                setMessage(e.target.value);
+                setOverLimit(false); // 길이 제한이 초과되지 않았으므로 경고를 숨김
+              } else {
+                setOverLimit(true); // 길이 제한이 초과되었으므로 경고를 표시
+              }
+            }}
+            // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행
+            onKeyPress={(e) => enterHandler(e, message)}
           />
           <SendButton onClick={() => publish(message)}>전송</SendButton>
         </ChatInputContainer>
@@ -180,7 +203,7 @@ const ChatContainer = styled.div`
 
   position: relative;
   min-height: 70vh;
-  /* overflow-y: auto; */
+  overflow: auto;
 `;
 
 const SendContainer = styled.div`
@@ -191,6 +214,16 @@ const SendContainer = styled.div`
   margin: 10px auto;
 
   /* position: relative; */
+  span {
+    color: red;
+  }
+`;
+
+const MessageContainer = styled.div`
+  display: flex;
+  align-items: center;
+  align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
+  margin: 10px 0;
 `;
 
 const ReceiverProfile = styled.img`
@@ -215,6 +248,7 @@ const ChatBubble = styled.div`
   margin-bottom: 20px;
   border-radius: 8px;
   align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
+  white-space: pre-wrap; // 줄바꿈과 공백 유지
 `;
 
 const ChatInputContainer = styled.div`
@@ -228,12 +262,13 @@ const ChatInputContainer = styled.div`
   /* transform: translateX(-50%); */
 `;
 
-const ChatInput = styled.input`
+const ChatInput = styled.textarea`
   flex: 1;
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  resize: none; // 사용자가 크기를 조절하지 못하게 함
 `;
 
 const SendButton = styled.button`
