@@ -51,7 +51,7 @@ function Card({ user }) {
           <FlexWrap>
             <UserNickName>{user.nickName}</UserNickName>
             <UserPosition>
-              <HeartIcon />
+              👍
               <UserPositionText>{user.totalLoveCnt}</UserPositionText>
             </UserPosition>
           </FlexWrap>
@@ -86,7 +86,7 @@ function Card({ user }) {
         <FlexWrap>
           <UserNickName>{user.nickName}</UserNickName>
           <UserPosition>
-            <HeartIcon />
+            👍
             <UserPositionText>
               {user.totalLoveCnt || user.loveCnt}
             </UserPositionText>
