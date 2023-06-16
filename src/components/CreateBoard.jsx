@@ -134,7 +134,7 @@ const CreateBoard = (props) => {
         confirmButtonText: "확인",
       });
       close();
-      queryClient.invalidateQueries("getBoardAxios");
+      queryClient.invalidateQueries("getBoard");
     },
     onError: (error) => {
       alert(error);
