@@ -78,7 +78,6 @@ function Feed() {
     ({ pageParam = 0 }) => getFeedAxios({ pageParam, activeNavItem }),
     {
       getNextPageParam: (lastPage) => {
-        // console.log(lastPage);
         if (lastPage.last === true) {
           return;
         } else {
