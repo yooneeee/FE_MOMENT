@@ -393,7 +393,7 @@ const ToggleMenu = styled.div`
 const ToggleWriteMenu = styled.div`
   position: absolute;
   top: 100%;
-  right: 75px;
+  right: 58px;
   background-color: white;
   padding: 10px;
   display: flex;
@@ -504,7 +504,7 @@ const ProfileImg = styled.img`
 const ToggleProfileMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 180px;
+  right: 160px;
   background-color: white;
   padding: 10px;
   display: flex;
