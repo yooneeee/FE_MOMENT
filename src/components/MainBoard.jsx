@@ -37,7 +37,7 @@ function MainBoard({ board }) {
           <FlexWrap>
             <UserName>{board.nickName}</UserName>
             <UserPosition>
-              <HeartIcon />
+              👍
               <UserPositionText>{board.totalLoveCnt}</UserPositionText>
             </UserPosition>
           </FlexWrap>
