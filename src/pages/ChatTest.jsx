@@ -6,26 +6,15 @@ import { useQuery } from "react-query";
 import { Chatting } from "../apis/mypage/chatting";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-// import MyPageTabs from "../components/MyPageTabs";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-function ChatTest() {
+const ChatTest = () => {
   const { receiverId } = useParams();
-  const { hostId } = useParams();
   const { userId, nickName, profileImg } = useSelector((state) => state.user);
-  // console.log("받는사람아이디", receiverId);
-  // console.log("호스트아이디", hostId);
-  // console.log("유저아이디", userId);
-  // console.log("유저닉네임", nickName);
-  // console.log("유저프로필", profileImg);
 
-  const [stompClient, setStompClient] = useState(null);
-  const [message, setMessage] = useState("");
-  const [chatList, setChatList] = useState([]);
-  const [isConnected, setIsConnected] = useState(false);
-
-  const scrollRef = useRef(null);
   const client = useRef({});
+  const [chatMessages, setChatMessages] = useState([]);
+  const [message, setMessage] = useState("");
 
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
@@ -34,51 +23,53 @@ function ChatTest() {
 
   useEffect(() => {
     if (data?.chatList) {
-      setChatList(data.chatList);
+      setChatMessages(data.chatList);
+    }
+  }, [data]);
 
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  const connect = () => {
+    client.current = new StompJs.Client({
+      webSocketFactory: () =>
+        new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`), // proxy를 통한 접속
+
+      debug: function (str) {
+        console.log(str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: () => {
+        subscribe();
+      },
+      onStompError: (frame) => {
+        console.error(frame);
+      },
+    });
+
+    client.current.activate();
+  };
+
+  const disconnect = () => {
+    client.current.deactivate();
+  };
+
+  const subscribe = () => {
+    client.current.subscribe(
+      `/sub/chat/room/${data.chatRoomId}`,
+      ({ body }) => {
+        setChatMessages((_chatMessages) => [
+          ..._chatMessages,
+          JSON.parse(body),
+        ]);
       }
-    }
-  }, [data]);
-
-  // console.log("챗리스트:::", data?.chatList);
-
-  /* 스크롤 */
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [chatList]);
-  // useEffect(() => {
-  //   scrollRef.current.scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "end",
-  //     inline: "nearest",
-  //   });
-  // }, [chatList]);
+    );
+  };
 
   useEffect(() => {
-    // console.log("유즈이펙트 ::::");
-    if (data && data.chatRoomId) {
-      // console.log("커넥팅 ::::");
-      connect();
-      // 컴포넌트 언마운트 시 STOMP 연결 해제
-      return () => {
-        // console.log("디스커넥팅 ::::");
-        disconnect();
-      };
-    }
-  }, [data]);
+    connect();
 
-  /* STOMP 클라이언트 초기화 */
-  // useEffect(() => {
-  //   connect();
-  //   // 컴포넌트 언마운트 시 STOMP 연결 해제
-  //   return () => {
-  //     disconnect();
-  //   };
-  // }, [data]);
+    return () => disconnect();
+  }, []);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -89,132 +80,79 @@ function ChatTest() {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
 
-  // /* STOMP 연결 */
-  const connect = () => {
-    const socketFactory = () =>
-      new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`);
-    const stomp = StompJs.Stomp.over(socketFactory);
-    stomp.connect(
-      {},
-      () => {
-        console.log("웹소켓 연결 ::::");
-        setStompClient(stomp);
-        setIsConnected(true);
-        subscribe(stomp);
-      },
-      (error) => {
-        // 에러 콜백..?
-        console.log("STOMP 연결 실패: ", error);
-      }
-    );
-    client.current = stomp;
-  };
-
-  /* STOMP 연결 해제 */
-  const disconnect = () => {
-    if (stompClient) {
-      stompClient?.disconnect();
-      console.log("웹소켓 연결 해제");
-      setIsConnected(false);
-    }
-  };
-
-  // STOMP 메시지 수신 이벤트 핸들링 -> 웹소켓
-  // useEffect(() => {
-  //   subscribe();
-  // }, [stompClient]);
-
-  /* STOMP 메시지 수신 이벤트 핸들링
-  sub 채팅방 입장 */
-  const subscribe = () => {
-    // if (!stompClient || !data.chatRoomId) return;
-
-    stompClient?.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
-      // console.log("변경 전", message);
-      const chatMessage = JSON.parse(message.body);
-      // console.log("메세지 바디", chatMessage);
-      setChatList((prevChatList) => [...prevChatList, chatMessage]);
-      // console.log("변경 후", message);
-    });
-  };
-
-  /*  STOMP 메시지 송신
-    pub 메세지 보내기 */
-  const sendMessage = () => {
-    if (!isConnected) {
-      console.log(
-        "웹소켓 연결이 완료되지 않았습니다. 메시지를 보낼 수 없습니다."
-      );
+  const publish = (message) => {
+    if (!client.current.connected) {
       return;
     }
 
-    if (stompClient && message) {
-      const chatMessage = {
+    client.current.publish({
+      destination: "/pub/chat/send",
+      body: JSON.stringify({
         message: message,
         senderId: userId,
         receiverId: data.receiverId,
         chatRoomId: data.chatRoomId,
-      };
-      stompClient.send("/pub/chat/send", {}, JSON.stringify(chatMessage));
-      // console.log("챗", chatMessage);
-      // setChatList((ChatList) => [...ChatList, chatMessage]);
+      }),
+    });
 
-      // 스크롤
-      // if (scrollRef.current) {
-      //   scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-      // }
-
-      setMessage("");
-    }
+    setMessage("");
   };
+
   const enterHandler = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      sendMessage();
+      publish(message);
     }
   };
 
   return (
-    /* 채팅방이 존재 */
     <>
-      {/* <MyPageTabs /> */}
-      <ChatContainer ref={scrollRef}>
-        {chatList.map((chat) => (
-          <React.Fragment key={chat.uuid}>
-            <ReceiverProfile
-              isSender={chat.senderId === userId}
-              src={
-                chat.senderId === userId ? profileImg : data.receiverProfileImg
-              }
-              alt="Profile"
-            />
-            <Nickname isSender={chat.senderId === userId}>
-              {chat.senderId === userId ? nickName : data.receiverNickName}
-            </Nickname>
-            <ChatBubble
-              key={chat.id}
-              isSender={chat.senderId === userId}
-              isReceiver={chat.receiverId === userId}
-            >
-              {chat.message}
-            </ChatBubble>
-          </React.Fragment>
-        ))}
-      </ChatContainer>
+      {chatMessages && chatMessages.length > 0 && (
+        <ChatContainer>
+          {/* {chatMessages.map((_chatMessage, index) => (
+            <li key={index}>{_chatMessage.message}</li>
+          ))} */}
+          {chatMessages.map((_chatMessage, index) => (
+            <React.Fragment key={_chatMessage.uuid}>
+              <ReceiverProfile
+                isSender={_chatMessage.senderId === userId}
+                src={
+                  _chatMessage.senderId === userId
+                    ? profileImg
+                    : data.receiverProfileImg
+                }
+                alt="Profile"
+              />
+              <Nickname isSender={_chatMessage.senderId === userId}>
+                {_chatMessage.senderId === userId
+                  ? nickName
+                  : data.receiverNickName}
+              </Nickname>
+              <ChatBubble
+                key={index}
+                isSender={_chatMessage.senderId === userId}
+                isReceiver={_chatMessage.receiverId === userId}
+              >
+                {_chatMessage.message}
+              </ChatBubble>
+            </React.Fragment>
+          ))}
+        </ChatContainer>
+      )}
       <SendContainer>
         <ChatInputContainer>
           <ChatInput
-            type="text"
+            type={"text"}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={(e) => enterHandler(e)}
+            onKeyPress={enterHandler}
           />
-          <SendButton onClick={sendMessage}>전송</SendButton>
+          <SendButton onClick={() => publish(message)}>전송</SendButton>
         </ChatInputContainer>
       </SendContainer>
     </>
   );
-}
+};
 
 export default ChatTest;
 
@@ -237,7 +175,7 @@ const SendContainer = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 800px;
-  margin: 10px auto 0;
+  margin: 10px auto;
 
   /* position: relative; */
 `;
