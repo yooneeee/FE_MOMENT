@@ -24,6 +24,7 @@ const MyPageInformation = () => {
   const [newPw, setNewPw] = useState("");
   const [newRole, setNewRole] = useState("");
   const [deleteUserModal, setDeleteUserModal] = useState(false);
+  const [intro, setIntro] = useState("");
 
   /* 프로필 이미지 선택 */
   const fileSelectHandler = (e) => {
@@ -91,6 +92,7 @@ const MyPageInformation = () => {
       nickName: newNick,
       password: newPw,
       role: newRole,
+      content: intro,
     };
     formData.append(
       "update",
@@ -205,6 +207,20 @@ const MyPageInformation = () => {
                 작가
               </MemoizedSelectionButton>
             </ButtonContainer>
+          </TextColumn>
+        </Box>
+        <Line1 />
+        <Box>
+          <Text>한 줄 소개</Text>
+          <TextColumn>
+            <Introduce
+              placeholder="자신을 소개해주세요(최대 50자)"
+              name="introduce"
+              value={intro}
+              onChange={(e) => {
+                setIntro(e.target.value);
+              }}
+            />
           </TextColumn>
         </Box>
         <Line1 />
@@ -397,7 +413,7 @@ const TextColumn = styled.div`
   text-align: left;
 
   span {
-    font-weight: 800;
+    font-weight: 
     font-size: 15px;
   }
 `;
@@ -411,4 +427,9 @@ const Line1 = styled.div`
   border-top: 1px solid #d6d6d6;
   width: 100%;
   margin: 10px auto;
+`;
+const Introduce = styled.textarea`
+  resize: none;
+  width: 300px;
+  height: 200px;
 `;

@@ -44,6 +44,9 @@ const MyPageProfile = () => {
           </StFlex>
           <Post>추천 {data.totalPhotoLoveCnt}</Post>
           <StFlex>
+            <Post>한 줄 소개 {data.content}</Post>
+          </StFlex>
+          <StFlex>
             {isMyPage ? (
               <>
                 <Link
