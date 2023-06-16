@@ -133,9 +133,8 @@ const CreateBoard = (props) => {
         text: `게시글 생성이 완료됐습니다✨`,
         confirmButtonText: "확인",
       });
-      queryClient.invalidateQueries("getBoardAxios");
       close();
-      navigate("/board");
+      queryClient.invalidateQueries("getBoardAxios");
     },
     onError: (error) => {
       alert(error);

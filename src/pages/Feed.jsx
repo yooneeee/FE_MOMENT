@@ -78,7 +78,6 @@ function Feed() {
     ({ pageParam = 0 }) => getFeedAxios({ pageParam, activeNavItem }),
     {
       getNextPageParam: (lastPage) => {
-        // console.log(lastPage);
         if (lastPage.last === true) {
           return;
         } else {
@@ -105,8 +104,6 @@ function Feed() {
   if (isError) {
     return <h3>에러가 발생하였습니다.</h3>;
   }
-
-  console.log(data);
 
   return (
     <>

@@ -125,6 +125,7 @@
 }
 
 .imgContainer {
+    position: relative;
     width: 720px;
     height: 100%;
     display: flex;

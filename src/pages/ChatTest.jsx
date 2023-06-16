@@ -29,7 +29,7 @@ function ChatTest() {
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
-  console.log("채팅할사람", data);
+  // console.log("채팅할사람", data);
 
   useEffect(() => {
     if (data?.chatList) {
@@ -37,7 +37,7 @@ function ChatTest() {
     }
   }, [data]);
 
-  console.log("챗리스트:::", data?.chatList);
+  // console.log("챗리스트:::", data?.chatList);
 
   /* 스크롤 */
   useEffect(() => {
@@ -48,13 +48,13 @@ function ChatTest() {
   }, []);
 
   useEffect(() => {
-    console.log("유즈이펙트 ::::");
+    // console.log("유즈이펙트 ::::");
     if (data && data.chatRoomId) {
-      console.log("커넥팅 ::::");
+      // console.log("커넥팅 ::::");
       connect();
       // 컴포넌트 언마운트 시 STOMP 연결 해제
       return () => {
-        console.log("디스커넥팅 ::::");
+        // console.log("디스커넥팅 ::::");
         disconnect();
       };
     }
@@ -85,7 +85,7 @@ function ChatTest() {
       new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`);
     const stomp = StompJs.Stomp.over(socketFactory);
     stomp.connect({}, () => {
-      console.log("웹소켓 연결 ::::");
+      // console.log("웹소켓 연결 ::::");
       setStompClient(stomp);
       subscribe(stomp);
     });
@@ -96,38 +96,9 @@ function ChatTest() {
   const disconnect = () => {
     if (stompClient) {
       stompClient?.disconnect();
-      console.log("웹소켓 연결 해제");
+      // console.log("웹소켓 연결 해제");
     }
   };
-
-  // const connect = () => {
-  //   client.current = new StompJs.Client({
-  //     brokerURL: () => new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`),
-  //     onConnect: () => {
-  //       console.log('success');
-
-  //       subscribe();
-  //       publish()
-  //     },
-  //   });
-  //   client.current.activate();
-  // };
-
-  // const publish = () => {
-  //   if (!client.current.connected) return;
-
-  //   client.current.publish({
-  //     destination: '/pub/chat/send',
-  //     body: JSON.stringify({
-  //       message: message,
-  //       senderId: userId,
-  //       receiverId: receiverId,
-  //       chatRoomId: data.chatRoomId,
-  //     }),
-  //   });
-
-  //   setMessage('');
-  // };
 
   // STOMP 메시지 수신 이벤트 핸들링 -> 웹소켓
   // useEffect(() => {
@@ -140,11 +111,11 @@ function ChatTest() {
     // if (!stompClient || !data.chatRoomId) return;
 
     stompClient?.subscribe(`/sub/chat/room/${data.chatRoomId}`, (message) => {
-      console.log("변경 전", message);
+      // console.log("변경 전", message);
       const chatMessage = JSON.parse(message.body);
-      console.log("메세지 바디", chatMessage);
+      // console.log("메세지 바디", chatMessage);
       setChatList((prevChatList) => [...prevChatList, chatMessage]);
-      console.log("변경 후", message);
+      // console.log("변경 후", message);
     });
   };
 
@@ -159,8 +130,8 @@ function ChatTest() {
         chatRoomId: data.chatRoomId,
       };
       stompClient.send("/pub/chat/send", {}, JSON.stringify(chatMessage));
-      console.log("챗", chatMessage);
-      setChatList((ChatList) => [...ChatList, chatMessage]);
+      // console.log("챗", chatMessage);
+      // setChatList((ChatList) => [...ChatList, chatMessage]);
 
       // 스크롤
       // if (scrollRef.current) {
