@@ -8,6 +8,7 @@ import { logoutAxios } from "../apis/auth/login";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "../redux/modules/user";
 import Swal from "sweetalert2";
+import { MdExpandCircleDown } from "react-icons/md";
 
 function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
@@ -136,7 +137,7 @@ function Header() {
               toggleProfileMenuClose();
             }}
           >
-            게시판
+            구인/구직 게시판
           </HeaderButton>
         </CategoryBox>
       </LeftMenu>
@@ -163,6 +164,9 @@ function Header() {
                 >
                   <ProfileImg src={profileImg} />
                   <div>{nickName}</div>
+                  <MdExpandCircleDown
+                    style={{ fontSize: "17px", color: "#483767" }}
+                  />
                 </HeaderButton>
               </>
             ) : (
@@ -218,6 +222,15 @@ function Header() {
             마이페이지
           </MenuButton>
           <MenuButton
+            name={"chatlist"}
+            onClick={() => {
+              navigate(`/chatlist/${userId}`);
+              toggleProfileMenuClose();
+            }}
+          >
+            채팅목록
+          </MenuButton>
+          <MenuButton
             name={"logout"}
             onClick={() => {
               logoutHandler();
@@ -267,7 +280,7 @@ function Header() {
               }
             }}
           >
-            게시글 작성
+            구인/구직글 작성
           </MenuButton>
         </ToggleWriteMenu>
       )}
@@ -292,7 +305,7 @@ function Header() {
               toggleProfileMenuClose();
             }}
           >
-            게시판
+            구인/구직 게시판
           </MenuButton>
           <MenuButton
             onClick={() => {
@@ -314,6 +327,17 @@ function Header() {
                 }}
               >
                 마이페이지
+              </MenuButton>
+              <MenuButton
+                name={"chatlist"}
+                onClick={() => {
+                  navigate(`/chatlist/${userId}`);
+                  toggleMenuClose();
+                  toggleWriteMenuClose();
+                  toggleProfileMenuClose();
+                }}
+              >
+                채팅목록
               </MenuButton>
               <MenuButton name={"logout"} onClick={logoutHandler}>
                 로그아웃
@@ -396,6 +420,7 @@ const MenuButton = styled.button`
   border: none;
   background: none;
   color: black;
+  font-size: 15px;
   cursor: pointer;
   &:hover {
     opacity: 40%;
@@ -412,7 +437,7 @@ const LeftMenu = styled.div`
 const HeaderTitle = styled.p`
   font-family: "UhBeeGENWOO";
   display: flex;
-  font-size: 25px;
+  font-size: 28px;
   font-weight: 600;
   align-items: center;
   cursor: pointer;
@@ -440,6 +465,7 @@ const HeaderStyles = styled.div`
   z-index: 10;
   justify-content: space-between;
   box-shadow: 0px 0.1px 5px gray;
+
   @media (max-width: 768px) {
     padding: 0 50px 0 80px;
   }
@@ -447,7 +473,7 @@ const HeaderStyles = styled.div`
 
 const HeaderButton = styled.button`
   padding: 8px;
-  gap: 10px;
+  gap: 3px;
   cursor: pointer;
   border: none;
   border-radius: 3.97px;
@@ -456,6 +482,7 @@ const HeaderButton = styled.button`
   background-color: ${(props) => props.bgcolor || "white"};
   color: ${(props) => props.color || "black"};
   display: flex;
+  font-size: 15px;
   @media (max-width: 768px) {
     width: 56px;
   }
@@ -464,6 +491,7 @@ const HeaderButton = styled.button`
 const ProfileImg = styled.img`
   width: 30px;
   height: 30px;
+  margin-right: 4px;
   border-radius: 70%;
   object-fit: cover;
   flex-shrink: 0;
@@ -476,7 +504,7 @@ const ProfileImg = styled.img`
 const ToggleProfileMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 150px;
+  right: 180px;
   background-color: white;
   padding: 10px;
   display: flex;
