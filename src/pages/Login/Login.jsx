@@ -104,7 +104,8 @@ function Login() {
     try {
       Swal.fire({
         title: "카카오 간편가입 주의",
-        text: "카카오 로그인시 선택항목에도 🌟모두 동의🌟해주셔야 원활한 서비스 이용이 가능합니다!",
+        text: `카카오 로그인시 선택항목에도 🌟모두 동의🌟해주셔야 원활한 서비스 이용이 가능합니다!
+        또한, ✨포지션선택✨ 반드시 해주셔야 회원가입이 완료됩니다!!`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#483767",

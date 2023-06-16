@@ -88,7 +88,7 @@ function KakaoLoginRedirect() {
       navigate("/main");
     },
     onError: () => {
-      alert("역할 전송을 실패했습니다!");
+      alert("포지션 전송을 실패했습니다!");
     },
   });
 
@@ -97,8 +97,17 @@ function KakaoLoginRedirect() {
   };
   const roleButtonHandler = (e) => {
     e.preventDefault();
-    sendRoleMutation.mutate(role);
-    dispatch(setUserRole({ role: role }));
+    if (!role) {
+      Swal.fire({
+        icon: "error",
+        title: "회원가입 실패!",
+        text: `포지션을 선택해주세요.`,
+        confirmButtonText: "확인",
+      });
+    } else {
+      sendRoleMutation.mutate(role);
+      dispatch(setUserRole({ role: role }));
+    }
   };
 
   const activeHandler = () => {
@@ -117,7 +126,6 @@ function KakaoLoginRedirect() {
           <ModalWrap>
             <ModalHeader>
               <p>포지션을 선택해주세요</p>
-              <button onClick={closeModal}>x</button>
             </ModalHeader>
             <ButtonContainer>
               <MemoizedSelectionButton
@@ -174,7 +182,6 @@ const ModalHeader = styled.div`
   height: 42px;
   border-bottom: 1px solid #dbdbdb;
   padding: 0 16px;
-  justify-content: space-between;
   align-items: center;
 
   p {
