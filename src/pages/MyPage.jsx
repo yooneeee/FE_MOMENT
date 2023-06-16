@@ -65,7 +65,7 @@ const MyPage = () => {
           </ProfileContainer>
           <Container>
             <WorkSection>
-              <Work>{mine ? "나의 작업물" : `${data.nickName}'s 작업물`}</Work>
+              <Work>{mine ? "나의 피드" : `${data.nickName}'s 피드`}</Work>
               <WorkList>
                 {data.photoList.slice(0, 10).map((item, index) => {
                   const isOpen = feedDetailOpen.includes(item.photoId);

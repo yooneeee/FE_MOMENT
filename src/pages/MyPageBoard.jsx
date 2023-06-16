@@ -240,7 +240,7 @@ const Content = styled.div`
 
 const ToggleWriteMenu = styled.div`
   position: absolute;
-  top: 88px;
+  top: 68px;
   right: -100px;
   transform: translate(-50%, -50%);
   padding: 10px;
@@ -265,7 +265,7 @@ const EditButton = styled.button`
   border: none;
   border-radius: 8px;
   font-weight: 900;
-  padding: 8px;
+  padding: 3px;
   z-index: 1;
 `;
 const Button = styled.button`
