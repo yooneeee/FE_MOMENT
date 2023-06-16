@@ -104,7 +104,8 @@ function Login() {
     try {
       Swal.fire({
         title: "카카오 간편가입 주의",
-        text: "카카오 로그인시 선택항목에도 🌟모두 동의🌟해주셔야 원활한 서비스 이용이 가능합니다!",
+        text: `카카오 로그인시 선택항목에도 🌟모두 동의🌟해주셔야 원활한 서비스 이용이 가능합니다!
+        또한, ✨포지션선택✨ 반드시 해주셔야 회원가입이 완료됩니다!!`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#483767",
@@ -174,6 +175,17 @@ function Login() {
           </KakaoLogoContainer>
           <ButtonText>카카오로 로그인하기</ButtonText>
         </KakaoLoginButton>
+        <Text4>
+          아직 모먼트 계정이 없으신가요?
+          <LoginButton
+            name={"signup"}
+            onClick={() => {
+              navigate("/integratedsignup");
+            }}
+          >
+            회원가입하기
+          </LoginButton>
+        </Text4>
       </CenteredContent>
     </Container>
   );
@@ -198,4 +210,22 @@ const CenteredContent = styled.form`
   flex-direction: column;
   box-sizing: border-box;
   padding: 40px 0px;
+`;
+const Text4 = styled.div`
+  margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+
+  span {
+    margin-left: 20px;
+  }
+`;
+
+const LoginButton = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 15px;
+  text-decoration: underline;
 `;
