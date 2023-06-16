@@ -216,8 +216,8 @@ export default MyPageFeed;
 
 const ToggleWriteMenu = styled.div`
   position: absolute;
-  top: 88px;
-  left: 25px;
+  top: 68px;
+  right: -95px;
   transform: translate(-50%, -50%);
   padding: 10px;
   display: flex;
@@ -236,17 +236,16 @@ const ProfileContainer = styled.div`
 
 const EditButton = styled.button`
   position: absolute;
-  top: 25px;
-  left: 30px;
+  top: 16px;
+  right: -20px;
   transform: translate(-50%, -50%);
-  display: none;
   /*   display: flex; */
   z-index: 100;
   background-color: #ffffff;
   border: none;
   border-radius: 8px;
   font-weight: 900;
-  padding: 8px;
+  padding: 5px;
 `;
 
 const Button = styled.button`

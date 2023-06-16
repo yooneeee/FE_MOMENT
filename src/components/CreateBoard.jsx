@@ -134,7 +134,7 @@ const CreateBoard = (props) => {
         confirmButtonText: "확인",
       });
       close();
-      queryClient.invalidateQueries("getBoardAxios");
+      queryClient.invalidateQueries("getBoard");
     },
     onError: (error) => {
       alert(error);
@@ -185,7 +185,7 @@ const CreateBoard = (props) => {
             <div className="headerTitle">새 게시글 만들기</div>
             <div className="headerRightBox">
               <button className="saveButton" onClick={saveButtonHandler}>
-                저장하기
+                등록하기
               </button>
               <button className="close" onClick={close}>
                 <AiOutlineClose />

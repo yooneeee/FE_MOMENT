@@ -175,6 +175,17 @@ function Login() {
           </KakaoLogoContainer>
           <ButtonText>카카오로 로그인하기</ButtonText>
         </KakaoLoginButton>
+        <Text4>
+          아직 모먼트 계정이 없으신가요?
+          <LoginButton
+            name={"signup"}
+            onClick={() => {
+              navigate("/integratedsignup");
+            }}
+          >
+            회원가입하기
+          </LoginButton>
+        </Text4>
       </CenteredContent>
     </Container>
   );
@@ -199,4 +210,22 @@ const CenteredContent = styled.form`
   flex-direction: column;
   box-sizing: border-box;
   padding: 40px 0px;
+`;
+const Text4 = styled.div`
+  margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+
+  span {
+    margin-left: 20px;
+  }
+`;
+
+const LoginButton = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 15px;
+  text-decoration: underline;
 `;

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getBoardDetailAxios } from "../apis/board/getBoardDetailAxios";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useSelector } from "react-redux";
 
 function BoardDetail() {
   const [currentPosition, setCurrentPosition] = useState(70);
@@ -12,7 +13,7 @@ function BoardDetail() {
   const formRangeRef = useRef(null);
   const params = useParams();
   const navigate = useNavigate();
-
+  const userId = useSelector((state) => state.user.userId);
   // 스크롤 시 따라다니는 Form
   useEffect(() => {
     const handleScroll = () => {
@@ -87,22 +88,25 @@ function BoardDetail() {
                 <UserPostion> {data.role} </UserPostion>
                 <UserNickName>{data.nickName}</UserNickName>
               </UserDataBox>
-              <ButtonContainer>
-                <ProfileVisitButton
-                  onClick={() => {
-                    navigate(`/chattest/${data.hostId}`);
-                  }}
-                >
-                  채팅하기
-                </ProfileVisitButton>
-                <ProfileVisitButton
-                  onClick={() => {
-                    navigate(`/page/${data.hostId}`);
-                  }}
-                >
-                  프로필 방문
-                </ProfileVisitButton>
-              </ButtonContainer>
+
+              {data.hostId !== userId && (
+                <ButtonContainer>
+                  <ProfileVisitButton
+                    onClick={() => {
+                      navigate(`/chattest/${data.hostId}`);
+                    }}
+                  >
+                    채팅하기
+                  </ProfileVisitButton>
+                  <ProfileVisitButton
+                    onClick={() => {
+                      navigate(`/page/${data.hostId}`);
+                    }}
+                  >
+                    프로필 방문
+                  </ProfileVisitButton>
+                </ButtonContainer>
+              )}
             </ProfileBox>
 
             <HashTagContainer>
