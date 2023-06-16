@@ -98,13 +98,6 @@ const ChatTest = () => {
     setMessage("");
   };
 
-  const enterHandler = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      publish(message);
-    }
-  };
-
   return (
     <>
       {chatMessages && chatMessages.length > 0 && (
@@ -145,7 +138,8 @@ const ChatTest = () => {
             type={"text"}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={enterHandler}
+            // onKeyPress={(e) => enterHandler(e)}
+            onKeyPress={(e) => e.which === 13 && publish(message)}
           />
           <SendButton onClick={() => publish(message)}>전송</SendButton>
         </ChatInputContainer>
