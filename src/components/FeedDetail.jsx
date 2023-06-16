@@ -66,6 +66,8 @@ const FeedDetail = (props) => {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
 
+  console.log(data);
+
   return (
     <div className={open ? "openModal feed-datail-modal" : "feed-datail-modal"}>
       {open && (
