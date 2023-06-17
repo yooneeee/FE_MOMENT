@@ -126,6 +126,7 @@ const HeartIcon = styled(AiOutlineHeart)`
 `;
 
 const UserPositionText = styled.span`
+  margin-left: 5px;
   font-size: 16px;
 `;
 const BoardTitle = styled.span`
