@@ -76,7 +76,11 @@ const MyPageInformation = () => {
           confirmButtonText: "확인",
         });
       } else {
-        alert("수정 실패o(TヘTo)");
+        Swal.fire({
+          icon: "warning",
+          title: "회원정보 수정 실패!",
+          confirmButtonText: "확인",
+        });
       }
     },
   });
