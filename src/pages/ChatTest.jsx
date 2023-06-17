@@ -14,10 +14,11 @@ const ChatTest = () => {
 
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [overLimit, setOverLimit] = useState(false);
+  const [overLimit, setOverLimit] = useState(false); // 메세지 길이 제한
 
   const client = useRef({});
   const scrollRef = useRef();
+  const inputRef = useRef(null);
 
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
@@ -112,20 +113,26 @@ const ChatTest = () => {
     setMessage("");
     setOverLimit(false);
   };
-
+  /* Enter key 메시지 전송 */
   const enterHandler = (e, message) => {
-    if (e.shiftKey && e.which === 13) {
+    // 메시지가 비어있고 enter키 눌렀을 때 동작 방지
+    if (message.trim() === "" && e.which === 13) {
+      e.preventDefault();
+    }
+    // 줄 바꿈
+    else if (e.shiftKey && e.which === 13 && message.trim() !== "") {
       setMessage(message + "\n");
       e.preventDefault();
     }
-    // Enter 키를 누르면 메시지 전송
-    else if (!e.shiftKey && e.which === 13) {
+    // enter 키를 누르면 메시지 전송
+    else if (!e.shiftKey && e.which === 13 && message.trim() !== "") {
       publish(message);
+      e.preventDefault();
     }
   };
 
   return (
-    <>
+    <EntireContainer>
       {chatMessages && chatMessages.length > 0 && (
         <ChatContainer>
           {chatMessages.map((_chatMessage, index) => (
@@ -169,7 +176,7 @@ const ChatTest = () => {
         {overLimit && <span>1000자를 초과하였습니다!</span>}
         <ChatInputContainer>
           <ChatInput
-            rows={message.split("\n").length || 1} // 줄바꿈의 수에 따라 row를 조절
+            rows={1}
             type={"text"}
             value={message}
             onChange={(e) => {
@@ -181,16 +188,18 @@ const ChatTest = () => {
               }
             }}
             // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행
-            onKeyPress={(e) => enterHandler(e, message)}
+            onKeyDown={(e) => enterHandler(e, message)}
           />
           <SendButton onClick={() => publish(message)}>전송</SendButton>
         </ChatInputContainer>
       </SendContainer>
-    </>
+    </EntireContainer>
   );
 };
 
 export default ChatTest;
+
+const EntireContainer = styled.div``;
 
 const ChatContainer = styled.div`
   display: flex;
@@ -213,7 +222,6 @@ const SendContainer = styled.div`
   max-width: 800px;
   margin: 10px auto;
 
-  /* position: relative; */
   span {
     color: red;
   }

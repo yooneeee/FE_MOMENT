@@ -8,6 +8,12 @@
   z-index: 999;
   cursor: default;
   background-color: rgba(0, 0, 0, 0.6);
+
+  /* @media (max-width: 1300px) {}
+
+  @media (max-width: 900px) {}
+
+  @media (max-width: 768px) {} */
 }
 
 .feed-datail-modal button {
@@ -24,6 +30,11 @@
   background-color: #fff;
   animation: modal-show 0.3s;
   /* overflow: hidden; */
+
+  @media (max-width: 1076px) {
+    width: 900px;
+    height: 600px;
+  }
 }
 
 .feed-datail-modal>section>header {
@@ -93,10 +104,11 @@
 
 /* 인풋 들어가는 부분 */
 .inputSection {
-  min-width: 350px;
-  min-height: 700px;
+  /* min-width: 100px;
+  min-height: 700px; */
   padding: 10px;
 }
+
 
 .btn-upload {
   width: 150px;
@@ -178,7 +190,7 @@
 .closeButton {
   display: flex;
   justify-content: flex-end;
-  padding: 0px;
+  /* padding: 0px; */
 }
 
 .close {
