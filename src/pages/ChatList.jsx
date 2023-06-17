@@ -43,7 +43,13 @@ function ChatList() {
                 />
                 <Content>
                   <SenderName>{item.receiverNickName}</SenderName>
-                  {item.lastChat && <Message>{item.lastChat.message}</Message>}
+                  {item.lastChat && (
+                    <Message>
+                      {item.lastChat.message.length > 15
+                        ? item.lastChat.message.slice(0, 15) + "..."
+                        : item.lastChat.message}
+                    </Message>
+                  )}
                 </Content>
               </ChatItem>
             </List>
@@ -95,7 +101,8 @@ const Content = styled.div`
 
 const SenderName = styled.span`
   font-weight: bold;
-  margin-right: 20px;
+  margin-right: 25px;
+  color: #000;
 `;
 
 const Message = styled.span`
