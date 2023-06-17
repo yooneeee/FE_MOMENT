@@ -22,11 +22,13 @@ const FeedDetail = (props) => {
   const navigate = useNavigate();
 
   const settings = {
-    // dots: true,
-    // infinite: true,
+    dots: true,
+    infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
   };
 
   // 모달창 바깥을 눌렀을 때 모달 close
@@ -82,58 +84,21 @@ const FeedDetail = (props) => {
   return (
     <div className={open ? "openModal feed-datail-modal" : "feed-datail-modal"}>
       {open && (
-        // <section ref={modalRef}>
-        //   <div className="container">
-        //     <main className="main-body">
-        //       <div className="imgContainer">
-        //         <img
-        //           src={data.photoUrls[0]}
-        //           className="feedDetailImg"
-        //           alt="피드사진"
-        //         />
-        //       </div>
-        //     </main>
-
         <section ref={modalRef}>
-          <div className="container">
+          <AllContainer>
             <MainBody>
               <ImgContainer>
-                {/* <Slider {...settings}>
-                  {ImgArray.map((img) => {
-                    return <FeedImg image={img} alt="피드사진" />;
+                <Styled_Slide {...settings}>
+                  {ImgArray.map((img, index) => {
+                    return (
+                      <SliderBox key={index}>
+                        <SliderBody image={img} alt="피드사진" />
+                      </SliderBox>
+                    );
                   })}
-                </Slider> */}
-
-                {/* {ImgArray.map((img) => {
-                  return (
-                    <SliderBox>
-                      <FeedImg image={img} alt="피드사진" />;
-                    </SliderBox>
-                  );
-                })} */}
-                {/* 
-                <Slider {...settings}>
-                  <SliderBox>
-                    <h3>1</h3>
-                  </SliderBox>
-                  <SliderBox>
-                    <h3>2</h3>
-                  </SliderBox>
-                  <SliderBox>
-                    <h3>3</h3>
-                  </SliderBox>
-                  <SliderBox>
-                    <h3>4</h3>
-                  </SliderBox>
-                  <SliderBox>
-                    <h3>5</h3>
-                  </SliderBox>
-                </Slider> */}
-
-                <FeedImg image={ImgArray[0]} />
+                </Styled_Slide>
               </ImgContainer>
             </MainBody>
-
             <div className="inputSection">
               <div className="closeButton">
                 <button className="close" onClick={close}>
@@ -175,7 +140,7 @@ const FeedDetail = (props) => {
                 })}
               </HashTagContainer>
             </div>
-          </div>
+          </AllContainer>
         </section>
       )}
     </div>
@@ -184,17 +149,60 @@ const FeedDetail = (props) => {
 
 export default FeedDetail;
 
-const SliderContainer = styled.div`
-  height: 100%;
-  background-color: aqua;
+const Styled_Slide = styled(Slider)`
+  width: 100%;
+  /* padding-bottom: 100%; */
+
+  .slick-prev,
+  .slick-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    font-size: 20px;
+    opacity: 0.8;
+  }
+
+  .slick-prev {
+    left: 3px;
+  }
+
+  .slick-next {
+    right: 3px;
+  }
+
+  .slick-dots {
+    bottom: 20px; /* Increase the bottom position by 20px */
+  }
 `;
 
 const SliderBox = styled.div`
+  /* background-color: aqua; */
+  /* position: relative; */
+`;
+
+const SliderBody = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: aqua;
-  min-height: 700px;
+  padding-bottom: 108%;
+  background-image: ${(props) => `url(${props.image})`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 /////////////////////////////
+
+const AllContainer = styled.div`
+  display: flex;
+`;
 
 const HashTagContainer = styled.div`
   margin-top: 20px;
@@ -214,9 +222,8 @@ const HashTag = styled.div`
 
 const MainBody = styled.div`
   /* display: flex; */
-  min-height: 700px;
   max-height: 700px;
-  overflow: hidden;
+  /* overflow: hidden; */
 `;
 
 const Container = styled.div`
@@ -233,9 +240,13 @@ const ContentArea = styled.div`
 `;
 
 const ImgContainer = styled.div`
-  width: 720px;
+  position: relative;
+  width: 650px;
+  height: 700px;
   background-color: #eee;
-  height: 100%;
+  /* height: 100%; */
+  /* padding-bottom: 100%; */
+  display: flex;
 `;
 
 const Content = styled.p`
@@ -245,7 +256,7 @@ const Content = styled.p`
 
 const FeedImg = styled.div`
   width: 100%;
-  height: 100%;
+  height: auto;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -272,5 +283,3 @@ const ArrowButton = styled.div`
   cursor: pointer;
   z-index: 2;
 `;
-
-const Styled_Slide = styled(Slider)``;
