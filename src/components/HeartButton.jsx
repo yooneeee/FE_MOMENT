@@ -15,4 +15,7 @@ export default HeartButton;
 const Heart = styled.img`
   width: 20px;
   cursor: pointer;
+  @media (max-width: 1076px) {
+    width: 15px;
+  }
 `;
