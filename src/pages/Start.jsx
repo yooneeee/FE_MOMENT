@@ -92,12 +92,14 @@ const NavigationBar = styled.nav`
 
 const DesTitle = styled.p`
   font-family: "LINESeedKR-Bd";
+  word-break: keep-all;
 `;
 
 const Des = styled.p`
   font-family: "LINESeedKR-Bd";
   margin-top: 20px;
   font-size: 65px;
+  word-break: keep-all;
   /* font-weight: 400; */
   color: #2f2f2f;
   @media (max-width: 1470px) {
