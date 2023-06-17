@@ -133,7 +133,6 @@ const CreateFeed = (props) => {
   // 모달창 바깥을 눌렀을 때 모달 close
   const handleOutsideClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
-      close();
     }
   };
 
