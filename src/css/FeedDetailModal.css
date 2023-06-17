@@ -16,7 +16,7 @@
   border: 0;
 }
 
-.feed-datail-modal > section {
+.feed-datail-modal>section {
   width: 90%;
   max-width: 1000px;
   margin: 0 auto;
@@ -26,7 +26,7 @@
   overflow: hidden;
 }
 
-.feed-datail-modal > section > header {
+.feed-datail-modal>section>header {
   position: relative;
   padding: 16px;
   background-color: transparent;
@@ -38,7 +38,7 @@
   border-bottom: 1px solid #dee2e6;
 }
 
-.feed-datail-modal > section > button {
+.feed-datail-modal>section>button {
   padding: 6px 12px;
   color: #fff;
   background-color: transparent;
@@ -124,6 +124,7 @@
 
 .imgContainer {
   width: 720px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
