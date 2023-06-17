@@ -5,7 +5,6 @@ import enableScroll from "./EnableScroll";
 import { useInput } from "../hooks/useInput";
 import { createFeedAxios } from "../apis/feed/createFeedAxios";
 import { useMutation, useQueryClient } from "react-query";
-import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import UserDataComponent from "./UserDataComponent";
 import styled from "styled-components";
@@ -26,14 +25,14 @@ const CreateFeed = (props) => {
   };
 
   const addHashTag = (e) => {
-    const allowedCommand = ["Comma", "Enter", "Space", "NumpadEnter"];
+    const allowedCommand = ["Enter"];
     if (!allowedCommand.includes(e.code)) return;
 
     if (isEmptyValue(e.target.value.trim())) {
       return setInputHashTag("");
     }
 
-    let newHashTag = e.target.value.trim();
+    let newHashTag = e.target.value;
     const regExp = /[\{\}\[\]\/?.;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
     if (regExp.test(newHashTag)) {
       newHashTag = newHashTag.replace(regExp, "");
