@@ -23,7 +23,7 @@
   border-radius: 0.3rem;
   background-color: #fff;
   animation: modal-show 0.3s;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .feed-datail-modal>section>header {
@@ -88,7 +88,6 @@
   align-items: center;
   justify-content: center;
   min-height: 700px;
-  max-height: 700px;
   overflow: hidden;
 }
 
