@@ -99,34 +99,35 @@ const FeedDetail = (props) => {
                 </Styled_Slide>
               </ImgContainer>
             </MainBody>
-            <div className="inputSection">
-              <div className="closeButton">
+
+            <ContentSection>
+              <CloseButtonBox>
                 <button className="close" onClick={close}>
                   <AiOutlineClose />
                 </button>
-              </div>
-              <div className="profileContainer">
-                <img
+              </CloseButtonBox>
+
+              <ProfileContainer>
+                <ProfileImg
                   src={data.profileUrl}
-                  className="profileImg"
                   onClick={() => {
                     navigate(`/page/${data.hostId}`);
                   }}
                   alt="프로필사진"
                 />
                 <div>
-                  <p className="position">{data.role}</p>
+                  <Position>{data.role}</Position>
                   <p>{data.nickName}</p>
                 </div>
 
-                <div className="loveButtonBox">
+                <LoveButtonContainer>
                   <HeartButton
                     like={data.checkLove}
                     onClick={likeButtonHandler}
                   />
                   <div>{data.photoLoveCnt}</div>
-                </div>
-              </div>
+                </LoveButtonContainer>
+              </ProfileContainer>
 
               <ContentArea>
                 <Content>
@@ -139,7 +140,7 @@ const FeedDetail = (props) => {
                   return <HashTag key={item.tagId}>{item.tag}</HashTag>;
                 })}
               </HashTagContainer>
-            </div>
+            </ContentSection>
           </AllContainer>
         </section>
       )}
@@ -184,6 +185,72 @@ const Styled_Slide = styled(Slider)`
 const SliderBox = styled.div`
   /* background-color: aqua; */
   /* position: relative; */
+  @media (max-width: 1076px) {
+    height: 596px;
+  }
+`;
+
+const ProfileImg = styled.img`
+  width: 80px;
+  height: 80px;
+  border-radius: 70%;
+  object-fit: cover;
+  padding: 15px;
+  flex-shrink: 0;
+
+  @media (max-width: 1076px) {
+    width: 70px;
+    height: 70px;
+  }
+`;
+
+const LoveButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  align-items: center;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: 5px;
+
+  @media (max-width: 1076px) {
+    width: 55px;
+    font-size: 5px;
+  }
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  align-items: center;
+  color: black;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+
+  @media (max-width: 1120px) {
+    font-size: 12px;
+  }
+`;
+
+const CloseButtonBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const ContentSection = styled.div`
+  padding: 10px;
+  width: 400px;
+
+  @media (max-width: 1076px) {
+    width: 900px;
+    height: 600px;
+  }
+`;
+
+const Position = styled.p`
+  color: #787878;
+  margin-bottom: 5px;
 `;
 
 const SliderBody = styled.div`
@@ -191,7 +258,7 @@ const SliderBody = styled.div`
   justify-content: center;
   align-items: center;
   background-color: aqua;
-  padding-bottom: 108%;
+  padding-bottom: 107.7%;
   background-image: ${(props) => `url(${props.image})`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -210,6 +277,10 @@ const HashTagContainer = styled.div`
   display: flex;
   gap: 5px;
   margin-left: 5px;
+
+  @media (max-width: 1076px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const HashTag = styled.div`
@@ -218,6 +289,11 @@ const HashTag = styled.div`
   border: none;
   padding: 10px;
   border-radius: 40px;
+  font-size: 14px;
+
+  @media (max-width: 1076px) {
+    font-size: 13px;
+  }
 `;
 
 const MainBody = styled.div`
@@ -226,17 +302,17 @@ const MainBody = styled.div`
   /* overflow: hidden; */
 `;
 
-const Container = styled.div`
-  display: flex;
-`;
-
 const ContentArea = styled.div`
   margin: 20px 10px 10px 10px;
-  width: 300px;
+  /* width: 300px; */
   font-size: 17px;
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: break-word;
+
+  @media (max-width: 1076px) {
+    font-size: 14px;
+  }
 `;
 
 const ImgContainer = styled.div`
@@ -247,10 +323,16 @@ const ImgContainer = styled.div`
   /* height: 100%; */
   /* padding-bottom: 100%; */
   display: flex;
+
+  @media (max-width: 1076px) {
+    width: 596px;
+    height: 596px;
+  }
 `;
 
 const Content = styled.p`
   width: 100%;
+  /* font-size: 1em; */
   white-space: pre-wrap; /* Add this line */
 `;
 

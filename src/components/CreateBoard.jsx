@@ -24,18 +24,18 @@ const CreateBoard = (props) => {
   };
 
   const addHashTag = (e) => {
-    const allowedCommand = ["Comma", "Enter", "Space", "NumpadEnter"];
+    const allowedCommand = ["Enter"];
     if (!allowedCommand.includes(e.code)) return;
 
-    if (isEmptyValue(e.target.value.trim())) {
+    if (isEmptyValue(e.target.value)) {
       return setInputHashTag("");
     }
 
-    let newHashTag = e.target.value.trim();
+    let newHashTag = e.target.value;
     const regExp = /[\{\}\[\]\/?.;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
-    if (regExp.test(newHashTag)) {
-      newHashTag = newHashTag.replace(regExp, "");
-    }
+    // if (regExp.test(newHashTag)) {
+    //   newHashTag = newHashTag.replace(regExp, "");
+    // }
     if (newHashTag.includes(",")) {
       newHashTag = newHashTag.split(",").join("");
     }
@@ -43,6 +43,16 @@ const CreateBoard = (props) => {
     if (isEmptyValue(newHashTag)) return;
 
     if (hashTags.length >= 3) return;
+
+    if (newHashTag.length > 10) {
+      Swal.fire({
+        icon: "error",
+        // title: "피드 생성 완료!",
+        text: `입력한 값은 10자를 초과할 수 없습니다.`,
+        confirmButtonText: "확인",
+      });
+      return;
+    }
 
     if (!newHashTag.startsWith("#")) {
       newHashTag = `#${newHashTag}`;
@@ -63,12 +73,12 @@ const CreateBoard = (props) => {
 
   const keyDownHandler = (e) => {
     if (e.code !== "Enter" && e.code !== "NumpadEnter") return;
-    e.preventDefault();
+    // e.preventDefault();
 
     const regExp = /^[a-z|A-Z|가-힣|ㄱ-ㅎ|ㅏ-ㅣ|0-9| \t|]+$/g;
-    if (!regExp.test(e.target.value)) {
-      setInputHashTag("");
-    }
+    // if (!regExp.test(e.target.value)) {
+    //   setInputHashTag("");
+    // }
   };
 
   const changeHashTagInput = (e) => {
@@ -227,50 +237,52 @@ const CreateBoard = (props) => {
                   <p>{loginUserData.nickName}</p>
                 </div>
               </div>
+              <ContentContainer>
+                <InputTitle>제목</InputTitle>
+                <ContentInput
+                  placeholder="제목을 입력해주세요"
+                  value={title}
+                  onChange={onChangeTitleHandler}
+                ></ContentInput>
 
-              <InputTitle>제목</InputTitle>
-              <ContentInput
-                placeholder="제목을 입력해주세요"
-                value={title}
-                onChange={onChangeTitleHandler}
-              ></ContentInput>
+                <InputTitle>내용</InputTitle>
+                <ContentInput
+                  placeholder="내용을 입력해주세요"
+                  value={content}
+                  onChange={onChangeContentHandler}
+                ></ContentInput>
+                <InputTitle>촬영 장소</InputTitle>
+                <ContentInput
+                  placeholder="장소를 입력해주세요"
+                  value={location}
+                  onChange={onChangeLocationHandler}
+                />
 
-              <InputTitle>내용</InputTitle>
-              <ContentInput
-                placeholder="내용을 입력해주세요"
-                value={content}
-                onChange={onChangeContentHandler}
-              ></ContentInput>
-              <InputTitle>촬영 장소</InputTitle>
-              <ContentInput
-                placeholder="장소를 입력해주세요"
-                value={location}
-                onChange={onChangeLocationHandler}
-              />
+                <InputTitle>페이</InputTitle>
+                <ContentInput
+                  placeholder="페이 조건을 입력해주세요"
+                  value={pay}
+                  onChange={onChangePayHandler}
+                />
 
-              <InputTitle>페이</InputTitle>
-              <ContentInput
-                placeholder="페이 조건을 입력해주세요"
-                value={pay}
-                onChange={onChangePayHandler}
-              />
+                <InputTitle>지원 방법</InputTitle>
+                <ContentInput
+                  placeholder="지원 방법을 입력해주세요"
+                  value={apply}
+                  onChange={onChangeApplyHandler}
+                />
 
-              <InputTitle>지원 방법</InputTitle>
-              <ContentInput
-                placeholder="지원 방법을 입력해주세요"
-                value={apply}
-                onChange={onChangeApplyHandler}
-              />
-
-              <InputTitle>모집 마감일</InputTitle>
-              <ContentInput
-                type="date"
-                value={deadLine}
-                onChange={onChangeDeadLineHandler}
-              />
+                <InputTitle>모집 마감일</InputTitle>
+                <ContentInput
+                  type="date"
+                  value={deadLine}
+                  onChange={onChangeDeadLineHandler}
+                />
+              </ContentContainer>
 
               <HashTageContainer>
                 <HashTagInputTitle>해시태그</HashTagInputTitle>
+                <HashTagGuide>10자 이내, 해시태그 개수 3개 제한</HashTagGuide>
                 <HashTag>
                   {hashTags.map((hashTag) => (
                     <Tag key={hashTag} onClick={() => removeHashTag(hashTag)}>
@@ -283,7 +295,7 @@ const CreateBoard = (props) => {
                     onChange={changeHashTagInput}
                     onKeyUp={addHashTag}
                     onKeyDown={keyDownHandler}
-                    placeholder="#해시태그를 등록해보세요. (최대 3개)"
+                    placeholder="#Enter를 눌러 해시태그를 등록해보세요."
                     className="hashTagInput"
                   />
                 </HashTag>
@@ -306,12 +318,22 @@ const HashTageContainer = styled.div`
 const HashTag = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
-  width: 100%;
+  width: 320px;
   border: 2px solid $GRAY;
   border-radius: 10px;
   padding: 5px;
   gap: 5px;
   margin-top: 10px;
+`;
+
+const ContentContainer = styled.div`
+  margin-top: -15px;
+`;
+
+const HashTagGuide = styled.div`
+  color: #787878;
+  font-size: 13px;
+  margin-left: 10px;
 `;
 
 const Tag = styled.div`
@@ -341,7 +363,7 @@ const InputTitle = styled.div`
 
 const HashTagInputTitle = styled.div`
   padding-bottom: 10px;
-  padding-left: 6px;
+  padding-left: 10px;
 `;
 
 const ContentInput = styled.input`
