@@ -277,6 +277,7 @@ const HashTagContainer = styled.div`
   display: flex;
   gap: 5px;
   margin-left: 5px;
+  flex-wrap: wrap;
 
   @media (max-width: 1076px) {
     flex-wrap: wrap;
