@@ -117,7 +117,7 @@ const MainImg = styled.img`
 `;
 
 const MainBody = styled.div`
-  margin: auto 100px;
+  margin: auto 150px;
 `;
 
 const CategoryContainer = styled.div`
