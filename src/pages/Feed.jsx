@@ -165,11 +165,11 @@ function Feed() {
 export default Feed;
 
 const FeedContainer = styled.div`
-  padding: 30px 0 30px 0;
+  padding: 30px 150px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 50px;
-  margin: auto 100px;
+  margin: auto;
   @media (max-width: 1300px) {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -203,9 +203,8 @@ const NavItem = styled.div`
   }
 `;
 
-const Header = styled.header`
-  padding: 16px;
-  width: 86%;
+const Header = styled.div`
+  padding: 16px 0 16px 0;
   border-bottom: 1px solid #ddd;
-  margin: auto;
+  margin: 0 150px;
 `;
