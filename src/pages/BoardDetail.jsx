@@ -303,6 +303,5 @@ const WorkItem = styled.div`
 `;
 
 const FormRange = styled.div`
-  /* background-color: aqua; */
   width: 10%;
 `;
