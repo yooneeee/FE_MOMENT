@@ -66,7 +66,6 @@ function Board() {
         });
       }
       setSearchResults(response.data.content);
-
       setKeyword("");
     },
     onError: () => {
@@ -125,7 +124,7 @@ function Board() {
       },
     }
   );
-  console.log("data", data);
+
   // 바닥 div 추적
   const [bottomObserverRef, bottomInView] = useInView({
     threshold: 0,
@@ -144,8 +143,6 @@ function Board() {
   if (isError) {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
-
-  console.log("result", searchResults);
 
   return (
     <Container>
@@ -351,7 +348,7 @@ const SelectButton = styled.button`
 
 const LanguageUl = styled.ul`
   width: 100px;
-  /*   height: 80px; */
+  z-index: 10;
   margin: 0;
   padding-left: 0;
   list-style: none;
