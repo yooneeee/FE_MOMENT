@@ -504,7 +504,7 @@ const ProfileImg = styled.img`
 const ToggleProfileMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 178px;
+  right: 160px;
   background-color: white;
   padding: 10px;
   display: flex;
