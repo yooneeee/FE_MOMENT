@@ -324,7 +324,20 @@ const Header = styled.header`
 `;
 
 const Content = styled.div`
-  width: 80%;
+  padding: 30px 150px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: auto;
+  @media (max-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 const SelectWrap = styled.div`
   position: relative;

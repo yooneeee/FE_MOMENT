@@ -3,13 +3,14 @@ import styled from "styled-components";
 import { IoLocationSharp } from "react-icons/io5";
 import { BiDollarCircle } from "react-icons/bi";
 import { LuCalendarDays } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 import { FaPen } from "react-icons/fa";
 
 function BoardItem({ item, onClick }) {
   const [timeDifference, setTimeDifference] = useState(null);
   // 오늘 날짜
   const today = new Date();
-
+  const navigate = useNavigate("");
   const getTimeDifference = (createdTime) => {
     const serverTime = new Date(createdTime);
     const currentTime = new Date();
@@ -49,18 +50,23 @@ function BoardItem({ item, onClick }) {
         <DDayInfo isDday={getDDay(item.deadLine) === "D-day"}>
           <p>{getDDay(item.deadLine)}</p>
         </DDayInfo>
+        <PhotographerInfo>
+          <CardProfileImg src={item.hostProfileUrl} />
+          <PhotographerRole>{item.role}</PhotographerRole>
+          <span>|</span>
+          <PhotographerName>{item.nickName}</PhotographerName>
+        </PhotographerInfo>
       </ImageContainer>
       <ContentContainer>
         <Title>{item.title}</Title>
-        <PhotographerInfo>
-          <PhotographerRole>{item.role}</PhotographerRole>
-          <PhotographerName>{item.nickName}</PhotographerName>
-        </PhotographerInfo>
+
         <LocationInfo>
           <IoLocationSharp style={{ color: "#514073" }} />
           <p>{item.location}</p>
-          <BiDollarCircle style={{ color: "#514073" }} />
-          <p>{item.pay}</p>
+          <PayInfo>
+            <BiDollarCircle style={{ color: "#514073" }} />
+            <p>{item.pay}</p>
+          </PayInfo>
         </LocationInfo>
         <DeadLineInfo>
           <LuCalendarDays style={{ color: "#514073" }} /> <p>{item.deadLine}</p>
@@ -73,7 +79,7 @@ function BoardItem({ item, onClick }) {
         </HashTagContainer>
         <MeetInfo hasHashTags={item.tag_boardList.length > 0}>
           <CreatedDate>
-            {/*             <FaPen /> */}
+            <FaPen style={{ color: "#514073", marginRight: "10px" }} />
             {getTimeDifference(item.createdTime)}
           </CreatedDate>
         </MeetInfo>
@@ -85,42 +91,62 @@ function BoardItem({ item, onClick }) {
 export default BoardItem;
 
 const Item = styled.div`
+  position: relative;
+  margin-top: 15px;
+  flex-grow: 1;
+  width: 100%;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-10px);
+    transition: transform 1s ease;
+    cursor: pointer;
+  }
+
+  &:not(:hover) {
+    transform: translateY(0);
+    transition: transform 1s ease;
+  }
+`;
+
+const ContentContainer = styled.div`
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 20px 0;
-  padding: 16px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  /* border: 3px solid #514073; */
-  border-radius: 5px;
-  cursor: pointer;
+  flex-wrap: wrap;
+`;
 
-  @media (min-width: 768px) {
-    flex-direction: row;
-    align-items: flex-start;
-    width: 100%;
+const PhotographerInfo = styled.div`
+  position: absolute;
+  bottom: 0px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 10px;
+  font-weight: 600;
+  width: 100%;
+  opacity: 80%;
+  @media (max-width: 1200px) {
+    padding: 5px;
   }
 `;
 
 const ImageContainer = styled.div`
   position: relative;
-  width: 200px;
-  height: 200px;
-  margin-right: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  padding-bottom: 100%;
+  border-radius: 4px;
+  object-fit: cover;
   background-image: url(${(props) => props.img});
-  background-position: center;
-  background-repeat: no-repeat;
   background-size: cover;
-`;
-
-const ContentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #bbbbbb;
+  cursor: pointer;
+  overflow: hidden;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.div`
@@ -129,29 +155,21 @@ const Title = styled.div`
   margin-bottom: 8px;
 `;
 
-const PhotographerInfo = styled.div`
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
+const PhotographerName = styled.div`
+  font-weight: 600;
+  margin-left: 8px;
   font-size: 14px;
 `;
 
-const PhotographerName = styled.div`
-  font-weight: 500;
-`;
-
 const PhotographerRole = styled.div`
-  font-weight: 500;
-  color: #666;
+  font-weight: 600;
   margin-right: 8px;
+  font-size: 10px;
 `;
 
 const MeetInfo = styled.div`
   display: flex;
   align-items: center;
-
-  margin-top: ${(props) => (props.hasHashTags ? "17px" : "50px")};
   @media (max-width: 768px) {
     margin-top: 20px;
   }
@@ -160,12 +178,14 @@ const MeetInfo = styled.div`
 const CreatedDate = styled.div`
   color: #666;
   font-size: 14px;
+  margin-top: 10px;
 `;
 
 const HashTagContainer = styled.div`
   padding-top: 10px;
   display: flex;
   gap: 5px;
+  flex-wrap: wrap;
 `;
 
 const HashTag = styled.div`
@@ -182,6 +202,7 @@ const LocationInfo = styled.div`
   font-size: 16px;
   align-items: center;
   margin-bottom: 10px;
+  flex-wrap: wrap;
 `;
 const DeadLineInfo = styled.div`
   display: flex;
@@ -203,4 +224,28 @@ const DDayInfo = styled.div`
   opacity: 50%;
   font-weight: 600;
   color: ${(props) => (props.isDday ? "#ff0000" : "#000000")};
+`;
+
+const CardProfileImg = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-image: url(${(props) => props.src});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #bbbbbb;
+  margin-right: 3%;
+  cursor: pointer;
+  @media (max-width: 1200px) {
+    width: 30px;
+    height: 30px;
+  }
+`;
+const PayInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
 `;
