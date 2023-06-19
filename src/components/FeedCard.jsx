@@ -64,7 +64,9 @@ function FeedCard({ data, onClick, openFeedDetail }) {
         </FlexWrap>
       </CardHeader>
       <ContentBox>
-        {data.content === "undefined" ? null : data.content}
+        {data.content && data.content.length > 50
+          ? data.content.slice(0, 50) + "..."
+          : data.content}
       </ContentBox>
       <HashTagContainer>
         {data.tag_photoList.map((item) => {
