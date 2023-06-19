@@ -7,6 +7,16 @@ import { Chatting } from "../apis/mypage/chatting";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoadingSpinner from "../components/LoadingSpinner";
+import MyPageTabs from "../components/MyPageTabs";
+import ChatList from "./ChatList";
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+  #root {
+    overflow: hidden;
+    height: 100vh;
+  }
+`;
 
 const ChatTest = () => {
   const { receiverId } = useParams();
@@ -22,7 +32,7 @@ const ChatTest = () => {
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
-  // console.log("채팅할사람", data);
+  console.log("채팅할사람", data);
 
   useEffect(() => {
     if (data?.chatList) {
@@ -131,87 +141,127 @@ const ChatTest = () => {
   };
 
   return (
-    <EntireContainer>
-      {chatMessages && chatMessages.length > 0 && (
-        <ChatContainer>
-          {chatMessages.map((_chatMessage, index) => (
-            <React.Fragment key={_chatMessage.uuid}>
-              {_chatMessage.senderId !== userId && (
-                <MessageContainer>
-                  {/* <ReceiverProfile
-                  isSender={_chatMessage.senderId === userId}
-                  src={
-                    _chatMessage.senderId === userId
-                      ? profileImg
-                      : data.receiverProfileImg
-                  }
-                  alt="Profile"
-                /> */}
-                  <ReceiverProfile
-                    src={data.receiverProfileImg}
-                    alt="Profile"
-                  />
-                  {/* <Nickname isSender={_chatMessage.senderId === userId}>
+    <>
+      <GlobalStyle />
+      <MyPageTabs />
+      <EntireContainer>
+        <ChatList />
+        <ChatRoomContainer>
+          <div>df</div>
+          <Line />
+          <ScrollableDiv>
+            {chatMessages && chatMessages.length > 0 && (
+              <ChatContainer>
+                {chatMessages.map((_chatMessage, index) => (
+                  <React.Fragment key={_chatMessage.uuid}>
+                    {_chatMessage.senderId !== userId && (
+                      <MessageContainer>
+                        <ReceiverProfile
+                          isSender={_chatMessage.senderId === userId}
+                          src={
+                            _chatMessage.senderId === userId
+                              ? profileImg
+                              : data.receiverProfileImg
+                          }
+                          alt="Profile"
+                        />
+                        {/* <ReceiverProfile
+                          src={data.receiverProfileImg}
+                          alt="Profile"
+                        /> */}
+                        {/* <Nickname isSender={_chatMessage.senderId === userId}>
                   {_chatMessage.senderId === userId
                     ? nickName
                     : data.receiverNickName}
                 </Nickname> */}
-                  <Nickname>{data.receiverNickName}</Nickname>
-                </MessageContainer>
-              )}
-              <ChatBubble
-                key={index}
-                isSender={_chatMessage.senderId === userId}
-                isReceiver={_chatMessage.receiverId === userId}
-              >
-                {_chatMessage.message}
-              </ChatBubble>
-            </React.Fragment>
-          ))}
-        </ChatContainer>
-      )}
-      <div ref={scrollRef}></div>
-      <SendContainer>
-        {overLimit && <span>1000자를 초과하였습니다!</span>}
-        <ChatInputContainer>
-          <ChatInput
-            rows={1}
-            type={"text"}
-            value={message}
-            onChange={(e) => {
-              if (e.target.value.length <= 1000) {
-                setMessage(e.target.value);
-                setOverLimit(false); // 길이 제한이 초과되지 않았으므로 경고를 숨김
-              } else {
-                setOverLimit(true); // 길이 제한이 초과되었으므로 경고를 표시
-              }
-            }}
-            // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행
-            onKeyDown={(e) => enterHandler(e, message)}
-          />
-          <SendButton onClick={() => publish(message)}>전송</SendButton>
-        </ChatInputContainer>
-      </SendContainer>
-    </EntireContainer>
+                        <Nickname>{data.receiverNickName}</Nickname>
+                      </MessageContainer>
+                    )}
+                    <ChatBubble
+                      key={index}
+                      isSender={_chatMessage.senderId === userId}
+                      isReceiver={_chatMessage.receiverId === userId}
+                    >
+                      {_chatMessage.message}
+                    </ChatBubble>
+                  </React.Fragment>
+                ))}
+              </ChatContainer>
+            )}
+            <div ref={scrollRef}></div>
+            <SendContainer>
+              {overLimit && <span>1000자를 초과하였습니다!</span>}
+              <ChatInputContainer>
+                <ChatInput
+                  rows={1}
+                  type={"text"}
+                  value={message}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 1000) {
+                      setMessage(e.target.value);
+                      setOverLimit(false); // 길이 제한이 초과되지 않았으므로 경고를 숨김
+                    } else {
+                      setOverLimit(true); // 길이 제한이 초과되었으므로 경고를 표시
+                    }
+                  }}
+                  // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행
+                  onKeyDown={(e) => enterHandler(e, message)}
+                />
+                <SendButton onClick={() => publish(message)}>전송</SendButton>
+              </ChatInputContainer>
+            </SendContainer>
+          </ScrollableDiv>
+        </ChatRoomContainer>
+      </EntireContainer>
+    </>
   );
 };
 
 export default ChatTest;
 
-const EntireContainer = styled.div``;
+const ScrollableDiv = styled.div`
+  overflow-y: auto;
+  height: calc(100% - 70px);
 
+  /* // For Webkit-based Browsers
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  // For Firefox
+  scrollbar-width: none; */
+`;
+
+const EntireContainer = styled.div`
+  display: flex;
+  width: 100%;
+  /* height: 100vh; */
+  height: calc(100vh - 150px);
+  max-width: 80%;
+  /* max-height: 60%; */
+  margin: auto;
+  overflow: hidden;
+`;
+const ChatRoomContainer = styled.div`
+  flex: 2; // 차지하는 공간의 비율을 2로 설정
+  border-left: 1px solid #ccc;
+  padding: 20px;
+  /* overflow: auto; */
+  max-height: 900px;
+`;
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  max-width: 800px;
+  /* max-width: 800px; */
+  padding: 0px 100px 0px 0px;
   align-items: center;
-  margin: 20px auto;
+  margin: 20px 0;
 
   position: relative;
   min-height: 70vh;
-  overflow: auto;
+  /* overflow: auto; */
 `;
 
 const SendContainer = styled.div`
@@ -285,4 +335,9 @@ const SendButton = styled.button`
   color: #fff;
   border: none;
   border-radius: 4px;
+`;
+const Line = styled.div`
+  border-top: 1px solid #d6d6d6;
+  width: 100%;
+  margin-top: 50px;
 `;
