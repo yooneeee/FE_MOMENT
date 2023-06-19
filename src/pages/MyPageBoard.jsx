@@ -139,55 +139,57 @@ function MyPageBoard() {
           <Container>
             <Content>
               <Work>내가 쓴 게시물</Work>
-              {data.boardList.map((item, index) => {
-                return (
-                  <BoardItemContainer key={item.boardId}>
-                    <BoardItem
-                      key={item.boardId}
-                      item={item}
-                      onClick={() => {
-                        navigate(`/board/${item.boardId}`);
-                      }}
-                    />
-                    <EditButton
-                      onClick={(e) => {
-                        if (editButtons[index]) {
-                          toggleButtonClose(index);
-                        } else {
-                          toggleButtonOpen(index);
-                        }
-                      }}
-                    >
-                      <FiSettings size={14} />
-                      <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
-                    </EditButton>
-                    {editButtons[index] && (
-                      <ToggleWriteMenu ref={toggleWriteMenuRef}>
-                        <Button
-                          onClick={() => {
-                            editButtonHandler(item.boardId);
-                          }}
-                        >
-                          수정
-                        </Button>
-                        <Button
-                          onClick={() => deleteButtonHandler(item.boardId)}
-                        >
-                          삭제
-                        </Button>
-                      </ToggleWriteMenu>
-                    )}
-                    {selectedBoardId === item.boardId && (
-                      <EditBoard
-                        id={item.boardId}
+              <BoardList>
+                {data.boardList.map((item, index) => {
+                  return (
+                    <BoardItemContainer key={item.boardId}>
+                      <BoardItem
+                        key={item.boardId}
                         item={item}
-                        open={openBoardModal}
-                        close={() => setSelectedBoardId(null)}
+                        onClick={() => {
+                          navigate(`/board/${item.boardId}`);
+                        }}
                       />
-                    )}
-                  </BoardItemContainer>
-                );
-              })}
+                      <EditButton
+                        onClick={(e) => {
+                          if (editButtons[index]) {
+                            toggleButtonClose(index);
+                          } else {
+                            toggleButtonOpen(index);
+                          }
+                        }}
+                      >
+                        <FiSettings size={14} />
+                        <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
+                      </EditButton>
+                      {editButtons[index] && (
+                        <ToggleWriteMenu ref={toggleWriteMenuRef}>
+                          <Button
+                            onClick={() => {
+                              editButtonHandler(item.boardId);
+                            }}
+                          >
+                            수정
+                          </Button>
+                          <Button
+                            onClick={() => deleteButtonHandler(item.boardId)}
+                          >
+                            삭제
+                          </Button>
+                        </ToggleWriteMenu>
+                      )}
+                      {selectedBoardId === item.boardId && (
+                        <EditBoard
+                          id={item.boardId}
+                          item={item}
+                          open={openBoardModal}
+                          close={() => setSelectedBoardId(null)}
+                        />
+                      )}
+                    </BoardItemContainer>
+                  );
+                })}
+              </BoardList>
             </Content>
           </Container>
         </ContentContainer>
@@ -233,6 +235,13 @@ const Work = styled.h2`
   margin-bottom: 1rem;
 `;
 
+const BoardList = styled.div`
+  display: grid;
+  /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+`;
+
 const Content = styled.div`
   flex-grow: 1;
   margin-left: 1rem;
@@ -240,7 +249,7 @@ const Content = styled.div`
 
 const ToggleWriteMenu = styled.div`
   position: absolute;
-  top: 68px;
+  top: 80px;
   right: -100px;
   transform: translate(-50%, -50%);
   padding: 10px;
@@ -259,7 +268,7 @@ const BoardItemContainer = styled.div`
 
 const EditButton = styled.button`
   position: absolute;
-  top: 10px;
+  top: 23px;
   right: 10px;
   background-color: transparent;
   border: none;
@@ -267,6 +276,7 @@ const EditButton = styled.button`
   font-weight: 900;
   padding: 3px;
   z-index: 1;
+  color: white;
 `;
 const Button = styled.button`
   width: 100px;
