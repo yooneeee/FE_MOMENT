@@ -18,7 +18,6 @@ const ChatTest = () => {
 
   const client = useRef({});
   const scrollRef = useRef();
-  const inputRef = useRef(null);
 
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
