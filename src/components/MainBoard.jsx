@@ -96,7 +96,7 @@ const FlexWrap = styled.div`
   flex-grow: 1;
 `;
 const MeetingInfo = styled.div`
-  margin-top: 12px;
+  margin-top: 20px;
   display: flex;
   font-weight: bold;
   gap: 20px;
@@ -114,6 +114,7 @@ const UserProfile = styled.img`
 `;
 const UserName = styled.span`
   font-weight: bold;
+  font-size: 14px;
 `;
 
 const UserPosition = styled.div`
