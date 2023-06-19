@@ -110,8 +110,6 @@ function Feed() {
       <Header>
         <Navbar>
           <span>피드</span>
-          {/*           <input type="text"></input>
-          <button type="button">검색</button> */}
           <NavItems>
             <NavItem
               className={activeNavItem === "Latest" ? "active" : ""}
