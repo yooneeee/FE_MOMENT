@@ -16,6 +16,9 @@ function BoardItem({ item, onClick }) {
     const currentTime = new Date();
     const timeDiff = Math.floor((currentTime - serverTime) / (1000 * 60)); // 분 단위로 시간 차이 계산
 
+    if (timeDiff === 0) {
+      return "방금 전 작성됨";
+    }
     if (timeDiff < 60) {
       return `${timeDiff}분 전 작성됨 `;
     } else if (timeDiff >= 60 && timeDiff < 1440) {
@@ -62,14 +65,15 @@ function BoardItem({ item, onClick }) {
 
         <LocationInfo>
           <IoLocationSharp style={{ color: "#514073" }} />
-          <p>{item.location}</p>
+          <CardFont>{item.location}</CardFont>
           <PayInfo>
             <BiDollarCircle style={{ color: "#514073" }} />
-            <p>{item.pay}</p>
+            <CardFont>{item.pay}</CardFont>
           </PayInfo>
         </LocationInfo>
         <DeadLineInfo>
-          <LuCalendarDays style={{ color: "#514073" }} /> <p>{item.deadLine}</p>
+          <LuCalendarDays style={{ color: "#514073" }} />{" "}
+          <CardFont>{item.deadLine}</CardFont>
         </DeadLineInfo>
 
         <HashTagContainer>
@@ -91,7 +95,6 @@ function BoardItem({ item, onClick }) {
 export default BoardItem;
 
 const Item = styled.div`
-  position: relative;
   margin-top: 15px;
   flex-grow: 1;
   width: 100%;
@@ -107,6 +110,10 @@ const Item = styled.div`
     transform: translateY(0);
     transition: transform 1s ease;
   }
+`;
+
+const CardFont = styled.p`
+  font-size: 13px;
 `;
 
 const ContentContainer = styled.div`
@@ -151,7 +158,7 @@ const ImageContainer = styled.div`
 
 const Title = styled.div`
   font-weight: 600;
-  font-size: 21px;
+  font-size: 18px;
   margin-bottom: 8px;
 `;
 
@@ -177,7 +184,7 @@ const MeetInfo = styled.div`
 
 const CreatedDate = styled.div`
   color: #666;
-  font-size: 14px;
+  font-size: 13px;
   margin-top: 10px;
 `;
 
@@ -194,6 +201,7 @@ const HashTag = styled.div`
   border: none;
   border-radius: 50px;
   padding: 7px;
+  font-size: 13px;
 `;
 
 const LocationInfo = styled.div`
@@ -207,7 +215,7 @@ const LocationInfo = styled.div`
 const DeadLineInfo = styled.div`
   display: flex;
   gap: 5px;
-  font-size: 16px;
+  font-size: 14px;
   align-items: center;
 `;
 const DDayInfo = styled.div`

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 
 function MyPageTabs({ pageName }) {
   const { hostId } = useParams();
@@ -40,6 +41,22 @@ function MyPageTabs({ pageName }) {
           }}
         >
           내 게시글
+        </TabButton>
+        <TabButton
+          className={pageName === "매칭목록" ? "active" : ""}
+          // onClick={() => {
+          //   navigate(`/matching/${hostId}`);
+          //   activeClickHandler("매칭목록");
+          // }}
+          onClick={() => {
+            Swal.fire({
+              icon: "error",
+              text: "현재 준비 중인 서비스입니다. 불편을 끼쳐드려 죄송합니다.",
+              confirmButtonText: "확인",
+            });
+          }}
+        >
+          매칭목록
         </TabButton>
         <TabButton
           className={pageName === "채팅목록" ? "active" : ""}
