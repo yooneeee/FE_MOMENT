@@ -53,6 +53,7 @@ function BoardItem({ item, onClick }) {
         <DDayInfo isDday={getDDay(item.deadLine) === "D-day"}>
           <p>{getDDay(item.deadLine)}</p>
         </DDayInfo>
+
         <PhotographerInfo>
           <CardProfileImg src={item.hostProfileUrl} />
           <PhotographerRole>{item.role}</PhotographerRole>
@@ -60,9 +61,9 @@ function BoardItem({ item, onClick }) {
           <PhotographerName>{item.nickName}</PhotographerName>
         </PhotographerInfo>
       </ImageContainer>
+
       <ContentContainer>
         <Title>{item.title}</Title>
-
         <LocationInfo>
           <IoLocationSharp style={{ color: "#514073" }} />
           <CardFont>{item.location}</CardFont>
@@ -130,11 +131,10 @@ const PhotographerInfo = styled.div`
   z-index: 3;
   display: flex;
   align-items: center;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.6);
   padding: 10px;
   font-weight: 600;
   width: 100%;
-  opacity: 80%;
   @media (max-width: 1200px) {
     padding: 5px;
   }
