@@ -96,7 +96,9 @@ function Main() {
 
 export default Main;
 
-const MainContainer = styled.div``;
+const MainContainer = styled.div`
+  /*   margin: auto 100px; */
+`;
 
 const SliderWrapper = styled.div`
   position: relative;

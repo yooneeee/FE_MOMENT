@@ -10,15 +10,17 @@ import { useInfiniteQuery, useMutation } from "react-query";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import ScrollToTopButton from "../components/ScrollToTopButton";
-import { TbTriangleInvertedFilled } from "react-icons/tb";
+import { GrSearch } from "react-icons/gr";
 import { searchBoardAxios } from "../apis/board/searchBoard";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+
 function Board() {
   const [activeNavItem, setActiveNavItem] = useState("Model");
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-  let optArr = ["닉네임", "장소", "해시태그"];
-  const [currentOpt, setCurrentOpt] = useState("닉네임");
+  let optArr = ["전체", "닉네임", "장소", "해시태그"];
+  const [currentOpt, setCurrentOpt] = useState("전체");
   const [showList, setShowList] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [option, setOption] = useState("userNickName");
@@ -66,7 +68,6 @@ function Board() {
         });
       }
       setSearchResults(response.data.content);
-
       setKeyword("");
     },
     onError: () => {
@@ -125,7 +126,7 @@ function Board() {
       },
     }
   );
-  console.log("data", data);
+
   // 바닥 div 추적
   const [bottomObserverRef, bottomInView] = useInView({
     threshold: 0,
@@ -145,10 +146,8 @@ function Board() {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
 
-  console.log("result", searchResults);
-
   return (
-    <Container>
+    <>
       <Header>
         <Navbar>
           <span>게시판</span>
@@ -156,7 +155,7 @@ function Board() {
             <SelectWrap ref={selectWrapRef}>
               <SelectButton onClick={toggleShowList}>
                 {currentOpt}
-                <TbTriangleInvertedFilled />
+                <MdOutlineKeyboardArrowDown style={{ fontSize: "18px" }} />
               </SelectButton>
               {showList && (
                 <LanguageUl>
@@ -180,9 +179,9 @@ function Board() {
               onChange={(e) => setKeyword(e.target.value)}
               onKeyPress={handleKeyPress}
             ></input>
-            <button type="button" onClick={searchButtonClickHandler}>
-              검색
-            </button>
+            <SearchButton type="button" onClick={searchButtonClickHandler}>
+              <GrSearch style={{ fontSize: "22px" }} />
+            </SearchButton>
           </Search>
           <NavItems>
             <NavItem
@@ -202,6 +201,7 @@ function Board() {
           </NavItems>
         </Navbar>
       </Header>
+
       <Content>
         {searchResults.length > 0 ? (
           <>
@@ -250,7 +250,7 @@ function Board() {
         <div ref={bottomObserverRef}></div>
       </Content>
       {showButton && <ScrollToTopButton />}
-    </Container>
+    </>
   );
 }
 
@@ -270,15 +270,12 @@ const Navbar = styled.nav`
 
   input {
     padding: 8px 12px;
-    border-radius: 8px;
     border: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     font-size: 16px;
     flex: 1;
 
     &:focus {
       outline: none;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
 
     &::placeholder {
@@ -287,28 +284,24 @@ const Navbar = styled.nav`
   }
 
   button {
-    padding: 8px 16px;
+    margin: 5px;
     border: none;
-    border-radius: 8px;
-    background-color: #483767;
-    color: #fff;
+    border-radius: 21px;
+    color: black;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-
-    &:hover:not(:disabled) {
-      opacity: 70%;
-    }
-
+    background-color: white;
     &:focus {
       outline: none;
     }
   }
 `;
 const Search = styled.div`
+  border: 1px solid #483767;
+  border-radius: 30px;
   width: 60%;
   display: flex;
-  gap: 10px;
 `;
 const NavItems = styled.nav`
   display: flex;
@@ -326,38 +319,56 @@ const NavItem = styled.div`
 `;
 
 const Header = styled.header`
-  padding: 16px;
-  width: 80%;
+  padding: 16px 0 16px 0;
   border-bottom: 1px solid #ddd;
+  margin: 0 150px;
 `;
 
 const Content = styled.div`
-  width: 80%;
+  padding: 30px 150px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  @media (max-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 const SelectWrap = styled.div`
   position: relative;
 `;
 
 const SelectButton = styled.button`
+  margin: 5px;
   width: 100px;
+  padding: 10px 5px;
+  gap: 5px;
   height: 40px;
-  padding: 0 20px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   background-color: white;
   cursor: pointer;
+  &:hover {
+    background-color: #f1f1f1;
+    opacity: 70%;
+  }
 `;
 
 const LanguageUl = styled.ul`
   width: 100px;
-  /*   height: 80px; */
+  z-index: 10;
   margin: 0;
   padding-left: 0;
   list-style: none;
   position: absolute;
-  border: 1px solid lightgray;
-  border-radius: 5px;
+  color: #483767;
+  border-radius: 7px;
   overflow: hidden;
 `;
 
@@ -367,21 +378,14 @@ const LanguageLi = styled.li`
   justify-content: center;
   align-items: center;
   background-color: white;
-  /*   border: 1px solid lightgrey; */
-  /*   border-left: 1px solid lightgrey;
-  border-right: 1px solid lightgrey; */
   font-size: 13px;
   cursor: pointer;
   &:hover {
-    background-color: lightgrey;
-    /* border-radius: 5px; */
+    background-color: #f1f1f1;
   }
-  /*   &:first-child {
-    border-top: 1px solid lightgrey;
-    border-radius: 5px;
-  }
-  &:last-child {
-    border-bottom: 1px solid lightgrey;
-    border-radius: 5px;
-  } */
+`;
+const SearchButton = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
 `;
