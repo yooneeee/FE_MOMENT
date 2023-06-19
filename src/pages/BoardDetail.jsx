@@ -6,6 +6,7 @@ import { useQuery } from "react-query";
 import { getBoardDetailAxios } from "../apis/board/getBoardDetailAxios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 function BoardDetail() {
   const [currentPosition, setCurrentPosition] = useState(70);
@@ -100,10 +101,16 @@ function BoardDetail() {
                   </ProfileVisitButton>
                   <ProfileVisitButton
                     onClick={() => {
-                      navigate(`/page/${data.hostId}`);
+                      Swal.fire({
+                        icon: "error",
+                        text: `현재 준비 중인 기능입니다.
+                        불편을 끼쳐드려 죄송합니다.`,
+                        confirmButtonText: "확인",
+                      });
                     }}
+                    // buttonColor="#6D0F8E"
                   >
-                    프로필 방문
+                    매칭 신청
                   </ProfileVisitButton>
                 </ButtonContainer>
               )}
@@ -241,9 +248,9 @@ const ButtonContainer = styled.div`
 const ProfileVisitButton = styled.button`
   margin-left: auto;
   padding: 12px;
-  background-color: #514073;
+  background-color: ${(props) => props.buttonColor || "#514073"};
   color: white;
-  border: 1px solid #7e7e7e;
+  border: none;
   border-radius: 10px;
 
   &:hover {
