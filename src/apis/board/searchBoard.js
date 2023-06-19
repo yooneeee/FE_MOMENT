@@ -1,7 +1,6 @@
 import { instance } from "../axios";
 
 const searchBoardAxios = async ({ keyword, option, role }) => {
-  console.log("axios", keyword, option, role);
   try {
     const response = await instance.get(
       `/boards/search?${option}=${keyword}&role=${role}`
