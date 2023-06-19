@@ -240,7 +240,7 @@ const EditButton = styled.button`
   right: -20px;
   transform: translate(-50%, -50%);
   /*   display: flex; */
-  z-index: 100;
+  z-index: 1;
   background-color: #ffffff;
   border: none;
   border-radius: 8px;
