@@ -5,7 +5,6 @@ import enableScroll from "./EnableScroll";
 import { useInput } from "../hooks/useInput";
 import { createFeedAxios } from "../apis/feed/createFeedAxios";
 import { useMutation, useQueryClient } from "react-query";
-import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import UserDataComponent from "./UserDataComponent";
 import styled from "styled-components";
@@ -26,25 +25,35 @@ const CreateFeed = (props) => {
   };
 
   const addHashTag = (e) => {
-    const allowedCommand = ["Comma", "Enter", "Space", "NumpadEnter"];
+    const allowedCommand = ["Enter"];
     if (!allowedCommand.includes(e.code)) return;
 
-    if (isEmptyValue(e.target.value.trim())) {
+    if (isEmptyValue(e.target.value)) {
       return setInputHashTag("");
     }
 
-    let newHashTag = e.target.value.trim();
+    let newHashTag = e.target.value;
     const regExp = /[\{\}\[\]\/?.;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
-    if (regExp.test(newHashTag)) {
-      newHashTag = newHashTag.replace(regExp, "");
-    }
+    // if (regExp.test(newHashTag)) {
+    //   newHashTag = newHashTag.replace(regExp, "");
+    // }
     if (newHashTag.includes(",")) {
       newHashTag = newHashTag.split(",").join("");
     }
 
     if (isEmptyValue(newHashTag)) return;
 
-    if (hashTags.length >= 3) return;
+    if (hashTags.length >= 6) return;
+
+    if (newHashTag.length > 10) {
+      Swal.fire({
+        icon: "error",
+        // title: "피드 생성 완료!",
+        text: `입력한 값은 10자를 초과할 수 없습니다.`,
+        confirmButtonText: "확인",
+      });
+      return;
+    }
 
     if (!newHashTag.startsWith("#")) {
       newHashTag = `#${newHashTag}`;
@@ -65,12 +74,12 @@ const CreateFeed = (props) => {
 
   const keyDownHandler = (e) => {
     if (e.code !== "Enter" && e.code !== "NumpadEnter") return;
-    e.preventDefault();
+    // e.preventDefault();
 
     const regExp = /^[a-z|A-Z|가-힣|ㄱ-ㅎ|ㅏ-ㅣ|0-9| \t|]+$/g;
-    if (!regExp.test(e.target.value)) {
-      setInputHashTag("");
-    }
+    // if (!regExp.test(e.target.value)) {
+    //   setInputHashTag("");
+    // }
   };
 
   const changeHashTagInput = (e) => {
@@ -133,7 +142,6 @@ const CreateFeed = (props) => {
   // 모달창 바깥을 눌렀을 때 모달 close
   const handleOutsideClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
-      close();
     }
   };
 
@@ -297,6 +305,7 @@ const CreateFeed = (props) => {
 
               <HashTageContainer>
                 <HashTagInputTitle>해시태그</HashTagInputTitle>
+                <HashTagGuide>10자 이내, 해시태그 개수 6개 제한</HashTagGuide>
                 <HashTag>
                   {hashTags.map((hashTag) => (
                     <Tag key={hashTag} onClick={() => removeHashTag(hashTag)}>
@@ -309,7 +318,7 @@ const CreateFeed = (props) => {
                     onChange={changeHashTagInput}
                     onKeyUp={addHashTag}
                     onKeyDown={keyDownHandler}
-                    placeholder="#해시태그를 등록해보세요. (최대 3개)"
+                    placeholder="#Enter를 눌러 해시태그를 등록해보세요."
                     className="hashTagInput"
                   />
                 </HashTag>
@@ -325,14 +334,14 @@ const CreateFeed = (props) => {
 export default CreateFeed;
 
 const HashTageContainer = styled.div`
-  margin-top: 50px;
   margin-left: 5px;
 `;
 
 const HashTag = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
-  width: 100%;
+  width: 320px;
+  /* background-color: aqua; */
   border: 2px solid $GRAY;
   border-radius: 10px;
   padding: 5px;
@@ -353,12 +362,18 @@ const Tag = styled.div`
   }
 `;
 
+const HashTagGuide = styled.div`
+  color: #787878;
+  font-size: 13px;
+  margin-left: 5px;
+`;
+
 const HashTagInput = styled.input`
   outline: none;
   border: none;
   font-size: 16px;
-  padding: 5px;
   width: 100%;
+  margin-top: 10px;
 `;
 
 const HashTagInputTitle = styled.div`

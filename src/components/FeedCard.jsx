@@ -86,6 +86,7 @@ const ContentBox = styled.div`
 const HashTagContainer = styled.div`
   padding: 10px 17px 20px;
   display: flex;
+
   flex-wrap: wrap;
   gap: 5px;
 `;
@@ -96,6 +97,7 @@ const HashTag = styled.div`
   border: none;
   border-radius: 50px;
   padding: 7px;
+  font-size: 14px;
   @media (max-width: 1200px) {
     font-size: 11px;
   }

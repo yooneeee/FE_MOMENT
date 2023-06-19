@@ -417,7 +417,6 @@ const TextColumn = styled.div`
   text-align: left;
 
   span {
-    font-weight: 
     font-size: 15px;
   }
 `;
