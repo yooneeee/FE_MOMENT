@@ -79,6 +79,8 @@ export default FeedCard;
 
 const ContentBox = styled.div`
   padding: 10px 20px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 `;
 
 const HashTagContainer = styled.div`
