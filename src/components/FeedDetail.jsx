@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../css/FeedDetailModal.css";
 import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
@@ -14,12 +14,18 @@ import { mypage } from "../apis/mypage/mypage";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { feedLikeListAxios } from "../apis/feed/feedLikeListAxios";
+import LikeListModal from "./LikeListModal";
 
 const FeedDetail = (props) => {
   const { open, close, photoId } = props;
   const modalRef = useRef(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [showLikeListModal, setShowLikeListModal] = useState(false);
+  const showLikeList = () => {
+    setShowLikeListModal(!showLikeListModal);
+  };
 
   const settings = {
     dots: true,
@@ -71,6 +77,10 @@ const FeedDetail = (props) => {
     likeButtonMutation.mutate(photoId);
   };
 
+  const likeListButtonHandler = () => {
+    showLikeList();
+  };
+
   if (isLoading) {
     return null;
   }
@@ -99,14 +109,12 @@ const FeedDetail = (props) => {
                 </Styled_Slide>
               </ImgContainer>
             </MainBody>
-
             <ContentSection>
               <CloseButtonBox>
                 <button className="close" onClick={close}>
                   <AiOutlineClose />
                 </button>
               </CloseButtonBox>
-
               <ProfileContainer>
                 <ProfileImg
                   src={data.profileUrl}
@@ -125,7 +133,15 @@ const FeedDetail = (props) => {
                     like={data.checkLove}
                     onClick={likeButtonHandler}
                   />
-                  <div>{data.photoLoveCnt}</div>
+                  <LikeList onClick={likeListButtonHandler}>
+                    {data.photoLoveCnt}
+                  </LikeList>
+                  {showLikeListModal && (
+                    <LikeListModal
+                      showLikeList={showLikeList}
+                      photoId={photoId}
+                    />
+                  )}
                 </LoveButtonContainer>
               </ProfileContainer>
 
@@ -207,7 +223,7 @@ const ProfileImg = styled.img`
 const LoveButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 15px;
+  gap: 5px;
   align-items: center;
   border: 1px solid #eee;
   padding: 10px;
@@ -365,4 +381,8 @@ const ArrowButton = styled.div`
   justify-content: center;
   cursor: pointer;
   z-index: 2;
+`;
+
+const LikeList = styled.button`
+  background-color: white;
 `;
