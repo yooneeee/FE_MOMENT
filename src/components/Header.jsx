@@ -95,11 +95,13 @@ function Header() {
             {
               headers: {
                 "Content-Type": "text/event-stream",
-
+                "Cache-Control": "no-cache",
+                Connection: "keep-alive",
                 ACCESS_KEY: `${Access_key}`,
                 REFRESH_KEY: `${Refresh_key}`,
               },
               withCredentials: true,
+              heartbeatTimeout: 86400000,
             }
           );
           eventSource.addEventListener("chatAlarm-event", (event) => {

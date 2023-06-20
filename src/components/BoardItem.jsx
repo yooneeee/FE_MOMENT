@@ -34,7 +34,6 @@ function BoardItem({ item, onClick, photograhperInfoShow, showFollow }) {
   const getDDay = (deadLine) => {
     const targetDate = new Date(deadLine);
     const timeDiff = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24)); // 일 단위로 시간 차이 계산
-
     if (timeDiff === 0) {
       return "D-day";
     } else if (timeDiff > 0) {
