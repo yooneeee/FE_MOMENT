@@ -279,10 +279,6 @@ const UserProfileImage = styled.img`
   border-radius: 50%;
 `;
 
-// const Nick = styled.div`
-//   margin-left: 300px;
-//   display: flex;
-// `;
 const SenderUserContainer = styled.div`
   position: relative;
   display: flex;
@@ -392,6 +388,11 @@ const ChatBubble = styled.div`
   border-radius: 13px;
   white-space: pre-wrap; // 줄바꿈과 공백 유지
   position: relative;
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-width: 700px; /* 한 줄에 표시되는 최대 너비 */
+  overflow-wrap: break-word;
 
   &:after {
     content: "";
