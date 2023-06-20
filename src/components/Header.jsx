@@ -222,9 +222,9 @@ function Header() {
             마이페이지
           </MenuButton>
           <MenuButton
-            name={"chatlist"}
+            name={"chatroomlist"}
             onClick={() => {
-              navigate(`/chatlist/${userId}`);
+              navigate(`/chatroomlist/${userId}`);
               toggleProfileMenuClose();
             }}
           >
