@@ -37,16 +37,13 @@ function FeedCard({ data, onClick, openFeedDetail }) {
   const handleCardClick = () => {
     onClick();
   };
-
+  const handleHeartButtonClick = (photoId) => {
+    likeButtonHandler(photoId);
+  };
   return (
     <CardDesign>
       <SliderWrapper>
-        <CardProfileImg
-          src={data.photoUrl}
-          onClick={() => {
-            handleCardClick();
-          }}
-        />
+        <CardProfileImg src={data.photoUrl} onClick={handleCardClick} />
       </SliderWrapper>
       <CardHeader>
         <ProfileImg src={data.profileImgUrl} />
@@ -55,15 +52,13 @@ function FeedCard({ data, onClick, openFeedDetail }) {
           <UserPosition>
             <HeartButton
               like={data.loveCheck}
-              onClick={() => {
-                likeButtonHandler(data.photoId);
-              }}
+              onClick={() => handleHeartButtonClick(data.photoId)}
             />
             <HeartCount>{data.loveCnt}</HeartCount>
           </UserPosition>
         </FlexWrap>
       </CardHeader>
-      <ContentBox>
+      <ContentBox onClick={handleCardClick}>
         {data.content && data.content.length > 50
           ? data.content.slice(0, 50) + "..."
           : data.content}
@@ -83,6 +78,7 @@ const ContentBox = styled.div`
   padding: 10px 20px;
   white-space: pre-wrap;
   word-wrap: break-word;
+  cursor: pointer;
 `;
 
 const HashTagContainer = styled.div`
@@ -135,6 +131,7 @@ const CardHeader = styled.div`
   margin-top: 10px;
   /* padding: 0 20px; */
   padding: 5px 20px 5px 20px;
+  cursor: pointer;
 `;
 
 const ProfileImg = styled.img`
@@ -145,7 +142,7 @@ const ProfileImg = styled.img`
   flex-shrink: 0;
   cursor: pointer;
   margin-right: 3%;
-  @media (max-width: 768px) {
+  @media (max-width: 1200px) {
     width: 30px;
     height: 30px;
   }

@@ -26,7 +26,6 @@ function Board() {
   const [option, setOption] = useState("userNickName");
   const [showButton, setShowButton] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
   const toggleShowList = () => setShowList(true);
   const toggleCloseList = () => setShowList(false);
