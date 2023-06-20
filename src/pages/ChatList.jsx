@@ -46,7 +46,7 @@ function ChatList() {
         <ChatSearchContainer>
           <StyledIcon />
           <ChatSearch
-            placeholder="닉네임 검색"
+            placeholder="Role, NickName 검색"
             value={search}
             onChange={updateSearch}
           />
@@ -54,7 +54,11 @@ function ChatList() {
         <Line />
         <ScrollableDiv>
           {data
-            .filter((item) => item.receiverNickName.includes(search))
+            .filter(
+              (item) =>
+                item.receiverNickName.includes(search) ||
+                item.receiverRole.includes(search)
+            )
             .map((item) => (
               <Link to={`/chattest/${item.receiverId}`} key={item.chatRoomId}>
                 <List
@@ -69,7 +73,7 @@ function ChatList() {
                     <Content>
                       <SenderNameContainer>
                         <SenderName>
-                          {item.receiverNickName} | {item.receiverRole}
+                          {item.receiverRole} | {item.receiverNickName}
                         </SenderName>
                       </SenderNameContainer>
                       <MessageContainer>
@@ -80,6 +84,11 @@ function ChatList() {
                               : item.lastChat.message}
                           </Message>
                         )}
+                        <HaveToRead>
+                          {item.haveToRead && (
+                            <UnreadBadge>읽지 않음</UnreadBadge>
+                          )}
+                        </HaveToRead>
                       </MessageContainer>
                     </Content>
                   </ChatItem>
@@ -93,6 +102,14 @@ function ChatList() {
 }
 
 export default ChatList;
+
+const UnreadBadge = styled.span`
+  background-color: #483767;
+  color: white;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 50px;
+`;
 
 const ScrollableDiv = styled.div`
   overflow-y: auto;
@@ -112,7 +129,8 @@ const ChatSearchContainer = styled.div`
 
   position: relative;
   width: 100%;
-  height: 50px;
+  height: 72px;
+  top: 1%;
 `;
 const ChatSearch = styled.input`
   border-radius: 50px;
@@ -120,7 +138,7 @@ const ChatSearch = styled.input`
   width: 70%; */
   padding-left: 45px;
   width: 60%;
-  height: 100%;
+  height: 80%;
   background-color: #e4e4e4;
   border: none;
   outline: none;
@@ -133,7 +151,8 @@ const StyledIcon = styled(FiSearch)`
 `;
 
 const ChatListContainer = styled.div`
-  width: 100%;
+  /* width: 100%; */
+  /* max-width: 50%; */
   height: 100vh;
   max-height: 100%;
   display: flex;
@@ -175,13 +194,16 @@ const ProfileImage = styled.img`
 
 const Content = styled.div`
   display: flex;
+  width: 80%;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: space-between;
   margin-left: 12px;
   row-gap: 5px;
 `;
 
 const SenderNameContainer = styled.div`
-  height: 20px; // Adjust this based on your requirements
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -193,10 +215,17 @@ const SenderName = styled.span`
 `;
 
 const MessageContainer = styled.div`
-  height: 20px; // Adjust this based on your requirements
+  height: 20px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+`;
+const HaveToRead = styled.div`
+  height: 20px;
+  width: 80px;
+  display: flex;
+  align-items: center;
+  /* justify-content: flex-end; */
 `;
 const Message = styled.span`
   color: #929292;
