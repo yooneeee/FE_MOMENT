@@ -33,7 +33,7 @@ function MainBoard({ board }) {
       <CardProfileImg src={board.boardImgUrl} alt="Profile Image" />
       <CardContent>
         <UserInfo>
-          <UserProfile src={board.profileImgUrl}></UserProfile>
+          <UserProfile src={board.hostProfileUrl}></UserProfile>
           <FlexWrap>
             <UserName>{board.nickName}</UserName>
             <UserPosition>
