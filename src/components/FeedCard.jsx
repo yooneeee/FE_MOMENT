@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import heartAxios from "../apis/feed/heartAxios";
 import { useQueryClient } from "react-query";
@@ -37,16 +36,13 @@ function FeedCard({ data, onClick, openFeedDetail }) {
   const handleCardClick = () => {
     onClick();
   };
-
+  const handleHeartButtonClick = (photoId) => {
+    likeButtonHandler(photoId);
+  };
   return (
     <CardDesign>
       <SliderWrapper>
-        <CardProfileImg
-          src={data.photoUrl}
-          onClick={() => {
-            handleCardClick();
-          }}
-        />
+        <CardProfileImg src={data.photoUrl} onClick={handleCardClick} />
       </SliderWrapper>
       <CardHeader>
         <ProfileImg src={data.profileImgUrl} />
@@ -55,16 +51,16 @@ function FeedCard({ data, onClick, openFeedDetail }) {
           <UserPosition>
             <HeartButton
               like={data.loveCheck}
-              onClick={() => {
-                likeButtonHandler(data.photoId);
-              }}
+              onClick={() => handleHeartButtonClick(data.photoId)}
             />
             <HeartCount>{data.loveCnt}</HeartCount>
           </UserPosition>
         </FlexWrap>
       </CardHeader>
-      <ContentBox>
-        {data.content === "undefined" ? null : data.content}
+      <ContentBox onClick={handleCardClick}>
+        {data.content && data.content.length > 50
+          ? data.content.slice(0, 50) + "..."
+          : data.content}
       </ContentBox>
       <HashTagContainer>
         {data.tag_photoList.map((item) => {
@@ -81,6 +77,7 @@ const ContentBox = styled.div`
   padding: 10px 20px;
   white-space: pre-wrap;
   word-wrap: break-word;
+  cursor: pointer;
 `;
 
 const HashTagContainer = styled.div`
@@ -112,18 +109,18 @@ const CardDesign = styled.div`
   flex-grow: 1;
   width: 100%;
   overflow: hidden;
-  box-shadow: rgb(135, 135, 135) 0px 4px 7px;
+  /* box-shadow: rgb(135, 135, 135) 0px 4px 7px; */
 
   &:hover {
     transform: translateY(-10px);
     transition: transform 1s ease;
-    box-shadow: rgb(135, 135, 135) 0px 6px 10px;
+    box-shadow: rgb(135, 135, 135) 2px 3px 4px;
   }
 
   &:not(:hover) {
     transform: translateY(0);
     transition: transform 1s ease;
-    box-shadow: rgb(135, 135, 135) 0px 4px 7px;
+    box-shadow: rgb(135, 135, 135) 1px 2px 3px;
   }
 `;
 
@@ -133,6 +130,7 @@ const CardHeader = styled.div`
   margin-top: 10px;
   /* padding: 0 20px; */
   padding: 5px 20px 5px 20px;
+  cursor: pointer;
 `;
 
 const ProfileImg = styled.img`
@@ -143,7 +141,7 @@ const ProfileImg = styled.img`
   flex-shrink: 0;
   cursor: pointer;
   margin-right: 3%;
-  @media (max-width: 768px) {
+  @media (max-width: 1200px) {
     width: 30px;
     height: 30px;
   }

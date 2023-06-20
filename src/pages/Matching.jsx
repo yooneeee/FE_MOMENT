@@ -10,14 +10,20 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { FiSettings } from "react-icons/fi";
 import { BiDownArrow } from "react-icons/bi";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
-import CreateBoard from "../components/CreateBoard";
 import EditBoard from "../components/EditBoard";
+import FollowModal from "../components/MatchingList";
 
-function MyPageBoard() {
+function Matching() {
   const { hostId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [showFollowModal, setShowFollowModal] = useState(false);
+  const [buttonActiveControl, setButtonActiveControl] = useState("accept");
+
+  // 모달 제어
+  const showFollow = () => {
+    setShowFollowModal(!showFollowModal);
+  };
 
   const [editButtons, setEditButtons] = useState([]);
   const toggleWriteMenuRef = useRef(null);
@@ -130,15 +136,31 @@ function MyPageBoard() {
 
   return (
     <>
-      <MyPageTabs pageName={"내 게시글"} />
+      <MyPageTabs pageName={"매칭목록"} />
       <PageContainer>
         <ContentContainer>
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
+
           <Container>
             <Content>
-              <Work>내가 쓴 게시물</Work>
+              <MatchingTabBar>
+                <MatchingTabButton
+                  className={buttonActiveControl === "accept" ? "active" : ""}
+                  onClick={() => setButtonActiveControl("accept")}
+                >
+                  내가 받은 매칭 신청
+                </MatchingTabButton>
+                <MatchingTabButton
+                  className={
+                    buttonActiveControl === "application" ? "active" : ""
+                  }
+                  onClick={() => setButtonActiveControl("application")}
+                >
+                  내가 신청한 매칭
+                </MatchingTabButton>
+              </MatchingTabBar>
               <BoardList>
                 {data.boardList.map((item, index) => {
                   return (
@@ -149,48 +171,17 @@ function MyPageBoard() {
                         onClick={() => {
                           navigate(`/board/${item.boardId}`);
                         }}
+                        photograhperInfoShow="no"
+                        showFollow={showFollow}
                       />
-                      <EditButton
-                        onClick={(e) => {
-                          if (editButtons[index]) {
-                            toggleButtonClose(index);
-                          } else {
-                            toggleButtonOpen(index);
-                          }
-                        }}
-                      >
-                        <FiSettings size={14} />
-                        <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
-                      </EditButton>
-                      {editButtons[index] && (
-                        <ToggleWriteMenu ref={toggleWriteMenuRef}>
-                          <Button
-                            onClick={() => {
-                              editButtonHandler(item.boardId);
-                            }}
-                          >
-                            수정
-                          </Button>
-                          <Button
-                            onClick={() => deleteButtonHandler(item.boardId)}
-                          >
-                            삭제
-                          </Button>
-                        </ToggleWriteMenu>
-                      )}
-                      {selectedBoardId === item.boardId && (
-                        <EditBoard
-                          id={item.boardId}
-                          item={item}
-                          open={openBoardModal}
-                          close={() => setSelectedBoardId(null)}
-                        />
-                      )}
                     </BoardItemContainer>
                   );
                 })}
               </BoardList>
             </Content>
+            {showFollowModal && (
+              <FollowModal showFollow={showFollow} userId="1" />
+            )}
           </Container>
         </ContentContainer>
       </PageContainer>
@@ -198,7 +189,7 @@ function MyPageBoard() {
   );
 }
 
-export default MyPageBoard;
+export default Matching;
 
 const PageContainer = styled.div`
   width: 100%;
@@ -215,6 +206,31 @@ const ProfileContainer = styled.div`
 const Container = styled.div`
   width: 100%;
 `;
+const MatchingTabBar = styled.div`
+  width: 100%;
+  background-color: #eee;
+  border: none;
+  border-radius: 5px;
+  padding: 2px;
+  display: flex;
+`;
+
+const MatchingTabButton = styled.button`
+  width: 50%;
+  padding: 10px;
+  /* background-color: #ffffff; */
+  /* border: 0.5px solid #a7a7a7; */
+  /* background-color: ${(props) =>
+    props.active === "on" ? "#ffffff" : "null"}; */
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+
+  &.active {
+    background-color: #ffffff;
+  }
+`;
+
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -229,10 +245,22 @@ const ContentContainer = styled.div`
   }
 `;
 
-const Work = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 1rem;
+const MatchingButton = styled.div`
+  position: absolute;
+  bottom: 0;
+
+  background-color: ${(props) =>
+    props.matchingStatus === "신청 대기 중" ? "#696969" : "#483767"};
+  padding: 8px;
+  border-radius: 7px;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #8c8c8c;
+    border-color: #fff;
+    color: #fff;
+  }
 `;
 
 const BoardList = styled.div`
@@ -242,6 +270,24 @@ const BoardList = styled.div`
   gap: 16px;
 `;
 
+const MatchingCountBox = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0 8px 3px 0;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`;
+
+const Work = styled.h2`
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+`;
+
 const Content = styled.div`
   flex-grow: 1;
   margin-left: 1rem;
@@ -249,7 +295,7 @@ const Content = styled.div`
 
 const ToggleWriteMenu = styled.div`
   position: absolute;
-  top: 87px;
+  top: 68px;
   right: -100px;
   transform: translate(-50%, -50%);
   padding: 10px;
@@ -268,7 +314,7 @@ const BoardItemContainer = styled.div`
 
 const EditButton = styled.button`
   position: absolute;
-  top: 23px;
+  top: 10px;
   right: 10px;
   background-color: transparent;
   border: none;
@@ -276,7 +322,6 @@ const EditButton = styled.button`
   font-weight: 900;
   padding: 3px;
   z-index: 1;
-  color: white;
 `;
 const Button = styled.button`
   width: 100px;

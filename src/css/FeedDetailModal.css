@@ -8,12 +8,6 @@
   z-index: 999;
   cursor: default;
   background-color: rgba(0, 0, 0, 0.6);
-
-  /* @media (max-width: 1300px) {}
-
-  @media (max-width: 900px) {}
-
-  @media (max-width: 768px) {} */
 }
 
 .feed-datail-modal button {

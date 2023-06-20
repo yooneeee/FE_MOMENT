@@ -43,13 +43,13 @@ const CreateFeed = (props) => {
 
     if (isEmptyValue(newHashTag)) return;
 
-    if (hashTags.length >= 6) return;
+    if (hashTags.length >= 3) return;
 
-    if (newHashTag.length > 10) {
+    if (newHashTag.length > 8) {
       Swal.fire({
         icon: "error",
         // title: "피드 생성 완료!",
-        text: `입력한 값은 10자를 초과할 수 없습니다.`,
+        text: `입력한 값은 8자를 초과할 수 없습니다.`,
         confirmButtonText: "확인",
       });
       return;
@@ -271,12 +271,6 @@ const CreateFeed = (props) => {
                 <MultipleUpload
                   onClick={() => {
                     setUploadToggleBtn(!uploadToggleBtn);
-                    // Swal.fire({
-                    //   icon: "error",
-                    //   title: "현재 준비 중인 기능입니다.",
-                    //   text: `곧 완성될 수 있도록 최선을 다하겠습니다.`,
-                    //   confirmButtonText: "확인",
-                    // });
                   }}
                 >
                   <TbBoxMultiple size={"25px"} />
@@ -301,11 +295,12 @@ const CreateFeed = (props) => {
                 placeholder="문구 입력..."
                 value={content}
                 onChange={onChangeContentHandler}
+                maxLength={100}
               ></textarea>
 
               <HashTageContainer>
                 <HashTagInputTitle>해시태그</HashTagInputTitle>
-                <HashTagGuide>10자 이내, 해시태그 개수 6개 제한</HashTagGuide>
+                <HashTagGuide>8자 이내, 해시태그 개수 3개 제한</HashTagGuide>
                 <HashTag>
                   {hashTags.map((hashTag) => (
                     <Tag key={hashTag} onClick={() => removeHashTag(hashTag)}>
@@ -320,6 +315,7 @@ const CreateFeed = (props) => {
                     onKeyDown={keyDownHandler}
                     placeholder="#Enter를 눌러 해시태그를 등록해보세요."
                     className="hashTagInput"
+                    maxLength={8}
                   />
                 </HashTag>
               </HashTageContainer>
