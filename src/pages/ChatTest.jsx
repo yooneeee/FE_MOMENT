@@ -4,7 +4,7 @@ import * as StompJs from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { useQuery, useQueryClient } from "react-query";
 import { Chatting, ChattingRoomDelete } from "../apis/mypage/chatting";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ChatList from "./ChatList";
@@ -21,6 +21,8 @@ const GlobalStyle = createGlobalStyle`
 
 const ChatTest = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   const { receiverId } = useParams();
   const { userId, profileImg } = useSelector((state) => state.user);
 
@@ -28,6 +30,7 @@ const ChatTest = () => {
   const [message, setMessage] = useState("");
   const [overLimit, setOverLimit] = useState(false); // 메세지 길이 제한
   const [chatDates, setChatDates] = useState([]); // 날짜
+  const [isVisible, setIsVisible] = useState(true); // 삭제후 채팅방 상태관리
 
   const client = useRef({});
   const scrollRef = useRef();
@@ -97,7 +100,9 @@ const ChatTest = () => {
         if (result.isConfirmed) {
           try {
             await deleteMutation.mutateAsync(chatRoomId);
-            // toggleButtonClose(chatRoomId);
+            // setIsVisible(false);
+            navigate("/chatroomlist/${hostId}");
+
             Swal.fire({
               title: "채팅방 삭제 되었습니다✨",
               icon: "success",
@@ -218,111 +223,115 @@ const ChatTest = () => {
       <GlobalStyle />
       <EntireContainer>
         <ChatList />
-        <ChatRoomContainer>
-          <SenderUserContainer>
-            <UserProfileImage
-              src={data.receiverProfileImg}
-              alt="profile image"
-            />
-            <div style={{ flexGrow: 1 }}>
-              <SenderName>
-                {data.receiverRole} | {data.receiverNickName}
-              </SenderName>
-            </div>
-            <ExitButton
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                chatRoomDelete(data.chatRoomId);
-              }}
-            >
-              나가기
-            </ExitButton>
-          </SenderUserContainer>
-          <Line />
-          <ScrollableDiv>
-            {chatMessages && chatMessages.length > 0 && (
-              <ChatContainer>
-                <GuideText>
-                  <span>{data.receiverNickName}님과 대화를 시작합니다</span>
-                </GuideText>
-                {chatMessages.map((_chatMessage, index) => (
-                  <React.Fragment key={_chatMessage.uuid}>
-                    <GuideText>
-                      {(index === 0 ||
-                        new Date(
-                          _chatMessage.createdAt
-                        ).toLocaleDateString() !==
+        {isVisible && (
+          <ChatRoomContainer>
+            <SenderUserContainer>
+              <UserProfileImage
+                src={data.receiverProfileImg}
+                alt="profile image"
+              />
+              <div style={{ flexGrow: 1 }}>
+                <SenderName>
+                  {data.receiverRole} | {data.receiverNickName}
+                </SenderName>
+              </div>
+              <ExitButton
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  chatRoomDelete(data.chatRoomId);
+                }}
+              >
+                나가기
+              </ExitButton>
+            </SenderUserContainer>
+            <Line />
+            <ScrollableDiv>
+              {chatMessages && chatMessages.length > 0 && (
+                <ChatContainer>
+                  <GuideText>
+                    <span>{data.receiverNickName}님과 대화를 시작합니다</span>
+                  </GuideText>
+                  {chatMessages.map((_chatMessage, index) => (
+                    <React.Fragment key={_chatMessage.uuid}>
+                      <GuideText>
+                        {(index === 0 ||
                           new Date(
-                            chatMessages[index - 1].createdAt
-                          ).toLocaleDateString()) && (
-                        <div>
-                          {new Date(_chatMessage.createdAt)
-                            .toLocaleDateString()
-                            .replace(
-                              /(\d{4})\. (\d{1,2})\. (\d{1,2})\./,
-                              "$1년 $2월 $3일"
-                            )}
-                        </div>
-                      )}
-                    </GuideText>
-                    <MessageWrapper isSender={_chatMessage.senderId === userId}>
-                      <ProfileContainer>
-                        <ReceiverProfile
-                          isSender={_chatMessage.senderId === userId}
-                          src={
-                            _chatMessage.senderId === userId
-                              ? profileImg
-                              : data.receiverProfileImg
-                          }
-                          alt="Profile"
-                        />
-                      </ProfileContainer>
-                      <MessageContainer>
-                        <ChatBubble
-                          key={index}
-                          isSender={_chatMessage.senderId === userId}
-                          isReceiver={_chatMessage.receiverId === userId}
-                        >
-                          {_chatMessage.message}
-                        </ChatBubble>
-                        {/* <Time>{todayTime()}</Time> */}
-                      </MessageContainer>
-                      <Time>
-                        {formatAMPM(new Date(_chatMessage.createdAt))}
-                      </Time>
-                    </MessageWrapper>
-                  </React.Fragment>
-                ))}
-              </ChatContainer>
-            )}
-            <div ref={scrollRef}></div>
-            <SendContainer>
-              {overLimit && <span>999자를 초과하였습니다!</span>}
-              <ChatInputContainer>
-                <ChatInput
-                  placeholder="메세지를 입력해주세요."
-                  maxLength={1000}
-                  rows={1}
-                  type={"text"}
-                  value={message}
-                  onChange={(e) => {
-                    if (e.target.value.length <= 1000) {
-                      setMessage(e.target.value);
-                      setOverLimit(false); // 길이 제한이 초과되지 않았으므로 경고를 숨김
-                    } else {
-                      setOverLimit(true); // 길이 제한이 초과되었으므로 경고를 표시
-                    }
-                  }}
-                  // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행
-                  onKeyDown={(e) => enterHandler(e, message)}
-                />
-                <SendButton onClick={() => publish(message)}>전송</SendButton>
-              </ChatInputContainer>
-            </SendContainer>
-          </ScrollableDiv>
-        </ChatRoomContainer>
+                            _chatMessage.createdAt
+                          ).toLocaleDateString() !==
+                            new Date(
+                              chatMessages[index - 1].createdAt
+                            ).toLocaleDateString()) && (
+                          <div>
+                            {new Date(_chatMessage.createdAt)
+                              .toLocaleDateString()
+                              .replace(
+                                /(\d{4})\. (\d{1,2})\. (\d{1,2})\./,
+                                "$1년 $2월 $3일"
+                              )}
+                          </div>
+                        )}
+                      </GuideText>
+                      <MessageWrapper
+                        isSender={_chatMessage.senderId === userId}
+                      >
+                        <ProfileContainer>
+                          <ReceiverProfile
+                            isSender={_chatMessage.senderId === userId}
+                            src={
+                              _chatMessage.senderId === userId
+                                ? profileImg
+                                : data.receiverProfileImg
+                            }
+                            alt="Profile"
+                          />
+                        </ProfileContainer>
+                        <MessageContainer>
+                          <ChatBubble
+                            key={index}
+                            isSender={_chatMessage.senderId === userId}
+                            isReceiver={_chatMessage.receiverId === userId}
+                          >
+                            {_chatMessage.message}
+                          </ChatBubble>
+                          {/* <Time>{todayTime()}</Time> */}
+                        </MessageContainer>
+                        <Time>
+                          {formatAMPM(new Date(_chatMessage.createdAt))}
+                        </Time>
+                      </MessageWrapper>
+                    </React.Fragment>
+                  ))}
+                </ChatContainer>
+              )}
+              <div ref={scrollRef}></div>
+              <SendContainer>
+                {overLimit && <span>999자를 초과하였습니다!</span>}
+                <ChatInputContainer>
+                  <ChatInput
+                    placeholder="메세지를 입력해주세요."
+                    maxLength={1000}
+                    rows={1}
+                    type={"text"}
+                    value={message}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 1000) {
+                        setMessage(e.target.value);
+                        setOverLimit(false); // 길이 제한이 초과되지 않았으므로 경고를 숨김
+                      } else {
+                        setOverLimit(true); // 길이 제한이 초과되었으므로 경고를 표시
+                      }
+                    }}
+                    // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행
+                    onKeyDown={(e) => enterHandler(e, message)}
+                  />
+                  <SendButton onClick={() => publish(message)}>전송</SendButton>
+                </ChatInputContainer>
+              </SendContainer>
+            </ScrollableDiv>
+          </ChatRoomContainer>
+        )}
       </EntireContainer>
     </>
   );
