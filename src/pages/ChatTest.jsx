@@ -154,8 +154,11 @@ const ChatTest = () => {
               <ChatContainer>
                 {chatMessages.map((_chatMessage, index) => (
                   <React.Fragment key={_chatMessage.uuid}>
-                    {_chatMessage.senderId !== userId && (
-                      <MessageContainer>
+                    <MessageWrapper isSender={_chatMessage.senderId === userId}>
+                      {/* <MessageContainer
+                      // isSender={_chatMessage.senderId === userId}
+                      > */}
+                      <ProfileContainer>
                         <ReceiverProfile
                           isSender={_chatMessage.senderId === userId}
                           src={
@@ -165,34 +168,38 @@ const ChatTest = () => {
                           }
                           alt="Profile"
                         />
-                        {/* <ReceiverProfile
+                      </ProfileContainer>
+                      {/* <ReceiverProfile
                           src={data.receiverProfileImg}
                           alt="Profile"
                         /> */}
-                        {/* <Nickname isSender={_chatMessage.senderId === userId}>
+                      {/* <Nickname isSender={_chatMessage.senderId === userId}>
                   {_chatMessage.senderId === userId
                     ? nickName
                     : data.receiverNickName}
                 </Nickname> */}
-                        <Nickname>{data.receiverNickName}</Nickname>
+                      {/* <Nickname>{data.receiverNickName}</Nickname> */}
+                      {/* </MessageContainer> */}
+                      <MessageContainer>
+                        <ChatBubble
+                          key={index}
+                          isSender={_chatMessage.senderId === userId}
+                          isReceiver={_chatMessage.receiverId === userId}
+                        >
+                          {_chatMessage.message}
+                        </ChatBubble>
                       </MessageContainer>
-                    )}
-                    <ChatBubble
-                      key={index}
-                      isSender={_chatMessage.senderId === userId}
-                      isReceiver={_chatMessage.receiverId === userId}
-                    >
-                      {_chatMessage.message}
-                    </ChatBubble>
+                    </MessageWrapper>
                   </React.Fragment>
                 ))}
               </ChatContainer>
             )}
             <div ref={scrollRef}></div>
             <SendContainer>
-              {overLimit && <span>1000자를 초과하였습니다!</span>}
+              {overLimit && <span>999자를 초과하였습니다!</span>}
               <ChatInputContainer>
                 <ChatInput
+                  maxLength={1000}
                   rows={1}
                   type={"text"}
                   value={message}
@@ -219,6 +226,15 @@ const ChatTest = () => {
 
 export default ChatTest;
 
+const MessageWrapper = styled.div`
+  display: flex;
+  flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
+  align-items: colum;
+  /* justify-content: space-between; */
+  align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
+  /* margin: 10px 0; */
+`;
+
 const ScrollableDiv = styled.div`
   overflow-y: auto;
   height: calc(100% - 70px);
@@ -236,7 +252,7 @@ const EntireContainer = styled.div`
   display: flex;
   width: 100%;
   /* height: 100vh; */
-  height: calc(100vh - 150px);
+  height: calc(100vh - 190px);
   max-width: 80%;
   /* max-height: 60%; */
   margin: auto;
@@ -245,23 +261,23 @@ const EntireContainer = styled.div`
 const ChatRoomContainer = styled.div`
   flex: 2; // 차지하는 공간의 비율을 2로 설정
   border-left: 1px solid #ccc;
-  padding: 20px;
+  /* padding: 20px; */
   /* overflow: auto; */
   max-height: 900px;
+  padding: 0px 90px 0px 0px;
 `;
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  /* align-items: flex-start; */
   width: 100%;
   /* max-width: 800px; */
-  padding: 0px 100px 0px 0px;
-  align-items: center;
+  padding: 0px 10px;
+  /* align-items: center; */
   margin: 20px 0;
 
   position: relative;
-  min-height: 70vh;
-  /* overflow: auto; */
+  min-height: 61vh;
 `;
 
 const SendContainer = styled.div`
@@ -279,14 +295,20 @@ const SendContainer = styled.div`
 const MessageContainer = styled.div`
   display: flex;
   align-items: center;
+  /* align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")}; */
+  margin: 10px 20px;
+`;
+const ProfileContainer = styled.div`
+  display: flex;
+  align-items: center;
   align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
   margin: 10px 0;
 `;
 
 const ReceiverProfile = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 40%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
 `;
 
@@ -299,13 +321,26 @@ const Nickname = styled.div`
 
 const ChatBubble = styled.div`
   background-color: ${(props) =>
-    props.isSender ? "#d6c9e9" : props.isReceiver ? "#F3F3F3" : "transparent"};
-  padding: 8px;
-  margin-top: 4px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
+    props.isSender ? "#483767" : props.isReceiver ? "#ebe8f0" : "transparent"};
+  color: ${(props) =>
+    props.isSender ? "#ffffff" : props.isReceiver ? "#000000" : "transparent"};
+  padding: 8px 13px;
+  border-radius: 13px;
   white-space: pre-wrap; // 줄바꿈과 공백 유지
+  position: relative;
+
+  &:after {
+    content: "";
+    position: absolute;
+
+    width: 0;
+    height: 0;
+    border: 9px solid transparent;
+    ${(props) =>
+      props.isSender
+        ? `right: -8px; border-left-color: #483767; border-right: none; top: 8px;`
+        : `left: -8px; border-right-color: #ebe8f0; border-left: none; top: 10px;`}
+  }
 `;
 
 const ChatInputContainer = styled.div`
@@ -339,5 +374,5 @@ const SendButton = styled.button`
 const Line = styled.div`
   border-top: 1px solid #d6d6d6;
   width: 100%;
-  margin-top: 50px;
+  margin-top: 70px;
 `;
