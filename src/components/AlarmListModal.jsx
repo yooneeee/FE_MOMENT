@@ -1,14 +1,31 @@
-import React from "react";
-import { useQuery } from "react-query";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router";
-import { feedLikeListAxios } from "../apis/feed/feedLikeListAxios";
 import LoadingSpinner from "./LoadingSpinner";
 
 function AlarmListModal({ alarmList, showAlarmList }) {
+  const [timeDifference, setTimeDifference] = useState(null);
   const navigate = useNavigate();
   console.log("alarmList", alarmList);
+  const getTimeDifference = (createdTime) => {
+    const serverTime = new Date(createdTime);
+    const currentTime = new Date();
+    const timeDiff = Math.floor((currentTime - serverTime) / (1000 * 60)); // 분 단위로 시간 차이 계산
+
+    if (timeDiff === 0) {
+      return "방금 전 작성됨";
+    }
+    if (timeDiff < 60) {
+      return `${timeDiff}분 전 작성됨 `;
+    } else if (timeDiff >= 60 && timeDiff < 1440) {
+      const hoursDiff = Math.floor(timeDiff / 60);
+      return `${hoursDiff}시간 전 작성됨 `;
+    } else {
+      const daysDiff = Math.floor(timeDiff / 1440);
+      return `${daysDiff}일 전 작성됨 `;
+    }
+  };
   /* const { isLoading, isError, data } = useQuery("likeList", () =>
     feedLikeListAxios(photoId)
   );
@@ -23,6 +40,15 @@ function AlarmListModal({ alarmList, showAlarmList }) {
   if (isError) {
     return <p>오류가 발생하였습니다!</p>;
   } */
+  useEffect(() => {
+    alarmList.forEach((item) => {
+      const diff = getTimeDifference(item.createdTime);
+      setTimeDifference((prevTimeDifference) => ({
+        ...prevTimeDifference,
+        [item.id]: diff,
+      }));
+    });
+  }, [alarmList]);
   return (
     <div>
       <Outside onClick={showAlarmList} />
@@ -41,23 +67,23 @@ function AlarmListModal({ alarmList, showAlarmList }) {
         {alarmList.length === 0 && (
           <NoLikesMessage>알림이 없습니다.</NoLikesMessage>
         )}
-        {/* <FollowList>
+        <FollowList>
           {alarmList?.map((item) => {
             return (
               <li>
                 <FollowItem
-                  onClick={() => handleUserClick(item.userId)}
-                  key={item.nickname}
+                  onClick={() => navigate(`/chattest/${item.senderId}`)}
+                  key={item.receiverNickName}
                 >
-                  <UserImage src={item.profileUrl} />
+                  <UserImage src={item.senderProfileImg} />
                   <UserInfo>
-                    <span>{item.nickName}</span>
+                    <span>{item.senderNickName}님이 메세지를 보냈습니다.</span>
                   </UserInfo>
                 </FollowItem>
               </li>
             );
           })}
-        </FollowList> */}
+        </FollowList>
       </ModalWrap>
     </div>
   );
