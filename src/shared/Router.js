@@ -18,6 +18,7 @@ import BoardDetail from "../pages/BoardDetail";
 import ChatTest from "../pages/ChatTest";
 import ScrollToTop from "../components/ScrollToTop";
 import ChatList from "../pages/ChatList";
+import ChatRoomList from "../pages/ChatRoomList";
 
 const Router = () => {
   return (
@@ -42,7 +43,8 @@ const Router = () => {
           <Route path={`mypageboard/:hostId`} element={<MyPageBoard />} />
           <Route path={`board/:boardId`} element={<BoardDetail />} />
           <Route path={`chattest/:receiverId`} element={<ChatTest />} />
-          <Route path={`chatlist/:hostId`} element={<ChatList />} />
+          {/* <Route path={`chatlist/:hostId`} element={<ChatList />} /> */}
+          <Route path={`chatroomlist/:hostId`} element={<ChatRoomList />} />
         </Routes>
       </Layout>
     </BrowserRouter>
