@@ -26,6 +26,13 @@ const MyPageInformation = () => {
   const [deleteUserModal, setDeleteUserModal] = useState(false);
   const [intro, setIntro] = useState("");
 
+  const [nickCharacters, setNickCharacters] = useState(0);
+  const [pwCharacters, setPwCharacters] = useState(0);
+  const [introCharacters, setIntroCharacters] = useState(0);
+  const introduceMaxLength = 50;
+  const nickMaxLength = 8;
+  const pwMaxLength = 15;
+
   /* 프로필 이미지 선택 */
   const fileSelectHandler = (e) => {
     const file = e.target.files[0];
@@ -114,6 +121,21 @@ const MyPageInformation = () => {
     setDeleteUserModal(false);
   };
 
+  const handleNickInput = (e) => {
+    setNewNick(e.target.value);
+    setNickCharacters(e.target.value.length);
+  };
+
+  const handlePwInput = (e) => {
+    setNewPw(e.target.value);
+    setPwCharacters(e.target.value.length);
+  };
+
+  const handleIntroduceInput = (e) => {
+    setIntro(e.target.value);
+    setIntroCharacters(e.target.value.length);
+  };
+
   return (
     <Container>
       <form onSubmit={handleFormSubmit}>
@@ -146,14 +168,16 @@ const MyPageInformation = () => {
           <Text>닉네임</Text>
           <TextColumn>
             <HiddenInput
+              maxLength={7}
               type="text"
-              placeholder="닉네임 입력(최대 8자)"
+              placeholder={`${loginUserData.nickName}`}
               name="nickName"
               value={newNick}
-              onChange={(e) => {
-                setNewNick(e.target.value);
-              }}
+              onChange={handleNickInput}
             />
+            <div>
+              {nickCharacters}/{nickMaxLength}
+            </div>
           </TextColumn>
         </Box>
         <Line1 />
@@ -166,17 +190,18 @@ const MyPageInformation = () => {
                 <span>신규 비밀번호</span>
               </Text>
               <TextColumn>
-                <Column>
-                  <HiddenInput
-                    type="password"
-                    placeholder="신규 비밀번호 입력"
-                    name="password"
-                    value={newPw}
-                    onChange={(e) => {
-                      setNewPw(e.target.value);
-                    }}
-                  />
-                </Column>
+                <HiddenInput
+                  minLength={7}
+                  maxLength={14}
+                  type="password"
+                  placeholder="변경할 비밀번호 입력"
+                  name="password"
+                  value={newPw}
+                  onChange={handlePwInput}
+                />
+                <div>
+                  {pwCharacters}/{pwMaxLength}
+                </div>
               </TextColumn>
             </Box>
             <Line1 />
@@ -218,13 +243,15 @@ const MyPageInformation = () => {
           <Text>한 줄 소개</Text>
           <TextColumn>
             <Introduce
+              maxLength={49}
               placeholder="자신을 소개해주세요(최대 50자)"
               name="introduce"
               value={intro}
-              onChange={(e) => {
-                setIntro(e.target.value);
-              }}
+              onChange={handleIntroduceInput}
             />
+            <div>
+              {introCharacters}/{introduceMaxLength}
+            </div>
           </TextColumn>
         </Box>
         <Line1 />
@@ -292,6 +319,11 @@ const ChangeButton = styled.button`
   border: 1px #acabab solid;
   justify-content: flex-end;
   margin-right: 185px;
+
+  &:hover {
+    background-color: #483767;
+    color: #ffffff;
+  }
 `;
 const WithdrawalButton = styled.button`
   border: none;
@@ -362,12 +394,6 @@ const Box = styled.div`
   margin: 10px auto 0;
 `;
 
-const Column = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 6px;
-`;
-
 const HiddenInput = styled.input`
   width: 100%;
   max-width: 65%;
@@ -375,6 +401,7 @@ const HiddenInput = styled.input`
   border-radius: 3px;
   padding: 10px 10px;
   outline: none;
+  margin-bottom: 5px;
 
   &:focus {
     border-color: #000000;
@@ -390,7 +417,6 @@ const Text = styled.div`
   float: left;
   width: 100%;
   max-width: 30%;
-  /* background-color: #c0f10d; */
   height: auto;
   padding: 15px 0;
   box-sizing: border-box;
@@ -407,7 +433,6 @@ const TextColumn = styled.div`
   display: inline-block;
   width: 100%;
   max-width: 55%;
-  /* background-color: #ffb773; */
   height: auto;
   padding: 15px 0;
   box-sizing: border-box;
@@ -418,11 +443,12 @@ const TextColumn = styled.div`
 
   span {
     font-size: 15px;
+    margin-top: 5px;
   }
 `;
 
 const Line = styled.div`
-  border-top: 4px solid #000000;
+  border-top: 4px solid #483767;
   width: 100%;
   margin: 20px auto;
 `;
@@ -434,5 +460,17 @@ const Line1 = styled.div`
 const Introduce = styled.textarea`
   resize: none;
   width: 300px;
-  height: 200px;
+  height: 80px;
+  padding: 10px;
+  border: 1px solid #acabab;
+  border-radius: 3px;
+
+  &:focus {
+    border-color: #000000;
+    outline: none; /* 포커스 시 기본 테두리 제거 */
+  }
+
+  &::placeholder {
+    color: #acabab;
+  }
 `;
