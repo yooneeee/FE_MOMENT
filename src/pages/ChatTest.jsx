@@ -7,7 +7,6 @@ import { Chatting } from "../apis/mypage/chatting";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoadingSpinner from "../components/LoadingSpinner";
-import MyPageTabs from "../components/MyPageTabs";
 import ChatList from "./ChatList";
 import { createGlobalStyle } from "styled-components";
 
@@ -41,12 +40,11 @@ const ChatTest = () => {
     const strTime = ampm + " " + hours + ":" + minutes + " ";
     return strTime;
   };
-  /* 날짜 변환 */
 
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
-  console.log("채팅할사람", data);
+  // console.log("채팅할사람", data);
 
   // useEffect(() => {
   //   if (data?.chatList) {
@@ -167,7 +165,6 @@ const ChatTest = () => {
   return (
     <>
       <GlobalStyle />
-      <MyPageTabs pageName={"채팅목록"} />
       <EntireContainer>
         <ChatList />
         <ChatRoomContainer>
@@ -242,6 +239,7 @@ const ChatTest = () => {
               {overLimit && <span>999자를 초과하였습니다!</span>}
               <ChatInputContainer>
                 <ChatInput
+                  placeholder="메세지를 입력해주세요."
                   maxLength={1000}
                   rows={1}
                   type={"text"}
@@ -302,7 +300,8 @@ const SenderName = styled.span`
 const MessageWrapper = styled.div`
   display: flex;
   flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
-  align-items: colum;
+  /* align-items: colum; */
+  align-items: center;
   /* justify-content: space-between; */
   align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
   /* margin: 10px 0; */
@@ -347,7 +346,7 @@ const ChatContainer = styled.div`
   /* align-items: flex-start; */
   width: 100%;
   /* max-width: 800px; */
-  padding: 0px 10px;
+  padding: 0px 20px;
   /* align-items: center; */
   margin: 20px 0;
 
@@ -361,10 +360,6 @@ const SendContainer = styled.div`
   width: 100%;
   max-width: 800px;
   margin: 10px auto;
-
-  span {
-    color: red;
-  }
 `;
 
 const MessageContainer = styled.div`
@@ -407,19 +402,21 @@ const ChatBubble = styled.div`
     border: 9px solid transparent;
     ${(props) =>
       props.isSender
-        ? `right: -8px; border-left-color: #483767; border-right: none; top: 8px;`
-        : `left: -8px; border-right-color: #ebe8f0; border-left: none; top: 10px;`}
+        ? `right: -8px; border-left-color: #483767; border-right: none; top: 9px;`
+        : `left: -8px; border-right-color: #ebe8f0; border-left: none; top: 9px;`}
   }
 `;
 const Time = styled.div`
   font-size: 13px;
   color: #a0a0a0;
-  margin-top: 30px;
+  margin-top: 20px;
 `;
 const ChatInputContainer = styled.div`
   display: flex;
   align-items: center;
   margin-top: 16px;
+  border: 1px solid #a0a0a0;
+  border-radius: 4px;
 
   /* position: absolute; */
   /* bottom: 20px; */
@@ -430,19 +427,23 @@ const ChatInputContainer = styled.div`
 const ChatInput = styled.textarea`
   flex: 1;
   width: 100%;
+  height: 70px;
   padding: 8px;
-  border: 1px solid #ddd;
+  border: none;
+  outline: none;
   border-radius: 4px;
   resize: none; // 사용자가 크기를 조절하지 못하게 함
 `;
 
 const SendButton = styled.button`
   margin-left: 8px;
-  padding: 8px 30px;
+  margin-right: 4px;
+  margin-top: 30px;
+  padding: 8px 20px;
   background-color: #483767;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
 `;
 const Line = styled.div`
   border-top: 1px solid #d6d6d6;
