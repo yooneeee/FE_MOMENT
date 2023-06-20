@@ -44,7 +44,7 @@ function MyPageTabs({ pageName }) {
         <TabButton
           className={pageName === "채팅목록" ? "active" : ""}
           onClick={() => {
-            navigate(`/chatlist/${hostId}`);
+            navigate(`/chatroomlist/${hostId}`);
             activeClickHandler("채팅목록");
           }}
         >
