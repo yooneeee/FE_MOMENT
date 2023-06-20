@@ -25,6 +25,7 @@ const ChatTest = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [overLimit, setOverLimit] = useState(false); // 메세지 길이 제한
+  const [chatDates, setChatDates] = useState([]); // 날짜
 
   const client = useRef({});
   const scrollRef = useRef();
@@ -40,15 +41,26 @@ const ChatTest = () => {
     const strTime = ampm + " " + hours + ":" + minutes + " ";
     return strTime;
   };
+  /* 날짜 변환 */
 
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
   console.log("채팅할사람", data);
 
+  // useEffect(() => {
+  //   if (data?.chatList) {
+  //     setChatMessages(data?.chatList);
+  //   }
+  // }, [data]);
   useEffect(() => {
     if (data?.chatList) {
       setChatMessages(data?.chatList);
+
+      const dates = new Set(
+        data?.chatList.map((msg) => new Date(msg.createdAt).toDateString())
+      );
+      setChatDates([...dates]);
     }
   }, [data]);
 
@@ -177,6 +189,24 @@ const ChatTest = () => {
                 </GuideText>
                 {chatMessages.map((_chatMessage, index) => (
                   <React.Fragment key={_chatMessage.uuid}>
+                    <GuideText>
+                      {(index === 0 ||
+                        new Date(
+                          _chatMessage.createdAt
+                        ).toLocaleDateString() !==
+                          new Date(
+                            chatMessages[index - 1].createdAt
+                          ).toLocaleDateString()) && (
+                        <div>
+                          {new Date(_chatMessage.createdAt)
+                            .toLocaleDateString()
+                            .replace(
+                              /(\d{4})\. (\d{1,2})\. (\d{1,2})\./,
+                              "$1년 $2월 $3일"
+                            )}
+                        </div>
+                      )}
+                    </GuideText>
                     <MessageWrapper isSender={_chatMessage.senderId === userId}>
                       <ProfileContainer>
                         <ReceiverProfile
@@ -242,6 +272,7 @@ export default ChatTest;
 const GuideText = styled.div`
   text-align: center;
   margin: 10px 0;
+  font-size: 15px;
 `;
 
 const UserProfileImage = styled.img`
