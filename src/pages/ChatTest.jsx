@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import * as StompJs from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { useQuery } from "react-query";
-import { Chatting } from "../apis/mypage/chatting";
+import { useQuery, useQueryClient } from "react-query";
+import { Chatting, ChattingRoomDelete } from "../apis/mypage/chatting";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ChatList from "./ChatList";
 import { createGlobalStyle } from "styled-components";
+import { useMutation } from "react-query";
+import Swal from "sweetalert2";
 
 const GlobalStyle = createGlobalStyle`
   #root {
@@ -18,8 +20,9 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const ChatTest = () => {
+  const queryClient = useQueryClient();
   const { receiverId } = useParams();
-  const { userId, nickName, profileImg } = useSelector((state) => state.user);
+  const { userId, profileImg } = useSelector((state) => state.user);
 
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -68,6 +71,54 @@ const ChatTest = () => {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [chatMessages]);
+
+  /* 채팅방 삭제 서버 */
+  const deleteMutation = useMutation(ChattingRoomDelete, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("ChattingList");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const chatRoomDelete = (chatRoomId) => {
+    try {
+      Swal.fire({
+        title: "채팅방 나가시겠습니까?",
+        text: "나가기를 하면 대화내용이 모두 삭제되고 채팅목록에서도 삭제됩니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#483767",
+        cancelButtonColor: "#c4c4c4",
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await deleteMutation.mutateAsync(chatRoomId);
+            // toggleButtonClose(chatRoomId);
+            Swal.fire({
+              title: "채팅방 삭제 되었습니다✨",
+              icon: "success",
+              confirmButtonColor: "#483767",
+              confirmButtonText: "완료",
+            });
+          } catch (error) {
+            Swal.fire({
+              title: "삭제 실패!",
+              text: "피드 삭제 중 오류가 발생했습니다.",
+              icon: "error",
+              confirmButtonColor: "#483767",
+              confirmButtonText: "확인",
+            });
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const connect = () => {
     client.current = new StompJs.Client({
@@ -173,9 +224,21 @@ const ChatTest = () => {
               src={data.receiverProfileImg}
               alt="profile image"
             />
-            <SenderName>
-              {data.receiverRole} | {data.receiverNickName}
-            </SenderName>
+            <div style={{ flexGrow: 1 }}>
+              <SenderName>
+                {data.receiverRole} | {data.receiverNickName}
+              </SenderName>
+            </div>
+            <ExitButton
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                chatRoomDelete(data.chatRoomId);
+              }}
+            >
+              나가기
+            </ExitButton>
           </SenderUserContainer>
           <Line />
           <ScrollableDiv>
@@ -267,6 +330,20 @@ const ChatTest = () => {
 
 export default ChatTest;
 
+const ExitButton = styled.button`
+  border: none;
+  background-color: #ebe8f0;
+  border-radius: 4px;
+  padding: 8px;
+  margin-right: 10px;
+  font-size: 15px;
+
+  &:hover {
+    background-color: #483767;
+    color: #ffffff;
+  }
+`;
+
 const GuideText = styled.div`
   text-align: center;
   margin: 10px 0;
@@ -285,6 +362,8 @@ const SenderUserContainer = styled.div`
   align-items: center;
   top: 6%;
   margin-left: 20px;
+
+  justify-content: space-between;
 `;
 const SenderName = styled.span`
   font-weight: bold;
@@ -321,7 +400,7 @@ const EntireContainer = styled.div`
   width: 100%;
   /* height: 100vh; */
   height: calc(100vh - 190px);
-  max-width: 80%;
+  max-width: 75%;
   /* max-height: 60%; */
   margin: auto;
   overflow: hidden;
@@ -332,7 +411,7 @@ const ChatRoomContainer = styled.div`
   /* padding: 20px; */
   /* overflow: auto; */
   max-height: 900px;
-  padding: 0px 90px 0px 0px;
+  /* padding: 0px 90px 0px 0px; */
 
   /* display: flex; */
 `;
