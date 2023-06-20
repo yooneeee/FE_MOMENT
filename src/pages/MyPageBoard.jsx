@@ -249,7 +249,7 @@ const Content = styled.div`
 
 const ToggleWriteMenu = styled.div`
   position: absolute;
-  top: 80px;
+  top: 87px;
   right: -100px;
   transform: translate(-50%, -50%);
   padding: 10px;

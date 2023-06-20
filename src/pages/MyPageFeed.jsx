@@ -157,7 +157,7 @@ function MyPageFeed() {
               {data.photoList.map((item, index) => {
                 const isOpen = feedDetailOpen.includes(item.photoId);
                 return (
-                  <>
+                  <React.Fragment key={item.photoId}>
                     <WorkItem
                       src={item.photoUrl}
                       onClick={() => {
@@ -201,7 +201,7 @@ function MyPageFeed() {
                         photoId={item.photoId}
                       />
                     )}
-                  </>
+                  </React.Fragment>
                 );
               })}
             </WorkList>
@@ -307,7 +307,7 @@ const WorkList = styled.div`
   margin-top: 16px;
 
   @media (min-width: 1200px) {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   @media (max-width: 768px) {

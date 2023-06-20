@@ -11,14 +11,14 @@ import { FiSettings } from "react-icons/fi";
 import { BiDownArrow } from "react-icons/bi";
 import Swal from "sweetalert2";
 import EditBoard from "../components/EditBoard";
-import { BiUser } from "react-icons/bi";
-import FollowModal from "../components/FollowModal";
+import FollowModal from "../components/MatchingList";
 
 function Matching() {
   const { hostId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showFollowModal, setShowFollowModal] = useState(false);
+  const [buttonActiveControl, setButtonActiveControl] = useState("accept");
 
   // 모달 제어
   const showFollow = () => {
@@ -145,132 +145,43 @@ function Matching() {
 
           <Container>
             <Content>
-              <Work>내가 받은 매칭 신청</Work>
-              {data.boardList.map((item, index) => {
-                return (
-                  <BoardItemContainer key={item.boardId}>
-                    <BoardItem
-                      key={item.boardId}
-                      item={item}
-                      onClick={() => {
-                        navigate(`/board/${item.boardId}`);
-                      }}
-                    />
-                    <EditButton
-                      onClick={(e) => {
-                        if (editButtons[index]) {
-                          toggleButtonClose(index);
-                        } else {
-                          toggleButtonOpen(index);
-                        }
-                      }}
-                    >
-                      <FiSettings size={14} />
-                      <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
-                    </EditButton>
-                    <MatchingButton
-                      onClick={() => {
-                        setShowFollowModal(true);
-                      }}
-                    >
-                      매칭 수락
-                    </MatchingButton>
-                    <MatchingCountBox>
-                      {/* <BiUser size={35} /> */}
-                      <BiUser size={25} />
-                      <p>2/5</p>
-                    </MatchingCountBox>
-                    {editButtons[index] && (
-                      <ToggleWriteMenu ref={toggleWriteMenuRef}>
-                        <Button
-                          onClick={() => {
-                            editButtonHandler(item.boardId);
-                          }}
-                        >
-                          수정
-                        </Button>
-                        <Button
-                          onClick={() => deleteButtonHandler(item.boardId)}
-                        >
-                          삭제
-                        </Button>
-                      </ToggleWriteMenu>
-                    )}
-                    {selectedBoardId === item.boardId && (
-                      <EditBoard
-                        id={item.boardId}
+              <MatchingTabBar>
+                <MatchingTabButton
+                  className={buttonActiveControl === "accept" ? "active" : ""}
+                  onClick={() => setButtonActiveControl("accept")}
+                >
+                  내가 받은 매칭 신청
+                </MatchingTabButton>
+                <MatchingTabButton
+                  className={
+                    buttonActiveControl === "application" ? "active" : ""
+                  }
+                  onClick={() => setButtonActiveControl("application")}
+                >
+                  내가 신청한 매칭
+                </MatchingTabButton>
+              </MatchingTabBar>
+              <BoardList>
+                {data.boardList.map((item, index) => {
+                  return (
+                    <BoardItemContainer key={item.boardId}>
+                      <BoardItem
+                        key={item.boardId}
                         item={item}
-                        open={openBoardModal}
-                        close={() => setSelectedBoardId(null)}
+                        onClick={() => {
+                          navigate(`/board/${item.boardId}`);
+                        }}
+                        photograhperInfoShow="no"
+                        showFollow={showFollow}
                       />
-                    )}
-                  </BoardItemContainer>
-                );
-              })}
+                    </BoardItemContainer>
+                  );
+                })}
+              </BoardList>
             </Content>
             {showFollowModal && (
               <FollowModal showFollow={showFollow} userId="1" />
             )}
-            <Content>
-              <Work>내가 신청한 매칭</Work>
-              {data.boardList.map((item, index) => {
-                return (
-                  <BoardItemContainer key={item.boardId}>
-                    <BoardItem
-                      key={item.boardId}
-                      item={item}
-                      onClick={() => {
-                        navigate(`/board/${item.boardId}`);
-                      }}
-                    />
-                    <EditButton
-                      onClick={(e) => {
-                        if (editButtons[index]) {
-                          toggleButtonClose(index);
-                        } else {
-                          toggleButtonOpen(index);
-                        }
-                      }}
-                    >
-                      <FiSettings size={14} />
-                      <BiDownArrow size={14} style={{ marginLeft: "5px" }} />
-                    </EditButton>
-                    <MatchingButton matchingStatus="신청 대기 중">
-                      신청 대기 중
-                    </MatchingButton>
-                    <MatchingCountBox>
-                      {/* <BiUser size={35} /> */}
-                      <BiUser size={25} />
-                      <p>2/5</p>
-                    </MatchingCountBox>
-                    {editButtons[index] && (
-                      <ToggleWriteMenu ref={toggleWriteMenuRef}>
-                        <Button
-                          onClick={() => {
-                            editButtonHandler(item.boardId);
-                          }}
-                        >
-                          수정
-                        </Button>
-                        <Button
-                          onClick={() => deleteButtonHandler(item.boardId)}
-                        >
-                          삭제
-                        </Button>
-                      </ToggleWriteMenu>
-                    )}
-                    {selectedBoardId === item.boardId && (
-                      <EditBoard
-                        id={item.boardId}
-                        item={item}
-                        open={openBoardModal}
-                        close={() => setSelectedBoardId(null)}
-                      />
-                    )}
-                  </BoardItemContainer>
-                );
-              })}
-            </Content>
           </Container>
         </ContentContainer>
       </PageContainer>
@@ -295,6 +206,31 @@ const ProfileContainer = styled.div`
 const Container = styled.div`
   width: 100%;
 `;
+const MatchingTabBar = styled.div`
+  width: 100%;
+  background-color: #eee;
+  border: none;
+  border-radius: 5px;
+  padding: 2px;
+  display: flex;
+`;
+
+const MatchingTabButton = styled.button`
+  width: 50%;
+  padding: 10px;
+  /* background-color: #ffffff; */
+  /* border: 0.5px solid #a7a7a7; */
+  /* background-color: ${(props) =>
+    props.active === "on" ? "#ffffff" : "null"}; */
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+
+  &.active {
+    background-color: #ffffff;
+  }
+`;
+
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -312,8 +248,7 @@ const ContentContainer = styled.div`
 const MatchingButton = styled.div`
   position: absolute;
   bottom: 0;
-  right: 0;
-  margin: 0 100px 10px 0;
+
   background-color: ${(props) =>
     props.matchingStatus === "신청 대기 중" ? "#696969" : "#483767"};
   padding: 8px;
@@ -326,6 +261,13 @@ const MatchingButton = styled.div`
     border-color: #fff;
     color: #fff;
   }
+`;
+
+const BoardList = styled.div`
+  display: grid;
+  /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 `;
 
 const MatchingCountBox = styled.div`

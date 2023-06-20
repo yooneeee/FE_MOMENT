@@ -1,11 +1,16 @@
 import React from "react";
-import { useQuery } from "react-query";
 import styled from "styled-components";
 import { IoArrowBack } from "react-icons/io5";
-import { useNavigate } from "react-router";
 import { AiOutlineClose } from "react-icons/ai";
+import { useEffect } from "react";
 
-function FollowModal({ userId, showFollow }) {
+function MatchingList({ userId, showFollow }) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden"; // Prevent scrolling on the entire page
+    return () => {
+      document.body.style.overflow = "auto"; // Restore scrolling when the modal is closed
+    };
+  }, []);
   return (
     <div>
       <Outside onClick={showFollow} />
@@ -60,7 +65,7 @@ function FollowModal({ userId, showFollow }) {
   );
 }
 
-export default FollowModal;
+export default MatchingList;
 
 const Outside = styled.div`
   position: fixed;
@@ -78,7 +83,7 @@ const ModalWrap = styled.div`
   flex-direction: column;
   align-items: flex-start;
   padding: 10px;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
