@@ -28,8 +28,7 @@ function ChatList() {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  console.log("데이터", data);
-  console.log("데이터22", data.chatRoomId);
+
   return (
     <>
       <ChatListContainer>
