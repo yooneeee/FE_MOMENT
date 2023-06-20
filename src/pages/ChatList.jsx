@@ -1,21 +1,25 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import MyPageTabs from "../components/MyPageTabs";
 import { ChattingList } from "../apis/mypage/chatting";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Swal from "sweetalert2";
-import ChatTest from "./ChatTest";
 import { FiSearch } from "react-icons/fi";
 
 function ChatList() {
   const { isError, isLoading, data } = useQuery("ChattingList", ChattingList);
   console.log("데이터", data);
+
   const [isClicked, setIsClicked] = useState(null);
+  const [search, setSearch] = useState("");
 
   const handleClick = (id) => {
     setIsClicked(id);
+  };
+
+  const updateSearch = (e) => {
+    setSearch(e.target.value);
   };
 
   if (isLoading) {
@@ -38,43 +42,50 @@ function ChatList() {
 
   return (
     <>
-      {/* <MyPageTabs pageName={"채팅목록"} /> */}
       <ChatListContainer>
         <ChatSearchContainer>
           <StyledIcon />
-          <ChatSearch placeholder="참여자, 내용 검색" />
+          <ChatSearch
+            placeholder="닉네임 검색"
+            value={search}
+            onChange={updateSearch}
+          />
         </ChatSearchContainer>
         <Line />
         <ScrollableDiv>
-          {data.map((item) => (
-            <Link to={`/chattest/${item.receiverId}`} key={item.chatRoomId}>
-              <List
-                isClicked={isClicked === item.chatRoomId}
-                onClick={() => handleClick(item.chatRoomId)}
-              >
-                <ChatItem>
-                  <ProfileImage
-                    src={item.receiverProfileImg}
-                    alt="profile image"
-                  />
-                  <Content>
-                    <SenderNameContainer>
-                      <SenderName>{item.receiverNickName}</SenderName>
-                    </SenderNameContainer>
-                    <MessageContainer>
-                      {item.lastChat && (
-                        <Message>
-                          {item.lastChat.message.length > 15
-                            ? item.lastChat.message.slice(0, 15) + "..."
-                            : item.lastChat.message}
-                        </Message>
-                      )}
-                    </MessageContainer>
-                  </Content>
-                </ChatItem>
-              </List>
-            </Link>
-          ))}
+          {data
+            .filter((item) => item.receiverNickName.includes(search))
+            .map((item) => (
+              <Link to={`/chattest/${item.receiverId}`} key={item.chatRoomId}>
+                <List
+                  isClicked={isClicked === item.chatRoomId}
+                  onClick={() => handleClick(item.chatRoomId)}
+                >
+                  <ChatItem>
+                    <ProfileImage
+                      src={item.receiverProfileImg}
+                      alt="profile image"
+                    />
+                    <Content>
+                      <SenderNameContainer>
+                        <SenderName>
+                          {item.receiverNickName} | {item.receiverRole}
+                        </SenderName>
+                      </SenderNameContainer>
+                      <MessageContainer>
+                        {item.lastChat && (
+                          <Message>
+                            {item.lastChat.message.length > 15
+                              ? item.lastChat.message.slice(0, 15) + "..."
+                              : item.lastChat.message}
+                          </Message>
+                        )}
+                      </MessageContainer>
+                    </Content>
+                  </ChatItem>
+                </List>
+              </Link>
+            ))}
         </ScrollableDiv>
       </ChatListContainer>
     </>
@@ -87,13 +98,11 @@ const ScrollableDiv = styled.div`
   overflow-y: auto;
   height: calc(100% - 70px);
 
-  /* // For Webkit-based Browsers
   ::-webkit-scrollbar {
     display: none;
   }
 
-  // For Firefox
-  scrollbar-width: none; */
+  scrollbar-width: none;
 `;
 const ChatSearchContainer = styled.div`
   display: flex;
@@ -126,7 +135,7 @@ const StyledIcon = styled(FiSearch)`
 const ChatListContainer = styled.div`
   width: 100%;
   height: 100vh;
-  max-height: 95%;
+  max-height: 100%;
   display: flex;
   padding: 0px 0px 0px 90px;
   margin-top: 20px;
@@ -180,7 +189,7 @@ const SenderNameContainer = styled.div`
 const SenderName = styled.span`
   font-weight: bold;
   color: #000;
-  font-size: 18px;
+  font-size: 15px;
 `;
 
 const MessageContainer = styled.div`
@@ -190,9 +199,9 @@ const MessageContainer = styled.div`
   justify-content: flex-start;
 `;
 const Message = styled.span`
-  color: #555;
+  color: #929292;
 `;
 const Line = styled.div`
-  border-top: 1px solid #d6d6d6;
+  border-top: 1px solid none;
   width: 100%;
 `;
