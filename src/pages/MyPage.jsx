@@ -64,6 +64,7 @@ const MyPage = () => {
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
+
           <Container>
             <WorkSection>
               <Work>{mine ? "나의 피드" : `${data.nickName}'s 피드`}</Work>
