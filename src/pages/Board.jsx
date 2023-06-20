@@ -146,7 +146,7 @@ function Board() {
   }
 
   return (
-    <Container>
+    <>
       <Header>
         <Navbar>
           <span>게시판</span>
@@ -200,6 +200,7 @@ function Board() {
           </NavItems>
         </Navbar>
       </Header>
+
       <Content>
         {searchResults.length > 0 ? (
           <>
@@ -248,7 +249,7 @@ function Board() {
         <div ref={bottomObserverRef}></div>
       </Content>
       {showButton && <ScrollToTopButton />}
-    </Container>
+    </>
   );
 }
 
@@ -317,9 +318,9 @@ const NavItem = styled.div`
 `;
 
 const Header = styled.header`
-  padding: 16px;
-  width: 80%;
+  padding: 16px 0 16px 0;
   border-bottom: 1px solid #ddd;
+  margin: 0 150px;
 `;
 
 const Content = styled.div`
@@ -327,7 +328,6 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  margin: auto;
   @media (max-width: 1300px) {
     grid-template-columns: repeat(3, 1fr);
   }

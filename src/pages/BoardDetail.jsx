@@ -2,10 +2,12 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { getBoardDetailAxios } from "../apis/board/getBoardDetailAxios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import ApplicationForMatching from "../apis/matching/ApplicationForMatching";
 
 function BoardDetail() {
   const [currentPosition, setCurrentPosition] = useState(70);
@@ -47,6 +49,25 @@ function BoardDetail() {
     () => getBoardDetailAxios(params.boardId)
   );
 
+  // 매칭 신청 버튼
+  const ApplicationForMatchingMutation = useMutation(ApplicationForMatching, {
+    onSuccess: () => {
+      Swal.fire({
+        icon: "success",
+        title: "매칭 신청 완료!",
+        text: `매칭 신청이 완료 되었습니다.`,
+        confirmButtonText: "확인",
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const matchingButtonHandler = (boardId) => {
+    ApplicationForMatchingMutation.mutate(boardId);
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -55,24 +76,27 @@ function BoardDetail() {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
 
+  console.log(data);
+
   return (
     <Container>
-      <FlexContainer>
-        <BoardImg img={data.boardImgUrl} />
-        <MainContentContainer>
-          <Title>작가 말</Title>
-          <MainContentBody>{data.content}</MainContentBody>
+      <ContentContainer>
+        <FlexContainer>
+          <BoardImg img={data.boardImgUrl} />
+          <MainContentContainer>
+            <Title>작가 말</Title>
+            <MainContentBody>{data.content}</MainContentBody>
 
-          <Title name="작품">작가 작품</Title>
-          <WorksContainer>
-            {data.feedImgUrl.map((item) => {
-              return <WorkItem img={item.photoUrl} key={item.photoId} />;
-            })}
-          </WorksContainer>
-        </MainContentContainer>
-      </FlexContainer>
+            <Title name="작품">작가 작품</Title>
+            <WorksContainer>
+              {data.feedImgUrl.map((item) => {
+                return <WorkItem img={item.photoUrl} key={item.photoId} />;
+              })}
+            </WorksContainer>
+          </MainContentContainer>
+        </FlexContainer>
 
-      <StyledForm ref={formRef}>
+        {/* <StyledForm ref={formRef}>
         <Form>
           <FormBody>
             <Title>{data.title}</Title>
@@ -100,10 +124,16 @@ function BoardDetail() {
                   </ProfileVisitButton>
                   <ProfileVisitButton
                     onClick={() => {
-                      navigate(`/page/${data.hostId}`);
+                      Swal.fire({
+                        icon: "error",
+                        text: `현재 준비 중인 기능입니다.
+                        불편을 끼쳐드려 죄송합니다.`,
+                        confirmButtonText: "확인",
+                      });
                     }}
+                    // buttonColor="#6D0F8E"
                   >
-                    프로필 방문
+                    매칭 신청
                   </ProfileVisitButton>
                 </ButtonContainer>
               )}
@@ -125,8 +155,68 @@ function BoardDetail() {
           </FormBody>
         </Form>
       </StyledForm>
+      <FormRange ref={formRangeRef}></FormRange> */}
 
-      <FormRange ref={formRangeRef}></FormRange>
+        <Form>
+          <FormBody>
+            <Title>{data.title}</Title>
+            <ProfileBox>
+              <ProfileImg
+                src={data.profileUrl}
+                onClick={() => {
+                  navigate(`/page/${data.hostId}`);
+                }}
+              ></ProfileImg>
+
+              <UserDataBox>
+                <UserPostion> {data.role} </UserPostion>
+                <UserNickName>{data.nickName}</UserNickName>
+              </UserDataBox>
+
+              {data.hostId !== userId && (
+                <ButtonContainer>
+                  <ProfileVisitButton
+                    onClick={() => {
+                      navigate(`/chattest/${data.hostId}`);
+                    }}
+                  >
+                    채팅하기
+                  </ProfileVisitButton>
+                  <ProfileVisitButton
+                    // onClick={() => {
+                    //   Swal.fire({
+                    //     icon: "error",
+                    //     text: `현재 준비 중인 기능입니다.
+                    //     불편을 끼쳐드려 죄송합니다.`,
+                    //     confirmButtonText: "확인",
+                    //   });
+                    // }}
+                    onClick={() => {
+                      matchingButtonHandler(data.boardId);
+                    }}
+                  >
+                    매칭 신청
+                  </ProfileVisitButton>
+                </ButtonContainer>
+              )}
+            </ProfileBox>
+
+            <HashTagContainer>
+              {data.tag_boardList.map((item) => {
+                return <HashTag key={item.tagId}>{item.tag}</HashTag>;
+              })}
+            </HashTagContainer>
+            <ListTitle>촬영장소</ListTitle>
+            <ListContent>{data.location}</ListContent>
+            <ListTitle>급여 조건</ListTitle>
+            <ListContent>{data.pay}</ListContent>
+            <ListTitle>지원 방법</ListTitle>
+            <ListContent>{data.apply}</ListContent>
+            <ListTitle>모집 마감일</ListTitle>
+            <ListContent>{data.deadLine}</ListContent>
+          </FormBody>
+        </Form>
+      </ContentContainer>
     </Container>
   );
 }
@@ -134,8 +224,14 @@ function BoardDetail() {
 export default BoardDetail;
 
 const Container = styled.div`
-  padding: 20px 150px 20px 150px;
+  /* padding: 20px 150px 20px 150px; */
+  padding: 20px 300px;
+  width: 100%;
   display: flex;
+  /* background-color: aqua; */
+  position: relative;
+  align-items: center;
+  justify-content: center;
 
   @media (max-width: 1320px) {
     flex-direction: column;
@@ -157,9 +253,16 @@ const BoardImg = styled.div`
   border-radius: 5px;
 `;
 
+const ContentContainer = styled.div`
+  width: 1200px;
+  min-width: 1200px;
+  /* background-color: aqua; */
+  display: flex;
+`;
+
 const StyledForm = styled.div`
   position: fixed;
-  right: 150px;
+  right: 300px;
   transition: top 0.8s ease;
   @media (max-width: 1320px) {
     position: relative;
@@ -170,15 +273,15 @@ const StyledForm = styled.div`
 
 const Form = styled.div`
   width: 500px;
-  max-height: calc(
-    100vh - 190px
-  ); /* Adjust the value (200px) based on your needs */
-  overflow-y: auto;
+  height: max-content;
   background-color: #f5f5f5;
   border-radius: 5px;
-  /*   margin-left: auto; */
+  margin-left: auto;
 
-  /* Hide the scrollbar */
+  /* position: fixed;
+  right: 140px; */
+
+  /* Hide the scrollbar
   ::-webkit-scrollbar {
     width: 0.8em;
     background-color: #f5f5f5;
@@ -190,7 +293,7 @@ const Form = styled.div`
 
   ::-webkit-scrollbar-thumb:hover {
     background-color: #888;
-  }
+  } */
 `;
 
 const FormBody = styled.div`
@@ -241,9 +344,9 @@ const ButtonContainer = styled.div`
 const ProfileVisitButton = styled.button`
   margin-left: auto;
   padding: 12px;
-  background-color: #514073;
+  background-color: ${(props) => props.buttonColor || "#514073"};
   color: white;
-  border: 1px solid #7e7e7e;
+  border: none;
   border-radius: 10px;
 
   &:hover {

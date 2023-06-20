@@ -55,6 +55,7 @@ const MyPage = () => {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
+
   return (
     <>
       {mine && <MyPageTabs pageName={"전체보기"} />}
@@ -63,6 +64,7 @@ const MyPage = () => {
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
+
           <Container>
             <WorkSection>
               <Work>{mine ? "나의 피드" : `${data.nickName}'s 피드`}</Work>
@@ -89,19 +91,22 @@ const MyPage = () => {
                 })}
               </WorkList>
             </WorkSection>
+
             <Content>
               <Work>{mine ? "내 게시물" : `${data.nickName}'s 게시물`}</Work>
-              {data.boardList.slice(0, 2).map((item) => {
-                return (
-                  <BoardItem
-                    key={item.boardId}
-                    item={item}
-                    onClick={() => {
-                      navigate(`/board/${item.boardId}`);
-                    }}
-                  />
-                );
-              })}
+              <BoardList>
+                {data.boardList.slice(0, 3).map((item) => {
+                  return (
+                    <BoardItem
+                      key={item.boardId}
+                      item={item}
+                      onClick={() => {
+                        navigate(`/board/${item.boardId}`);
+                      }}
+                    />
+                  );
+                })}
+              </BoardList>
             </Content>
           </Container>
         </ContentContainer>
@@ -151,6 +156,13 @@ const ContentContainer = styled.div`
   }
 `;
 
+const BoardList = styled.div`
+  display: grid;
+  /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+`;
+
 const WorkSection = styled.div`
   flex-grow: 1;
 `;
@@ -170,7 +182,7 @@ const WorkList = styled.div`
   margin-top: 16px;
 
   @media (min-width: 1200px) {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   @media (max-width: 768px) {

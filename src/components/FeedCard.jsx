@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import heartAxios from "../apis/feed/heartAxios";
 import { useQueryClient } from "react-query";
@@ -110,18 +109,18 @@ const CardDesign = styled.div`
   flex-grow: 1;
   width: 100%;
   overflow: hidden;
-  box-shadow: rgb(135, 135, 135) 0px 4px 7px;
+  /* box-shadow: rgb(135, 135, 135) 0px 4px 7px; */
 
   &:hover {
     transform: translateY(-10px);
     transition: transform 1s ease;
-    box-shadow: rgb(135, 135, 135) 0px 6px 10px;
+    box-shadow: rgb(135, 135, 135) 2px 3px 4px;
   }
 
   &:not(:hover) {
     transform: translateY(0);
     transition: transform 1s ease;
-    box-shadow: rgb(135, 135, 135) 0px 4px 7px;
+    box-shadow: rgb(135, 135, 135) 1px 2px 3px;
   }
 `;
 

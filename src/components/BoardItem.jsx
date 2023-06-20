@@ -5,8 +5,9 @@ import { BiDollarCircle } from "react-icons/bi";
 import { LuCalendarDays } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { FaPen } from "react-icons/fa";
+import { BiUser } from "react-icons/bi";
 
-function BoardItem({ item, onClick }) {
+function BoardItem({ item, onClick, photograhperInfoShow, showFollow }) {
   const [timeDifference, setTimeDifference] = useState(null);
   // 오늘 날짜
   const today = new Date();
@@ -16,6 +17,9 @@ function BoardItem({ item, onClick }) {
     const currentTime = new Date();
     const timeDiff = Math.floor((currentTime - serverTime) / (1000 * 60)); // 분 단위로 시간 차이 계산
 
+    if (timeDiff === 0) {
+      return "방금 전 작성됨";
+    }
     if (timeDiff < 60) {
       return `${timeDiff}분 전 작성됨 `;
     } else if (timeDiff >= 60 && timeDiff < 1440) {
@@ -50,26 +54,45 @@ function BoardItem({ item, onClick }) {
         <DDayInfo isDday={getDDay(item.deadLine) === "D-day"}>
           <p>{getDDay(item.deadLine)}</p>
         </DDayInfo>
-        <PhotographerInfo>
-          <CardProfileImg src={item.hostProfileUrl} />
-          <PhotographerRole>{item.role}</PhotographerRole>
-          <span>|</span>
-          <PhotographerName>{item.nickName}</PhotographerName>
-        </PhotographerInfo>
+
+        {photograhperInfoShow === "no" ? (
+          <PhotographerInfo button="matching">
+            <MatchingAcceptButton
+              onClick={(e) => {
+                e.stopPropagation();
+                showFollow(true);
+              }}
+            >
+              <MatchingCount>
+                <BiUser />
+                <p>3/5</p>
+              </MatchingCount>
+              <p>매칭 수락</p>
+            </MatchingAcceptButton>
+          </PhotographerInfo>
+        ) : (
+          <PhotographerInfo>
+            <CardProfileImg src={item.hostProfileUrl} />
+            <PhotographerRole>{item.role}</PhotographerRole>
+            <span>|</span>
+            <PhotographerName>{item.nickName}</PhotographerName>
+          </PhotographerInfo>
+        )}
       </ImageContainer>
+
       <ContentContainer>
         <Title>{item.title}</Title>
-
         <LocationInfo>
           <IoLocationSharp style={{ color: "#514073" }} />
-          <p>{item.location}</p>
+          <CardFont>{item.location}</CardFont>
           <PayInfo>
             <BiDollarCircle style={{ color: "#514073" }} />
-            <p>{item.pay}</p>
+            <CardFont>{item.pay}</CardFont>
           </PayInfo>
         </LocationInfo>
         <DeadLineInfo>
-          <LuCalendarDays style={{ color: "#514073" }} /> <p>{item.deadLine}</p>
+          <LuCalendarDays style={{ color: "#514073" }} />{" "}
+          <CardFont>{item.deadLine}</CardFont>
         </DeadLineInfo>
 
         <HashTagContainer>
@@ -91,7 +114,6 @@ function BoardItem({ item, onClick }) {
 export default BoardItem;
 
 const Item = styled.div`
-  position: relative;
   margin-top: 15px;
   flex-grow: 1;
   width: 100%;
@@ -109,6 +131,10 @@ const Item = styled.div`
   }
 `;
 
+const CardFont = styled.p`
+  font-size: 13px;
+`;
+
 const ContentContainer = styled.div`
   position: relative;
   z-index: 2;
@@ -123,14 +149,20 @@ const PhotographerInfo = styled.div`
   z-index: 3;
   display: flex;
   align-items: center;
-  background-color: white;
+  background-color: ${(props) =>
+    props.button === "matching" ? "transparent" : "rgba(255, 255, 255, 0.6);"};
   padding: 10px;
   font-weight: 600;
   width: 100%;
-  opacity: 80%;
   @media (max-width: 1200px) {
     padding: 5px;
   }
+`;
+
+const MatchingCount = styled.div`
+  display: flex;
+  margin-right: 10px;
+  align-items: center;
 `;
 
 const ImageContainer = styled.div`
@@ -149,9 +181,28 @@ const ImageContainer = styled.div`
   margin-bottom: 20px;
 `;
 
+const MatchingAcceptButton = styled.button`
+  margin: auto;
+  padding: 8px;
+  width: 90%;
+  background-color: #483767;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #8c8c8c;
+    border-color: #fff;
+    color: #fff;
+  }
+`;
+
 const Title = styled.div`
   font-weight: 600;
-  font-size: 21px;
+  font-size: 18px;
   margin-bottom: 8px;
 `;
 
@@ -177,7 +228,7 @@ const MeetInfo = styled.div`
 
 const CreatedDate = styled.div`
   color: #666;
-  font-size: 14px;
+  font-size: 13px;
   margin-top: 10px;
 `;
 
@@ -194,6 +245,7 @@ const HashTag = styled.div`
   border: none;
   border-radius: 50px;
   padding: 7px;
+  font-size: 13px;
 `;
 
 const LocationInfo = styled.div`
@@ -207,7 +259,7 @@ const LocationInfo = styled.div`
 const DeadLineInfo = styled.div`
   display: flex;
   gap: 5px;
-  font-size: 16px;
+  font-size: 14px;
   align-items: center;
 `;
 const DDayInfo = styled.div`
