@@ -132,8 +132,65 @@ function BoardDetail() {
           </FormBody>
         </Form>
       </StyledForm>
-
       <FormRange ref={formRangeRef}></FormRange>
+
+      {/* <Form>
+        <FormBody>
+          <Title>{data.title}</Title>
+          <ProfileBox>
+            <ProfileImg
+              src={data.profileUrl}
+              onClick={() => {
+                navigate(`/page/${data.hostId}`);
+              }}
+            ></ProfileImg>
+
+            <UserDataBox>
+              <UserPostion> {data.role} </UserPostion>
+              <UserNickName>{data.nickName}</UserNickName>
+            </UserDataBox>
+
+            {data.hostId !== userId && (
+              <ButtonContainer>
+                <ProfileVisitButton
+                  onClick={() => {
+                    navigate(`/chattest/${data.hostId}`);
+                  }}
+                >
+                  채팅하기
+                </ProfileVisitButton>
+                <ProfileVisitButton
+                  onClick={() => {
+                    Swal.fire({
+                      icon: "error",
+                      text: `현재 준비 중인 기능입니다.
+                        불편을 끼쳐드려 죄송합니다.`,
+                      confirmButtonText: "확인",
+                    });
+                  }}
+                  // buttonColor="#6D0F8E"
+                >
+                  매칭 신청
+                </ProfileVisitButton>
+              </ButtonContainer>
+            )}
+          </ProfileBox>
+
+          <HashTagContainer>
+            {data.tag_boardList.map((item) => {
+              return <HashTag key={item.tagId}>{item.tag}</HashTag>;
+            })}
+          </HashTagContainer>
+          <ListTitle>촬영장소</ListTitle>
+          <ListContent>{data.location}</ListContent>
+          <ListTitle>급여 조건</ListTitle>
+          <ListContent>{data.pay}</ListContent>
+          <ListTitle>지원 방법</ListTitle>
+          <ListContent>{data.apply}</ListContent>
+          <ListTitle>모집 마감일</ListTitle>
+          <ListContent>{data.deadLine}</ListContent>
+        </FormBody>
+      </Form> */}
     </Container>
   );
 }
@@ -141,8 +198,11 @@ function BoardDetail() {
 export default BoardDetail;
 
 const Container = styled.div`
-  padding: 20px 150px 20px 150px;
+  /* padding: 20px 150px 20px 150px; */
+  margin: 20px 150px;
   display: flex;
+  /* background-color: aqua; */
+  position: relative;
 
   @media (max-width: 1320px) {
     flex-direction: column;
@@ -180,12 +240,12 @@ const Form = styled.div`
   max-height: calc(
     100vh - 190px
   ); /* Adjust the value (200px) based on your needs */
-  overflow-y: auto;
   background-color: #f5f5f5;
   border-radius: 5px;
-  /*   margin-left: auto; */
+  position: absolute;
+  right: 0;
 
-  /* Hide the scrollbar */
+  /* Hide the scrollbar
   ::-webkit-scrollbar {
     width: 0.8em;
     background-color: #f5f5f5;
@@ -197,7 +257,7 @@ const Form = styled.div`
 
   ::-webkit-scrollbar-thumb:hover {
     background-color: #888;
-  }
+  } */
 `;
 
 const FormBody = styled.div`
