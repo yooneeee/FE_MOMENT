@@ -2,11 +2,12 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { getBoardDetailAxios } from "../apis/board/getBoardDetailAxios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import ApplicationForMatching from "../apis/matching/ApplicationForMatching";
 
 function BoardDetail() {
   const [currentPosition, setCurrentPosition] = useState(70);
@@ -48,6 +49,25 @@ function BoardDetail() {
     () => getBoardDetailAxios(params.boardId)
   );
 
+  // 매칭 신청 버튼
+  const ApplicationForMatchingMutation = useMutation(ApplicationForMatching, {
+    onSuccess: () => {
+      Swal.fire({
+        icon: "success",
+        title: "매칭 신청 완료!",
+        text: `매칭 신청이 완료 되었습니다.`,
+        confirmButtonText: "확인",
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const matchingButtonHandler = (boardId) => {
+    ApplicationForMatchingMutation.mutate(boardId);
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -55,6 +75,8 @@ function BoardDetail() {
   if (isError) {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
+
+  console.log(data);
 
   return (
     <Container>
@@ -161,15 +183,17 @@ function BoardDetail() {
                     채팅하기
                   </ProfileVisitButton>
                   <ProfileVisitButton
+                    // onClick={() => {
+                    //   Swal.fire({
+                    //     icon: "error",
+                    //     text: `현재 준비 중인 기능입니다.
+                    //     불편을 끼쳐드려 죄송합니다.`,
+                    //     confirmButtonText: "확인",
+                    //   });
+                    // }}
                     onClick={() => {
-                      Swal.fire({
-                        icon: "error",
-                        text: `현재 준비 중인 기능입니다.
-                        불편을 끼쳐드려 죄송합니다.`,
-                        confirmButtonText: "확인",
-                      });
+                      matchingButtonHandler(data.boardId);
                     }}
-                    // buttonColor="#6D0F8E"
                   >
                     매칭 신청
                   </ProfileVisitButton>
