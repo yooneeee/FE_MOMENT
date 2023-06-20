@@ -29,6 +29,18 @@ const ChatTest = () => {
   const client = useRef({});
   const scrollRef = useRef();
 
+  /* 시간을 변환하는 함수->오전, 오후 */
+  const formatAMPM = (date) => {
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "오후" : "오전";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    const strTime = ampm + " " + hours + ":" + minutes + " ";
+    return strTime;
+  };
+
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
@@ -143,21 +155,29 @@ const ChatTest = () => {
   return (
     <>
       <GlobalStyle />
-      <MyPageTabs />
+      <MyPageTabs pageName={"채팅목록"} />
       <EntireContainer>
         <ChatList />
         <ChatRoomContainer>
-          <div>df</div>
+          <SenderUserContainer>
+            <UserProfileImage
+              src={data.receiverProfileImg}
+              alt="profile image"
+            />
+            <SenderName>
+              {data.receiverRole} | {data.receiverNickName}
+            </SenderName>
+          </SenderUserContainer>
           <Line />
           <ScrollableDiv>
             {chatMessages && chatMessages.length > 0 && (
               <ChatContainer>
+                <GuideText>
+                  <span>{data.receiverNickName}님과 대화를 시작합니다</span>
+                </GuideText>
                 {chatMessages.map((_chatMessage, index) => (
                   <React.Fragment key={_chatMessage.uuid}>
                     <MessageWrapper isSender={_chatMessage.senderId === userId}>
-                      {/* <MessageContainer
-                      // isSender={_chatMessage.senderId === userId}
-                      > */}
                       <ProfileContainer>
                         <ReceiverProfile
                           isSender={_chatMessage.senderId === userId}
@@ -169,17 +189,6 @@ const ChatTest = () => {
                           alt="Profile"
                         />
                       </ProfileContainer>
-                      {/* <ReceiverProfile
-                          src={data.receiverProfileImg}
-                          alt="Profile"
-                        /> */}
-                      {/* <Nickname isSender={_chatMessage.senderId === userId}>
-                  {_chatMessage.senderId === userId
-                    ? nickName
-                    : data.receiverNickName}
-                </Nickname> */}
-                      {/* <Nickname>{data.receiverNickName}</Nickname> */}
-                      {/* </MessageContainer> */}
                       <MessageContainer>
                         <ChatBubble
                           key={index}
@@ -188,7 +197,11 @@ const ChatTest = () => {
                         >
                           {_chatMessage.message}
                         </ChatBubble>
+                        {/* <Time>{todayTime()}</Time> */}
                       </MessageContainer>
+                      <Time>
+                        {formatAMPM(new Date(_chatMessage.createdAt))}
+                      </Time>
                     </MessageWrapper>
                   </React.Fragment>
                 ))}
@@ -226,6 +239,35 @@ const ChatTest = () => {
 
 export default ChatTest;
 
+const GuideText = styled.div`
+  text-align: center;
+  margin: 10px 0;
+`;
+
+const UserProfileImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+`;
+
+// const Nick = styled.div`
+//   margin-left: 300px;
+//   display: flex;
+// `;
+const SenderUserContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  top: 6%;
+  margin-left: 20px;
+`;
+const SenderName = styled.span`
+  font-weight: bold;
+  color: #000;
+  font-size: 15px;
+  margin-left: 15px;
+`;
+
 const MessageWrapper = styled.div`
   display: flex;
   flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
@@ -237,7 +279,7 @@ const MessageWrapper = styled.div`
 
 const ScrollableDiv = styled.div`
   overflow-y: auto;
-  height: calc(100% - 70px);
+  height: calc(100% - 80px);
 
   /* // For Webkit-based Browsers
   ::-webkit-scrollbar {
@@ -265,6 +307,8 @@ const ChatRoomContainer = styled.div`
   /* overflow: auto; */
   max-height: 900px;
   padding: 0px 90px 0px 0px;
+
+  /* display: flex; */
 `;
 const ChatContainer = styled.div`
   display: flex;
@@ -296,7 +340,8 @@ const MessageContainer = styled.div`
   display: flex;
   align-items: center;
   /* align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")}; */
-  margin: 10px 20px;
+  margin: 10px 15px;
+  flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
 `;
 const ProfileContainer = styled.div`
   display: flex;
@@ -310,13 +355,6 @@ const ReceiverProfile = styled.img`
   height: 40px;
   border-radius: 50%;
   align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
-`;
-
-const Nickname = styled.div`
-  margin-left: 8px;
-  font-size: 15px;
-  margin-left: ${(props) => (props.isSender ? "auto" : "8px")};
-  margin-right: ${(props) => (props.isSender ? "8px" : "auto")};
 `;
 
 const ChatBubble = styled.div`
@@ -342,7 +380,11 @@ const ChatBubble = styled.div`
         : `left: -8px; border-right-color: #ebe8f0; border-left: none; top: 10px;`}
   }
 `;
-
+const Time = styled.div`
+  font-size: 13px;
+  color: #a0a0a0;
+  margin-top: 30px;
+`;
 const ChatInputContainer = styled.div`
   display: flex;
   align-items: center;
