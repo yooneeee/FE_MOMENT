@@ -32,6 +32,13 @@ const EditBoard = (props) => {
   const loginUserData = UserDataComponent(); // 나의 유저 데이터 받아오는 코드
   const queryClient = useQueryClient();
 
+  // 오늘 날짜
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = ("0" + (today.getMonth() + 1)).slice(-2);
+  const day = ("0" + today.getDate()).slice(-2);
+  const dateString = year + "-" + month + "-" + day;
+
   // 이미지 미리보기
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -191,6 +198,7 @@ const EditBoard = (props) => {
                   type="date"
                   value={deadLine}
                   onChange={onChangeDeadLineHandler}
+                  min={dateString}
                 />
               </div>
             </div>

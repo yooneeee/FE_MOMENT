@@ -50,7 +50,7 @@ const ChatTest = () => {
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
-  // console.log("채팅할사람", data);
+  console.log("채팅할사람", data);
 
   // useEffect(() => {
   //   if (data?.chatList) {
@@ -160,25 +160,21 @@ const ChatTest = () => {
             ..._chatMessages,
             JSON.parse(body),
           ]);
-          // const newMessage = JSON.parse(body);
-
-          // 새 메시지를 채팅방에 추가
-          // setChatMessages((_chatMessages) => [..._chatMessages, newMessage]);
-
-          // queryClient.setQueryData(["ChattingList", userId], (old) => {
-          //   return old.map((chatroom) => {
-          //     if (chatroom.id === newMessage.chatRoomId) {
-          //       return {
-          //         ...chatroom,
-          //         messages: [...chatroom.messages, newMessage],
-          //       };
-          //     } else {
-          //       return chatroom;
-          //     }
-          //   });
-          // });
         }
       );
+      // client.current?.subscribe("/pub/chat/read", ({ body }) => {
+      //   const readStatusUpdate = JSON.parse(body);
+      //   setChatMessages((prevChatMessages) =>
+      //     prevChatMessages.map((message) =>
+      //       message.id === readStatusUpdate.uuid
+      //         ? { ...message, readStatus: readStatusUpdate.readStatus }
+      //         : message
+      //     )
+      //   );
+      //   console.log("확인:::".readStatusUpdate);
+      //   // readStatusUpdate에 따라 필요한 동작을 수행합니다.
+      //   // 예를 들어, 메시지를 읽은 상태로 표시하거나, 읽지 않은 메시지 개수를 업데이트하는 등의 동작을 수행할 수 있습니다.
+      // });
     }
   };
 
@@ -411,6 +407,9 @@ const MessageWrapper = styled.div`
 const ScrollableDiv = styled.div`
   overflow-y: auto;
   height: calc(100% - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   /* // For Webkit-based Browsers
   ::-webkit-scrollbar {
