@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { IoLocationSharp } from "react-icons/io5";
 import { BiDollarCircle } from "react-icons/bi";
 import { LuCalendarDays } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { FaPen } from "react-icons/fa";
-import { BiUser } from "react-icons/bi";
 
-function BoardItem({ item, onClick, photograhperInfoShow, showFollow }) {
+function BoardItem({
+  item,
+  onClick,
+  photograhperInfoShow,
+  MatchingStatus,
+  children,
+  hover,
+}) {
   const [timeDifference, setTimeDifference] = useState(null);
+  const [matchStatus, setMatchStatus] = useState();
+
   // 오늘 날짜
   const today = new Date();
   const navigate = useNavigate("");
@@ -48,28 +56,44 @@ function BoardItem({ item, onClick, photograhperInfoShow, showFollow }) {
     setTimeDifference(diff);
   }, [item.createdTime]);
 
+  useEffect(() => {
+    if (item.alreadyMatch && item.matchingWith) {
+      return setMatchStatus("true");
+    } else if (item.applyRefused) {
+      return setMatchStatus("refuse");
+    } else {
+      return setMatchStatus("pending");
+    }
+  }, [item]);
+
   return (
-    <Item key={item.boardId} onClick={onClick}>
+    <Item key={item.boardId} onClick={onClick} hover={hover}>
       <ImageContainer img={item.boardImgUrl}>
-        <DDayInfo isDday={getDDay(item.deadLine) === "D-day"}>
-          <p>{getDDay(item.deadLine)}</p>
-        </DDayInfo>
+        {item.checkMatched ? (
+          <DDayInfo isDday={getDDay(item.deadLine) === "D-day"} matched="true">
+            <p>매칭 완료</p>
+          </DDayInfo>
+        ) : (
+          <DDayInfo isDday={getDDay(item.deadLine) === "D-day"}>
+            <p>{getDDay(item.deadLine)}</p>
+          </DDayInfo>
+        )}
 
         {photograhperInfoShow === "no" ? (
-          <PhotographerInfo button="matching">
-            <MatchingAcceptButton
-              onClick={(e) => {
-                e.stopPropagation();
-                showFollow(true);
-              }}
-            >
-              <MatchingCount>
-                <BiUser />
-                <p>3/5</p>
-              </MatchingCount>
-              <p>매칭 수락</p>
-            </MatchingAcceptButton>
-          </PhotographerInfo>
+          <PhotographerInfo button="matching">{children}</PhotographerInfo>
+        ) : MatchingStatus === "on" ? (
+          <MatchingStatusBox
+            matchStatus={matchStatus}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            {matchStatus === "true"
+              ? `${item.nickName} 님과 매칭이 완료되었습니다!`
+              : matchStatus === "refuse"
+              ? "승인되지 않음"
+              : "신청 대기 중..."}
+          </MatchingStatusBox>
         ) : (
           <PhotographerInfo>
             <CardProfileImg src={item.hostProfileUrl} />
@@ -119,20 +143,53 @@ const Item = styled.div`
   width: 100%;
   overflow: hidden;
 
-  &:hover {
-    transform: translateY(-10px);
-    transition: transform 1s ease;
-    cursor: pointer;
-  }
+  ${(props) =>
+    props.hover !== "no" &&
+    css`
+      &:hover {
+        transform: translateY(-10px);
+        transition: transform 1s ease;
+        cursor: pointer;
+      }
 
-  &:not(:hover) {
-    transform: translateY(0);
-    transition: transform 1s ease;
-  }
+      &:not(:hover) {
+        transform: translateY(0);
+        transition: transform 1s ease;
+      }
+    `}
 `;
 
 const CardFont = styled.p`
   font-size: 13px;
+`;
+
+const MatchingStatusBox = styled.button`
+  width: 84%;
+  background-color: ${(props) =>
+    props.matchStatus === "true"
+      ? "#8d18aa"
+      : props.matchStatus === "refuse"
+      ? "#e61f1f"
+      : "#6c6c6c"};
+  color: white;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 9px;
+  border: none;
+
+  &:hover {
+    background-color: #8c8c8c;
+    border-color: #fff;
+    color: #fff;
+  }
 `;
 
 const ContentContainer = styled.div`
@@ -275,7 +332,7 @@ const DDayInfo = styled.div`
   padding: 2px 10px;
   opacity: 50%;
   font-weight: 600;
-  color: ${(props) => (props.isDday ? "#ff0000" : "#000000")};
+  color: ${(props) => (props.isDday || props.matched ? "#ff0000" : "#000000")};
 `;
 
 const CardProfileImg = styled.div`
