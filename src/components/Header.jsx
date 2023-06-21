@@ -51,6 +51,9 @@ function Header() {
     setIsAlarmListOpen(!isAlarmListOpen);
     setHasNewNotifications(false);
   };
+  const closeAlarmList = () => {
+    setIsAlarmListOpen(false);
+  };
 
   // 신규알람 표시 여부
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
@@ -77,6 +80,7 @@ function Header() {
     setIsMenuOpen(false);
     setIsWriteMenuOpen(false);
     setIsProfileMenuOpen(false);
+    closeAlarmList();
   };
   //헤더 영역 외의 클릭 이벤트를 처리해 메뉴와 글쓰기 메뉴를 닫는 함수
   const handleClickOutside = (event) => {
@@ -99,13 +103,12 @@ function Header() {
             {
               headers: {
                 "Content-Type": "text/event-stream",
-                "Cache-Control": "no-cache",
                 Connection: "keep-alive",
                 ACCESS_KEY: `${Access_key}`,
                 REFRESH_KEY: `${Refresh_key}`,
               },
               withCredentials: true,
-              heartbeatTimeout: 86400000,
+              heartbeatTimeout: 2000000,
             }
           );
           eventSource.addEventListener("chatAlarm-event", (event) => {
@@ -166,6 +169,7 @@ function Header() {
               navigate("/main");
               toggleMenuClose();
               toggleWriteMenuClose();
+              closeAlarmList();
             }}
           >
             <MainLogo src="/img/mainlogo2.png" />
@@ -176,6 +180,7 @@ function Header() {
                 navigate("/feeds");
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               피드
@@ -185,6 +190,7 @@ function Header() {
                 navigate("/board");
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               구인/구직 게시판
@@ -198,6 +204,7 @@ function Header() {
                 setIsMenuOpen(!isMenuOpen);
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               <MenuIcon>&#9776;</MenuIcon>
@@ -210,6 +217,7 @@ function Header() {
                     onClick={() => {
                       setIsProfileMenuOpen(!isProfileMenuOpen);
                       toggleWriteMenuClose();
+                      closeAlarmList();
                     }}
                   >
                     <ProfileImg src={profileImg} />
@@ -267,6 +275,7 @@ function Header() {
                 onClick={() => {
                   setIsWriteMenuOpen(!isWriteMenuOpen);
                   toggleProfileMenuClose();
+                  closeAlarmList();
                 }}
               >
                 글쓰기
@@ -284,6 +293,7 @@ function Header() {
                 toggleMenuClose();
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               마이페이지
@@ -293,6 +303,7 @@ function Header() {
               onClick={() => {
                 navigate(`/chatlist/${userId}`);
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               채팅목록
@@ -301,6 +312,7 @@ function Header() {
               name={"logout"}
               onClick={() => {
                 logoutHandler();
+                closeAlarmList();
                 toggleProfileMenuClose();
               }}
             >
@@ -318,6 +330,7 @@ function Header() {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
                   toggleMenuClose();
+                  closeAlarmList();
                 } else {
                   Swal.fire({
                     icon: "warning",
@@ -337,6 +350,7 @@ function Header() {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
                   toggleMenuClose();
+                  closeAlarmList();
                 } else {
                   Swal.fire({
                     icon: "warning",
@@ -360,6 +374,7 @@ function Header() {
                 toggleMenuClose();
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               피드
@@ -370,6 +385,7 @@ function Header() {
                 toggleMenuClose();
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               구인/구직 게시판
@@ -378,6 +394,7 @@ function Header() {
               onClick={() => {
                 toggleWriteMenuOpen();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               글쓰기
@@ -391,17 +408,30 @@ function Header() {
                     toggleMenuClose();
                     toggleWriteMenuClose();
                     toggleProfileMenuClose();
+                    closeAlarmList();
                   }}
                 >
                   마이페이지
                 </MenuButton>
                 <MenuButton
-                  name={"chatlist"}
+                  name={"alarmlist"}
                   onClick={() => {
-                    navigate(`/chatlist/${userId}`);
+                    showAlarmList();
                     toggleMenuClose();
                     toggleWriteMenuClose();
                     toggleProfileMenuClose();
+                  }}
+                >
+                  알림
+                </MenuButton>
+                <MenuButton
+                  name={"chatlist"}
+                  onClick={() => {
+                    navigate(`/chatroomlist/${userId}`);
+                    toggleMenuClose();
+                    toggleWriteMenuClose();
+                    toggleProfileMenuClose();
+                    closeAlarmList();
                   }}
                 >
                   채팅목록
