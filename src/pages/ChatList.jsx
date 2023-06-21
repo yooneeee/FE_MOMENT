@@ -4,12 +4,11 @@ import { ChattingList } from "../apis/mypage/chatting";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
-import Swal from "sweetalert2";
 import { FiSearch } from "react-icons/fi";
 
 function ChatList() {
   const { isError, isLoading, data } = useQuery("ChattingList", ChattingList);
-  console.log("데이터", data);
+  // console.log("데이터", data);
 
   const [isClicked, setIsClicked] = useState(null);
   const [search, setSearch] = useState("");
@@ -29,16 +28,6 @@ function ChatList() {
   if (isError) {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
-  //   if (!data) {
-  //     return <h1>채팅목록이 없습니다.</h1>;
-  //   }
-  //   if (data.length === 0) {
-  //     Swal.fire({
-  //       icon: "info",
-  //       title: "채팅목록이 없습니다.",
-  //       text: "새로운 채팅을 시작해보세요!",
-  //     });
-  //   }
 
   return (
     <>
@@ -53,6 +42,11 @@ function ChatList() {
           />
         </ChatSearchContainer>
         <Line />
+        {(!data || data.length === 0) && (
+          <EmptyChatList>
+            <p>채팅목록이 없습니다. 채팅을 시작해보세요!</p>
+          </EmptyChatList>
+        )}
         <ScrollableDiv>
           {data
             .filter(
@@ -103,6 +97,19 @@ function ChatList() {
 }
 
 export default ChatList;
+
+const EmptyChatList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+
+  p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+  }
+`;
 
 const UnreadBadge = styled.span`
   background-color: #483767;
@@ -158,7 +165,7 @@ const ChatListContainer = styled.div`
   height: 100vh;
   max-height: 100%;
   display: flex;
-  padding: 0px 0px 0px 90px;
+  /* padding: 0px 0px 0px 90px; */
   margin-top: 20px;
   flex-direction: column;
   flex: 1;

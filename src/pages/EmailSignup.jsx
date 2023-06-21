@@ -180,7 +180,7 @@ function EmailSignup() {
   const passwordError = useMemo(() => {
     if (password && !passwordRegex.test(password)) {
       setPasswordErrorMessage(true);
-      return "비밀번호는 8~20자의 영문, 숫자 포함 8자리 이상입니다.";
+      return "비밀번호는 8~15자의 영문, 숫자 포함 8자리 이상입니다.";
     } else {
       return "";
     }

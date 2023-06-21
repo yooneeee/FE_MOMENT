@@ -9,6 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "../redux/modules/user";
 import Swal from "sweetalert2";
 import { MdExpandCircleDown } from "react-icons/md";
+import { NativeEventSource, EventSourcePolyfill } from "event-source-polyfill";
+import { TbBell } from "react-icons/tb";
+import AlarmListModal from "./AlarmListModal";
+import { BsFillCircleFill } from "react-icons/bs";
 
 function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
@@ -40,6 +44,19 @@ function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWriteMenuOpen, setIsWriteMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  // 알림창
+  const [alarmList, setAlarmList] = useState([]);
+  const [isAlarmListOpen, setIsAlarmListOpen] = useState(false);
+  const showAlarmList = () => {
+    setIsAlarmListOpen(!isAlarmListOpen);
+    setHasNewNotifications(false);
+  };
+  const closeAlarmList = () => {
+    setIsAlarmListOpen(false);
+  };
+
+  // 신규알람 표시 여부
+  const [hasNewNotifications, setHasNewNotifications] = useState(false);
 
   // 헤더 컴포넌트 DOM 요소 참조
   const headerRef = useRef(null);
@@ -63,6 +80,7 @@ function Header() {
     setIsMenuOpen(false);
     setIsWriteMenuOpen(false);
     setIsProfileMenuOpen(false);
+    closeAlarmList();
   };
   //헤더 영역 외의 클릭 이벤트를 처리해 메뉴와 글쓰기 메뉴를 닫는 함수
   const handleClickOutside = (event) => {
@@ -72,6 +90,36 @@ function Header() {
       setIsProfileMenuOpen(false);
     }
   };
+  const Access_key = sessionStorage.getItem("Access_key");
+  const Refresh_key = sessionStorage.getItem("Refresh_key");
+
+  const EventSource = EventSourcePolyfill;
+  useEffect(() => {
+    if (isLoggedIn) {
+      const fetchSse = async () => {
+        const eventSource = new EventSource(
+          `https://moment-backend.shop/sse/chat/alarm/${userId}`,
+          {
+            headers: {
+              "Content-Type": "text/event-stream",
+              Connection: "keep-alive",
+              ACCESS_KEY: `${Access_key}`,
+              REFRESH_KEY: `${Refresh_key}`,
+            },
+            withCredentials: true,
+            heartbeatTimeout: 2000000,
+          }
+        );
+        eventSource.addEventListener("chatAlarm-event", (event) => {
+          const eventData = JSON.parse(event.data);
+          /* console.log("Received event:", eventData); */
+          setAlarmList((prevList) => [...prevList, eventData]);
+          setHasNewNotifications(true);
+        });
+      };
+      fetchSse();
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
@@ -106,276 +154,326 @@ function Header() {
     navigate("/");
   };
   return (
-    <HeaderStyles
-      ismobile={windowWidth <= 768 ? "true" : "false"}
-      ref={headerRef}
-    >
-      <LeftMenu>
-        <HeaderTitle
-          onClick={() => {
-            navigate("/main");
-            toggleMenuClose();
-            toggleWriteMenuClose();
-          }}
-        >
-          <MainLogo src="/img/mainlogo2.png" />
-        </HeaderTitle>
-        <CategoryBox>
-          <HeaderButton
+    <>
+      <HeaderStyles
+        ismobile={windowWidth <= 768 ? "true" : "false"}
+        ref={headerRef}
+      >
+        <LeftMenu>
+          <HeaderTitle
             onClick={() => {
-              navigate("/feeds");
+              navigate("/main");
+              toggleMenuClose();
               toggleWriteMenuClose();
-              toggleProfileMenuClose();
+              closeAlarmList();
             }}
           >
-            피드
-          </HeaderButton>
-          <HeaderButton
-            onClick={() => {
-              navigate("/board");
-              toggleWriteMenuClose();
-              toggleProfileMenuClose();
-            }}
-          >
-            구인/구직 게시판
-          </HeaderButton>
-        </CategoryBox>
-      </LeftMenu>
-      <ButtonBox>
-        {windowWidth <= 768 ? (
-          <MenuButton
-            onClick={() => {
-              setIsMenuOpen(!isMenuOpen);
-              toggleWriteMenuClose();
-              toggleProfileMenuClose();
-            }}
-          >
-            <MenuIcon>&#9776;</MenuIcon>
-          </MenuButton>
-        ) : (
-          <>
+            <MainLogo src="/img/mainlogo2.png" />
+          </HeaderTitle>
+          <CategoryBox>
+            <HeaderButton
+              onClick={() => {
+                navigate("/feeds");
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                closeAlarmList();
+              }}
+            >
+              피드
+            </HeaderButton>
+            <HeaderButton
+              onClick={() => {
+                navigate("/board");
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                closeAlarmList();
+              }}
+            >
+              구인/구직 게시판
+            </HeaderButton>
+          </CategoryBox>
+        </LeftMenu>
+        <ButtonBox>
+          {windowWidth <= 768 ? (
+            <MenuButton
+              onClick={() => {
+                setIsMenuOpen(!isMenuOpen);
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                closeAlarmList();
+              }}
+            >
+              <MenuIcon>&#9776;</MenuIcon>
+            </MenuButton>
+          ) : (
+            <>
+              {isLoggedIn ? (
+                <>
+                  <HeaderButton
+                    onClick={() => {
+                      setIsProfileMenuOpen(!isProfileMenuOpen);
+                      toggleWriteMenuClose();
+                      closeAlarmList();
+                    }}
+                  >
+                    <ProfileImg src={profileImg} />
+                    <div>{nickName}</div>
+                    <MdExpandCircleDown
+                      style={{ fontSize: "17px", color: "#483767" }}
+                    />
+                  </HeaderButton>
+                  <HeaderButton
+                    name={"alarmList"}
+                    onClick={() => {
+                      toggleProfileMenuClose();
+                      toggleWriteMenuClose();
+                      showAlarmList();
+                    }}
+                  >
+                    <TbBell style={{ fontSize: "20px" }} />
+                    {!isAlarmListOpen && hasNewNotifications && (
+                      <NotificationDot>
+                        <BsFillCircleFill
+                          style={{ fontSize: "8px", color: "red" }}
+                        />
+                      </NotificationDot>
+                    )}
+                  </HeaderButton>
+                </>
+              ) : (
+                <>
+                  <HeaderButton
+                    name={"login"}
+                    bgcolor="#483767"
+                    color="white"
+                    onClick={() => {
+                      navigate("/login");
+                      toggleWriteMenuClose();
+                      toggleProfileMenuClose();
+                    }}
+                  >
+                    로그인
+                  </HeaderButton>
+                  <HeaderButton
+                    name={"integratedsignup"}
+                    onClick={() => {
+                      navigate("/integratedsignup");
+                      toggleWriteMenuClose();
+                      toggleProfileMenuClose();
+                    }}
+                  >
+                    회원가입
+                  </HeaderButton>
+                </>
+              )}
+              <HeaderButton
+                name={"Write"}
+                onClick={() => {
+                  setIsWriteMenuOpen(!isWriteMenuOpen);
+                  toggleProfileMenuClose();
+                  closeAlarmList();
+                }}
+              >
+                글쓰기
+              </HeaderButton>
+            </>
+          )}
+        </ButtonBox>
+
+        {isProfileMenuOpen && (
+          <ToggleProfileMenu>
+            <MenuButton
+              name={"mypage"}
+              onClick={() => {
+                navigate(`/page/${userId}`);
+                toggleMenuClose();
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                closeAlarmList();
+              }}
+            >
+              마이페이지
+            </MenuButton>
+            <MenuButton
+              name={"chatlist"}
+              onClick={() => {
+                navigate(`/chatroomlist/${userId}`);
+                toggleProfileMenuClose();
+                closeAlarmList();
+              }}
+            >
+              채팅목록
+            </MenuButton>
+            <MenuButton
+              name={"logout"}
+              onClick={() => {
+                logoutHandler();
+                closeAlarmList();
+                toggleProfileMenuClose();
+              }}
+            >
+              로그아웃
+            </MenuButton>
+          </ToggleProfileMenu>
+        )}
+
+        {isWriteMenuOpen && (
+          <ToggleWriteMenu>
+            <MenuButton
+              onClick={() => {
+                if (isLoggedIn) {
+                  openFeedModal();
+                  toggleWriteMenuClose();
+                  toggleProfileMenuClose();
+                  toggleMenuClose();
+                  closeAlarmList();
+                } else {
+                  Swal.fire({
+                    icon: "warning",
+                    title: "회원 전용 서비스!",
+                    text: `로그인이 필요한 서비스입니다🙏`,
+                    confirmButtonText: "확인",
+                  });
+                }
+              }}
+            >
+              피드 작성
+            </MenuButton>
+            <MenuButton
+              onClick={() => {
+                if (isLoggedIn) {
+                  openBoardModal();
+                  toggleWriteMenuClose();
+                  toggleProfileMenuClose();
+                  toggleMenuClose();
+                  closeAlarmList();
+                } else {
+                  Swal.fire({
+                    icon: "warning",
+                    title: "회원 전용 서비스!",
+                    text: `로그인이 필요한 서비스입니다🙏`,
+                    confirmButtonText: "확인",
+                  });
+                }
+              }}
+            >
+              구인/구직글 작성
+            </MenuButton>
+          </ToggleWriteMenu>
+        )}
+
+        {isMenuOpen && (
+          <ToggleMenu>
+            <MenuButton
+              onClick={() => {
+                navigate("/feeds");
+                toggleMenuClose();
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                closeAlarmList();
+              }}
+            >
+              피드
+            </MenuButton>
+            <MenuButton
+              onClick={() => {
+                navigate("/board");
+                toggleMenuClose();
+                toggleWriteMenuClose();
+                toggleProfileMenuClose();
+                closeAlarmList();
+              }}
+            >
+              구인/구직 게시판
+            </MenuButton>
+            <MenuButton
+              onClick={() => {
+                toggleWriteMenuOpen();
+                toggleProfileMenuClose();
+                closeAlarmList();
+              }}
+            >
+              글쓰기
+            </MenuButton>
             {isLoggedIn ? (
               <>
-                <HeaderButton
+                <MenuButton
+                  name={"mypage"}
                   onClick={() => {
-                    setIsProfileMenuOpen(!isProfileMenuOpen);
+                    navigate(`/page/${userId}`);
+                    toggleMenuClose();
                     toggleWriteMenuClose();
+                    toggleProfileMenuClose();
+                    closeAlarmList();
                   }}
                 >
-                  <ProfileImg src={profileImg} />
-                  <div>{nickName}</div>
-                  <MdExpandCircleDown
-                    style={{ fontSize: "17px", color: "#483767" }}
-                  />
-                </HeaderButton>
+                  마이페이지
+                </MenuButton>
+                <MenuButton
+                  name={"alarmlist"}
+                  onClick={() => {
+                    showAlarmList();
+                    toggleMenuClose();
+                    toggleWriteMenuClose();
+                    toggleProfileMenuClose();
+                  }}
+                >
+                  알림
+                </MenuButton>
+                <MenuButton
+                  name={"chatlist"}
+                  onClick={() => {
+                    navigate(`/chatroomlist/${userId}`);
+                    toggleMenuClose();
+                    toggleWriteMenuClose();
+                    toggleProfileMenuClose();
+                    closeAlarmList();
+                  }}
+                >
+                  채팅목록
+                </MenuButton>
+                <MenuButton name={"logout"} onClick={logoutHandler}>
+                  로그아웃
+                </MenuButton>
               </>
             ) : (
               <>
-                <HeaderButton
-                  name={"login"}
-                  bgcolor="#483767"
-                  color="white"
+                <MenuButton
                   onClick={() => {
                     navigate("/login");
+                    toggleMenuClose();
                     toggleWriteMenuClose();
                     toggleProfileMenuClose();
                   }}
                 >
                   로그인
-                </HeaderButton>
-                <HeaderButton
-                  name={"integratedsignup"}
+                </MenuButton>
+                <MenuButton
                   onClick={() => {
                     navigate("/integratedsignup");
+                    toggleMenuClose();
                     toggleWriteMenuClose();
                     toggleProfileMenuClose();
                   }}
                 >
                   회원가입
-                </HeaderButton>
+                </MenuButton>
               </>
             )}
-            <HeaderButton
-              name={"Write"}
-              onClick={() => {
-                setIsWriteMenuOpen(!isWriteMenuOpen);
-                toggleProfileMenuClose();
-              }}
-            >
-              글쓰기
-            </HeaderButton>
-          </>
+          </ToggleMenu>
         )}
-      </ButtonBox>
+        {feedModalOpen && (
+          <CreateFeed open={openFeedModal} close={closeFeedModal} />
+        )}
+        {boardModalOpen && (
+          <CreateBoard open={openBoardModal} close={closeBoardModal} />
+        )}
+      </HeaderStyles>
 
-      {isProfileMenuOpen && (
-        <ToggleProfileMenu>
-          <MenuButton
-            name={"mypage"}
-            onClick={() => {
-              navigate(`/page/${userId}`);
-              toggleMenuClose();
-              toggleWriteMenuClose();
-              toggleProfileMenuClose();
-            }}
-          >
-            마이페이지
-          </MenuButton>
-          <MenuButton
-            name={"chatlist"}
-            onClick={() => {
-              navigate(`/chatlist/${userId}`);
-              toggleProfileMenuClose();
-            }}
-          >
-            채팅목록
-          </MenuButton>
-          <MenuButton
-            name={"logout"}
-            onClick={() => {
-              logoutHandler();
-              toggleProfileMenuClose();
-            }}
-          >
-            로그아웃
-          </MenuButton>
-        </ToggleProfileMenu>
+      {isAlarmListOpen && (
+        <AlarmListModal showAlarmList={showAlarmList} alarmList={alarmList} />
       )}
-
-      {isWriteMenuOpen && (
-        <ToggleWriteMenu>
-          <MenuButton
-            onClick={() => {
-              if (isLoggedIn) {
-                openFeedModal();
-                toggleWriteMenuClose();
-                toggleProfileMenuClose();
-                toggleMenuClose();
-              } else {
-                Swal.fire({
-                  icon: "warning",
-                  title: "회원 전용 서비스!",
-                  text: `로그인이 필요한 서비스입니다🙏`,
-                  confirmButtonText: "확인",
-                });
-              }
-            }}
-          >
-            피드 작성
-          </MenuButton>
-          <MenuButton
-            onClick={() => {
-              if (isLoggedIn) {
-                openBoardModal();
-                toggleWriteMenuClose();
-                toggleProfileMenuClose();
-                toggleMenuClose();
-              } else {
-                Swal.fire({
-                  icon: "warning",
-                  title: "회원 전용 서비스!",
-                  text: `로그인이 필요한 서비스입니다🙏`,
-                  confirmButtonText: "확인",
-                });
-              }
-            }}
-          >
-            구인/구직글 작성
-          </MenuButton>
-        </ToggleWriteMenu>
-      )}
-
-      {isMenuOpen && (
-        <ToggleMenu>
-          <MenuButton
-            onClick={() => {
-              navigate("/feeds");
-              toggleMenuClose();
-              toggleWriteMenuClose();
-              toggleProfileMenuClose();
-            }}
-          >
-            피드
-          </MenuButton>
-          <MenuButton
-            onClick={() => {
-              navigate("/board");
-              toggleMenuClose();
-              toggleWriteMenuClose();
-              toggleProfileMenuClose();
-            }}
-          >
-            구인/구직 게시판
-          </MenuButton>
-          <MenuButton
-            onClick={() => {
-              toggleWriteMenuOpen();
-              toggleProfileMenuClose();
-            }}
-          >
-            글쓰기
-          </MenuButton>
-          {isLoggedIn ? (
-            <>
-              <MenuButton
-                name={"mypage"}
-                onClick={() => {
-                  navigate(`/page/${userId}`);
-                  toggleMenuClose();
-                  toggleWriteMenuClose();
-                  toggleProfileMenuClose();
-                }}
-              >
-                마이페이지
-              </MenuButton>
-              <MenuButton
-                name={"chatlist"}
-                onClick={() => {
-                  navigate(`/chatlist/${userId}`);
-                  toggleMenuClose();
-                  toggleWriteMenuClose();
-                  toggleProfileMenuClose();
-                }}
-              >
-                채팅목록
-              </MenuButton>
-              <MenuButton name={"logout"} onClick={logoutHandler}>
-                로그아웃
-              </MenuButton>
-            </>
-          ) : (
-            <>
-              <MenuButton
-                onClick={() => {
-                  navigate("/login");
-                  toggleMenuClose();
-                  toggleWriteMenuClose();
-                  toggleProfileMenuClose();
-                }}
-              >
-                로그인
-              </MenuButton>
-              <MenuButton
-                onClick={() => {
-                  navigate("/integratedsignup");
-                  toggleMenuClose();
-                  toggleWriteMenuClose();
-                  toggleProfileMenuClose();
-                }}
-              >
-                회원가입
-              </MenuButton>
-            </>
-          )}
-        </ToggleMenu>
-      )}
-      {feedModalOpen && (
-        <CreateFeed open={openFeedModal} close={closeFeedModal} />
-      )}
-      {boardModalOpen && (
-        <CreateBoard open={openBoardModal} close={closeBoardModal} />
-      )}
-    </HeaderStyles>
+    </>
   );
 }
 
@@ -504,7 +602,7 @@ const ProfileImg = styled.img`
 const ToggleProfileMenu = styled.div`
   position: absolute;
   top: 50px;
-  right: 160px;
+  right: 240px;
   background-color: white;
   padding: 10px;
   display: flex;
@@ -519,5 +617,16 @@ const ToggleProfileMenu = styled.div`
 const MainLogo = styled.img`
   width: 50px;
 `;
-
+const NotificationDot = styled.span`
+  position: absolute;
+  top: 12px;
+  right: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: white;
+`;
 export default Header;
