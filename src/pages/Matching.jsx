@@ -7,11 +7,12 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { mypage, mypageBoardDelete } from "../apis/mypage/mypage";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { FiSettings } from "react-icons/fi";
-import { BiDownArrow } from "react-icons/bi";
 import Swal from "sweetalert2";
 import EditBoard from "../components/EditBoard";
 import FollowModal from "../components/MatchingList";
+import getAcceptList from "../apis/matching/getAcceptList";
+import getApplyList from "../apis/matching/getApplyList";
+import { BiUser } from "react-icons/bi";
 
 function Matching() {
   const { hostId } = useParams();
@@ -19,6 +20,7 @@ function Matching() {
   const queryClient = useQueryClient();
   const [showFollowModal, setShowFollowModal] = useState(false);
   const [buttonActiveControl, setButtonActiveControl] = useState("accept");
+  const [clickedBoardId, setClickedBoardId] = useState();
 
   // 모달 제어
   const showFollow = () => {
@@ -27,9 +29,6 @@ function Matching() {
 
   const [editButtons, setEditButtons] = useState([]);
   const toggleWriteMenuRef = useRef(null);
-  const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
-    mypage(hostId)
-  );
 
   const [boardModalOpen, setBoardModalOpen] = useState(false);
   const [selectedBoardId, setSelectedBoardId] = useState(null);
@@ -113,14 +112,6 @@ function Matching() {
     };
   }, []);
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (isError) {
-    return <h1>오류(⊙ˍ⊙)</h1>;
-  }
-
   /* 토글버튼 */
   const toggleButtonOpen = (index) => {
     const updatedEditButtons = [...editButtons];
@@ -133,6 +124,26 @@ function Matching() {
     updatedEditButtons[index] = false;
     setEditButtons(updatedEditButtons);
   };
+
+  const {
+    isError: isErrorAcceptList,
+    isLoading: isLoadingAcceptList,
+    data: acceptListData,
+  } = useQuery("getAcceptList", getAcceptList);
+
+  const {
+    isError: isErrorApplyList,
+    isLoading: isLoadingApplyList,
+    data: applyListData,
+  } = useQuery("getApplyList", getApplyList);
+
+  if (isLoadingAcceptList || isLoadingApplyList) {
+    return <LoadingSpinner />;
+  }
+
+  if (isErrorAcceptList || isErrorApplyList) {
+    return <h1>오류(⊙ˍ⊙)</h1>;
+  }
 
   return (
     <>
@@ -162,25 +173,70 @@ function Matching() {
                 </MatchingTabButton>
               </MatchingTabBar>
               <BoardList>
-                {data.boardList.map((item, index) => {
-                  return (
-                    <BoardItemContainer key={item.boardId}>
-                      <BoardItem
-                        key={item.boardId}
-                        item={item}
-                        onClick={() => {
-                          navigate(`/board/${item.boardId}`);
-                        }}
-                        photograhperInfoShow="no"
-                        showFollow={showFollow}
-                      />
-                    </BoardItemContainer>
-                  );
-                })}
+                {buttonActiveControl === "accept"
+                  ? acceptListData.map((item) => {
+                      return (
+                        <BoardItemContainer key={item.boardId}>
+                          <BoardItem
+                            key={item.boardId}
+                            item={item}
+                            onClick={() => {
+                              navigate(`/board/${item.boardId}`);
+                            }}
+                            photograhperInfoShow="no"
+                            showFollow={showFollow}
+                            hover="no"
+                          >
+                            {item.matching && item.whoMatch ? (
+                              <MatchingStatusBox
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate(`/page/1`);
+                                }}
+                              >
+                                <p>
+                                  {item.whoMatch} 님과 매칭이 완료되었습니다!
+                                </p>
+                              </MatchingStatusBox>
+                            ) : (
+                              <MatchingAcceptButton
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  showFollow(true);
+                                  setClickedBoardId(item.boardId);
+                                }}
+                              >
+                                <MatchingCount>
+                                  <BiUser />
+                                  <p>{item.totalApplicantCnt}/5</p>
+                                </MatchingCount>
+                                <p>매칭 수락</p>
+                              </MatchingAcceptButton>
+                            )}
+                          </BoardItem>
+                        </BoardItemContainer>
+                      );
+                    })
+                  : applyListData.map((item) => {
+                      return (
+                        <BoardItemContainer key={item.boardId}>
+                          <BoardItem
+                            key={item.boardId}
+                            item={item}
+                            onClick={() => {
+                              navigate(`/board/${item.boardId}`);
+                            }}
+                            showFollow={showFollow}
+                            MatchingStatus="on"
+                            hover="no"
+                          />
+                        </BoardItemContainer>
+                      );
+                    })}
               </BoardList>
             </Content>
             {showFollowModal && (
-              <FollowModal showFollow={showFollow} userId="1" />
+              <FollowModal showFollow={showFollow} boardId={clickedBoardId} />
             )}
           </Container>
         </ContentContainer>
@@ -215,6 +271,33 @@ const MatchingTabBar = styled.div`
   display: flex;
 `;
 
+const MatchingStatusBox = styled.button`
+  width: 84%;
+  background-color: #8d18aa;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 6px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 9px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #8c8c8c;
+    border-color: #fff;
+    color: #fff;
+  }
+`;
+
+const ButtonContainer = styled.div``;
+
 const MatchingTabButton = styled.button`
   width: 50%;
   padding: 10px;
@@ -228,6 +311,31 @@ const MatchingTabButton = styled.button`
 
   &.active {
     background-color: #ffffff;
+  }
+`;
+
+const MatchingCount = styled.div`
+  display: flex;
+  margin-right: 10px;
+  align-items: center;
+`;
+
+const MatchingAcceptButton = styled.button`
+  margin: auto;
+  padding: 9px;
+  width: 90%;
+  background-color: #483767;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #8c8c8c;
+    border-color: #fff;
+    color: #fff;
   }
 `;
 
