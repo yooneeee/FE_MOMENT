@@ -26,6 +26,7 @@ const MyPage = () => {
       enabled: hostId !== undefined,
     }
   );
+  console.log("데이터", data);
 
   // 모달 제어
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -67,6 +68,11 @@ const MyPage = () => {
           <Container>
             <WorkSection>
               <Work>{mine ? "나의 피드" : `${data.nickName}'s 피드`}</Work>
+              {(!data.photoList || data.photoList.length === 0) && (
+                <EmptyChatList>
+                  <p>피드 목록이 없습니다. 피드를 생성해보세요!</p>
+                </EmptyChatList>
+              )}
               <WorkList>
                 {data.photoList.slice(0, 6).map((item, index) => {
                   const isOpen = feedDetailOpen.includes(item.photoId);
@@ -93,6 +99,11 @@ const MyPage = () => {
 
             <Content>
               <Work>{mine ? "내 게시물" : `${data.nickName}'s 게시물`}</Work>
+              {(!data.boardList || data.boardList.length === 0) && (
+                <EmptyChatList>
+                  <p>게시물 목록이 없습니다. 게시물을 생성해보세요!</p>
+                </EmptyChatList>
+              )}
               <BoardList>
                 {data.boardList.slice(0, 3).map((item) => {
                   return (
@@ -116,6 +127,19 @@ const MyPage = () => {
 };
 
 export default MyPage;
+
+const EmptyChatList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+
+  p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+  }
+`;
 
 const PageContainer = styled.div`
   width: 100%;
