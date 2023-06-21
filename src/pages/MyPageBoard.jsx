@@ -139,6 +139,11 @@ function MyPageBoard() {
           <Container>
             <Content>
               <Work>내가 쓴 게시물</Work>
+              {(!data.boardList || data.boardList.length === 0) && (
+                <EmptyChatList>
+                  <p>게시물 목록이 없습니다. 게시물을 생성해보세요!</p>
+                </EmptyChatList>
+              )}
               <BoardList>
                 {data.boardList.map((item, index) => {
                   return (
@@ -149,6 +154,7 @@ function MyPageBoard() {
                         onClick={() => {
                           navigate(`/board/${item.boardId}`);
                         }}
+                        hover="no"
                       />
                       <EditButton
                         onClick={(e) => {
@@ -199,6 +205,19 @@ function MyPageBoard() {
 }
 
 export default MyPageBoard;
+
+const EmptyChatList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+
+  p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+  }
+`;
 
 const PageContainer = styled.div`
   width: 100%;

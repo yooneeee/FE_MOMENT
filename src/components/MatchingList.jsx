@@ -3,14 +3,81 @@ import styled from "styled-components";
 import { IoArrowBack } from "react-icons/io5";
 import { AiOutlineClose } from "react-icons/ai";
 import { useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import requestedMatchingList from "../apis/matching/requestedMatchingList.js";
+import LoadingSpinner from "./LoadingSpinner.jsx";
+import AcceptMatching from "../apis/matching/AcceptMatching.js";
+import Swal from "sweetalert2";
+import deleteUser from "../apis/matching/deleteUser.js";
 
-function MatchingList({ userId, showFollow }) {
+function MatchingList({ showFollow, boardId }) {
+  const queryClient = useQueryClient();
+
   useEffect(() => {
-    document.body.style.overflow = "hidden"; // Prevent scrolling on the entire page
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "auto"; // Restore scrolling when the modal is closed
+      document.body.style.overflow = "auto";
     };
   }, []);
+
+  // 나에게 매칭 신청한 유저 리스트
+  const { isError, isLoading, data } = useQuery(
+    [requestedMatchingList, "requestedMatchingList", boardId],
+    async () => {
+      return await requestedMatchingList(boardId);
+    }
+  );
+
+  // 매칭 신청 수락
+  const AcceptMatchingRequest = useMutation(AcceptMatching, {
+    onSuccess: () => {
+      Swal.fire({
+        icon: "success",
+        title: "매칭 수락 완료!",
+        text: `매칭이 완료되었습니다!`,
+        confirmButtonText: "확인",
+      });
+      queryClient.invalidateQueries("requestedMatchingList");
+      queryClient.invalidateQueries("getAcceptList");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const AcceptButtonHandler = (boardId, applyUserId) => {
+    AcceptMatchingRequest.mutate({ boardId, applyUserId });
+  };
+
+  // 매칭 신청 거절
+  const DeleteMatchingRequest = useMutation(deleteUser, {
+    onSuccess: () => {
+      Swal.fire({
+        icon: "success",
+        title: "매칭 거절 완료!",
+        text: `매칭 신청이 거절 되었습니다!`,
+        confirmButtonText: "확인",
+      });
+      queryClient.invalidateQueries("requestedMatchingList");
+      queryClient.invalidateQueries("getAcceptList");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const DeleteMatchingRequestButtonHandler = (boardId, applyUserId) => {
+    DeleteMatchingRequest.mutate({ boardId, applyUserId });
+  };
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return <h1>오류(⊙ˍ⊙)</h1>;
+  }
+
   return (
     <div>
       <Outside onClick={showFollow} />
@@ -23,43 +90,38 @@ function MatchingList({ userId, showFollow }) {
           </button>
         </ModalHeader>
 
-        <FollowList>
-          <FollowItem>
-            <UserImage src="/img/profile_12.jpeg" />
-            <UserInfo>
-              <span>Jun</span>
-            </UserInfo>
-
-            <ButtonContainer>
-              <AllowButton>수락하기</AllowButton>
-              <AllowButton name="refuse">거절하기</AllowButton>
-            </ButtonContainer>
-          </FollowItem>
-
-          <FollowItem>
-            <UserImage src="/img/profile_10.jpeg" />
-            <UserInfo>
-              <span>지윤</span>
-            </UserInfo>
-
-            <ButtonContainer>
-              <AllowButton>수락하기</AllowButton>
-              <AllowButton name="refuse">거절하기</AllowButton>
-            </ButtonContainer>
-          </FollowItem>
-
-          <FollowItem>
-            <UserImage src="/img/profile_6.jpeg" />
-            <UserInfo>
-              <span>미녕</span>
-            </UserInfo>
-
-            <ButtonContainer>
-              <AllowButton>수락하기</AllowButton>
-              <AllowButton name="refuse">거절하기</AllowButton>
-            </ButtonContainer>
-          </FollowItem>
-        </FollowList>
+        {data.map((item, index) => {
+          return (
+            <FollowList key={index}>
+              <FollowItem>
+                <UserImage src={item.userProfileImg} />
+                <UserInfo>
+                  <span>{item.userNickName}</span>
+                </UserInfo>
+                <ButtonContainer>
+                  <AllowButton
+                    onClick={() => {
+                      AcceptButtonHandler(item.boardId, item.userId);
+                    }}
+                  >
+                    수락하기
+                  </AllowButton>
+                  <AllowButton
+                    name="refuse"
+                    onClick={() => {
+                      DeleteMatchingRequestButtonHandler(
+                        item.boardId,
+                        item.userId
+                      );
+                    }}
+                  >
+                    거절하기
+                  </AllowButton>
+                </ButtonContainer>
+              </FollowItem>
+            </FollowList>
+          );
+        })}
       </ModalWrap>
     </div>
   );
@@ -112,6 +174,13 @@ const AllowButton = styled.button`
   border: none;
   color: white;
   border-radius: 7px;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.name === "refuse" ? "#919191" : " #6e569c"};
+    border-color: #fff;
+    color: #fff;
+  }
 `;
 
 const FollowList = styled.ul`
