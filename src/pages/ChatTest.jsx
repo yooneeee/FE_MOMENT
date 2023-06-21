@@ -160,6 +160,23 @@ const ChatTest = () => {
             ..._chatMessages,
             JSON.parse(body),
           ]);
+          // const newMessage = JSON.parse(body);
+
+          // 새 메시지를 채팅방에 추가
+          // setChatMessages((_chatMessages) => [..._chatMessages, newMessage]);
+
+          // queryClient.setQueryData(["ChattingList", userId], (old) => {
+          //   return old.map((chatroom) => {
+          //     if (chatroom.id === newMessage.chatRoomId) {
+          //       return {
+          //         ...chatroom,
+          //         messages: [...chatroom.messages, newMessage],
+          //       };
+          //     } else {
+          //       return chatroom;
+          //     }
+          //   });
+          // });
         }
       );
     }
