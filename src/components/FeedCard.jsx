@@ -6,6 +6,7 @@ import { useQueryClient } from "react-query";
 import HeartButton from "./HeartButton";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 function FeedCard({ data, onClick, openFeedDetail }) {
   // 좋아요 버튼
@@ -39,15 +40,18 @@ function FeedCard({ data, onClick, openFeedDetail }) {
   const handleHeartButtonClick = (photoId) => {
     likeButtonHandler(photoId);
   };
+  console.log("데이터", data);
   return (
     <CardDesign>
       <SliderWrapper>
         <CardProfileImg src={data.photoUrl} onClick={handleCardClick} />
       </SliderWrapper>
       <CardHeader>
-        <ProfileImg src={data.profileImgUrl} />
-        <FlexWrap>
+        <StyledLink to={`/page/${data.hostId}`}>
+          <ProfileImg src={data.profileImgUrl} />
           <UserNickName>{data.nickName}</UserNickName>
+        </StyledLink>
+        <FlexWrap>
           <UserPosition>
             <HeartButton
               like={data.loveCheck}
@@ -133,6 +137,11 @@ const CardHeader = styled.div`
   cursor: pointer;
 `;
 
+const StyledLink = styled(Link)`
+  display: flex;
+  align-items: center;
+`;
+
 const ProfileImg = styled.img`
   width: 40px;
   height: 40px;
@@ -158,6 +167,7 @@ const UserNickName = styled.div`
   font-weight: bold;
   color: black;
   margin-left: 1px;
+  flex-shrink: 0;
 `;
 
 const UserPosition = styled.div`
