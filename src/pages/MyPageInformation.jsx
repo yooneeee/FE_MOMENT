@@ -206,7 +206,7 @@ const MyPageInformation = () => {
           <>
             <Box>
               <Text>
-                <span>신규 비밀번호</span>
+                <span>새 비밀번호</span>
               </Text>
               <TextColumn>
                 <HiddenInput
@@ -479,7 +479,7 @@ const Line1 = styled.div`
 `;
 const Introduce = styled.textarea`
   resize: none;
-  width: 300px;
+  width: 65%;
   height: 80px;
   padding: 10px;
   border: 1px solid #acabab;
