@@ -12,6 +12,7 @@ import { MdExpandCircleDown } from "react-icons/md";
 import { NativeEventSource, EventSourcePolyfill } from "event-source-polyfill";
 import { TbBell } from "react-icons/tb";
 import AlarmListModal from "./AlarmListModal";
+import { BsFillCircleFill } from "react-icons/bs";
 
 function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
@@ -48,7 +49,11 @@ function Header() {
   const [isAlarmListOpen, setIsAlarmListOpen] = useState(false);
   const showAlarmList = () => {
     setIsAlarmListOpen(!isAlarmListOpen);
+    setHasNewNotifications(false);
   };
+
+  // 신규알람 표시 여부
+  const [hasNewNotifications, setHasNewNotifications] = useState(false);
 
   // 헤더 컴포넌트 DOM 요소 참조
   const headerRef = useRef(null);
@@ -108,6 +113,7 @@ function Header() {
             const eventData = JSON.parse(event.data);
             console.log("Received event:", eventData);
             setAlarmList((prevList) => [...prevList, eventData]);
+            setHasNewNotifications(true);
           });
         };
         fetchSse();
@@ -262,6 +268,7 @@ function Header() {
                     />
                   </HeaderButton>
                   <HeaderButton
+                    name={"alarmList"}
                     onClick={() => {
                       toggleProfileMenuClose();
                       toggleWriteMenuClose();
@@ -269,6 +276,13 @@ function Header() {
                     }}
                   >
                     <TbBell style={{ fontSize: "20px" }} />
+                    {hasNewNotifications && (
+                      <NotificationDot>
+                        <BsFillCircleFill
+                          style={{ fontSize: "8px", color: "red" }}
+                        />
+                      </NotificationDot>
+                    )}
                   </HeaderButton>
                 </>
               ) : (
@@ -478,6 +492,7 @@ function Header() {
           <CreateBoard open={openBoardModal} close={closeBoardModal} />
         )}
       </HeaderStyles>
+
       {isAlarmListOpen && (
         <AlarmListModal showAlarmList={showAlarmList} alarmList={alarmList} />
       )}
@@ -625,5 +640,16 @@ const ToggleProfileMenu = styled.div`
 const MainLogo = styled.img`
   width: 50px;
 `;
-
+const NotificationDot = styled.span`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: white;
+`;
 export default Header;
