@@ -153,6 +153,7 @@ const Recommend = styled.span`
 
 const Post = styled.div`
   font-size: 16px;
+  white-space: pre-line;
 `;
 
 const StFlex = styled.div`
