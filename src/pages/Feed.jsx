@@ -284,7 +284,7 @@ const FeedContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 45px;
-  margin: auto;
+
   @media (max-width: 1300px) {
     grid-template-columns: repeat(3, 1fr);
   }
