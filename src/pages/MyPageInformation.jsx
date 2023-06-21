@@ -22,7 +22,7 @@ const MyPageInformation = () => {
 
   const [newNick, setNewNick] = useState("");
   const [newPw, setNewPw] = useState("");
-  const [newRole, setNewRole] = useState("");
+  const [newRole, setNewRole] = useState(loginUserData.role);
   const [deleteUserModal, setDeleteUserModal] = useState(false);
   const [intro, setIntro] = useState("");
 
@@ -122,8 +122,10 @@ const MyPageInformation = () => {
   };
 
   const handleNickInput = (e) => {
-    setNewNick(e.target.value);
-    setNickCharacters(e.target.value.length);
+    if (e.target.value.length <= 8) {
+      setNewNick(e.target.value);
+      setNickCharacters(e.target.value.length);
+    }
   };
 
   const handlePwInput = (e) => {
@@ -132,8 +134,25 @@ const MyPageInformation = () => {
   };
 
   const handleIntroduceInput = (e) => {
-    setIntro(e.target.value);
-    setIntroCharacters(e.target.value.length);
+    const textareaLineHeight = 24;
+    const maxRows = 4;
+    const maxLength = 50;
+
+    const previousRows = e.target.rows;
+    e.target.rows = 1;
+
+    const currentRows = ~~(e.target.scrollHeight / textareaLineHeight);
+
+    if (
+      (currentRows <= maxRows || previousRows <= maxRows) &&
+      e.target.value.length <= maxLength
+    ) {
+      e.target.rows = currentRows;
+      setIntro(e.target.value);
+      setIntroCharacters(e.target.value.length);
+    } else {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -168,7 +187,7 @@ const MyPageInformation = () => {
           <Text>닉네임</Text>
           <TextColumn>
             <HiddenInput
-              maxLength={7}
+              maxLength={8}
               type="text"
               placeholder={`${loginUserData.nickName}`}
               name="nickName"
@@ -192,9 +211,9 @@ const MyPageInformation = () => {
               <TextColumn>
                 <HiddenInput
                   minLength={7}
-                  maxLength={14}
+                  maxLength={15}
                   type="password"
-                  placeholder="변경할 비밀번호 입력"
+                  placeholder="변경할 비밀번호 입력 (8자 - 15자)"
                   name="password"
                   value={newPw}
                   onChange={handlePwInput}
@@ -243,6 +262,7 @@ const MyPageInformation = () => {
           <Text>한 줄 소개</Text>
           <TextColumn>
             <Introduce
+              rows={1}
               maxLength={49}
               placeholder="자신을 소개해주세요(최대 50자)"
               name="introduce"
