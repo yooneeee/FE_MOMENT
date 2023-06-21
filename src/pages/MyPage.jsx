@@ -64,12 +64,11 @@ const MyPage = () => {
           <ProfileContainer>
             <MyPageProfile />
           </ProfileContainer>
-
           <Container>
             <WorkSection>
               <Work>{mine ? "나의 피드" : `${data.nickName}'s 피드`}</Work>
               <WorkList>
-                {data.photoList.slice(0, 10).map((item, index) => {
+                {data.photoList.slice(0, 6).map((item, index) => {
                   const isOpen = feedDetailOpen.includes(item.photoId);
                   return (
                     <React.Fragment key={index}>
