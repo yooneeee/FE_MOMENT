@@ -93,6 +93,7 @@ const CreateFeed = (props) => {
   const [uploadToggleBtn, setUploadToggleBtn] = useState(false);
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [content, onChangeContentHandler] = useInput();
+  const [isSaving, setIsSaving] = useState(false); // 버튼 비활성화
   const modalRef = useRef(null);
   const loginUserData = UserDataComponent();
   const queryClient = useQueryClient();
@@ -184,6 +185,8 @@ const CreateFeed = (props) => {
       });
       return;
     }
+    setIsSaving(true);
+
     const formData = new FormData();
     formData.append("contents", content);
     formData.append(
@@ -198,6 +201,12 @@ const CreateFeed = (props) => {
     createFeedMutation.mutate(formData);
   };
 
+  useEffect(() => {
+    if (createFeedMutation.isSuccess || createFeedMutation.isError) {
+      setIsSaving(false);
+    }
+  }, [createFeedMutation.isSuccess, createFeedMutation.isError]);
+
   return (
     <div className={open ? "openModal create-feed-modal" : "create-feed-modal"}>
       {open ? (
@@ -205,7 +214,11 @@ const CreateFeed = (props) => {
           <div className="header">
             <div className="headerTitle">새 피드 만들기</div>
             <div className="headerRightBox">
-              <button className="saveButton" onClick={saveButtonHandler}>
+              <button
+                className="saveButton"
+                onClick={saveButtonHandler}
+                disabled={isSaving}
+              >
                 등록하기
               </button>
               <button className="close" onClick={close}>

@@ -289,7 +289,7 @@ const ContentContainer = styled.div`
 
 const WorkSection = styled.div`
   flex-grow: 1;
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
 `;
 
 const Work = styled.h2`
