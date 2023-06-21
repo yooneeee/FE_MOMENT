@@ -145,7 +145,9 @@ const ProfilePicture = styled.img`
   border-radius: 50%;
 `;
 
-const UserNickname = styled.span``;
+const UserNickname = styled.span`
+  flex-shrink: 0;
+`;
 
 const Recommend = styled.span`
   font-size: 16px;
