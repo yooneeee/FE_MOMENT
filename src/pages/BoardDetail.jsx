@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getBoardDetailAxios } from "../apis/board/getBoardDetailAxios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useSelector } from "react-redux";
@@ -16,6 +16,7 @@ function BoardDetail() {
   const params = useParams();
   const navigate = useNavigate();
   const userId = useSelector((state) => state.user.userId);
+  const queryClient = useQueryClient();
   // 스크롤 시 따라다니는 Form
   useEffect(() => {
     const handleScroll = () => {
@@ -52,12 +53,7 @@ function BoardDetail() {
   // 매칭 신청 버튼
   const ApplicationForMatchingMutation = useMutation(ApplicationForMatching, {
     onSuccess: () => {
-      Swal.fire({
-        icon: "success",
-        title: "매칭 신청 완료!",
-        text: `매칭 신청이 완료 되었습니다.`,
-        confirmButtonText: "확인",
-      });
+      queryClient.invalidateQueries("getBoardDetailAxios");
     },
     onError: (error) => {
       console.log(error);
@@ -75,8 +71,6 @@ function BoardDetail() {
   if (isError) {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
-
-  console.log(data);
 
   return (
     <Container>
@@ -96,7 +90,6 @@ function BoardDetail() {
           </MainContentContainer>
         </FlexContainer>
 
-        {/* <StyledForm ref={formRef}>
         <Form>
           <FormBody>
             <Title>{data.title}</Title>
@@ -122,81 +115,48 @@ function BoardDetail() {
                   >
                     채팅하기
                   </ProfileVisitButton>
-                  <ProfileVisitButton
-                    onClick={() => {
-                      Swal.fire({
-                        icon: "error",
-                        text: `현재 준비 중인 기능입니다.
-                        불편을 끼쳐드려 죄송합니다.`,
-                        confirmButtonText: "확인",
-                      });
-                    }}
-                    // buttonColor="#6D0F8E"
-                  >
-                    매칭 신청
-                  </ProfileVisitButton>
-                </ButtonContainer>
-              )}
-            </ProfileBox>
-
-            <HashTagContainer>
-              {data.tag_boardList.map((item) => {
-                return <HashTag key={item.tagId}>{item.tag}</HashTag>;
-              })}
-            </HashTagContainer>
-            <ListTitle>촬영장소</ListTitle>
-            <ListContent>{data.location}</ListContent>
-            <ListTitle>급여 조건</ListTitle>
-            <ListContent>{data.pay}</ListContent>
-            <ListTitle>지원 방법</ListTitle>
-            <ListContent>{data.apply}</ListContent>
-            <ListTitle>모집 마감일</ListTitle>
-            <ListContent>{data.deadLine}</ListContent>
-          </FormBody>
-        </Form>
-      </StyledForm>
-      <FormRange ref={formRangeRef}></FormRange> */}
-
-        <Form>
-          <FormBody>
-            <Title>{data.title}</Title>
-            <ProfileBox>
-              <ProfileImg
-                src={data.profileUrl}
-                onClick={() => {
-                  navigate(`/page/${data.hostId}`);
-                }}
-              ></ProfileImg>
-
-              <UserDataBox>
-                <UserPostion> {data.role} </UserPostion>
-                <UserNickName>{data.nickName}</UserNickName>
-              </UserDataBox>
-
-              {data.hostId !== userId && (
-                <ButtonContainer>
-                  <ProfileVisitButton
-                    onClick={() => {
-                      navigate(`/chattest/${data.hostId}`);
-                    }}
-                  >
-                    채팅하기
-                  </ProfileVisitButton>
-                  <ProfileVisitButton
-                    // onClick={() => {
-                    //   Swal.fire({
-                    //     icon: "error",
-                    //     text: `현재 준비 중인 기능입니다.
-                    //     불편을 끼쳐드려 죄송합니다.`,
-                    //     confirmButtonText: "확인",
-                    //   });
-                    // }}
-                    onClick={() => {
-                      matchingButtonHandler(data.boardId);
-                    }}
-                  >
-                    매칭 신청
-                  </ProfileVisitButton>
+                  {data.checkApply && data.checkMatched === false ? (
+                    <ProfileVisitButton
+                      onClick={() => {
+                        matchingButtonHandler(data.boardId);
+                        Swal.fire({
+                          icon: "success",
+                          title: "매칭 신청 취소 완료!",
+                          text: "매칭 신청이 취소되었습니다!",
+                          confirmButtonText: "확인",
+                        });
+                      }}
+                      buttonStatus="cancel"
+                    >
+                      매칭 취소
+                    </ProfileVisitButton>
+                  ) : data.checkMatched && data.checkApply ? (
+                    <ProfileVisitButton
+                      onClick={() => {
+                        Swal.fire({
+                          icon: "success",
+                          title: "매칭이 이미 완료된 게시글입니다.",
+                          confirmButtonText: "확인",
+                        });
+                      }}
+                    >
+                      매칭 완료
+                    </ProfileVisitButton>
+                  ) : (
+                    <ProfileVisitButton
+                      onClick={() => {
+                        matchingButtonHandler(data.boardId);
+                        Swal.fire({
+                          icon: "success",
+                          title: "매칭 신청 완료!",
+                          text: "매칭이 완료되었습니다!",
+                          confirmButtonText: "확인",
+                        });
+                      }}
+                    >
+                      매칭 신청
+                    </ProfileVisitButton>
+                  )}
                 </ButtonContainer>
               )}
             </ProfileBox>
@@ -344,7 +304,8 @@ const ButtonContainer = styled.div`
 const ProfileVisitButton = styled.button`
   margin-left: auto;
   padding: 12px;
-  background-color: ${(props) => props.buttonColor || "#514073"};
+  background-color: ${(props) =>
+    props.buttonStatus === "cancel" ? "#696969" : "#514073"};
   color: white;
   border: none;
   border-radius: 10px;
