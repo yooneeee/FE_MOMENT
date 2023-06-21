@@ -301,7 +301,7 @@ function Header() {
             <MenuButton
               name={"chatlist"}
               onClick={() => {
-                navigate(`/chatlist/${userId}`);
+                navigate(`/chatroomlist/${userId}`);
                 toggleProfileMenuClose();
                 closeAlarmList();
               }}

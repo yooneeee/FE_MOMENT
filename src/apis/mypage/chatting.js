@@ -20,4 +20,14 @@ const ChattingList = async () => {
   }
 };
 
-export { Chatting, ChattingList };
+/* 채팅방 삭제 */
+const ChattingRoomDelete = async (chatRoomId) => {
+  try {
+    const response = await instance.delete(`/chatRoom/${chatRoomId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { Chatting, ChattingList, ChattingRoomDelete };
