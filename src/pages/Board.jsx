@@ -19,18 +19,20 @@ function Board() {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-  let optArr = ["전체", "닉네임", "장소", "해시태그"];
-  const [currentOpt, setCurrentOpt] = useState("전체");
+  let optArr = ["제목", "닉네임", "장소", "해시태그"];
+  const [currentOpt, setCurrentOpt] = useState("제목");
   const [showList, setShowList] = useState(false);
   const [keyword, setKeyword] = useState("");
-  const [option, setOption] = useState("userNickName");
+  const [option, setOption] = useState("title");
   const [showButton, setShowButton] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [isEmpty, setIsEmpty] = useState(false);
   const toggleShowList = () => setShowList(true);
   const toggleCloseList = () => setShowList(false);
   const optionChangeHandler = (currentOpt) => {
-    if (currentOpt === "해시태그") {
+    if (currentOpt === "제목") {
+      setOption("title");
+    } else if (currentOpt === "해시태그") {
       setOption("keyWord");
     } else if (currentOpt === "닉네임") {
       setOption("userNickName");
@@ -146,7 +148,7 @@ function Board() {
   }
 
   return (
-    <>
+    <Container>
       <Header>
         <Navbar>
           <span>게시판</span>
@@ -200,7 +202,6 @@ function Board() {
           </NavItems>
         </Navbar>
       </Header>
-
       <Content>
         {searchResults.length > 0 ? (
           <>
@@ -249,7 +250,7 @@ function Board() {
         <div ref={bottomObserverRef}></div>
       </Content>
       {showButton && <ScrollToTopButton />}
-    </>
+    </Container>
   );
 }
 
@@ -318,9 +319,9 @@ const NavItem = styled.div`
 `;
 
 const Header = styled.header`
-  padding: 16px 0 16px 0;
+  padding: 16px;
+  width: 80%;
   border-bottom: 1px solid #ddd;
-  margin: 0 150px;
 `;
 
 const Content = styled.div`
@@ -328,6 +329,7 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  margin: auto;
   @media (max-width: 1300px) {
     grid-template-columns: repeat(3, 1fr);
   }

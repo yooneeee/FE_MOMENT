@@ -154,6 +154,7 @@ function MyPageBoard() {
                         onClick={() => {
                           navigate(`/board/${item.boardId}`);
                         }}
+                        hover="no"
                       />
                       <EditButton
                         onClick={(e) => {
