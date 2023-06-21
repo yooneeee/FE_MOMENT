@@ -5,14 +5,12 @@ import { useNavigate } from "react-router";
 
 function AlarmListModal({ alarmList, showAlarmList }) {
   const navigate = useNavigate();
-  console.log("alarmList", alarmList);
-
   const groupedAlarmList = [];
   let currentSender = null;
 
   alarmList.forEach((item) => {
-    if (item.senderId !== currentSender) {
-      currentSender = item.senderId;
+    if (item.senderNickName !== currentSender) {
+      currentSender = item.senderNickName;
       groupedAlarmList.push([item]);
     } else {
       groupedAlarmList[groupedAlarmList.length - 1].push(item);
@@ -56,10 +54,15 @@ function AlarmListModal({ alarmList, showAlarmList }) {
           <NoLikesMessage>알림이 없습니다.</NoLikesMessage>
         )}
         <FollowList>
-          {groupedAlarmList.map((group) => {
+          {groupedAlarmList.reverse().map((group) => {
             const timeDifference = getTimeDifference(group[0].createdAt);
+            const latestTime = new Date(
+              Math.max(...group.map((item) => new Date(item.createdAt)))
+            );
+
+            const latestTimeDifference = getTimeDifference(latestTime);
             return (
-              <li key={group[0].senderId}>
+              <li key={group[0].createdAt}>
                 <FollowItem
                   onClick={() => {
                     navigate(`/chattest/${group[0].senderId}`);
@@ -71,32 +74,12 @@ function AlarmListModal({ alarmList, showAlarmList }) {
                     <span>
                       {group[0].senderNickName}님이 메세지를 보냈습니다.
                     </span>
-                    <p>{timeDifference}</p>
+                    <p>{latestTimeDifference}</p>
                   </UserInfo>
                 </FollowItem>
               </li>
             );
           })}
-          {/* {alarmList?.map((item) => {
-            const timeDifference = getTimeDifference(item.createdAt);
-            return (
-              <li>
-                <FollowItem
-                  onClick={() => {
-                    navigate(`/chattest/${item.senderId}`);
-                    showAlarmList();
-                  }}
-                  key={item.receiverNickName}
-                >
-                  <UserImage src={item.senderProfileImg} />
-                  <UserInfo>
-                    <span>{item.senderNickName}님이 메세지를 보냈습니다.</span>
-                    <p>{timeDifference}</p>
-                  </UserInfo>
-                </FollowItem>
-              </li>
-            );
-          })} */}
         </FollowList>
       </ModalWrap>
     </div>
