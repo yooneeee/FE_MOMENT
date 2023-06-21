@@ -34,6 +34,7 @@ function ChatList() {
       <ChatListContainer>
         <ChatSearchContainer>
           <StyledIcon />
+
           <ChatSearch
             placeholder="Role, NickName 검색"
             value={search}
@@ -128,6 +129,7 @@ const ScrollableDiv = styled.div`
 
   scrollbar-width: none;
 `;
+
 const ChatSearchContainer = styled.div`
   display: flex;
   justify-content: center;
