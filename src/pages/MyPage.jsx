@@ -103,6 +103,7 @@ const MyPage = () => {
                       onClick={() => {
                         navigate(`/board/${item.boardId}`);
                       }}
+                      hover="no"
                     />
                   );
                 })}
