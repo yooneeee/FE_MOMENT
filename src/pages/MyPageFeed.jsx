@@ -153,6 +153,11 @@ function MyPageFeed() {
           </ProfileContainer>
           <WorkSection>
             <Work>나의 작업물</Work>
+            {(!data.photoList || data.photoList.length === 0) && (
+              <EmptyChatList>
+                <p>피드 목록이 없습니다. 피드를 생성해보세요!</p>
+              </EmptyChatList>
+            )}
             <WorkList>
               {data.photoList.map((item, index) => {
                 const isOpen = feedDetailOpen.includes(item.photoId);
@@ -213,6 +218,19 @@ function MyPageFeed() {
 }
 
 export default MyPageFeed;
+
+const EmptyChatList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+
+  p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+  }
+`;
 
 const ToggleWriteMenu = styled.div`
   position: absolute;
