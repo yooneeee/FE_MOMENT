@@ -5,7 +5,17 @@ import { useNavigate } from "react-router";
 
 function AlarmListModal({ alarmList, showAlarmList }) {
   const navigate = useNavigate();
-  console.log("alarmList", alarmList);
+  const groupedAlarmList = [];
+  let currentSender = null;
+
+  alarmList.forEach((item) => {
+    if (item.senderNickName !== currentSender) {
+      currentSender = item.senderNickName;
+      groupedAlarmList.push([item]);
+    } else {
+      groupedAlarmList[groupedAlarmList.length - 1].push(item);
+    }
+  });
   const getTimeDifference = (createdTime) => {
     const serverTime = new Date(createdTime);
     const currentTime = new Date();
@@ -44,21 +54,27 @@ function AlarmListModal({ alarmList, showAlarmList }) {
           <NoLikesMessage>알림이 없습니다.</NoLikesMessage>
         )}
         <FollowList>
-          {alarmList?.map((item) => {
-            const timeDifference = getTimeDifference(item.createdAt);
+          {groupedAlarmList.reverse().map((group) => {
+            const timeDifference = getTimeDifference(group[0].createdAt);
+            const latestTime = new Date(
+              Math.max(...group.map((item) => new Date(item.createdAt)))
+            );
+
+            const latestTimeDifference = getTimeDifference(latestTime);
             return (
-              <li>
+              <li key={group[0].createdAt}>
                 <FollowItem
                   onClick={() => {
-                    navigate(`/chattest/${item.senderId}`);
+                    navigate(`/chattest/${group[0].senderId}`);
                     showAlarmList();
                   }}
-                  key={item.receiverNickName}
                 >
-                  <UserImage src={item.senderProfileImg} />
+                  <UserImage src={group[0].senderProfileImg} />
                   <UserInfo>
-                    <span>{item.senderNickName}님이 메세지를 보냈습니다.</span>
-                    <p>{timeDifference}</p>
+                    <span>
+                      {group[0].senderNickName}님이 메세지를 보냈습니다.
+                    </span>
+                    <p>{latestTimeDifference}</p>
                   </UserInfo>
                 </FollowItem>
               </li>
@@ -121,18 +137,20 @@ const UserImage = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 `;
 
 const UserInfo = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  flex-wrap: wrap;
 
   span {
     font-weight: bold;
     font-size: 15px;
     color: #000000;
+    margin-right: 10px;
   }
   p {
     font-size: 15px;
