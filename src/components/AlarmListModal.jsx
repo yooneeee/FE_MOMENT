@@ -6,6 +6,18 @@ import { useNavigate } from "react-router";
 function AlarmListModal({ alarmList, showAlarmList }) {
   const navigate = useNavigate();
   console.log("alarmList", alarmList);
+
+  const groupedAlarmList = [];
+  let currentSender = null;
+
+  alarmList.forEach((item) => {
+    if (item.senderId !== currentSender) {
+      currentSender = item.senderId;
+      groupedAlarmList.push([item]);
+    } else {
+      groupedAlarmList[groupedAlarmList.length - 1].push(item);
+    }
+  });
   const getTimeDifference = (createdTime) => {
     const serverTime = new Date(createdTime);
     const currentTime = new Date();
@@ -44,7 +56,28 @@ function AlarmListModal({ alarmList, showAlarmList }) {
           <NoLikesMessage>알림이 없습니다.</NoLikesMessage>
         )}
         <FollowList>
-          {alarmList?.map((item) => {
+          {groupedAlarmList.map((group) => {
+            const timeDifference = getTimeDifference(group[0].createdAt);
+            return (
+              <li key={group[0].senderId}>
+                <FollowItem
+                  onClick={() => {
+                    navigate(`/chattest/${group[0].senderId}`);
+                    showAlarmList();
+                  }}
+                >
+                  <UserImage src={group[0].senderProfileImg} />
+                  <UserInfo>
+                    <span>
+                      {group[0].senderNickName}님이 메세지를 보냈습니다.
+                    </span>
+                    <p>{timeDifference}</p>
+                  </UserInfo>
+                </FollowItem>
+              </li>
+            );
+          })}
+          {/* {alarmList?.map((item) => {
             const timeDifference = getTimeDifference(item.createdAt);
             return (
               <li>
@@ -63,7 +96,7 @@ function AlarmListModal({ alarmList, showAlarmList }) {
                 </FollowItem>
               </li>
             );
-          })}
+          })} */}
         </FollowList>
       </ModalWrap>
     </div>
@@ -121,18 +154,20 @@ const UserImage = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 `;
 
 const UserInfo = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  flex-wrap: wrap;
 
   span {
     font-weight: bold;
     font-size: 15px;
     color: #000000;
+    margin-right: 10px;
   }
   p {
     font-size: 15px;
