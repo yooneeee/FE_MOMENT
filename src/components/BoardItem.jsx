@@ -85,6 +85,7 @@ function BoardItem({
             matchStatus={matchStatus}
             onClick={(e) => {
               e.stopPropagation();
+              navigate(`/page/${item.boardHostId}`);
             }}
           >
             {matchStatus === "true"
