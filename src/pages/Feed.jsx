@@ -21,17 +21,19 @@ function Feed() {
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
   const [showButton, setShowButton] = useState(false);
 
-  let optArr = ["전체", "닉네임", "해시태그"];
-  const [currentOpt, setCurrentOpt] = useState("전체");
+  let optArr = ["내용", "닉네임", "해시태그"];
+  const [currentOpt, setCurrentOpt] = useState("내용");
   const [showList, setShowList] = useState(false);
   const [keyword, setKeyword] = useState("");
-  const [option, setOption] = useState("userNickName");
+  const [option, setOption] = useState("contents");
   const [searchResults, setSearchResults] = useState([]);
   const [isEmpty, setIsEmpty] = useState(false);
   const toggleShowList = () => setShowList(true);
   const toggleCloseList = () => setShowList(false);
   const optionChangeHandler = (currentOpt) => {
-    if (currentOpt === "해시태그") {
+    if (currentOpt === "내용") {
+      setOption("contents");
+    } else if (currentOpt === "해시태그") {
       setOption("tag");
     } else if (currentOpt === "닉네임") {
       setOption("userNickName");
