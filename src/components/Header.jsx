@@ -12,6 +12,7 @@ import { MdExpandCircleDown } from "react-icons/md";
 import { NativeEventSource, EventSourcePolyfill } from "event-source-polyfill";
 import { TbBell } from "react-icons/tb";
 import AlarmListModal from "./AlarmListModal";
+import { BsFillCircleFill } from "react-icons/bs";
 
 function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
@@ -48,7 +49,14 @@ function Header() {
   const [isAlarmListOpen, setIsAlarmListOpen] = useState(false);
   const showAlarmList = () => {
     setIsAlarmListOpen(!isAlarmListOpen);
+    setHasNewNotifications(false);
   };
+  const closeAlarmList = () => {
+    setIsAlarmListOpen(false);
+  };
+
+  // 신규알람 표시 여부
+  const [hasNewNotifications, setHasNewNotifications] = useState(false);
 
   // 헤더 컴포넌트 DOM 요소 참조
   const headerRef = useRef(null);
@@ -72,6 +80,7 @@ function Header() {
     setIsMenuOpen(false);
     setIsWriteMenuOpen(false);
     setIsProfileMenuOpen(false);
+    closeAlarmList();
   };
   //헤더 영역 외의 클릭 이벤트를 처리해 메뉴와 글쓰기 메뉴를 닫는 함수
   const handleClickOutside = (event) => {
@@ -87,7 +96,6 @@ function Header() {
   const EventSource = EventSourcePolyfill || NativeEventSource;
   useEffect(() => {
     if (isLoggedIn) {
-      console.log(isLoggedIn);
       try {
         const fetchSse = async () => {
           const eventSource = new EventSource(
@@ -95,19 +103,19 @@ function Header() {
             {
               headers: {
                 "Content-Type": "text/event-stream",
-                "Cache-Control": "no-cache",
                 Connection: "keep-alive",
                 ACCESS_KEY: `${Access_key}`,
                 REFRESH_KEY: `${Refresh_key}`,
               },
               withCredentials: true,
-              heartbeatTimeout: 86400000,
+              heartbeatTimeout: 2000000,
             }
           );
           eventSource.addEventListener("chatAlarm-event", (event) => {
             const eventData = JSON.parse(event.data);
-            console.log("Received event:", eventData);
+            /* console.log("Received event:", eventData); */
             setAlarmList((prevList) => [...prevList, eventData]);
+            setHasNewNotifications(true);
           });
         };
         fetchSse();
@@ -117,55 +125,7 @@ function Header() {
     }
   }, [isLoggedIn]);
 
-  /*  useEffect(() => {
-    
-   const eventSource = new EventSourcePolyfill(
-      `https://moment-backend.shop/sse/chat/alarm/${userId}`,
-      {
-        headers: {
-          ACCESS_KEY: `${Access_key}`,
-          REFRESH_KEY: `${Refresh_key}`,
-        },
-        withCredentials: true,
-      }
-    );
-    eventSource.addEventListener("chatAlarm-event", (event) => {
-      const eventData = JSON.parse(event.data);
-      console.log("Received event:", eventData);
-    }); */
-  /*  const fetchData = async () => {
-      const response = await fetch(
-        `https://moment-backend.shop/sse/chat/alarm/${userId}`,
-        {
-          headers: {
-            ACCESS_KEY: `${Access_key}`,
-            REFRESH_KEY: `${Refresh_key}`,
-          },
-          withCredentials: true,
-        }
-      );
-    };
-
-    fetchData(); 
-  }, []);*/
-
   useEffect(() => {
-    /*       const eventSource = new EventSource(
-      `https://moment-backend.shop/sse/chat/alarm/${userId}`,
-      {
-        withCredentials: true,
-        headers: {
-          ACCESS_KEY: `${Access_key}`,
-          REFRESH_KEY: `${Refresh_key}`,
-        },
-      }
-    );
-
-    eventSource.addEventListener("chatAlarm-event", (event) => {
-      const eventData = JSON.parse(event.data);
-      console.log("Received event:", eventData);
-    }); */
-
     window.addEventListener("resize", handleResize);
     document.addEventListener("click", handleClickOutside);
 
@@ -209,6 +169,7 @@ function Header() {
               navigate("/main");
               toggleMenuClose();
               toggleWriteMenuClose();
+              closeAlarmList();
             }}
           >
             <MainLogo src="/img/mainlogo2.png" />
@@ -219,6 +180,7 @@ function Header() {
                 navigate("/feeds");
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               피드
@@ -228,6 +190,7 @@ function Header() {
                 navigate("/board");
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               구인/구직 게시판
@@ -241,6 +204,7 @@ function Header() {
                 setIsMenuOpen(!isMenuOpen);
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               <MenuIcon>&#9776;</MenuIcon>
@@ -253,6 +217,7 @@ function Header() {
                     onClick={() => {
                       setIsProfileMenuOpen(!isProfileMenuOpen);
                       toggleWriteMenuClose();
+                      closeAlarmList();
                     }}
                   >
                     <ProfileImg src={profileImg} />
@@ -262,6 +227,7 @@ function Header() {
                     />
                   </HeaderButton>
                   <HeaderButton
+                    name={"alarmList"}
                     onClick={() => {
                       toggleProfileMenuClose();
                       toggleWriteMenuClose();
@@ -269,6 +235,13 @@ function Header() {
                     }}
                   >
                     <TbBell style={{ fontSize: "20px" }} />
+                    {!isAlarmListOpen && hasNewNotifications && (
+                      <NotificationDot>
+                        <BsFillCircleFill
+                          style={{ fontSize: "8px", color: "red" }}
+                        />
+                      </NotificationDot>
+                    )}
                   </HeaderButton>
                 </>
               ) : (
@@ -302,6 +275,7 @@ function Header() {
                 onClick={() => {
                   setIsWriteMenuOpen(!isWriteMenuOpen);
                   toggleProfileMenuClose();
+                  closeAlarmList();
                 }}
               >
                 글쓰기
@@ -319,6 +293,7 @@ function Header() {
                 toggleMenuClose();
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               마이페이지
@@ -328,6 +303,7 @@ function Header() {
               onClick={() => {
                 navigate(`/chatroomlist/${userId}`);
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               채팅목록
@@ -336,6 +312,7 @@ function Header() {
               name={"logout"}
               onClick={() => {
                 logoutHandler();
+                closeAlarmList();
                 toggleProfileMenuClose();
               }}
             >
@@ -353,6 +330,7 @@ function Header() {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
                   toggleMenuClose();
+                  closeAlarmList();
                 } else {
                   Swal.fire({
                     icon: "warning",
@@ -372,6 +350,7 @@ function Header() {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
                   toggleMenuClose();
+                  closeAlarmList();
                 } else {
                   Swal.fire({
                     icon: "warning",
@@ -395,6 +374,7 @@ function Header() {
                 toggleMenuClose();
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               피드
@@ -405,6 +385,7 @@ function Header() {
                 toggleMenuClose();
                 toggleWriteMenuClose();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               구인/구직 게시판
@@ -413,6 +394,7 @@ function Header() {
               onClick={() => {
                 toggleWriteMenuOpen();
                 toggleProfileMenuClose();
+                closeAlarmList();
               }}
             >
               글쓰기
@@ -426,17 +408,30 @@ function Header() {
                     toggleMenuClose();
                     toggleWriteMenuClose();
                     toggleProfileMenuClose();
+                    closeAlarmList();
                   }}
                 >
                   마이페이지
                 </MenuButton>
                 <MenuButton
-                  name={"chatlist"}
+                  name={"alarmlist"}
                   onClick={() => {
-                    navigate(`/chatlist/${userId}`);
+                    showAlarmList();
                     toggleMenuClose();
                     toggleWriteMenuClose();
                     toggleProfileMenuClose();
+                  }}
+                >
+                  알림
+                </MenuButton>
+                <MenuButton
+                  name={"chatlist"}
+                  onClick={() => {
+                    navigate(`/chatroomlist/${userId}`);
+                    toggleMenuClose();
+                    toggleWriteMenuClose();
+                    toggleProfileMenuClose();
+                    closeAlarmList();
                   }}
                 >
                   채팅목록
@@ -478,6 +473,7 @@ function Header() {
           <CreateBoard open={openBoardModal} close={closeBoardModal} />
         )}
       </HeaderStyles>
+
       {isAlarmListOpen && (
         <AlarmListModal showAlarmList={showAlarmList} alarmList={alarmList} />
       )}
@@ -625,5 +621,16 @@ const ToggleProfileMenu = styled.div`
 const MainLogo = styled.img`
   width: 50px;
 `;
-
+const NotificationDot = styled.span`
+  position: absolute;
+  top: 12px;
+  right: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: white;
+`;
 export default Header;
