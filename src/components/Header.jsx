@@ -92,7 +92,6 @@ function Header() {
   const EventSource = EventSourcePolyfill || NativeEventSource;
   useEffect(() => {
     if (isLoggedIn) {
-      console.log(isLoggedIn);
       try {
         const fetchSse = async () => {
           const eventSource = new EventSource(
@@ -111,7 +110,7 @@ function Header() {
           );
           eventSource.addEventListener("chatAlarm-event", (event) => {
             const eventData = JSON.parse(event.data);
-            console.log("Received event:", eventData);
+            /* console.log("Received event:", eventData); */
             setAlarmList((prevList) => [...prevList, eventData]);
             setHasNewNotifications(true);
           });
@@ -123,55 +122,7 @@ function Header() {
     }
   }, [isLoggedIn]);
 
-  /*  useEffect(() => {
-    
-   const eventSource = new EventSourcePolyfill(
-      `https://moment-backend.shop/sse/chat/alarm/${userId}`,
-      {
-        headers: {
-          ACCESS_KEY: `${Access_key}`,
-          REFRESH_KEY: `${Refresh_key}`,
-        },
-        withCredentials: true,
-      }
-    );
-    eventSource.addEventListener("chatAlarm-event", (event) => {
-      const eventData = JSON.parse(event.data);
-      console.log("Received event:", eventData);
-    }); */
-  /*  const fetchData = async () => {
-      const response = await fetch(
-        `https://moment-backend.shop/sse/chat/alarm/${userId}`,
-        {
-          headers: {
-            ACCESS_KEY: `${Access_key}`,
-            REFRESH_KEY: `${Refresh_key}`,
-          },
-          withCredentials: true,
-        }
-      );
-    };
-
-    fetchData(); 
-  }, []);*/
-
   useEffect(() => {
-    /*       const eventSource = new EventSource(
-      `https://moment-backend.shop/sse/chat/alarm/${userId}`,
-      {
-        withCredentials: true,
-        headers: {
-          ACCESS_KEY: `${Access_key}`,
-          REFRESH_KEY: `${Refresh_key}`,
-        },
-      }
-    );
-
-    eventSource.addEventListener("chatAlarm-event", (event) => {
-      const eventData = JSON.parse(event.data);
-      console.log("Received event:", eventData);
-    }); */
-
     window.addEventListener("resize", handleResize);
     document.addEventListener("click", handleClickOutside);
 
@@ -276,7 +227,7 @@ function Header() {
                     }}
                   >
                     <TbBell style={{ fontSize: "20px" }} />
-                    {hasNewNotifications && (
+                    {!isAlarmListOpen && hasNewNotifications && (
                       <NotificationDot>
                         <BsFillCircleFill
                           style={{ fontSize: "8px", color: "red" }}
@@ -642,8 +593,8 @@ const MainLogo = styled.img`
 `;
 const NotificationDot = styled.span`
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: 12px;
+  right: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
