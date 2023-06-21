@@ -93,35 +93,31 @@ function Header() {
   const Access_key = sessionStorage.getItem("Access_key");
   const Refresh_key = sessionStorage.getItem("Refresh_key");
 
-  const EventSource = EventSourcePolyfill || NativeEventSource;
+  const EventSource = EventSourcePolyfill;
   useEffect(() => {
     if (isLoggedIn) {
-      try {
-        const fetchSse = async () => {
-          const eventSource = new EventSource(
-            `https://moment-backend.shop/sse/chat/alarm/${userId}`,
-            {
-              headers: {
-                "Content-Type": "text/event-stream",
-                Connection: "keep-alive",
-                ACCESS_KEY: `${Access_key}`,
-                REFRESH_KEY: `${Refresh_key}`,
-              },
-              withCredentials: true,
-              heartbeatTimeout: 2000000,
-            }
-          );
-          eventSource.addEventListener("chatAlarm-event", (event) => {
-            const eventData = JSON.parse(event.data);
-            /* console.log("Received event:", eventData); */
-            setAlarmList((prevList) => [...prevList, eventData]);
-            setHasNewNotifications(true);
-          });
-        };
-        fetchSse();
-      } catch (error) {
-        throw error;
-      }
+      const fetchSse = async () => {
+        const eventSource = new EventSource(
+          `https://moment-backend.shop/sse/chat/alarm/${userId}`,
+          {
+            headers: {
+              "Content-Type": "text/event-stream",
+              Connection: "keep-alive",
+              ACCESS_KEY: `${Access_key}`,
+              REFRESH_KEY: `${Refresh_key}`,
+            },
+            withCredentials: true,
+            heartbeatTimeout: 2000000,
+          }
+        );
+        eventSource.addEventListener("chatAlarm-event", (event) => {
+          const eventData = JSON.parse(event.data);
+          /* console.log("Received event:", eventData); */
+          setAlarmList((prevList) => [...prevList, eventData]);
+          setHasNewNotifications(true);
+        });
+      };
+      fetchSse();
     }
   }, [isLoggedIn]);
 
