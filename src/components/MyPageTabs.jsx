@@ -44,17 +44,17 @@ function MyPageTabs({ pageName }) {
         </TabButton>
         <TabButton
           className={pageName === "매칭목록" ? "active" : ""}
-          // onClick={() => {
-          //   navigate(`/matching/${hostId}`);
-          //   activeClickHandler("매칭목록");
-          // }}
           onClick={() => {
-            Swal.fire({
-              icon: "error",
-              text: "현재 준비 중인 서비스입니다. 불편을 끼쳐드려 죄송합니다.",
-              confirmButtonText: "확인",
-            });
+            navigate(`/matching/${hostId}`);
+            activeClickHandler("매칭목록");
           }}
+          // onClick={() => {
+          //   Swal.fire({
+          //     icon: "error",
+          //     text: "현재 준비 중인 서비스입니다. 불편을 끼쳐드려 죄송합니다.",
+          //     confirmButtonText: "확인",
+          //   });
+          // }}
         >
           매칭목록
         </TabButton>
