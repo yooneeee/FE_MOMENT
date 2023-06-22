@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { AiOutlineHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { TbMoodHappy } from "react-icons/tb";
@@ -61,6 +60,16 @@ const CardDesign = styled.div`
   flex-grow: 1;
   width: 100%;
   cursor: pointer;
+  &:hover {
+    transform: translateY(-10px);
+    transition: transform 1s ease;
+    cursor: pointer;
+  }
+
+  &:not(:hover) {
+    transform: translateY(0);
+    transition: transform 1s ease;
+  }
   /* &:hover {
     transform: scale(1.05);
   } */
