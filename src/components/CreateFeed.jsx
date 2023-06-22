@@ -168,6 +168,7 @@ const CreateFeed = (props) => {
       });
       close();
       queryClient.invalidateQueries("getFeedAxios");
+      queryClient.invalidateQueries("mypage");
     },
     onError: (error) => {
       alert(error);

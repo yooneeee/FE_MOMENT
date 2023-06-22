@@ -97,7 +97,7 @@ function ChatList() {
     <>
       <ChatListContainer>
         <ChatSearchContainer>
-          <StyledIcon />
+          {/* <StyledIcon /> */}
 
           <ChatSearch
             placeholder="Role, NickName 검색"

@@ -10,8 +10,6 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { FiSettings } from "react-icons/fi";
 import { BiDownArrow } from "react-icons/bi";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
-import CreateBoard from "../components/CreateBoard";
 import EditBoard from "../components/EditBoard";
 
 function MyPageBoard() {

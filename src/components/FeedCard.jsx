@@ -40,7 +40,6 @@ function FeedCard({ data, onClick, openFeedDetail }) {
   const handleHeartButtonClick = (photoId) => {
     likeButtonHandler(photoId);
   };
-  console.log("데이터", data);
   return (
     <CardDesign>
       <SliderWrapper>
