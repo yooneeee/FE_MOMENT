@@ -32,6 +32,9 @@ const ChatTest = () => {
   const [chatDates, setChatDates] = useState([]); // 날짜
   const [isVisible, setIsVisible] = useState(true); // 삭제후 채팅방 상태관리
 
+  const [messageCharacters, setMessageCharacters] = useState(0);
+  const messageMaxLength = 500;
+
   const client = useRef({});
   const scrollRef = useRef();
 
@@ -337,19 +340,23 @@ const ChatTest = () => {
                             alt="Profile"
                           />
                         </ProfileContainer>
-                        <MessageContainer>
-                          <ChatBubble
-                            key={index}
-                            isSender={_chatMessage.senderId === userId}
-                            isReceiver={_chatMessage.receiverId === userId}
-                          >
-                            {_chatMessage.message}
-                          </ChatBubble>
-                          {/* <Time>{todayTime()}</Time> */}
-                        </MessageContainer>
-                        <Time>
-                          {formatAMPM(new Date(_chatMessage.createdAt))}
-                        </Time>
+                        <ParentContainer
+                          isSender={_chatMessage.senderId === userId}
+                        >
+                          <MessageContainer>
+                            <ChatBubble
+                              key={index}
+                              isSender={_chatMessage.senderId === userId}
+                              isReceiver={_chatMessage.receiverId === userId}
+                            >
+                              {_chatMessage.message}
+                            </ChatBubble>
+                            {/* <Time>{todayTime()}</Time> */}
+                          </MessageContainer>
+                          <Time isSender={_chatMessage.senderId === userId}>
+                            {formatAMPM(new Date(_chatMessage.createdAt))}
+                          </Time>
+                        </ParentContainer>
                       </MessageWrapper>
                     </React.Fragment>
                   ))}
@@ -357,17 +364,19 @@ const ChatTest = () => {
               )}
               <div ref={scrollRef}></div>
               <SendContainer>
-                {overLimit && <span>999자를 초과하였습니다!</span>}
+                {overLimit && <span>500자 초과하였습니다!</span>}
                 <ChatInputContainer>
                   <ChatInput
                     placeholder="메세지를 입력해주세요."
-                    maxLength={1000}
+                    maxLength={500}
                     rows={1}
                     type={"text"}
                     value={message}
                     onChange={(e) => {
-                      if (e.target.value.length <= 1000) {
-                        setMessage(e.target.value);
+                      const newValue = e.target.value;
+                      if (newValue.length <= messageMaxLength) {
+                        setMessage(newValue);
+                        setMessageCharacters(newValue.length);
                         setOverLimit(false); // 길이 제한이 초과되지 않았으므로 경고를 숨김
                       } else {
                         setOverLimit(true); // 길이 제한이 초과되었으므로 경고를 표시
@@ -377,7 +386,20 @@ const ChatTest = () => {
                     onKeyDown={(e) => enterHandler(e, message)}
                   />
                   {/* <SendButton onClick={() => sendMessage.mutate(message)}> */}
-                  <SendButton onClick={() => publish(message)}>전송</SendButton>
+                  <Bundle>
+                    <span>
+                      {messageCharacters}/{messageMaxLength}
+                    </span>
+                    <SendButton
+                      onClick={() => {
+                        publish(message);
+                        setMessage("");
+                        setMessageCharacters(0);
+                      }}
+                    >
+                      전송
+                    </SendButton>
+                  </Bundle>
                 </ChatInputContainer>
               </SendContainer>
             </ScrollableDiv>
@@ -471,12 +493,13 @@ const EntireContainer = styled.div`
 const ChatRoomContainer = styled.div`
   flex: 2; // 차지하는 공간의 비율을 2로 설정
   border-left: 1px solid #ccc;
-  /* padding: 20px; */
-  /* overflow: auto; */
+
   max-height: 900px;
   /* padding: 0px 90px 0px 0px; */
-
+  /* padding: 20px; */
+  /* overflow: auto; */
   /* display: flex; */
+  /* position: relative; */
 `;
 const ChatContainer = styled.div`
   display: flex;
@@ -490,6 +513,8 @@ const ChatContainer = styled.div`
 
   position: relative;
   min-height: 61vh;
+
+  margin-bottom: 100px;
 `;
 
 const SendContainer = styled.div`
@@ -498,6 +523,15 @@ const SendContainer = styled.div`
   width: 100%;
   max-width: 800px;
   margin: 10px auto;
+  margin: 0 auto;
+
+  /* position: absolute;
+  bottom: 20%; */
+`;
+const ParentContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
 `;
 
 const MessageContainer = styled.div`
@@ -505,6 +539,8 @@ const MessageContainer = styled.div`
   align-items: center;
   /* align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")}; */
   margin: 10px 15px;
+  /* justify-content: ${(props) =>
+    props.isSender ? "flex-start" : "flex-end"}; */
   flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
 `;
 const ProfileContainer = styled.div`
@@ -533,7 +569,7 @@ const ChatBubble = styled.div`
 
   white-space: pre-wrap;
   word-wrap: break-word;
-  max-width: 700px; /* 한 줄에 표시되는 최대 너비 */
+  max-width: 550px; /* 한 줄에 표시되는 최대 너비 */
   overflow-wrap: break-word;
 
   &:after {
@@ -552,7 +588,7 @@ const ChatBubble = styled.div`
 const Time = styled.div`
   font-size: 13px;
   color: #a0a0a0;
-  margin-top: 20px;
+  margin-bottom: 10px;
 `;
 const ChatInputContainer = styled.div`
   display: flex;
@@ -577,11 +613,20 @@ const ChatInput = styled.textarea`
   border-radius: 4px;
   resize: none; // 사용자가 크기를 조절하지 못하게 함
 `;
+const Bundle = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  /* align-items: center; */
+  /* justify-content: center; */
+  & span {
+    margin-left: 8px;
+  }
+`;
 
 const SendButton = styled.button`
   margin-left: 8px;
-  margin-right: 4px;
-  margin-top: 30px;
+  margin-top: 10px;
   padding: 8px 20px;
   background-color: #483767;
   color: #fff;
