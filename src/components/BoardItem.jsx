@@ -50,6 +50,7 @@ function BoardItem({
       return "마감";
     }
   };
+
   useEffect(() => {
     const diff = getTimeDifference(item.createdTime);
     setTimeDifference(diff);
