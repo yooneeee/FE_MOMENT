@@ -92,7 +92,7 @@ function MyPageFeed() {
           } catch (error) {
             Swal.fire({
               title: "삭제 실패!",
-              text: "피드 삭제 중 오류가 발생했습니다.",
+              text: "포트폴리오 삭제 중 오류가 발생했습니다.",
               icon: "error",
               confirmButtonColor: "#483767",
               confirmButtonText: "확인",
@@ -152,10 +152,10 @@ function MyPageFeed() {
             <MyPageProfile />
           </ProfileContainer>
           <WorkSection>
-            <Work>나의 작업물</Work>
+            <Work>나의 포트폴리오</Work>
             {(!data.photoList || data.photoList.length === 0) && (
               <EmptyChatList>
-                <p>피드 목록이 없습니다. 피드를 생성해보세요!</p>
+                <p>포트폴리오 목록이 없습니다. 포트폴리오를 생성해보세요!</p>
               </EmptyChatList>
             )}
             <WorkList>

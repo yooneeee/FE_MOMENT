@@ -128,7 +128,6 @@ function Board() {
     }
   );
 
-  // 바닥 div 추적
   const [bottomObserverRef, bottomInView] = useInView({
     threshold: 0,
   });
