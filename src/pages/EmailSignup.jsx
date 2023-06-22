@@ -240,7 +240,14 @@ function EmailSignup() {
     return password === passwordCheck;
   }
   const signupActiveHandler = () => {
-    if (!email || !password || !passwordCheck || !nickName || !gender) {
+    if (
+      !email ||
+      !password ||
+      !passwordCheck ||
+      !nickName ||
+      !gender ||
+      password !== passwordCheck
+    ) {
       setSignupActive(false);
     } else {
       setSignupActive(true);
@@ -314,7 +321,7 @@ function EmailSignup() {
   };
   useEffect(() => {
     signupActiveHandler();
-  }, [nickName, email, gender, role, password]);
+  }, [nickName, email, gender, role, password, passwordCheck]);
   return (
     <Container>
       <CenteredContent>
