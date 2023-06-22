@@ -39,15 +39,28 @@ const ChatTest = () => {
   const scrollRef = useRef();
 
   /* 시간을 변환하는 함수->오전, 오후 */
-  const formatAMPM = (date) => {
+  // const formatAMPM = (date) => {
+  //   let hours = date.getHours();
+  //   let minutes = date.getMinutes();
+  //   const ampm = hours >= 12 ? "오후" : "오전";
+  //   hours = hours % 12;
+  //   hours = hours ? hours : 12;
+  //   minutes = minutes < 10 ? "0" + minutes : minutes;
+  //   const strTime = ampm + " " + hours + ":" + minutes + " ";
+  //   return strTime;
+  // };
+  const getHours = (date) => {
     let hours = date.getHours();
+    return hours > 12 ? hours - 12 : hours;
+  };
+
+  const getMinutes = (date) => {
     let minutes = date.getMinutes();
-    const ampm = hours >= 12 ? "오후" : "오전";
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    const strTime = ampm + " " + hours + ":" + minutes + " ";
-    return strTime;
+    return minutes < 10 ? "0" + minutes : minutes;
+  };
+
+  const getAMPM = (date) => {
+    return date.getHours() >= 12 ? "오후" : "오전";
   };
 
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
@@ -312,7 +325,7 @@ const ChatTest = () => {
                   <GuideText>
                     <span>{data.receiverNickName}님과 대화를 시작합니다</span>
                   </GuideText>
-                  {chatMessages.map((_chatMessage, index) => (
+                  {chatMessages.map((_chatMessage, index, arr) => (
                     <React.Fragment key={_chatMessage.uuid}>
                       <GuideText>
                         {(index === 0 ||
@@ -357,11 +370,18 @@ const ChatTest = () => {
                             >
                               {_chatMessage.message}
                             </ChatBubble>
-                            {/* <Time>{todayTime()}</Time> */}
                           </MessageContainer>
-                          <Time isSender={_chatMessage.senderId === userId}>
-                            {formatAMPM(new Date(_chatMessage.createdAt))}
-                          </Time>
+                          {index === arr.length - 1 ||
+                          new Date(_chatMessage.createdAt).getMinutes() !==
+                            new Date(arr[index + 1].createdAt).getMinutes() ? (
+                            <Time isSender={_chatMessage.senderId === userId}>
+                              {getAMPM(new Date(_chatMessage.createdAt)) +
+                                " " +
+                                getHours(new Date(_chatMessage.createdAt)) +
+                                ":" +
+                                getMinutes(new Date(_chatMessage.createdAt))}
+                            </Time>
+                          ) : null}
                         </ParentContainer>
                       </MessageWrapper>
                     </React.Fragment>
