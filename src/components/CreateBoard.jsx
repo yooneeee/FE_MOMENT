@@ -151,6 +151,7 @@ const CreateBoard = (props) => {
       });
       close();
       queryClient.invalidateQueries("getBoard");
+      queryClient.invalidateQueries("mypage");
     },
     onError: (error) => {
       alert(error);
