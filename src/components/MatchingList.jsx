@@ -37,6 +37,7 @@ function MatchingList({ showFollow, boardId }) {
         text: `매칭이 완료되었습니다!`,
         confirmButtonText: "확인",
       });
+      showFollow(false);
       queryClient.invalidateQueries("requestedMatchingList");
       queryClient.invalidateQueries("getAcceptList");
     },
@@ -58,6 +59,7 @@ function MatchingList({ showFollow, boardId }) {
         text: `매칭 신청이 거절 되었습니다!`,
         confirmButtonText: "확인",
       });
+      showFollow(false);
       queryClient.invalidateQueries("requestedMatchingList");
       queryClient.invalidateQueries("getAcceptList");
     },

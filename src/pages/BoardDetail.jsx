@@ -142,6 +142,18 @@ function BoardDetail() {
                     >
                       매칭 완료
                     </ProfileVisitButton>
+                  ) : data.checkMatched && data.checkApply === false ? (
+                    <ProfileVisitButton
+                      onClick={() => {
+                        Swal.fire({
+                          icon: "success",
+                          title: "매칭이 이미 완료된 게시글입니다.",
+                          confirmButtonText: "확인",
+                        });
+                      }}
+                    >
+                      매칭 완료
+                    </ProfileVisitButton>
                   ) : (
                     <ProfileVisitButton
                       onClick={() => {
