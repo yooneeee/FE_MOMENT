@@ -17,33 +17,34 @@ function BoardDetail() {
   const navigate = useNavigate();
   const userId = useSelector((state) => state.user.userId);
   const queryClient = useQueryClient();
+
   // 스크롤 시 따라다니는 Form
-  useEffect(() => {
-    const handleScroll = () => {
-      const position = window.pageYOffset;
-      const limitedPosition = Math.max(70, Math.min(125, position));
-      setCurrentPosition(limitedPosition);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const position = window.pageYOffset;
+  //     const limitedPosition = Math.max(70, Math.min(125, position));
+  //     setCurrentPosition(limitedPosition);
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    if (formRef.current && formRangeRef.current) {
-      // formRef와 formRangeRef가 null이 아닌지 확인
-      const formHeight = formRef.current.offsetHeight;
-      const formRangeHeight = formRangeRef.current.offsetHeight;
-      const maxTopPosition = formRangeHeight - formHeight;
-      const limitedTopPosition = Math.max(
-        0,
-        Math.min(maxTopPosition, currentPosition)
-      );
-      formRef.current.style.top = `${limitedTopPosition}px`;
-    }
-  }, [currentPosition]);
+  // useEffect(() => {
+  //   if (formRef.current && formRangeRef.current) {
+  //     // formRef와 formRangeRef가 null이 아닌지 확인
+  //     const formHeight = formRef.current.offsetHeight;
+  //     const formRangeHeight = formRangeRef.current.offsetHeight;
+  //     const maxTopPosition = formRangeHeight - formHeight;
+  //     const limitedTopPosition = Math.max(
+  //       0,
+  //       Math.min(maxTopPosition, currentPosition)
+  //     );
+  //     formRef.current.style.top = `${limitedTopPosition}px`;
+  //   }
+  // }, [currentPosition]);
 
   const { isError, isLoading, data } = useQuery(
     ["getBoardDetailAxios", params.boardId],
@@ -71,6 +72,16 @@ function BoardDetail() {
   if (isError) {
     return <h1>오류가 발생하였습니다...!</h1>;
   }
+
+  const currentDate = new Date(); // 현재 날짜를 가져옴
+  const year = currentDate.getFullYear(); // 년도를 가져옴
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // 월을 가져옴 (0부터 시작하기 때문에 +1)
+  const day = String(currentDate.getDate()).padStart(2, "0"); // 일을 가져옴
+  const formattedDate = `${year}-${month}-${day}`; // 포맷팅된 날짜 생성
+
+  console.log(data.deadLine);
+  console.log(formattedDate); // 출력: "2023-06-22"
+  console.log(data.deadLine < formattedDate);
 
   return (
     <Container>
@@ -142,16 +153,36 @@ function BoardDetail() {
                     >
                       매칭 완료
                     </ProfileVisitButton>
+                  ) : data.checkMatched && data.checkApply === false ? (
+                    <ProfileVisitButton
+                      onClick={() => {
+                        Swal.fire({
+                          icon: "success",
+                          title: "매칭이 이미 완료된 게시글입니다.",
+                          confirmButtonText: "확인",
+                        });
+                      }}
+                    >
+                      매칭 완료
+                    </ProfileVisitButton>
                   ) : (
                     <ProfileVisitButton
                       onClick={() => {
-                        matchingButtonHandler(data.boardId);
-                        Swal.fire({
-                          icon: "success",
-                          title: "매칭 신청 완료!",
-                          text: "매칭이 완료되었습니다!",
-                          confirmButtonText: "확인",
-                        });
+                        if (data.deadLine > formattedDate) {
+                          matchingButtonHandler(data.boardId);
+                          Swal.fire({
+                            icon: "success",
+                            title: "매칭 신청 완료!",
+                            text: "매칭이 완료되었습니다!",
+                            confirmButtonText: "확인",
+                          });
+                        } else {
+                          Swal.fire({
+                            icon: "error",
+                            title: "이미 마감된 게시글입니다.",
+                            confirmButtonText: "확인",
+                          });
+                        }
                       }}
                     >
                       매칭 신청

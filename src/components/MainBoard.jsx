@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { TbMoodHappy } from "react-icons/tb";
 
 function MainBoard({ board }) {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ function MainBoard({ board }) {
           <FlexWrap>
             <UserName>{board.nickName}</UserName>
             <UserPosition>
-              👍
+              <TbMoodHappy />
               <UserPositionText>{board.totalLoveCnt}</UserPositionText>
             </UserPosition>
           </FlexWrap>
@@ -111,6 +112,10 @@ const UserProfile = styled.img`
   object-fit: cover;
   flex-shrink: 0;
   margin-right: 10px;
+  @media (max-width: 1200px) {
+    width: 23px;
+    height: 23px;
+  }
 `;
 const UserName = styled.span`
   font-weight: bold;
@@ -121,13 +126,8 @@ const UserPosition = styled.div`
   display: flex;
   align-items: center;
 `;
-const HeartIcon = styled(AiOutlineHeart)`
-  font-size: 16px;
-  margin-right: 4px;
-`;
 
 const UserPositionText = styled.span`
-  margin-left: 5px;
   font-size: 16px;
 `;
 const BoardTitle = styled.span`
