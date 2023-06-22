@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
 function AlarmListModal({ alarmList, showAlarmList }) {
+  console.log(alarmList);
   const navigate = useNavigate();
+  const userId = useSelector((state) => state.user.userId);
   const groupedAlarmList = [];
   let currentSender = null;
 
@@ -34,6 +37,22 @@ function AlarmListModal({ alarmList, showAlarmList }) {
       return `${daysDiff}일 전 `;
     }
   };
+  const handleFollowItemClick = (groupId) => {
+    const group = groupedAlarmList.find(
+      (item) => item[0].createdAt === groupId
+    );
+
+    if (
+      group[0].matchStatus === "MATCH_APPLY" ||
+      group[0].matchStatus === "MATCH_ACCEPT"
+    ) {
+      navigate(`/matching/${userId}`);
+    } else if (typeof group[0].matchStatus === "undefined") {
+      navigate(`/chattest/${group[0].senderId}`);
+    }
+    showAlarmList();
+  };
+  console.log("group", groupedAlarmList);
 
   return (
     <div>
@@ -59,22 +78,33 @@ function AlarmListModal({ alarmList, showAlarmList }) {
             const latestTime = new Date(
               Math.max(...group.map((item) => new Date(item.createdAt)))
             );
-
+            console.log(group[0].matchStatus);
             const latestTimeDifference = getTimeDifference(latestTime);
+            let message;
+            if (group[0].matchStatus === "MATCH_APPLY") {
+              message = `${group[0].userNickName}님이 매칭을 신청하셨습니다.`;
+            } else if (group[0].matchStatus === "MATCH_ACCEPT") {
+              message = `${group[0].userNickName}님이 매칭을 수락하였습니다.`;
+            } else {
+              message = `${group[0].senderNickName}님이 메세지를 보냈습니다.`;
+            }
+            /*   group[0].matchStatus === "MATCH_APPLY"
+                ? `${group[0].userNickName}님이 매칭을 신청하셨습니다.`
+                : `${group[0].senderNickName}님이 메세지를 보냈습니다.`; */
             return (
               <li key={group[0].createdAt}>
                 <FollowItem
                   onClick={() => {
-                    navigate(`/chattest/${group[0].senderId}`);
+                    handleFollowItemClick(group[0].createdAt);
                     showAlarmList();
                   }}
                 >
-                  <UserImage src={group[0].senderProfileImg} />
+                  <UserImage
+                    src={group[0].senderProfileImg || group[0].userProfileImg}
+                  />
                   <UserInfo>
-                    <span>
-                      {group[0].senderNickName}님이 메세지를 보냈습니다.
-                    </span>
-                    <p>{latestTimeDifference}</p>
+                    <span>{message}</span>
+                    {group[0].createdAt && <p>{latestTimeDifference}</p>}
                   </UserInfo>
                 </FollowItem>
               </li>
