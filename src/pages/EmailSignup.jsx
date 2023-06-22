@@ -37,6 +37,7 @@ function EmailSignup() {
   const [passwordCheckErrorMessage, setPasswordCheckErrorMessage] =
     useState(false);
   const [signupActive, setSignupActive] = useState(false);
+  const nickMaxLength = 8;
   // 이미지 state
   const [profileImg, setProfileImg] = useState(null);
   const [imgUrl, setImgUrl] = useState(null);
@@ -166,7 +167,12 @@ function EmailSignup() {
       return "";
     }
   }, [nickName]);
-
+  const handleNickNameChange = (e) => {
+    const value = e.target.value;
+    if (value.length <= nickMaxLength) {
+      setNickName(value);
+    }
+  };
   // 이메일 에러 메세지
   const emailError = useMemo(() => {
     if (email && !emailRegex.test(email)) {
@@ -328,8 +334,9 @@ function EmailSignup() {
             name="nickname"
             value={nickName || ""}
             placeholder="닉네임을 입력해주세요."
-            onChange={(e) => setNickName(e.target.value)}
+            onChange={handleNickNameChange}
           />
+          {nickName.length}/8
         </InputWrap>
         {nickNameErrorMessage && <ErrorMessage>{nickNameError}</ErrorMessage>}
         <InputTitle>포지션</InputTitle>
