@@ -166,6 +166,10 @@ function Feed() {
     return <h3>에러가 발생하였습니다.</h3>;
   }
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <>
       <Header>
