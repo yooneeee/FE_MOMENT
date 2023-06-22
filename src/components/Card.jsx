@@ -4,10 +4,10 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineHeart } from "react-icons/ai";
 import defaultImg from "../assets/img/2.jpg";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { TbMoodHappy } from "react-icons/tb";
 
 function Card({ user }) {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ function Card({ user }) {
           <FlexWrap>
             <UserNickName>{user.nickName}</UserNickName>
             <UserPosition>
-              👍
+              <TbMoodHappy />
               <UserPositionText>{user.totalLoveCnt}</UserPositionText>
             </UserPosition>
           </FlexWrap>
@@ -86,7 +86,7 @@ function Card({ user }) {
         <FlexWrap>
           <UserNickName>{user.nickName}</UserNickName>
           <UserPosition>
-            👍
+            <TbMoodHappy />
             <UserPositionText>
               {user.totalLoveCnt || user.loveCnt}
             </UserPositionText>
@@ -104,14 +104,8 @@ const UserPosition = styled.div`
   align-items: center;
 `;
 
-const HeartIcon = styled(AiOutlineHeart)`
-  font-size: 16px;
-  margin-right: 4px;
-`;
-
 const UserPositionText = styled.span`
   font-size: 16px;
-  margin-left: 5px;
 `;
 
 const Styled_Slide = styled(Slider)`
@@ -155,19 +149,14 @@ const CardDesign = styled.div`
   flex-grow: 1;
   cursor: pointer;
   width: 100%;
-  border-radius: 5px;
-  flex-grow: 1;
+  width: calc(25% - 20px);
 
-  @media (min-width: 768px) {
-    width: calc(25% - 20px);
+  @media (max-width: 1024px) {
+    width: calc(50% - 20px);
   }
 
-  @media (min-width: 1024px) {
-    width: calc(25% - 20px);
-  }
-
-  @media (min-width: 1440px) {
-    width: calc(25% - 20px);
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 
@@ -183,6 +172,10 @@ const ProfileImg = styled.img`
   object-fit: cover;
   padding: 10px;
   flex-shrink: 0;
+  @media (max-width: 1024px) {
+    width: 45px;
+    height: 45px;
+  }
 `;
 
 const FlexWrap = styled.div`
