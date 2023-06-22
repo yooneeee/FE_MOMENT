@@ -30,7 +30,21 @@ function Card({ user }) {
       <CardDesign>
         <SliderWrapper>
           <Styled_Slide>
-            <CardProfileImg src={defaultImg} />
+            <CardProfileImg
+              onClick={() => {
+                if (isLoggedIn) {
+                  navigate(`/page/${user.userId}`);
+                } else {
+                  Swal.fire({
+                    icon: "warning",
+                    title: "회원 전용 서비스!",
+                    text: `더 많은 서비스를 이용하시려면 로그인해주세요🙏`,
+                    confirmButtonText: "확인",
+                  });
+                }
+              }}
+              src={defaultImg}
+            />
           </Styled_Slide>
         </SliderWrapper>
         <CardHeader
@@ -64,7 +78,22 @@ function Card({ user }) {
       <SliderWrapper>
         <Styled_Slide {...settings}>
           {user.photoList.map((item) => (
-            <CardProfileImg key={item.photoUrl} src={item.photoUrl} />
+            <CardProfileImg
+              key={item.photoUrl}
+              src={item.photoUrl}
+              onClick={() => {
+                if (isLoggedIn) {
+                  navigate(`/page/${user.userId}`);
+                } else {
+                  Swal.fire({
+                    icon: "warning",
+                    title: "회원 전용 서비스!",
+                    text: `더 많은 서비스를 이용하시려면 로그인해주세요🙏`,
+                    confirmButtonText: "확인",
+                  });
+                }
+              }}
+            />
           ))}
         </Styled_Slide>
       </SliderWrapper>
@@ -157,6 +186,16 @@ const CardDesign = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
+  }
+  &:hover {
+    transform: translateY(-10px);
+    transition: transform 1s ease;
+    cursor: pointer;
+  }
+
+  &:not(:hover) {
+    transform: translateY(0);
+    transition: transform 1s ease;
   }
 `;
 

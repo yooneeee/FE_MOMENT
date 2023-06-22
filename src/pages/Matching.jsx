@@ -161,7 +161,10 @@ function Matching() {
                   className={buttonActiveControl === "accept" ? "active" : ""}
                   onClick={() => setButtonActiveControl("accept")}
                 >
-                  내가 받은 매칭 신청
+                  <ButtonContentContainer>
+                    <p>내가 받은 매칭 신청</p>
+                    <p>{acceptListData.totalCnt}</p>
+                  </ButtonContentContainer>
                 </MatchingTabButton>
                 <MatchingTabButton
                   className={
@@ -169,12 +172,15 @@ function Matching() {
                   }
                   onClick={() => setButtonActiveControl("application")}
                 >
-                  내가 신청한 매칭
+                  <ButtonContentContainer>
+                    <p>내가 신청한 매칭</p>
+                    <p>{applyListData.totalCnt}</p>
+                  </ButtonContentContainer>
                 </MatchingTabButton>
               </MatchingTabBar>
               <BoardList>
                 {buttonActiveControl === "accept"
-                  ? acceptListData.map((item) => {
+                  ? acceptListData.matchingBoardResponseDtoList.map((item) => {
                       return (
                         <BoardItemContainer key={item.boardId}>
                           <BoardItem
@@ -191,7 +197,7 @@ function Matching() {
                               <MatchingStatusBox
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                navigate(`/page/${item.whoMatchId}`)
+                                  navigate(`/page/${item.whoMatchId}`);
                                 }}
                               >
                                 <p>
@@ -217,22 +223,24 @@ function Matching() {
                         </BoardItemContainer>
                       );
                     })
-                  : applyListData.map((item) => {
-                      return (
-                        <BoardItemContainer key={item.boardId}>
-                          <BoardItem
-                            key={item.boardId}
-                            item={item}
-                            onClick={() => {
-                              navigate(`/board/${item.boardId}`);
-                            }}
-                            showFollow={showFollow}
-                            MatchingStatus="on"
-                            hover="no"
-                          />
-                        </BoardItemContainer>
-                      );
-                    })}
+                  : applyListData.matchingApplyBoardResponseDtoList.map(
+                      (item) => {
+                        return (
+                          <BoardItemContainer key={item.boardId}>
+                            <BoardItem
+                              key={item.boardId}
+                              item={item}
+                              onClick={() => {
+                                navigate(`/board/${item.boardId}`);
+                              }}
+                              showFollow={showFollow}
+                              MatchingStatus="on"
+                              hover="no"
+                            />
+                          </BoardItemContainer>
+                        );
+                      }
+                    )}
               </BoardList>
             </Content>
             {showFollowModal && (
@@ -271,6 +279,13 @@ const MatchingTabBar = styled.div`
   display: flex;
 `;
 
+const ButtonContentContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  width: fit-content;
+  margin: auto;
+`;
+
 const MatchingStatusBox = styled.button`
   width: 84%;
   background-color: #8d18aa;
@@ -295,8 +310,6 @@ const MatchingStatusBox = styled.button`
     color: #fff;
   }
 `;
-
-const ButtonContainer = styled.div``;
 
 const MatchingTabButton = styled.button`
   width: 50%;
