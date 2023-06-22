@@ -70,22 +70,6 @@ const CardDesign = styled.div`
     transform: translateY(0);
     transition: transform 1s ease;
   }
-  /* &:hover {
-    transform: scale(1.05);
-  } */
-  /*     width: calc(25% - 20px);
-    margin: 10px;
-  } 
-
-  @media (min-width: 1024px) {
-    width: calc(25% - 20px);
-    margin: 10px;
-  }
-
-  @media (min-width: 1440px) {
-    width: calc(25% - 20px);
-    margin: 10px;
-  }*/
 `;
 
 const CardContent = styled.div`
@@ -138,6 +122,7 @@ const UserPosition = styled.div`
 
 const UserPositionText = styled.span`
   font-size: 16px;
+  margin-left: 5px;
 `;
 const BoardTitle = styled.span`
   font-size: 16px;
