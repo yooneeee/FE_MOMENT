@@ -26,7 +26,6 @@ const MyPage = () => {
       enabled: hostId !== undefined,
     }
   );
-  console.log("데이터", data);
 
   // 모달 제어
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);

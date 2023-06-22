@@ -135,6 +135,7 @@ const UserPosition = styled.div`
 
 const UserPositionText = styled.span`
   font-size: 16px;
+  margin-left: 5px;
 `;
 
 const Styled_Slide = styled(Slider)`
