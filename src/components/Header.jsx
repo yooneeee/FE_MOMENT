@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "../redux/modules/user";
 import Swal from "sweetalert2";
 import { MdExpandCircleDown } from "react-icons/md";
-import { NativeEventSource, EventSourcePolyfill } from "event-source-polyfill";
+import { EventSourcePolyfill } from "event-source-polyfill";
 import { TbBell } from "react-icons/tb";
 import AlarmListModal from "./AlarmListModal";
 import { BsFillCircleFill } from "react-icons/bs";
@@ -112,7 +112,7 @@ function Header() {
         );
         eventSource.addEventListener("chatAlarm-event", (event) => {
           const eventData = JSON.parse(event.data);
-          /* console.log("Received event:", eventData); */
+          console.log("Received event:", eventData);
           setAlarmList((prevList) => [...prevList, eventData]);
           setHasNewNotifications(true);
         });
@@ -499,7 +499,7 @@ const ToggleWriteMenu = styled.div`
   z-index: 100;
   @media (max-width: 768px) {
     top: 105px;
-    right: 90px;
+    right: 120px;
   }
 `;
 
@@ -508,7 +508,7 @@ const CategoryBox = styled.div`
   gap: 20px;
   margin-left: 20px;
   @media (max-width: 768px) {
-    gap: 0;
+    display: none;
   }
 `;
 
@@ -530,6 +530,8 @@ const MenuIcon = styled.span`
 `;
 const LeftMenu = styled.div`
   display: flex;
+  align-items: center;
+  flex-grow: 1;
 `;
 
 const HeaderTitle = styled.p`
