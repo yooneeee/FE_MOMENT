@@ -179,7 +179,7 @@ function Header() {
                 closeAlarmList();
               }}
             >
-              피드
+              포트폴리오
             </HeaderButton>
             <HeaderButton
               onClick={() => {
@@ -337,7 +337,7 @@ function Header() {
                 }
               }}
             >
-              피드 작성
+              포트폴리오 작성
             </MenuButton>
             <MenuButton
               onClick={() => {
@@ -373,7 +373,7 @@ function Header() {
                 closeAlarmList();
               }}
             >
-              피드
+              포트폴리오
             </MenuButton>
             <MenuButton
               onClick={() => {
