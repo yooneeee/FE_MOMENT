@@ -66,10 +66,12 @@ const MyPage = () => {
           </ProfileContainer>
           <Container>
             <WorkSection>
-              <Work>{mine ? "나의 피드" : `${data.nickName}'s 피드`}</Work>
+              <Work>
+                {mine ? "나의 포트폴리오" : `${data.nickName}'s 포트폴리오`}
+              </Work>
               {(!data.photoList || data.photoList.length === 0) && (
                 <EmptyChatList>
-                  <p>피드 목록이 없습니다. 피드를 생성해보세요!</p>
+                  <p>포트폴리오 목록이 없습니다. 포트폴리오를 생성해보세요!</p>
                 </EmptyChatList>
               )}
               <WorkList>

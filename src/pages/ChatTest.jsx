@@ -114,7 +114,7 @@ const ChatTest = () => {
           } catch (error) {
             Swal.fire({
               title: "삭제 실패!",
-              text: "피드 삭제 중 오류가 발생했습니다.",
+              text: "포트폴리오 삭제 중 오류가 발생했습니다.",
               icon: "error",
               confirmButtonColor: "#483767",
               confirmButtonText: "확인",

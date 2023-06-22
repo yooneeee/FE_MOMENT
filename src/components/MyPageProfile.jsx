@@ -38,7 +38,7 @@ const MyPageProfile = () => {
             <UserNickname>{data.nickName}</UserNickname>
           </StFlex>
           <StFlex>
-            <Post>피드 {data.photoList.length}</Post>
+            <Post>포트폴리오 {data.photoList.length}</Post>
             <span>|</span>
             <Recommend>게시글 {data.boardCnt}</Recommend>
           </StFlex>
