@@ -66,9 +66,9 @@ const ChatTest = () => {
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
-  console.log("채팅할사람", data);
+  // console.log("채팅할사람", data);
   const chatRoomIds = data?.chatList?.map((item) => item.chatRoomId);
-  console.log("챗룸", chatRoomIds);
+  // console.log("챗룸", chatRoomIds);
 
   // useEffect(() => {
   //   if (data?.chatList) {
