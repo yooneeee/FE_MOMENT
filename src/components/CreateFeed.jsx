@@ -162,8 +162,8 @@ const CreateFeed = (props) => {
     onSuccess: () => {
       Swal.fire({
         icon: "success",
-        title: "피드 생성 완료!",
-        text: `피드가 생성되었습니다✨`,
+        title: "포트폴리오 생성 완료!",
+        text: `포트폴리오가 생성되었습니다✨`,
         confirmButtonText: "확인",
       });
       close();
@@ -179,7 +179,7 @@ const CreateFeed = (props) => {
     if (!selectedFile || !content || hashTags == []) {
       Swal.fire({
         icon: "error",
-        title: "피드 생성 실패!",
+        title: "포트폴리오 생성 실패!",
         text: `모든 내용을 입력해주세요🙏`,
         confirmButtonText: "확인",
       });
@@ -212,7 +212,7 @@ const CreateFeed = (props) => {
       {open ? (
         <section ref={modalRef}>
           <div className="header">
-            <div className="headerTitle">새 피드 만들기</div>
+            <div className="headerTitle">새 포트폴리오 만들기</div>
             <div className="headerRightBox">
               <button
                 className="saveButton"

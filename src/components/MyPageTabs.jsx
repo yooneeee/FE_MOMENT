@@ -31,7 +31,7 @@ function MyPageTabs({ pageName }) {
             activeClickHandler("내 피드");
           }}
         >
-          내 피드
+          내 포트폴리오
         </TabButton>
         <TabButton
           className={pageName === "내 게시글" ? "active" : ""}
@@ -99,7 +99,7 @@ const MaueBar = styled.div`
 const TabButton = styled.button`
   margin-right: 15px;
   flex: 1;
-  max-width: 100px;
+  max-width: 120px;
   padding: 11px;
   border: none;
   outline: none;
