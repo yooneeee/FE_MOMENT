@@ -166,7 +166,7 @@ const UserNickName = styled.div`
   font-size: 14px;
   font-weight: bold;
   color: black;
-  margin-left: 1px;
+  margin-left: 8px;
   flex-shrink: 0;
 `;
 
