@@ -148,7 +148,7 @@ function Board() {
   }
 
   return (
-    <Container>
+    <>
       <Header>
         <Navbar>
           <span>게시판</span>
@@ -250,7 +250,7 @@ function Board() {
         <div ref={bottomObserverRef}></div>
       </Content>
       {showButton && <ScrollToTopButton />}
-    </Container>
+    </>
   );
 }
 
@@ -311,7 +311,7 @@ const NavItems = styled.nav`
 
 const NavItem = styled.div`
   cursor: pointer;
-  padding: 5px 5px 5px 5px;
+  padding: 5px;
 
   &.active {
     color: black;
@@ -319,9 +319,9 @@ const NavItem = styled.div`
 `;
 
 const Header = styled.header`
-  padding: 16px;
-  width: 80%;
+  padding: 16px 0 16px 0;
   border-bottom: 1px solid #ddd;
+  margin: 0 150px;
 `;
 
 const Content = styled.div`
@@ -329,7 +329,7 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 45px;
-  
+
   @media (max-width: 1300px) {
     grid-template-columns: repeat(3, 1fr);
   }
