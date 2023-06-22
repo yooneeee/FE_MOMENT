@@ -50,7 +50,9 @@ const ChatTest = () => {
   const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
     Chatting(receiverId)
   );
-  // console.log("채팅할사람", data);
+  console.log("채팅할사람", data);
+  const chatRoomIds = data?.chatList?.map((item) => item.chatRoomId);
+  console.log("챗룸", chatRoomIds);
 
   // useEffect(() => {
   //   if (data?.chatList) {
@@ -151,37 +153,37 @@ const ChatTest = () => {
     client.current.deactivate();
   };
 
-  const sendMessage = useMutation(
-    async (message) => {
-      if (!client.current.connected || !message.trim()) {
-        // message.trim()으로 메시지 앞뒤의 공백 제거 후 내용이 있는지 확인
-        return;
-      }
+  // const sendMessage = useMutation(
+  //   async (message) => {
+  //     if (!client.current.connected || !message.trim()) {
+  //       // message.trim()으로 메시지 앞뒤의 공백 제거 후 내용이 있는지 확인
+  //       return;
+  //     }
 
-      client.current.publish({
-        destination: "/pub/chat/send",
-        body: JSON.stringify({
-          message: message,
-          senderId: userId,
-          receiverId: data.receiverId,
-          chatRoomId: data.chatRoomId,
-        }),
-      });
+  //     client.current.publish({
+  //       destination: "/pub/chat/send",
+  //       body: JSON.stringify({
+  //         message: message,
+  //         senderId: userId,
+  //         receiverId: data.receiverId,
+  //         chatRoomId: data.chatRoomId,
+  //       }),
+  //     });
 
-      setMessage("");
-      setOverLimit(false);
-    },
-    {
-      onSuccess: () => {
-        // 새 메시지를 성공적으로 보냈을 때, 채팅 목록 query를 무효화하여 다시 fetch하게 합니다.
-        queryClient.invalidateQueries("ChattingList");
-      },
-      onError: (error) => {
-        // 메시지 전송 실패 시에는 에러를 출력합니다.
-        console.error(error);
-      },
-    }
-  );
+  //     setMessage("");
+  //     setOverLimit(false);
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       // 새 메시지를 성공적으로 보냈을 때, 채팅 목록 query를 무효화하여 다시 fetch하게 합니다.
+  //       queryClient.invalidateQueries("ChattingList");
+  //     },
+  //     onError: (error) => {
+  //       // 메시지 전송 실패 시에는 에러를 출력합니다.
+  //       console.error(error);
+  //     },
+  //   }
+  // );
 
   const subscribe = () => {
     if (data?.chatRoomId) {
@@ -194,19 +196,21 @@ const ChatTest = () => {
           ]);
         }
       );
-      // client.current?.subscribe("/pub/chat/read", ({ body }) => {
-      //   const readStatusUpdate = JSON.parse(body);
-      //   setChatMessages((prevChatMessages) =>
-      //     prevChatMessages.map((message) =>
-      //       message.id === readStatusUpdate.uuid
-      //         ? { ...message, readStatus: readStatusUpdate.readStatus }
-      //         : message
-      //     )
-      //   );
-      //   console.log("확인:::".readStatusUpdate);
-      //   // readStatusUpdate에 따라 필요한 동작을 수행합니다.
-      //   // 예를 들어, 메시지를 읽은 상태로 표시하거나, 읽지 않은 메시지 개수를 업데이트하는 등의 동작을 수행할 수 있습니다.
-      // });
+      client.current?.subscribe(`/pub/chat/read`, ({ body }) => {
+        const readStatusUpdate = JSON.parse(body);
+        console.log("확인:::", readStatusUpdate);
+
+        setChatMessages((prevChatMessages) =>
+          prevChatMessages.map((message) =>
+            data.chatRoomId === chatRoomIds
+              ? { ...message, readStatus: readStatusUpdate.readStatus }
+              : message
+          )
+        );
+        console.log("확인:::", readStatusUpdate);
+        // readStatusUpdate에 따라 필요한 동작을 수행합니다.
+        // 예를 들어, 메시지를 읽은 상태로 표시하거나, 읽지 않은 메시지 개수를 업데이트하는 등의 동작을 수행할 수 있습니다.
+      });
     }
   };
 
@@ -226,25 +230,25 @@ const ChatTest = () => {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
 
-  // const publish = (message) => {
-  //   if (!client.current.connected || !message.trim()) {
-  //     // message.trim()으로 메시지 앞뒤의 공백 제거 후 내용이 있는지 확인
-  //     return;
-  //   }
+  const publish = (message) => {
+    if (!client.current.connected || !message.trim()) {
+      // message.trim()으로 메시지 앞뒤의 공백 제거 후 내용이 있는지 확인
+      return;
+    }
 
-  //   client.current.publish({
-  //     destination: "/pub/chat/send",
-  //     body: JSON.stringify({
-  //       message: message,
-  //       senderId: userId,
-  //       receiverId: data.receiverId,
-  //       chatRoomId: data.chatRoomId,
-  //     }),
-  //   });
+    client.current.publish({
+      destination: "/pub/chat/send",
+      body: JSON.stringify({
+        message: message,
+        senderId: userId,
+        receiverId: data.receiverId,
+        chatRoomId: data.chatRoomId,
+      }),
+    });
 
-  //   setMessage("");
-  //   setOverLimit(false);
-  // };
+    setMessage("");
+    setOverLimit(false);
+  };
   /* Enter key 메시지 전송 */
   const enterHandler = (e, message) => {
     // 메시지가 비어있고 enter키 눌렀을 때 동작 방지
@@ -258,8 +262,8 @@ const ChatTest = () => {
     }
     // enter 키를 누르면 메시지 전송
     else if (!e.shiftKey && e.which === 13 && message.trim() !== "") {
-      // publish(message);
-      sendMessage.mutate(message);
+      publish(message);
+      // sendMessage.mutate(message);
       e.preventDefault();
     }
   };
@@ -372,9 +376,8 @@ const ChatTest = () => {
                     // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행
                     onKeyDown={(e) => enterHandler(e, message)}
                   />
-                  <SendButton onClick={() => sendMessage.mutate(message)}>
-                    전송
-                  </SendButton>
+                  {/* <SendButton onClick={() => sendMessage.mutate(message)}> */}
+                  <SendButton onClick={() => publish(message)}>전송</SendButton>
                 </ChatInputContainer>
               </SendContainer>
             </ScrollableDiv>
