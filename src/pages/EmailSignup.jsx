@@ -37,6 +37,7 @@ function EmailSignup() {
   const [passwordCheckErrorMessage, setPasswordCheckErrorMessage] =
     useState(false);
   const [signupActive, setSignupActive] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const nickMaxLength = 8;
   // 이미지 state
   const [profileImg, setProfileImg] = useState(null);
@@ -123,14 +124,21 @@ function EmailSignup() {
       });
     },
     onError: (error) => {
-      console.log(error);
       setIsSendEmail(false);
-      Swal.fire({
-        icon: "error",
-        title: "인증번호 전송 실패!",
-        /*      text: `이미 가입된 이메일입니다.😥`, */
-        confirmButtonText: "확인",
-      });
+      if (error.response.data.message === "이미 존재하는 메일입니다.") {
+        Swal.fire({
+          icon: "error",
+          title: "인증번호 전송 실패!",
+          text: `이미 가입된 이메일입니다.😥`,
+          confirmButtonText: "확인",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "인증번호 전송 실패!",
+          confirmButtonText: "확인",
+        });
+      }
     },
   });
 
@@ -143,6 +151,7 @@ function EmailSignup() {
         text: `이메일 인증에 성공하셨습니다!✨`,
         confirmButtonText: "확인",
       });
+      setIsEmailVerified(true);
     },
     onError: () => {
       setIsEmailChecking(false);
@@ -231,7 +240,7 @@ function EmailSignup() {
     return password === passwordCheck;
   }
   const signupActiveHandler = () => {
-    if (!email || !password || !nickName || !gender) {
+    if (!email || !password || !passwordCheck || !nickName || !gender) {
       setSignupActive(false);
     } else {
       setSignupActive(true);
@@ -392,9 +401,23 @@ function EmailSignup() {
                 setEmail(e.target.value);
               }}
               placeholder="이메일 주소를 입력해주세요"
+              disabled={isEmailVerified}
             />
           </InputWrap>
-          <MailCheckButton type="button" onClick={emailSendButtonHandler}>
+          <MailCheckButton
+            type="button"
+            onClick={() => {
+              if (isemailChecking) {
+                Swal.fire({
+                  icon: "warning",
+                  title: "이미 이메일 인증을 완료하셨습니다!",
+                  confirmButtonText: "확인",
+                });
+                return;
+              }
+              emailSendButtonHandler();
+            }}
+          >
             {isemailChecking ? "인증완료" : "인증번호 전송"}
           </MailCheckButton>
         </InputGroup>
@@ -418,6 +441,7 @@ function EmailSignup() {
               <MailCheckButton
                 type="button"
                 onClick={emailVerifyNumCheckHandler}
+                disabled={isemailChecking}
               >
                 {isemailChecking ? "인증완료" : "확인"}
               </MailCheckButton>
