@@ -174,7 +174,7 @@ function Feed() {
     <>
       <Header>
         <Navbar>
-          <span>피드</span>
+          <span>포트폴리오</span>
           <Search>
             <SelectWrap ref={selectWrapRef}>
               <SelectButton onClick={toggleShowList}>
