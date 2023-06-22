@@ -328,8 +328,8 @@ const Content = styled.div`
   padding: 30px 150px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin: auto;
+  gap: 45px;
+  
   @media (max-width: 1300px) {
     grid-template-columns: repeat(3, 1fr);
   }

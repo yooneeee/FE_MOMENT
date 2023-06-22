@@ -191,7 +191,7 @@ function Matching() {
                               <MatchingStatusBox
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  navigate(`/page/1`);
+                                navigate(`/page/${item.whoMatchId}`)
                                 }}
                               >
                                 <p>
