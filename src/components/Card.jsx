@@ -187,6 +187,16 @@ const CardDesign = styled.div`
   @media (max-width: 768px) {
     width: 100%;
   }
+  &:hover {
+    transform: translateY(-10px);
+    transition: transform 1s ease;
+    cursor: pointer;
+  }
+
+  &:not(:hover) {
+    transform: translateY(0);
+    transition: transform 1s ease;
+  }
 `;
 
 const CardHeader = styled.div`
