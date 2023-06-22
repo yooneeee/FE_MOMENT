@@ -271,6 +271,12 @@ const ChatTest = () => {
     }
   };
 
+  const handleMessageInput = (e) => {
+    publish(message);
+    setMessage(e.target.value);
+    setMessageCharacters(e.target.value.length);
+  };
+
   return (
     <>
       <GlobalStyle />
@@ -390,15 +396,7 @@ const ChatTest = () => {
                     <span>
                       {messageCharacters}/{messageMaxLength}
                     </span>
-                    <SendButton
-                      onClick={() => {
-                        publish(message);
-                        setMessage("");
-                        setMessageCharacters(0);
-                      }}
-                    >
-                      전송
-                    </SendButton>
+                    <SendButton onClick={handleMessageInput}>전송</SendButton>
                   </Bundle>
                 </ChatInputContainer>
               </SendContainer>
@@ -457,19 +455,13 @@ const SenderName = styled.span`
 const MessageWrapper = styled.div`
   display: flex;
   flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
-  /* align-items: colum; */
   align-items: center;
-  /* justify-content: space-between; */
   align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
-  /* margin: 10px 0; */
 `;
 
 const ScrollableDiv = styled.div`
   overflow-y: auto;
   height: calc(100% - 80px);
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-between; */
 
   /* // For Webkit-based Browsers
   ::-webkit-scrollbar {
@@ -483,32 +475,21 @@ const ScrollableDiv = styled.div`
 const EntireContainer = styled.div`
   display: flex;
   width: 100%;
-  /* height: 100vh; */
   height: calc(100vh - 190px);
   max-width: 75%;
-  /* max-height: 60%; */
   margin: auto;
   overflow: hidden;
 `;
 const ChatRoomContainer = styled.div`
   flex: 2; // 차지하는 공간의 비율을 2로 설정
   border-left: 1px solid #ccc;
-
   max-height: 900px;
-  /* padding: 0px 90px 0px 0px; */
-  /* padding: 20px; */
-  /* overflow: auto; */
-  /* display: flex; */
-  /* position: relative; */
 `;
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
   width: 100%;
-  /* max-width: 800px; */
   padding: 0px 20px;
-  /* align-items: center; */
   margin: 20px 0;
 
   position: relative;
@@ -524,9 +505,6 @@ const SendContainer = styled.div`
   max-width: 800px;
   margin: 10px auto;
   margin: 0 auto;
-
-  /* position: absolute;
-  bottom: 20%; */
 `;
 const ParentContainer = styled.div`
   display: flex;
@@ -537,10 +515,7 @@ const ParentContainer = styled.div`
 const MessageContainer = styled.div`
   display: flex;
   align-items: center;
-  /* align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")}; */
   margin: 10px 15px;
-  /* justify-content: ${(props) =>
-    props.isSender ? "flex-start" : "flex-end"}; */
   flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
 `;
 const ProfileContainer = styled.div`
@@ -596,11 +571,6 @@ const ChatInputContainer = styled.div`
   margin-top: 16px;
   border: 1px solid #a0a0a0;
   border-radius: 4px;
-
-  /* position: absolute; */
-  /* bottom: 20px; */
-  /* left: 50%; */
-  /* transform: translateX(-50%); */
 `;
 
 const ChatInput = styled.textarea`
@@ -617,8 +587,6 @@ const Bundle = styled.div`
   display: flex;
   flex-direction: column;
   margin: 5px;
-  /* align-items: center; */
-  /* justify-content: center; */
   & span {
     margin-left: 8px;
   }
