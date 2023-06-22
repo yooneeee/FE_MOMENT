@@ -1,17 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { ChattingList } from "../apis/mypage/chatting";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { FiSearch } from "react-icons/fi";
+import * as StompJs from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import { useSelector } from "react-redux";
 
 function ChatList() {
-  const { isError, isLoading, data } = useQuery("ChattingList", ChattingList);
+  const {
+    isError,
+    isLoading,
+    data: initialData,
+  } = useQuery("ChattingList", ChattingList);
   // console.log("데이터", data);
-
   const [isClicked, setIsClicked] = useState(null);
   const [search, setSearch] = useState("");
+  const client = useRef({});
+  const [data, setData] = useState(initialData);
+  const { userId } = useSelector((state) => state.user);
 
   const handleClick = (id) => {
     setIsClicked(id);
@@ -20,6 +29,61 @@ function ChatList() {
   const updateSearch = (e) => {
     setSearch(e.target.value);
   };
+
+  const connect = () => {
+    client.current = new StompJs.Client({
+      webSocketFactory: () =>
+        new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`), // proxy를 통한 접속
+
+      debug: function (str) {
+        console.log(str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: () => {
+        subscribe();
+      },
+      onStompError: (frame) => {
+        console.error(frame);
+      },
+    });
+
+    client.current.activate();
+  };
+
+  const disconnect = () => {
+    client.current.deactivate();
+  };
+
+  const subscribe = () => {
+    client.current?.subscribe(`/sub/chat/list/${userId}`, ({ body }) => {
+      const updatedChat = JSON.parse(body);
+
+      // Find the index of the chat room to be updated.
+      const index = data.findIndex(
+        (chat) => chat.chatRoomId === updatedChat.chatRoomId
+      );
+
+      // If found, replace the chat room with the updated one.
+      if (index !== -1) {
+        setData([
+          ...data.slice(0, index),
+          updatedChat,
+          ...data.slice(index + 1),
+        ]);
+      }
+    });
+  };
+
+  useEffect(() => {
+    setData(initialData);
+  }, [initialData]);
+
+  useEffect(() => {
+    connect();
+    return () => disconnect();
+  }, []);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -48,48 +112,49 @@ function ChatList() {
           </EmptyChatList>
         )}
         <ScrollableDiv>
-          {data
-            .filter(
-              (item) =>
-                item.receiverNickName.includes(search) ||
-                item.receiverRole.includes(search)
-            )
-            .map((item) => (
-              <Link to={`/chattest/${item.receiverId}`} key={item.chatRoomId}>
-                <List
-                  isClicked={isClicked === item.chatRoomId}
-                  onClick={() => handleClick(item.chatRoomId)}
-                >
-                  <ChatItem>
-                    <ProfileImage
-                      src={item.receiverProfileImg}
-                      alt="profile image"
-                    />
-                    <Content>
-                      <SenderNameContainer>
-                        <SenderName>
-                          {item.receiverRole} | {item.receiverNickName}
-                        </SenderName>
-                      </SenderNameContainer>
-                      <MessageContainer>
-                        {item.lastChat && (
-                          <Message>
-                            {item.lastChat.message.length > 15
-                              ? item.lastChat.message.slice(0, 15) + "..."
-                              : item.lastChat.message}
-                          </Message>
-                        )}
-                        <HaveToRead>
-                          {item.haveToRead && (
-                            <UnreadBadge>읽지 않음</UnreadBadge>
+          {data &&
+            data
+              .filter(
+                (item) =>
+                  item.receiverNickName.includes(search) ||
+                  item.receiverRole.includes(search)
+              )
+              .map((item) => (
+                <Link to={`/chattest/${item.receiverId}`} key={item.chatRoomId}>
+                  <List
+                    isClicked={isClicked === item.chatRoomId}
+                    onClick={() => handleClick(item.chatRoomId)}
+                  >
+                    <ChatItem>
+                      <ProfileImage
+                        src={item.receiverProfileImg}
+                        alt="profile image"
+                      />
+                      <Content>
+                        <SenderNameContainer>
+                          <SenderName>
+                            {item.receiverRole} | {item.receiverNickName}
+                          </SenderName>
+                        </SenderNameContainer>
+                        <MessageContainer>
+                          {item.lastChat && (
+                            <Message>
+                              {item.lastChat.message.length > 15
+                                ? item.lastChat.message.slice(0, 15) + "..."
+                                : item.lastChat.message}
+                            </Message>
                           )}
-                        </HaveToRead>
-                      </MessageContainer>
-                    </Content>
-                  </ChatItem>
-                </List>
-              </Link>
-            ))}
+                          <HaveToRead>
+                            {item.haveToRead && (
+                              <UnreadBadge>읽지 않음</UnreadBadge>
+                            )}
+                          </HaveToRead>
+                        </MessageContainer>
+                      </Content>
+                    </ChatItem>
+                  </List>
+                </Link>
+              ))}
         </ScrollableDiv>
       </ChatListContainer>
     </>
