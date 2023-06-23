@@ -134,7 +134,7 @@ const FeedDetail = (props) => {
                     onClick={likeButtonHandler}
                   />
                   <LikeList onClick={likeListButtonHandler}>
-                    {data.photoLoveCnt}
+                    <LoveCnt>{data.photoLoveCnt}</LoveCnt>
                   </LikeList>
                   {showLikeListModal && (
                     <LikeListModal
@@ -204,6 +204,10 @@ const SliderBox = styled.div`
   @media (max-width: 1076px) {
     height: 596px;
   }
+`;
+
+const LoveCnt = styled.div`
+  margin-left: 5px;
 `;
 
 const ProfileImg = styled.img`

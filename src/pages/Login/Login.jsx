@@ -40,6 +40,7 @@ function Login() {
       return { type: "password", visible: false };
     });
   };
+
   const loginActiveHandler = () => {
     return email.includes("@") && password.length >= 7
       ? setLoginActive(true)
