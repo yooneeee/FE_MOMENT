@@ -128,6 +128,8 @@ const MyPageInformation = () => {
     }
   };
 
+  let prevValue = "";
+
   const handlePwInput = (e) => {
     setNewPw(e.target.value);
     setPwCharacters(e.target.value.length);
@@ -138,20 +140,18 @@ const MyPageInformation = () => {
     const maxRows = 4;
     const maxLength = 50;
 
-    const previousRows = e.target.rows;
-    e.target.rows = 1;
+    // const previousRows = e.target.rows;
+    // e.target.rows = 1;
 
     const currentRows = ~~(e.target.scrollHeight / textareaLineHeight);
 
-    if (
-      (currentRows <= maxRows || previousRows <= maxRows) &&
-      e.target.value.length <= maxLength
-    ) {
+    if (currentRows > maxRows || e.target.value.length > maxLength) {
+      e.target.value = prevValue;
+    } else {
+      prevValue = e.target.value;
       e.target.rows = currentRows;
       setIntro(e.target.value);
       setIntroCharacters(e.target.value.length);
-    } else {
-      e.preventDefault();
     }
   };
 
