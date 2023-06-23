@@ -150,7 +150,8 @@ function Board() {
     <>
       <Header>
         <Navbar>
-          <Logo>구인/구직 게시판</Logo>
+          <span>구인/구직 게시판</span>
+
           <SearchWrap>
             <SelectWrap ref={selectWrapRef}>
               <SelectButton onClick={toggleShowList}>
@@ -451,7 +452,6 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 45px;
-
   @media (max-width: 1300px) {
     grid-template-columns: repeat(3, 1fr);
   }
