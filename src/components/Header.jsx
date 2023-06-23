@@ -13,6 +13,7 @@ import { EventSourcePolyfill } from "event-source-polyfill";
 import { TbBell } from "react-icons/tb";
 import AlarmListModal from "./AlarmListModal";
 import { BsFillCircleFill } from "react-icons/bs";
+import { decrypt } from "../apis/axios";
 
 function Header() {
   const [feedModalOpen, setFeedModalOpen] = useState(false);
@@ -97,15 +98,16 @@ function Header() {
   useEffect(() => {
     if (isLoggedIn) {
       const fetchSse = async () => {
+        const headers = {
+          "Content-Type": "text/event-stream",
+          Connection: "keep-alive",
+          ACCESS_KEY: Access_key,
+          REFRESH_KEY: decrypt(Refresh_key),
+        };
         const eventSource = new EventSource(
           `https://moment-backend.shop/sse/chat/alarm/${userId}`,
           {
-            headers: {
-              "Content-Type": "text/event-stream",
-              Connection: "keep-alive",
-              ACCESS_KEY: `${Access_key}`,
-              REFRESH_KEY: `${Refresh_key}`,
-            },
+            headers,
             withCredentials: true,
             heartbeatTimeout: 2000000,
           }
