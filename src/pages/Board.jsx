@@ -150,7 +150,7 @@ function Board() {
     <>
       <Header>
         <Navbar>
-          <Logo>게시판</Logo>
+          <span>구인/구직 게시판</span>
           <SearchWrap>
             <SelectWrap ref={selectWrapRef}>
               <SelectButton onClick={toggleShowList}>
@@ -447,7 +447,20 @@ const NavItem = styled.li`
 `;
 
 const Content = styled.div`
-  margin: 30px 150px;
+  padding: 30px 150px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 45px;
+
+  @media (max-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 
   @media (max-width: 768px) {
     margin: 30px 20px;
