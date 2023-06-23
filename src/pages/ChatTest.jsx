@@ -264,6 +264,7 @@ const ChatTest = () => {
 
     setMessage("");
     setOverLimit(false);
+    setMessageCharacters(0);
   };
   /* Enter key 메시지 전송 */
   const enterHandler = (e, message) => {
@@ -286,8 +287,8 @@ const ChatTest = () => {
 
   const handleMessageInput = (e) => {
     publish(message);
-    setMessage(e.target.value);
-    setMessageCharacters(e.target.value.length);
+    // setMessage(e.target.value);
+    // setMessageCharacters(0);
   };
 
   return (
@@ -514,8 +515,6 @@ const ChatContainer = styled.div`
 
   position: relative;
   min-height: 61vh;
-
-  margin-bottom: 100px;
 `;
 
 const SendContainer = styled.div`
