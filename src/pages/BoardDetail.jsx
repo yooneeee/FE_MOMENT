@@ -46,7 +46,7 @@ function BoardDetail() {
   //   }
   // }, [currentPosition]);
 
-  const { isError, isLoading, data } = useQuery(
+  const { isError, isLoading, data, error } = useQuery(
     ["getBoardDetailAxios", params.boardId],
     () => getBoardDetailAxios(params.boardId)
   );
@@ -70,7 +70,16 @@ function BoardDetail() {
   }
 
   if (isError) {
-    return <h1>오류가 발생하였습니다...!</h1>;
+    if (error.response.request.status === 401) {
+      Swal.fire({
+        icon: "error",
+        title: "로그인이후 이용가능한 페이지입니다!",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/");
+      });
+    }
+    return null;
   }
 
   const currentDate = new Date(); // 현재 날짜를 가져옴

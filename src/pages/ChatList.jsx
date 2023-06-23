@@ -2,18 +2,20 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { ChattingList } from "../apis/mypage/chatting";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { FiSearch } from "react-icons/fi";
 import * as StompJs from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 function ChatList() {
   const {
     isError,
     isLoading,
     data: initialData,
+    error,
   } = useQuery("ChattingList", ChattingList);
   // console.log("데이터", data);
   const [isClicked, setIsClicked] = useState(null);
@@ -21,7 +23,7 @@ function ChatList() {
   const client = useRef({});
   const [data, setData] = useState(initialData);
   const { userId } = useSelector((state) => state.user);
-
+  const navigate = useNavigate();
   const handleClick = (id) => {
     setIsClicked(id);
   };
@@ -90,7 +92,18 @@ function ChatList() {
   }
 
   if (isError) {
-    return <h1>오류(⊙ˍ⊙)</h1>;
+    if (isError) {
+      if (error.response.request.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "로그인이후 이용가능한 페이지입니다!",
+          confirmButtonText: "확인",
+        }).then(() => {
+          navigate("/");
+        });
+      }
+      return null;
+    }
   }
 
   return (

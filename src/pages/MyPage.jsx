@@ -19,7 +19,7 @@ const MyPage = () => {
   const userId = useSelector((state) => state.user.userId);
   const mine = hostId == userId;
 
-  const { isError, isLoading, data } = useQuery(
+  const { isError, isLoading, data, error } = useQuery(
     ["mypage", hostId],
     () => mypage(hostId),
     {
@@ -53,7 +53,16 @@ const MyPage = () => {
   }
 
   if (isError) {
-    return <h1>오류(⊙ˍ⊙)</h1>;
+    if (error.response.request.status === 401) {
+      Swal.fire({
+        icon: "error",
+        title: "로그인이후 이용가능한 페이지입니다!",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/");
+      });
+    }
+    return null;
   }
 
   return (

@@ -129,13 +129,37 @@ function Matching() {
     isError: isErrorAcceptList,
     isLoading: isLoadingAcceptList,
     data: acceptListData,
-  } = useQuery("getAcceptList", getAcceptList);
+  } = useQuery("getAcceptList", getAcceptList, {
+    onError: (error) => {
+      if (error.response && error.response.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "로그인이후 이용가능한 페이지입니다!",
+          confirmButtonText: "확인",
+        }).then(() => {
+          navigate("/");
+        });
+      }
+    },
+  });
 
   const {
     isError: isErrorApplyList,
     isLoading: isLoadingApplyList,
     data: applyListData,
-  } = useQuery("getApplyList", getApplyList);
+  } = useQuery("getApplyList", getApplyList, {
+    onError: (error) => {
+      if (error.response && error.response.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "로그인이후 이용가능한 페이지입니다!",
+          confirmButtonText: "확인",
+        }).then(() => {
+          navigate("/");
+        });
+      }
+    },
+  });
 
   if (isLoadingAcceptList || isLoadingApplyList) {
     return <LoadingSpinner />;
