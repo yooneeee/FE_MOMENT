@@ -14,7 +14,6 @@ function KakaoLoginRedirect() {
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("");
-  const [active, setActive] = useState(role !== "");
   const [hasRole, setHasRole] = useState(false);
   const dispatch = useDispatch();
   const { data, isError } = useQuery("authKakaoLogin", async () => {
@@ -30,60 +29,14 @@ function KakaoLoginRedirect() {
     setRole(selectedRole);
   }, []);
   const MemoizedSelectionButton = React.memo(SelectionButton);
-  const redirectHandler = async () => {
-    if (data) {
-      if (data.data.role !== null) {
-        setHasRole(true);
-      } else {
-        setLoading(false);
-        setModal(true);
-      }
-      dispatch(
-        setUser({
-          nickName: data.data.nickName,
-          profileImg: data.data.profileImg,
-          role: data.data.role,
-          userId: data.data.userId,
-        })
-      );
-    } else if (isError) {
-      Swal.fire({
-        icon: "error",
-        title: "로그인 실패!",
-        text: `로그인이 실패되었습니다. 다시 확인해 주세요.`,
-        confirmButtonText: "확인",
-      });
-      navigate("/login");
-    }
-    setLoading(true);
-  };
-  useEffect(() => {
-    redirectHandler();
-  }, [data, isError]);
-  useEffect(() => {
-    if (hasRole) {
-      setModal(false);
-      Swal.fire({
-        icon: "success",
-        title: "로그인 성공!",
-        text: `[${data.data.nickName}]님 로그인되었습니다✨`,
-        confirmButtonText: "확인",
-      });
-
-      dispatch(loginSuccess());
-      navigate("/main");
-    }
-  }, [hasRole]);
-
   const sendRoleMutation = useMutation(sendRoleAxios, {
     onSuccess: () => {
       closeModal();
-      Swal.fire({
-        icon: "success",
-        title: "회원가입 성공!",
-        text: `[${data.data.nickName}]님 회원가입이 완료되었습니다✨`,
-        confirmButtonText: "확인",
-      });
+      showAlert(
+        "success",
+        "회원가입 성공!",
+        `[${data.data.nickName}]님 회원가입이 완료되었습니다✨`
+      );
       dispatch(loginSuccess());
       navigate("/main");
     },
@@ -98,25 +51,65 @@ function KakaoLoginRedirect() {
   const roleButtonHandler = (e) => {
     e.preventDefault();
     if (!role) {
-      Swal.fire({
-        icon: "error",
-        title: "회원가입 실패!",
-        text: `포지션을 선택해주세요.`,
-        confirmButtonText: "확인",
-      });
+      showAlert("error", "회원가입 실패!", "포지션을 선택해주세요.");
     } else {
       sendRoleMutation.mutate(role);
       dispatch(setUserRole({ role: role }));
     }
   };
 
-  const activeHandler = () => {
-    setActive(!role);
-  };
   useEffect(() => {
-    activeHandler();
-  }, [role]);
+    const redirectHandler = async () => {
+      if (data) {
+        if (data.data.role !== null) {
+          setHasRole(true);
+        } else {
+          setLoading(false);
+          setModal(true);
+        }
+        dispatch(
+          setUser({
+            nickName: data.data.nickName,
+            profileImg: data.data.profileImg,
+            role: data.data.role,
+            userId: data.data.userId,
+          })
+        );
+      } else if (isError) {
+        showAlert(
+          "error",
+          "로그인 실패!",
+          "로그인이 실패되었습니다. 다시 확인해 주세요."
+        );
+        navigate("/login");
+      }
+      setLoading(true);
+    };
 
+    redirectHandler();
+  }, [data, isError, dispatch, navigate]);
+
+  useEffect(() => {
+    if (hasRole) {
+      setModal(false);
+      showAlert(
+        "success",
+        "로그인 성공!",
+        `[${data.data.nickName}]님 로그인되었습니다✨`
+      );
+      dispatch(loginSuccess());
+      navigate("/main");
+    }
+  }, [hasRole, data, dispatch, navigate]);
+
+  const showAlert = (icon, title, text) => {
+    Swal.fire({
+      icon: icon,
+      title: title,
+      text: text,
+      confirmButtonText: "확인",
+    });
+  };
   return (
     <>
       {loading && <LoadingSpinner />}
