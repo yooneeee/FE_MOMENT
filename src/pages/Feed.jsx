@@ -1,4 +1,11 @@
-import React, { Suspense, lazy, useEffect, useRef, useState } from "react";
+import React, {
+  Suspense,
+  lazy,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import styled from "styled-components";
 import "../css/App.css";
 import { getFeedAxios } from "../apis/feed/getFeedAxios";
@@ -12,6 +19,7 @@ import { searchFeedAxios } from "../apis/feed/searchFeedAxios";
 import { IoIosArrowDown } from "@react-icons/all-files/io/IoIosArrowDown";
 import { GrSearch } from "@react-icons/all-files/gr/GrSearch";
 import FeedCard from "../components/FeedCard";
+import { throttle } from "lodash";
 const FeedDetail = lazy(() => import("../components/FeedDetail"));
 
 function Feed() {
@@ -19,13 +27,12 @@ function Feed() {
   const [timer, setTimer] = useState(null);
   // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
-  const [showButton, setShowButton] = useState(false);
-
   let optArr = ["내용", "닉네임", "해시태그"];
   const [currentOpt, setCurrentOpt] = useState("내용");
   const [showList, setShowList] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [option, setOption] = useState("contents");
+  const [showButton, setShowButton] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [isEmpty, setIsEmpty] = useState(false);
   const toggleShowList = () => setShowList(true);
@@ -57,6 +64,7 @@ function Feed() {
       document.removeEventListener("mousedown", clickListOutside);
     };
   }, []);
+
   const searchMutation = useMutation(searchFeedAxios, {
     onSuccess: (response) => {
       if (response.data.empty === true) {
@@ -68,7 +76,7 @@ function Feed() {
         });
       }
       setSearchResults(response.data.content);
-      setKeyword("");
+      // setKeyword("");
     },
     onError: () => {
       Swal.fire({
@@ -84,11 +92,11 @@ function Feed() {
       clearTimeout(timer);
     }
     if (keyword.trim() === "") {
-      Swal.fire({
-        icon: "warning",
-        title: "검색어를 입력해주세요!",
-        confirmButtonText: "확인",
-      });
+      // Swal.fire({
+      //   icon: "warning",
+      //   title: "검색어를 입력해주세요!",
+      //   confirmButtonText: "확인",
+      // });
       setSearchResults([]);
       return;
     }
@@ -112,16 +120,21 @@ function Feed() {
 
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-  const ShowButtonClick = () => {
-    const { scrollY } = window;
-    scrollY > 200 ? setShowButton(true) : setShowButton(false);
-  };
+  // 화면 내릴 시 최상단 up 버튼
+  const handleScrollThrottled = useCallback(
+    throttle(() => {
+      const { scrollY } = window;
+      scrollY > 200 ? setShowButton(true) : setShowButton(false);
+    }, 300),
+    []
+  );
+
   useEffect(() => {
-    window.addEventListener("scroll", ShowButtonClick);
+    window.addEventListener("scroll", handleScrollThrottled);
     return () => {
-      window.removeEventListener("scroll", ShowButtonClick);
+      window.removeEventListener("scroll", handleScrollThrottled);
     };
-  }, []);
+  }, [handleScrollThrottled]);
 
   const openFeedDetail = (photoId) => {
     if (isLoggedIn) {
@@ -171,10 +184,6 @@ function Feed() {
 
   if (isError) {
     return <h3>에러가 발생하였습니다.</h3>;
-  }
-
-  if (!data) {
-    return null;
   }
 
   return (
@@ -285,15 +294,20 @@ function Feed() {
               );
             })
         )}
-
-        <div ref={bottomObserverRef}></div>
       </FeedContainer>
+      {data.pages[data.pages.length - 1].last === false ? (
+        <BottomDiv ref={bottomObserverRef}></BottomDiv>
+      ) : null}
       {showButton && <ScrollToTopButton />}
     </>
   );
 }
 
 export default Feed;
+
+const BottomDiv = styled.div`
+  height: 1px;
+`;
 
 const FeedContainer = styled.div`
   padding: 30px 150px;

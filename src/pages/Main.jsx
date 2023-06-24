@@ -75,7 +75,12 @@ function Main() {
         <SliderWrapper>
           <Styled_Slide {...settings}>
             {banners.map((item) => (
-              <MainImg key={item} src={item} alt="메인 배너 이미지" />
+              <MainImg
+                key={item}
+                src={item}
+                fetchpriority="high"
+                alt="메인 배너 이미지"
+              />
             ))}
           </Styled_Slide>
         </SliderWrapper>

@@ -11,6 +11,7 @@ import styled from "styled-components";
 import Swal from "sweetalert2";
 import { RiCheckboxMultipleBlankLine } from "@react-icons/all-files/ri/RiCheckboxMultipleBlankLine";
 import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
+import imageCompression from "browser-image-compression";
 
 const CreateFeed = (props) => {
   // 해시태그 기능
@@ -98,14 +99,23 @@ const CreateFeed = (props) => {
   const loginUserData = UserDataComponent();
   const queryClient = useQueryClient();
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const files = e.target.files;
-
     const fileArray = Array.from(files);
 
-    setSelectedFile([...selectedFile, ...fileArray]);
+    const options = {
+      maxSizeMB: 1, // 최대 크기 MB
+      maxWidthOrHeight: 1920, // 최대 너비 또는 높이
+      useWebWorker: true,
+      // fileType: "webp",
+    };
+    const compressedFileArray = await Promise.all(
+      fileArray.map((file) => imageCompression(file, options))
+    );
 
-    fileArray.forEach((file) => {
+    setSelectedFile([...selectedFile, ...compressedFileArray]);
+
+    compressedFileArray.forEach((file) => {
       if (file) {
         const reader = new FileReader();
         reader.onload = () => {

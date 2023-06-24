@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import { AiOutlineEye } from "@react-icons/all-files/ai/AiOutlineEye";
 import { AiOutlineEyeInvisible } from "@react-icons/all-files/ai/AiOutlineEyeInvisible";
 import TermsofService from "../components/TermsofService";
+import ImageCompressor from "browser-image-compression";
 
 function EmailSignup() {
   const navigate = useNavigate();
@@ -220,9 +221,22 @@ function EmailSignup() {
   }, []);
 
   // 프로필사진 업로드
-  const addPhoto = (e) => {
+  const addPhoto = async (e) => {
     e.preventDefault();
-    setProfileImg(e.target.files[0]);
+    const imageFile = e.target.files[0];
+
+    const options = {
+      maxSizeMB: 1, // 최대 파일 크기(메가바이트 단위)
+      maxWidthOrHeight: 1920, // 이미지의 최대 너비 또는 높이 (이미지 비율 유지)
+      useWebWorker: true,
+      fileType: "webp",
+    };
+    try {
+      const compressedFile = await ImageCompressor(imageFile, options);
+      setProfileImg(compressedFile);
+    } catch (error) {
+      console.log(error);
+    }
 
     // 미리보기
     const reader = new FileReader();
