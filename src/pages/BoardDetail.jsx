@@ -1,6 +1,5 @@
-import React, { useCallback } from "react";
+import React from "react";
 import styled from "styled-components";
-import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getBoardDetailAxios } from "../apis/board/getBoardDetailAxios";
@@ -10,41 +9,10 @@ import Swal from "sweetalert2";
 import ApplicationForMatching from "../apis/matching/ApplicationForMatching";
 
 function BoardDetail() {
-  const [currentPosition, setCurrentPosition] = useState(70);
-  const formRef = useRef(null);
-  const formRangeRef = useRef(null);
   const params = useParams();
   const navigate = useNavigate();
   const userId = useSelector((state) => state.user.userId);
   const queryClient = useQueryClient();
-
-  // 스크롤 시 따라다니는 Form
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const position = window.pageYOffset;
-  //     const limitedPosition = Math.max(70, Math.min(125, position));
-  //     setCurrentPosition(limitedPosition);
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   if (formRef.current && formRangeRef.current) {
-  //     // formRef와 formRangeRef가 null이 아닌지 확인
-  //     const formHeight = formRef.current.offsetHeight;
-  //     const formRangeHeight = formRangeRef.current.offsetHeight;
-  //     const maxTopPosition = formRangeHeight - formHeight;
-  //     const limitedTopPosition = Math.max(
-  //       0,
-  //       Math.min(maxTopPosition, currentPosition)
-  //     );
-  //     formRef.current.style.top = `${limitedTopPosition}px`;
-  //   }
-  // }, [currentPosition]);
 
   const { isError, isLoading, data, error } = useQuery(
     ["getBoardDetailAxios", params.boardId],
@@ -224,11 +192,9 @@ function BoardDetail() {
 export default BoardDetail;
 
 const Container = styled.div`
-  /* padding: 20px 150px 20px 150px; */
   padding: 20px 300px;
   width: 100%;
   display: flex;
-  /* background-color: aqua; */
   position: relative;
   align-items: center;
   justify-content: center;
@@ -256,19 +222,7 @@ const BoardImg = styled.div`
 const ContentContainer = styled.div`
   width: 1200px;
   min-width: 1200px;
-  /* background-color: aqua; */
   display: flex;
-`;
-
-const StyledForm = styled.div`
-  position: fixed;
-  right: 300px;
-  transition: top 0.8s ease;
-  @media (max-width: 1320px) {
-    position: relative;
-    right: 0px;
-    margin-top: 20px;
-  }
 `;
 
 const Form = styled.div`
@@ -277,23 +231,6 @@ const Form = styled.div`
   background-color: #f5f5f5;
   border-radius: 5px;
   margin-left: auto;
-
-  /* position: fixed;
-  right: 140px; */
-
-  /* Hide the scrollbar
-  ::-webkit-scrollbar {
-    width: 0.8em;
-    background-color: #f5f5f5;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: #c5c5c5;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #888;
-  } */
 `;
 
 const FormBody = styled.div`
@@ -404,8 +341,4 @@ const WorkItem = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-`;
-
-const FormRange = styled.div`
-  width: 10%;
 `;
