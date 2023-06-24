@@ -331,7 +331,7 @@ const DDayInfo = styled.div`
   background-color: white;
   border-radius: 13px;
   padding: 2px 10px;
-  opacity: 50%;
+  opacity: 65%;
   font-weight: 600;
   color: ${(props) => (props.isDday || props.matched ? "#ff0000" : "#000000")};
 `;
