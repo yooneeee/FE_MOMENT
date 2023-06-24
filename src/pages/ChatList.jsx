@@ -17,12 +17,22 @@ function ChatList() {
     data: initialData,
     error,
   } = useQuery("ChattingList", ChattingList);
-  // console.log("데이터", data);
+  // console.log("데이터", initialData);
   const [isClicked, setIsClicked] = useState(null);
   const [search, setSearch] = useState("");
   const client = useRef({});
   const [data, setData] = useState(initialData);
   const { userId } = useSelector((state) => state.user);
+  // const [iconLeft, setIconLeft] = useState("10px");
+  // const inputRef = useRef(null);
+
+  // useEffect(() => {
+  //   if (inputRef.current) {
+  //     const { width } = inputRef.current.getBoundingClientRect();
+  //     setIconLeft(`${width * 0.37}px`);
+  //   }
+  // }, []);
+
   const navigate = useNavigate();
   const handleClick = (id) => {
     setIsClicked(id);
@@ -38,7 +48,7 @@ function ChatList() {
         new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws-edit`), // proxy를 통한 접속
 
       debug: function (str) {
-        console.log(str);
+        // console.log(str);
       },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
@@ -47,7 +57,7 @@ function ChatList() {
         subscribe();
       },
       onStompError: (frame) => {
-        console.error(frame);
+        // console.error(frame);
       },
     });
 
@@ -110,9 +120,9 @@ function ChatList() {
     <>
       <ChatListContainer>
         <ChatSearchContainer>
-          {/* <StyledIcon /> */}
-
+          {/* <StyledIcon style={{ left: iconLeft }} /> */}
           <ChatSearch
+            // ref={inputRef}
             placeholder="Role, NickName 검색"
             value={search}
             onChange={updateSearch}
@@ -232,7 +242,8 @@ const ChatSearch = styled.input`
 `;
 const StyledIcon = styled(FiSearch)`
   position: absolute;
-  left: 110px; // 아이콘의 위치를 필요에 따라 조정하세요.
+  /* left: 24%; */
+  left: 10px;
   top: 50%;
   transform: translateY(-50%);
 `;
