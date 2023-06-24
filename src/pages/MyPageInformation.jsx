@@ -53,8 +53,9 @@ const MyPageInformation = () => {
     if (file) {
       try {
         const options = {
-          maxSizeMB: 1,
-          maxWidthOrHeight: 1920,
+          // maxSizeMB: 1,
+          maxSizeKB: 100,
+          maxWidthOrHeight: 100,
           useWebWorker: true,
           fileType: "webp",
         };
