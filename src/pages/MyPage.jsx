@@ -11,6 +11,7 @@ import FeedDetail from "../components/FeedDetail";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const MyPage = () => {
   const navigate = useNavigate();
