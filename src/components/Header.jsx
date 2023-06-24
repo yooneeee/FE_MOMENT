@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import CreateBoard from "./CreateBoard";
-import CreateFeed from "./CreateFeed";
 import { useMutation } from "react-query";
 import { logoutAxios } from "../apis/auth/login";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,9 +9,13 @@ import Swal from "sweetalert2";
 import { ImCircleDown } from "@react-icons/all-files/im/ImCircleDown";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { BiBell } from "@react-icons/all-files/bi/BiBell";
-import AlarmListModal from "./AlarmListModal";
 import { BsFillCircleFill } from "@react-icons/all-files/bs/BsFillCircleFill";
 import { decrypt } from "../apis/axios";
+import LoadingSpinner from "./LoadingSpinner";
+import logoImage from "../assets/img/mainlogo2 (1).png";
+const AlarmListModal = React.lazy(() => import("./AlarmListModal"));
+const CreateBoard = React.lazy(() => import("./CreateBoard"));
+const CreateFeed = React.lazy(() => import("./CreateFeed"));
 
 function Header() {
   const dispatch = useDispatch();
@@ -163,7 +165,7 @@ function Header() {
               closeAlarmList();
             }}
           >
-            <MainLogo src="/img/mainlogo2.png" alt="MOMENT로고" />
+            <MainLogo src={logoImage} width={50} height={30} alt="MOMENT로고" />
           </HeaderTitle>
           <CategoryBox>
             <HeaderButton
@@ -354,10 +356,14 @@ function Header() {
           </>
         )}
         {modalType === "feed" && (
-          <CreateFeed open={openModal} close={closeModal} />
+          <Suspense fallback={<LoadingSpinner />}>
+            <CreateFeed open={openModal} close={closeModal} />
+          </Suspense>
         )}
         {modalType === "board" && (
-          <CreateBoard open={openModal} close={closeModal} />
+          <Suspense fallback={<LoadingSpinner />}>
+            <CreateBoard open={openModal} close={closeModal} />
+          </Suspense>
         )}
         {isMenuOpen && (
           <ToggleMenu>
@@ -474,7 +480,9 @@ function Header() {
       </HeaderStyles>
 
       {isAlarmListOpen && (
-        <AlarmListModal showAlarmList={showAlarmList} alarmList={alarmList} />
+        <Suspense fallback={<LoadingSpinner />}>
+          <AlarmListModal showAlarmList={showAlarmList} alarmList={alarmList} />
+        </Suspense>
       )}
     </>
   );
@@ -537,14 +545,12 @@ const LeftMenu = styled.div`
   flex-grow: 1;
 `;
 
-const HeaderTitle = styled.p`
-  font-family: "UhBeeGENWOO";
+const HeaderTitle = styled.div`
   display: flex;
-  font-size: 28px;
-  font-weight: 600;
   align-items: center;
   cursor: pointer;
   margin-right: 20px;
+  width: 50px;
 `;
 
 const ButtonBox = styled.div`
