@@ -18,6 +18,7 @@ function Board() {
   const [activeNavItem, setActiveNavItem] = useState("Model");
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [timer, setTimer] = useState(null);
 
   let optArr = ["제목", "닉네임", "장소", "해시태그"];
   const [currentOpt, setCurrentOpt] = useState("제목");
@@ -81,6 +82,9 @@ function Board() {
   });
 
   const searchButtonClickHandler = () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
     if (keyword.trim() === "") {
       Swal.fire({
         icon: "warning",
@@ -91,7 +95,11 @@ function Board() {
       return;
     }
     const role = activeNavItem.toUpperCase();
-    searchMutation.mutate({ keyword, option, role });
+    setTimer(
+      setTimeout(() => {
+        searchMutation.mutate({ keyword, option, role });
+      }, 500)
+    );
   };
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -384,4 +392,5 @@ const SearchButton = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 15px;
+  cursor: pointer;
 `;

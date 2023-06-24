@@ -16,7 +16,7 @@ const FeedDetail = lazy(() => import("../components/FeedDetail"));
 
 function Feed() {
   const [activeNavItem, setActiveNavItem] = useState("Latest");
-
+  const [timer, setTimer] = useState(null);
   // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
   const [showButton, setShowButton] = useState(false);
@@ -80,6 +80,9 @@ function Feed() {
   });
 
   const searchButtonClickHandler = () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
     if (keyword.trim() === "") {
       Swal.fire({
         icon: "warning",
@@ -90,7 +93,11 @@ function Feed() {
       return;
     }
     const role = activeNavItem.toUpperCase();
-    searchMutation.mutate({ keyword, option, role });
+    setTimer(
+      setTimeout(() => {
+        searchMutation.mutate({ keyword, option, role });
+      }, 500)
+    );
   };
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -417,4 +424,5 @@ const SearchButton = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 15px;
+  cursor: pointer;
 `;
