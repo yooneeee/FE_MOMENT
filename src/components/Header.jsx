@@ -1,24 +1,31 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import CreateBoard from "./CreateBoard";
-import CreateFeed from "./CreateFeed";
 import { useMutation } from "react-query";
 import { logoutAxios } from "../apis/auth/login";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "../redux/modules/user";
 import Swal from "sweetalert2";
-import { MdExpandCircleDown } from "react-icons/md";
+import { ImCircleDown } from "@react-icons/all-files/im/ImCircleDown";
 import { EventSourcePolyfill } from "event-source-polyfill";
-import { TbBell } from "react-icons/tb";
-import AlarmListModal from "./AlarmListModal";
-import { BsFillCircleFill } from "react-icons/bs";
+import { BiBell } from "@react-icons/all-files/bi/BiBell";
+import { BsFillCircleFill } from "@react-icons/all-files/bs/BsFillCircleFill";
 import { decrypt } from "../apis/axios";
+import LoadingSpinner from "./LoadingSpinner";
+import logoImage from "../assets/img/mainlogo2 (1).png";
+const AlarmListModal = React.lazy(() => import("./AlarmListModal"));
+const CreateBoard = React.lazy(() => import("./CreateBoard"));
+const CreateFeed = React.lazy(() => import("./CreateFeed"));
 
 function Header() {
-  const [feedModalOpen, setFeedModalOpen] = useState(false);
-  const [boardModalOpen, setBoardModalOpen] = useState(false);
   const dispatch = useDispatch();
+  const [modalType, setModalType] = useState(null);
+  const openModal = (type) => {
+    setModalType(type);
+  };
+  const closeModal = () => {
+    setModalType(null);
+  };
 
   // 로그인 여부 확인
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -26,18 +33,6 @@ function Header() {
   const profileImg = useSelector((state) => state.user.profileImg);
   const userId = useSelector((state) => state.user.userId);
 
-  const openFeedModal = () => {
-    setFeedModalOpen(true);
-  };
-  const closeFeedModal = () => {
-    setFeedModalOpen(false);
-  };
-  const openBoardModal = () => {
-    setBoardModalOpen(true);
-  };
-  const closeBoardModal = () => {
-    setBoardModalOpen(false);
-  };
   const navigate = useNavigate();
   // 현재 창 너비
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -109,7 +104,7 @@ function Header() {
           {
             headers,
             withCredentials: true,
-            heartbeatTimeout: 2000000,
+            heartbeatTimeout: 4000000,
           }
         );
         eventSource.addEventListener("chatAlarm-event", (event) => {
@@ -170,10 +165,11 @@ function Header() {
               closeAlarmList();
             }}
           >
-            <MainLogo src="/img/mainlogo2.png" />
+            <MainLogo src={logoImage} width={50} height={30} alt="MOMENT로고" />
           </HeaderTitle>
           <CategoryBox>
             <HeaderButton
+              aria-label="포트폴리오페이지로이동"
               onClick={() => {
                 navigate("/feeds");
                 toggleWriteMenuClose();
@@ -184,6 +180,7 @@ function Header() {
               포트폴리오
             </HeaderButton>
             <HeaderButton
+              aria-label="구인/구직게시판페이지로이동"
               onClick={() => {
                 navigate("/board");
                 toggleWriteMenuClose();
@@ -198,6 +195,7 @@ function Header() {
         <ButtonBox>
           {windowWidth <= 768 ? (
             <MenuButton
+              aria-label="전체메뉴보기"
               onClick={() => {
                 setIsMenuOpen(!isMenuOpen);
                 toggleWriteMenuClose();
@@ -212,19 +210,21 @@ function Header() {
               {isLoggedIn ? (
                 <>
                   <HeaderButton
+                    aria-label="프로필메뉴열기"
                     onClick={() => {
                       setIsProfileMenuOpen(!isProfileMenuOpen);
                       toggleWriteMenuClose();
                       closeAlarmList();
                     }}
                   >
-                    <ProfileImg src={profileImg} />
+                    <ProfileImg alt="프로필이미지" src={profileImg} />
                     <div>{nickName}</div>
-                    <MdExpandCircleDown
+                    <ImCircleDown
                       style={{ fontSize: "17px", color: "#483767" }}
                     />
                   </HeaderButton>
                   <HeaderButton
+                    aria-label="알림목록"
                     name={"alarmList"}
                     onClick={() => {
                       toggleProfileMenuClose();
@@ -232,7 +232,7 @@ function Header() {
                       showAlarmList();
                     }}
                   >
-                    <TbBell style={{ fontSize: "20px" }} />
+                    <BiBell style={{ fontSize: "20px" }} />
                     {!isAlarmListOpen && hasNewNotifications && (
                       <NotificationDot>
                         <BsFillCircleFill
@@ -245,6 +245,7 @@ function Header() {
               ) : (
                 <>
                   <HeaderButton
+                    aria-label="로그인버튼"
                     name={"login"}
                     bgcolor="#483767"
                     color="white"
@@ -257,6 +258,7 @@ function Header() {
                     로그인
                   </HeaderButton>
                   <HeaderButton
+                    aria-label="회원가입버튼"
                     name={"integratedsignup"}
                     onClick={() => {
                       navigate("/integratedsignup");
@@ -269,6 +271,7 @@ function Header() {
                 </>
               )}
               <HeaderButton
+                aria-label="글쓰기모달열기"
                 name={"Write"}
                 onClick={() => {
                   setIsWriteMenuOpen(!isWriteMenuOpen);
@@ -285,6 +288,7 @@ function Header() {
         {isProfileMenuOpen && (
           <ToggleProfileMenu>
             <MenuButton
+              aria-label="마이페이지로이동버튼"
               name={"mypage"}
               onClick={() => {
                 navigate(`/page/${userId}`);
@@ -297,6 +301,7 @@ function Header() {
               마이페이지
             </MenuButton>
             <MenuButton
+              aria-label="채팅목록으로 이동버튼"
               name={"chatlist"}
               onClick={() => {
                 navigate(`/chatroomlist/${userId}`);
@@ -307,6 +312,7 @@ function Header() {
               채팅목록
             </MenuButton>
             <MenuButton
+              aria-label="로그아웃버튼"
               name={"logout"}
               onClick={() => {
                 logoutHandler();
@@ -320,53 +326,49 @@ function Header() {
         )}
 
         {isWriteMenuOpen && (
-          <ToggleWriteMenu>
-            <MenuButton
-              onClick={() => {
-                if (isLoggedIn) {
-                  openFeedModal();
+          <>
+            <ToggleWriteMenu>
+              <MenuButton
+                aria-label="포트폴리오작성버튼"
+                onClick={() => {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
                   toggleMenuClose();
                   closeAlarmList();
-                } else {
-                  Swal.fire({
-                    icon: "warning",
-                    title: "회원 전용 서비스!",
-                    text: `로그인이 필요한 서비스입니다🙏`,
-                    confirmButtonText: "확인",
-                  });
-                }
-              }}
-            >
-              포트폴리오 작성
-            </MenuButton>
-            <MenuButton
-              onClick={() => {
-                if (isLoggedIn) {
-                  openBoardModal();
+                  openModal("feed");
+                }}
+              >
+                포트폴리오 작성
+              </MenuButton>
+              <MenuButton
+                aria-label="구인/구직글 작성버튼"
+                onClick={() => {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
                   toggleMenuClose();
                   closeAlarmList();
-                } else {
-                  Swal.fire({
-                    icon: "warning",
-                    title: "회원 전용 서비스!",
-                    text: `로그인이 필요한 서비스입니다🙏`,
-                    confirmButtonText: "확인",
-                  });
-                }
-              }}
-            >
-              구인/구직글 작성
-            </MenuButton>
-          </ToggleWriteMenu>
+                  openModal("board");
+                }}
+              >
+                구인/구직글 작성
+              </MenuButton>
+            </ToggleWriteMenu>
+          </>
         )}
-
+        {modalType === "feed" && (
+          <Suspense fallback={<LoadingSpinner />}>
+            <CreateFeed open={openModal} close={closeModal} />
+          </Suspense>
+        )}
+        {modalType === "board" && (
+          <Suspense fallback={<LoadingSpinner />}>
+            <CreateBoard open={openModal} close={closeModal} />
+          </Suspense>
+        )}
         {isMenuOpen && (
           <ToggleMenu>
             <MenuButton
+              aria-label="포트폴리오작성버튼"
               onClick={() => {
                 navigate("/feeds");
                 toggleMenuClose();
@@ -378,6 +380,7 @@ function Header() {
               포트폴리오
             </MenuButton>
             <MenuButton
+              aria-label="구인/구직게시판작성버튼"
               onClick={() => {
                 navigate("/board");
                 toggleMenuClose();
@@ -389,6 +392,7 @@ function Header() {
               구인/구직 게시판
             </MenuButton>
             <MenuButton
+              aria-label="글쓰기모달열기버튼"
               onClick={() => {
                 toggleWriteMenuOpen();
                 toggleProfileMenuClose();
@@ -400,6 +404,7 @@ function Header() {
             {isLoggedIn ? (
               <>
                 <MenuButton
+                  aria-label="마이페이지이동버튼"
                   name={"mypage"}
                   onClick={() => {
                     navigate(`/page/${userId}`);
@@ -412,6 +417,7 @@ function Header() {
                   마이페이지
                 </MenuButton>
                 <MenuButton
+                  aria-label="알림목록보기버튼"
                   name={"alarmlist"}
                   onClick={() => {
                     showAlarmList();
@@ -423,6 +429,7 @@ function Header() {
                   알림
                 </MenuButton>
                 <MenuButton
+                  aria-label="채팅목록이동버튼"
                   name={"chatlist"}
                   onClick={() => {
                     navigate(`/chatroomlist/${userId}`);
@@ -434,13 +441,18 @@ function Header() {
                 >
                   채팅목록
                 </MenuButton>
-                <MenuButton name={"logout"} onClick={logoutHandler}>
+                <MenuButton
+                  aria-label="로그아웃버튼"
+                  name={"logout"}
+                  onClick={logoutHandler}
+                >
                   로그아웃
                 </MenuButton>
               </>
             ) : (
               <>
                 <MenuButton
+                  aria-label="로그인버튼"
                   onClick={() => {
                     navigate("/login");
                     toggleMenuClose();
@@ -451,6 +463,7 @@ function Header() {
                   로그인
                 </MenuButton>
                 <MenuButton
+                  aria-label="회원가입버튼"
                   onClick={() => {
                     navigate("/integratedsignup");
                     toggleMenuClose();
@@ -464,16 +477,12 @@ function Header() {
             )}
           </ToggleMenu>
         )}
-        {feedModalOpen && (
-          <CreateFeed open={openFeedModal} close={closeFeedModal} />
-        )}
-        {boardModalOpen && (
-          <CreateBoard open={openBoardModal} close={closeBoardModal} />
-        )}
       </HeaderStyles>
 
       {isAlarmListOpen && (
-        <AlarmListModal showAlarmList={showAlarmList} alarmList={alarmList} />
+        <Suspense fallback={<LoadingSpinner />}>
+          <AlarmListModal showAlarmList={showAlarmList} alarmList={alarmList} />
+        </Suspense>
       )}
     </>
   );
@@ -536,14 +545,12 @@ const LeftMenu = styled.div`
   flex-grow: 1;
 `;
 
-const HeaderTitle = styled.p`
-  font-family: "UhBeeGENWOO";
+const HeaderTitle = styled.div`
   display: flex;
-  font-size: 28px;
-  font-weight: 600;
   align-items: center;
   cursor: pointer;
   margin-right: 20px;
+  width: 50px;
 `;
 
 const ButtonBox = styled.div`

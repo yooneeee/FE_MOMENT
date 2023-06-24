@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { useInput } from "../hooks/useInput";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import UserDataComponent from "./UserDataComponent";
 import Swal from "sweetalert2";
 import { getBoardDetailAxios } from "../apis/board/getBoardDetailAxios";

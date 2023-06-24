@@ -7,7 +7,7 @@ import { useInput } from "../hooks/useInput";
 import { createBoardAxios } from "../apis/board/createBoard";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import UserDataComponent from "./UserDataComponent";
 import Swal from "sweetalert2";
 import imageCompression from "browser-image-compression";

@@ -1,22 +1,31 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, {
+  Suspense,
+  lazy,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import styled from "styled-components";
 import "../css/App.css";
 import { getFeedAxios } from "../apis/feed/getFeedAxios";
 import { useInfiniteQuery, useMutation } from "react-query";
 import LoadingSpinner from "../components/LoadingSpinner";
-import FeedCard from "../components/FeedCard";
-import FeedDetail from "../components/FeedDetail";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useInView } from "react-intersection-observer";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import { searchFeedAxios } from "../apis/feed/searchFeedAxios";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { GrSearch } from "react-icons/gr";
+import { IoIosArrowDown } from "@react-icons/all-files/io/IoIosArrowDown";
+import { GrSearch } from "@react-icons/all-files/gr/GrSearch";
+import FeedCard from "../components/FeedCard";
 import { throttle } from "lodash";
+const FeedDetail = lazy(() => import("../components/FeedDetail"));
 
 function Feed() {
   const [activeNavItem, setActiveNavItem] = useState("Latest");
+  const [timer, setTimer] = useState(null);
+  // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
   let optArr = ["내용", "닉네임", "해시태그"];
   const [currentOpt, setCurrentOpt] = useState("내용");
@@ -79,6 +88,9 @@ function Feed() {
   });
 
   const searchButtonClickHandler = () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
     if (keyword.trim() === "") {
       // Swal.fire({
       //   icon: "warning",
@@ -89,7 +101,11 @@ function Feed() {
       return;
     }
     const role = activeNavItem.toUpperCase();
-    searchMutation.mutate({ keyword, option, role });
+    setTimer(
+      setTimeout(() => {
+        searchMutation.mutate({ keyword, option, role });
+      }, 500)
+    );
   };
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -179,7 +195,7 @@ function Feed() {
             <SelectWrap ref={selectWrapRef}>
               <SelectButton onClick={toggleShowList}>
                 {currentOpt}
-                <MdOutlineKeyboardArrowDown style={{ fontSize: "18px" }} />
+                <IoIosArrowDown style={{ fontSize: "18px" }} />
               </SelectButton>
               {showList && (
                 <LanguageUl>
@@ -238,12 +254,15 @@ function Feed() {
                       openFeedDetail(item.photoId);
                     }}
                   />
+
                   {isOpen && (
-                    <FeedDetail
-                      open={() => openFeedDetail(item.photoId)}
-                      close={() => closeFeedDetail(item.photoId)}
-                      photoId={item.photoId}
-                    />
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <FeedDetail
+                        open={() => openFeedDetail(item.photoId)}
+                        close={() => closeFeedDetail(item.photoId)}
+                        photoId={item.photoId}
+                      />
+                    </Suspense>
                   )}
                 </React.Fragment>
               );
@@ -307,13 +326,6 @@ const FeedContainer = styled.div`
   }
 `;
 
-/* const Navbar = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bold;
-`; */
-
 const NavItems = styled.nav`
   display: flex;
   gap: 20px;
@@ -333,12 +345,6 @@ const Header = styled.div`
   padding: 16px 0 16px 0;
   border-bottom: 1px solid #ddd;
   margin: 0 150px;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `;
 
 const Navbar = styled.nav`
@@ -383,22 +389,6 @@ const Search = styled.div`
   display: flex;
 `;
 
-const Content = styled.div`
-  padding: 30px 150px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin: auto;
-  @media (max-width: 1300px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(1, 1fr);
-  }
-`;
 const SelectWrap = styled.div`
   position: relative;
 `;
@@ -448,4 +438,5 @@ const SearchButton = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 15px;
+  cursor: pointer;
 `;

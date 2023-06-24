@@ -5,12 +5,12 @@ import enableScroll from "./EnableScroll";
 import { useInput } from "../hooks/useInput";
 import { createFeedAxios } from "../apis/feed/createFeedAxios";
 import { useMutation, useQueryClient } from "react-query";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import UserDataComponent from "./UserDataComponent";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-import { TbBoxMultiple } from "react-icons/tb";
-import { AiOutlinePlus } from "react-icons/ai";
+import { RiCheckboxMultipleBlankLine } from "@react-icons/all-files/ri/RiCheckboxMultipleBlankLine";
+import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
 import imageCompression from "browser-image-compression";
 
 const CreateFeed = (props) => {
@@ -297,7 +297,7 @@ const CreateFeed = (props) => {
                     setUploadToggleBtn(!uploadToggleBtn);
                   }}
                 >
-                  <TbBoxMultiple size={"25px"} />
+                  <RiCheckboxMultipleBlankLine size={"25px"} />
                 </MultipleUpload>
               </div>
             </main>
