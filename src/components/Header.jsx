@@ -16,9 +16,14 @@ import { BsFillCircleFill } from "react-icons/bs";
 import { decrypt } from "../apis/axios";
 
 function Header() {
-  const [feedModalOpen, setFeedModalOpen] = useState(false);
-  const [boardModalOpen, setBoardModalOpen] = useState(false);
   const dispatch = useDispatch();
+  const [modalType, setModalType] = useState(null);
+  const openModal = (type) => {
+    setModalType(type);
+  };
+  const closeModal = () => {
+    setModalType(null);
+  };
 
   // 로그인 여부 확인
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -26,18 +31,6 @@ function Header() {
   const profileImg = useSelector((state) => state.user.profileImg);
   const userId = useSelector((state) => state.user.userId);
 
-  const openFeedModal = () => {
-    setFeedModalOpen(true);
-  };
-  const closeFeedModal = () => {
-    setFeedModalOpen(false);
-  };
-  const openBoardModal = () => {
-    setBoardModalOpen(true);
-  };
-  const closeBoardModal = () => {
-    setBoardModalOpen(false);
-  };
   const navigate = useNavigate();
   // 현재 창 너비
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -109,7 +102,7 @@ function Header() {
           {
             headers,
             withCredentials: true,
-            heartbeatTimeout: 2000000,
+            heartbeatTimeout: 4000000,
           }
         );
         eventSource.addEventListener("chatAlarm-event", (event) => {
@@ -320,50 +313,39 @@ function Header() {
         )}
 
         {isWriteMenuOpen && (
-          <ToggleWriteMenu>
-            <MenuButton
-              onClick={() => {
-                if (isLoggedIn) {
-                  openFeedModal();
+          <>
+            <ToggleWriteMenu>
+              <MenuButton
+                onClick={() => {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
                   toggleMenuClose();
                   closeAlarmList();
-                } else {
-                  Swal.fire({
-                    icon: "warning",
-                    title: "회원 전용 서비스!",
-                    text: `로그인이 필요한 서비스입니다🙏`,
-                    confirmButtonText: "확인",
-                  });
-                }
-              }}
-            >
-              포트폴리오 작성
-            </MenuButton>
-            <MenuButton
-              onClick={() => {
-                if (isLoggedIn) {
-                  openBoardModal();
+                  openModal("feed");
+                }}
+              >
+                포트폴리오 작성
+              </MenuButton>
+              <MenuButton
+                onClick={() => {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
                   toggleMenuClose();
                   closeAlarmList();
-                } else {
-                  Swal.fire({
-                    icon: "warning",
-                    title: "회원 전용 서비스!",
-                    text: `로그인이 필요한 서비스입니다🙏`,
-                    confirmButtonText: "확인",
-                  });
-                }
-              }}
-            >
-              구인/구직글 작성
-            </MenuButton>
-          </ToggleWriteMenu>
+                  openModal("board");
+                }}
+              >
+                구인/구직글 작성
+              </MenuButton>
+            </ToggleWriteMenu>
+          </>
         )}
-
+        {modalType === "feed" && (
+          <CreateFeed open={openModal} close={closeModal} />
+        )}
+        {modalType === "board" && (
+          <CreateBoard open={openModal} close={closeModal} />
+        )}
         {isMenuOpen && (
           <ToggleMenu>
             <MenuButton
@@ -463,12 +445,6 @@ function Header() {
               </>
             )}
           </ToggleMenu>
-        )}
-        {feedModalOpen && (
-          <CreateFeed open={openFeedModal} close={closeFeedModal} />
-        )}
-        {boardModalOpen && (
-          <CreateBoard open={openBoardModal} close={closeBoardModal} />
         )}
       </HeaderStyles>
 
