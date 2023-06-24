@@ -19,7 +19,7 @@ function MyPageBoard() {
 
   const [editButtons, setEditButtons] = useState([]);
   const toggleWriteMenuRef = useRef(null);
-  const { isError, isLoading, data } = useQuery(["mypage", mypage], () =>
+  const { isError, isLoading, data, error } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
   );
 
@@ -110,9 +110,17 @@ function MyPageBoard() {
   }
 
   if (isError) {
-    return <h1>오류(⊙ˍ⊙)</h1>;
+    if (error.response.request.status === 401) {
+      Swal.fire({
+        icon: "error",
+        title: "로그인이후 이용가능한 페이지입니다!",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/");
+      });
+    }
+    return null;
   }
-
   /* 토글버튼 */
   const toggleButtonOpen = (index) => {
     const updatedEditButtons = [...editButtons];

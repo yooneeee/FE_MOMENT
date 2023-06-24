@@ -63,8 +63,9 @@ const ChatTest = () => {
     return date.getHours() >= 12 ? "오후" : "오전";
   };
 
-  const { isError, isLoading, data } = useQuery(["Chatting", receiverId], () =>
-    Chatting(receiverId)
+  const { isError, isLoading, data, error } = useQuery(
+    ["Chatting", receiverId],
+    () => Chatting(receiverId)
   );
   // console.log("채팅할사람", data);
   const chatRoomIds = data?.chatList?.map((item) => item.chatRoomId);
@@ -240,6 +241,18 @@ const ChatTest = () => {
 
   if (isLoading) {
     return <LoadingSpinner />;
+  }
+  if (isError) {
+    if (error.response.request.status === 401) {
+      Swal.fire({
+        icon: "error",
+        title: "로그인이후 이용가능한 페이지입니다!",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/");
+      });
+    }
+    return null;
   }
 
   if (isError || !data) {
