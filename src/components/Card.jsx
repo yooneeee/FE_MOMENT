@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import defaultImg from "../assets/img/2.jpg";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { TbMoodHappy } from "react-icons/tb";
+import { RiEmotionHappyLine } from "@react-icons/all-files/ri/RiEmotionHappyLine";
 
 function Card({ user }) {
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ function Card({ user }) {
           <FlexWrap>
             <UserNickName>{user.nickName}</UserNickName>
             <UserPosition>
-              <TbMoodHappy />
+              <RiEmotionHappyLine />
               <UserPositionText>{user.totalLoveCnt}</UserPositionText>
             </UserPosition>
           </FlexWrap>
@@ -115,7 +115,7 @@ function Card({ user }) {
         <FlexWrap>
           <UserNickName>{user.nickName}</UserNickName>
           <UserPosition>
-            <TbMoodHappy />
+            <RiEmotionHappyLine />
             <UserPositionText>
               {user.totalLoveCnt || user.loveCnt}
             </UserPositionText>

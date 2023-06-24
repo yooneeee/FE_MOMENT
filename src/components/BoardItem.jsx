@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { IoLocationSharp } from "react-icons/io5";
-import { BiDollarCircle } from "react-icons/bi";
-import { LuCalendarDays } from "react-icons/lu";
+import { IoLocationSharp } from "@react-icons/all-files/io5/IoLocationSharp";
+import { BiDollarCircle } from "@react-icons/all-files/bi/BiDollarCircle";
+import { BsCalendar } from "@react-icons/all-files/bs/BsCalendar";
 import { useNavigate } from "react-router-dom";
-import { FaPen } from "react-icons/fa";
+import { FaPen } from "@react-icons/all-files/fa/FaPen";
 
 function BoardItem({
   item,
@@ -116,7 +116,7 @@ function BoardItem({
           </PayInfo>
         </LocationInfo>
         <DeadLineInfo>
-          <LuCalendarDays style={{ color: "#514073" }} />{" "}
+          <BsCalendar style={{ color: "#514073" }} />{" "}
           <CardFont>{item.deadLine}</CardFont>
         </DeadLineInfo>
 

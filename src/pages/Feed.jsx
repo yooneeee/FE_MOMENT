@@ -11,8 +11,8 @@ import Swal from "sweetalert2";
 import { useInView } from "react-intersection-observer";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import { searchFeedAxios } from "../apis/feed/searchFeedAxios";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { GrSearch } from "react-icons/gr";
+import { IoIosArrowDown } from "@react-icons/all-files/io/IoIosArrowDown";
+import { GrSearch } from "@react-icons/all-files/gr/GrSearch";
 
 function Feed() {
   const [activeNavItem, setActiveNavItem] = useState("Latest");
@@ -179,7 +179,7 @@ function Feed() {
             <SelectWrap ref={selectWrapRef}>
               <SelectButton onClick={toggleShowList}>
                 {currentOpt}
-                <MdOutlineKeyboardArrowDown style={{ fontSize: "18px" }} />
+                <IoIosArrowDown style={{ fontSize: "18px" }} />
               </SelectButton>
               {showList && (
                 <LanguageUl>

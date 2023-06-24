@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { IoArrowBack } from "react-icons/io5";
-import { AiOutlineClose } from "react-icons/ai";
+import { IoArrowBack } from "@react-icons/all-files/io5/IoArrowBack";
+import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import requestedMatchingList from "../apis/matching/requestedMatchingList.js";

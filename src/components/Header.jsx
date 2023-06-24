@@ -8,11 +8,11 @@ import { logoutAxios } from "../apis/auth/login";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "../redux/modules/user";
 import Swal from "sweetalert2";
-import { MdExpandCircleDown } from "react-icons/md";
+import { ImCircleDown } from "@react-icons/all-files/im/ImCircleDown";
 import { EventSourcePolyfill } from "event-source-polyfill";
-import { TbBell } from "react-icons/tb";
+import { BiBell } from "@react-icons/all-files/bi/BiBell";
 import AlarmListModal from "./AlarmListModal";
-import { BsFillCircleFill } from "react-icons/bs";
+import { BsFillCircleFill } from "@react-icons/all-files/bs/BsFillCircleFill";
 import { decrypt } from "../apis/axios";
 
 function Header() {
@@ -213,7 +213,7 @@ function Header() {
                   >
                     <ProfileImg src={profileImg} />
                     <div>{nickName}</div>
-                    <MdExpandCircleDown
+                    <ImCircleDown
                       style={{ fontSize: "17px", color: "#483767" }}
                     />
                   </HeaderButton>
@@ -225,7 +225,7 @@ function Header() {
                       showAlarmList();
                     }}
                   >
-                    <TbBell style={{ fontSize: "20px" }} />
+                    <BiBell style={{ fontSize: "20px" }} />
                     {!isAlarmListOpen && hasNewNotifications && (
                       <NotificationDot>
                         <BsFillCircleFill

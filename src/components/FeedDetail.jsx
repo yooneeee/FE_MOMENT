@@ -4,7 +4,7 @@ import disableScroll from "./DisableScroll";
 import enableScroll from "./EnableScroll";
 import { feedDetailAxios } from "../apis/feed/feedDetailAxios";
 import { useQuery, useQueryClient } from "react-query";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import { useMutation } from "react-query";
 import heartAxios from "../apis/feed/heartAxios";
 import HeartButton from "./HeartButton";

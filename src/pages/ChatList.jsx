@@ -4,7 +4,7 @@ import { ChattingList } from "../apis/mypage/chatting";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch } from "@react-icons/all-files/fi/FiSearch";
 import * as StompJs from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { useSelector } from "react-redux";

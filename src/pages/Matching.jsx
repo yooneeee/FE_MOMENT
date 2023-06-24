@@ -12,7 +12,7 @@ import EditBoard from "../components/EditBoard";
 import FollowModal from "../components/MatchingList";
 import getAcceptList from "../apis/matching/getAcceptList";
 import getApplyList from "../apis/matching/getApplyList";
-import { BiUser } from "react-icons/bi";
+import { BiUser } from "@react-icons/all-files/bi/BiUser";
 
 function Matching() {
   const { hostId } = useParams();

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { TbMoodHappy } from "react-icons/tb";
+import { RiEmotionHappyLine } from "@react-icons/all-files/ri/RiEmotionHappyLine";
 
 function MainBoard({ board }) {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ function MainBoard({ board }) {
           <FlexWrap>
             <UserName>{board.nickName}</UserName>
             <UserPosition>
-              <TbMoodHappy />
+              <RiEmotionHappyLine />
               <UserPositionText>{board.totalLoveCnt}</UserPositionText>
             </UserPosition>
           </FlexWrap>
