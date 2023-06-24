@@ -163,10 +163,11 @@ function Header() {
               closeAlarmList();
             }}
           >
-            <MainLogo src="/img/mainlogo2.png" />
+            <MainLogo src="/img/mainlogo2.png" alt="MOMENT로고" />
           </HeaderTitle>
           <CategoryBox>
             <HeaderButton
+              aria-label="포트폴리오페이지로이동"
               onClick={() => {
                 navigate("/feeds");
                 toggleWriteMenuClose();
@@ -177,6 +178,7 @@ function Header() {
               포트폴리오
             </HeaderButton>
             <HeaderButton
+              aria-label="구인/구직게시판페이지로이동"
               onClick={() => {
                 navigate("/board");
                 toggleWriteMenuClose();
@@ -191,6 +193,7 @@ function Header() {
         <ButtonBox>
           {windowWidth <= 768 ? (
             <MenuButton
+              aria-label="전체메뉴보기"
               onClick={() => {
                 setIsMenuOpen(!isMenuOpen);
                 toggleWriteMenuClose();
@@ -205,19 +208,21 @@ function Header() {
               {isLoggedIn ? (
                 <>
                   <HeaderButton
+                    aria-label="프로필메뉴열기"
                     onClick={() => {
                       setIsProfileMenuOpen(!isProfileMenuOpen);
                       toggleWriteMenuClose();
                       closeAlarmList();
                     }}
                   >
-                    <ProfileImg src={profileImg} />
+                    <ProfileImg alt="프로필이미지" src={profileImg} />
                     <div>{nickName}</div>
                     <ImCircleDown
                       style={{ fontSize: "17px", color: "#483767" }}
                     />
                   </HeaderButton>
                   <HeaderButton
+                    aria-label="알림목록"
                     name={"alarmList"}
                     onClick={() => {
                       toggleProfileMenuClose();
@@ -238,6 +243,7 @@ function Header() {
               ) : (
                 <>
                   <HeaderButton
+                    aria-label="로그인버튼"
                     name={"login"}
                     bgcolor="#483767"
                     color="white"
@@ -250,6 +256,7 @@ function Header() {
                     로그인
                   </HeaderButton>
                   <HeaderButton
+                    aria-label="회원가입버튼"
                     name={"integratedsignup"}
                     onClick={() => {
                       navigate("/integratedsignup");
@@ -262,6 +269,7 @@ function Header() {
                 </>
               )}
               <HeaderButton
+                aria-label="글쓰기모달열기"
                 name={"Write"}
                 onClick={() => {
                   setIsWriteMenuOpen(!isWriteMenuOpen);
@@ -278,6 +286,7 @@ function Header() {
         {isProfileMenuOpen && (
           <ToggleProfileMenu>
             <MenuButton
+              aria-label="마이페이지로이동버튼"
               name={"mypage"}
               onClick={() => {
                 navigate(`/page/${userId}`);
@@ -290,6 +299,7 @@ function Header() {
               마이페이지
             </MenuButton>
             <MenuButton
+              aria-label="채팅목록으로 이동버튼"
               name={"chatlist"}
               onClick={() => {
                 navigate(`/chatroomlist/${userId}`);
@@ -300,6 +310,7 @@ function Header() {
               채팅목록
             </MenuButton>
             <MenuButton
+              aria-label="로그아웃버튼"
               name={"logout"}
               onClick={() => {
                 logoutHandler();
@@ -316,6 +327,7 @@ function Header() {
           <>
             <ToggleWriteMenu>
               <MenuButton
+                aria-label="포트폴리오작성버튼"
                 onClick={() => {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
@@ -327,6 +339,7 @@ function Header() {
                 포트폴리오 작성
               </MenuButton>
               <MenuButton
+                aria-label="구인/구직글 작성버튼"
                 onClick={() => {
                   toggleWriteMenuClose();
                   toggleProfileMenuClose();
@@ -349,6 +362,7 @@ function Header() {
         {isMenuOpen && (
           <ToggleMenu>
             <MenuButton
+              aria-label="포트폴리오작성버튼"
               onClick={() => {
                 navigate("/feeds");
                 toggleMenuClose();
@@ -360,6 +374,7 @@ function Header() {
               포트폴리오
             </MenuButton>
             <MenuButton
+              aria-label="구인/구직게시판작성버튼"
               onClick={() => {
                 navigate("/board");
                 toggleMenuClose();
@@ -371,6 +386,7 @@ function Header() {
               구인/구직 게시판
             </MenuButton>
             <MenuButton
+              aria-label="글쓰기모달열기버튼"
               onClick={() => {
                 toggleWriteMenuOpen();
                 toggleProfileMenuClose();
@@ -382,6 +398,7 @@ function Header() {
             {isLoggedIn ? (
               <>
                 <MenuButton
+                  aria-label="마이페이지이동버튼"
                   name={"mypage"}
                   onClick={() => {
                     navigate(`/page/${userId}`);
@@ -394,6 +411,7 @@ function Header() {
                   마이페이지
                 </MenuButton>
                 <MenuButton
+                  aria-label="알림목록보기버튼"
                   name={"alarmlist"}
                   onClick={() => {
                     showAlarmList();
@@ -405,6 +423,7 @@ function Header() {
                   알림
                 </MenuButton>
                 <MenuButton
+                  aria-label="채팅목록이동버튼"
                   name={"chatlist"}
                   onClick={() => {
                     navigate(`/chatroomlist/${userId}`);
@@ -416,13 +435,18 @@ function Header() {
                 >
                   채팅목록
                 </MenuButton>
-                <MenuButton name={"logout"} onClick={logoutHandler}>
+                <MenuButton
+                  aria-label="로그아웃버튼"
+                  name={"logout"}
+                  onClick={logoutHandler}
+                >
                   로그아웃
                 </MenuButton>
               </>
             ) : (
               <>
                 <MenuButton
+                  aria-label="로그인버튼"
                   onClick={() => {
                     navigate("/login");
                     toggleMenuClose();
@@ -433,6 +457,7 @@ function Header() {
                   로그인
                 </MenuButton>
                 <MenuButton
+                  aria-label="회원가입버튼"
                   onClick={() => {
                     navigate("/integratedsignup");
                     toggleMenuClose();
