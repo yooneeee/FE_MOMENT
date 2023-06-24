@@ -8,6 +8,7 @@ import DeleteUser from "../components/DeleteUser";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/modules/user";
 import Swal from "sweetalert2";
+import imageCompression from "browser-image-compression";
 
 const MyPageInformation = () => {
   const { hostId } = useParams();
@@ -34,17 +35,38 @@ const MyPageInformation = () => {
   const pwMaxLength = 15;
 
   /* 프로필 이미지 선택 */
-  const fileSelectHandler = (e) => {
+  // const fileSelectHandler = (e) => {
+  //   const file = e.target.files[0];
+  //   // 파일 처리 로직 추가
+  //   // 이미지 업로드 후 이미지 변경 로직
+  //   // setImage(file);
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       setImage(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  const fileSelectHandler = async (e) => {
     const file = e.target.files[0];
-    // 파일 처리 로직 추가
-    // 이미지 업로드 후 이미지 변경 로직
-    // setImage(file);
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+          fileType: "webp",
+        };
+        const compressedFile = await imageCompression(file, options);
+        const reader = new FileReader();
+        reader.onload = () => {
+          setImage(reader.result);
+        };
+        reader.readAsDataURL(compressedFile);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -128,7 +150,7 @@ const MyPageInformation = () => {
     }
   };
 
-  let prevValue = "";
+  const prevValue = "";
 
   const handlePwInput = (e) => {
     setNewPw(e.target.value);
@@ -166,6 +188,7 @@ const MyPageInformation = () => {
           <Text1>사진</Text1>
           <ProfileContainer>
             <ProfileImg src={image} />
+            {/* <ProfileImg src={imagePreview || loginUserData.profileImg} /> */}
           </ProfileContainer>
           <TextColumn>
             <ProfileText>
