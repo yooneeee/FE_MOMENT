@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import UserDataComponent from "./UserDataComponent";
 import Swal from "sweetalert2";
+import imageCompression from "browser-image-compression";
 
 const CreateBoard = (props) => {
   // 해시태그 기능
@@ -107,19 +108,29 @@ const CreateBoard = (props) => {
   const day = ("0" + today.getDate()).slice(-2);
   const dateString = year + "-" + month + "-" + day;
 
-  // 이미지 미리보기
-  const handleFileChange = (e) => {
+  // 이미지 미리보기, 압축
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    setSelectedFile(file);
 
-    if (file) {
+    if (!file) return;
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true, // 웹 워커 사용
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+      setSelectedFile(compressedFile);
+
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewImage(reader.result);
       };
-      reader.readAsDataURL(file);
-    } else {
-      setPreviewImage(null);
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error(error);
     }
   };
 
