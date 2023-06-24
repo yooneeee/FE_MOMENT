@@ -7,6 +7,7 @@ import HeartButton from "./HeartButton";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
 function FeedCard({ data, onClick, openFeedDetail }) {
   // 좋아요 버튼
@@ -40,14 +41,35 @@ function FeedCard({ data, onClick, openFeedDetail }) {
   const handleHeartButtonClick = (photoId) => {
     likeButtonHandler(photoId);
   };
+
+  const [cardProfileImgSrc, cardProfileImgRef] = useIntersectionObserver(
+    "/path/to/placeholder.jpg", // placeholder 이미지 경로
+    data.photoUrl
+  );
+  const [profileImgSrc, profileImgRef] = useIntersectionObserver(
+    "/path/to/placeholder.jpg", // placeholder 이미지 경로
+    data.profileImgUrl
+  );
+
   return (
     <CardDesign>
       <SliderWrapper>
-        <CardProfileImg src={data.photoUrl} onClick={handleCardClick} />
+        <CardProfileImg
+          // src={data.photoUrl}
+          src={cardProfileImgSrc}
+          ref={cardProfileImgRef}
+          onClick={handleCardClick}
+          alt="photoImg"
+        />
       </SliderWrapper>
       <CardHeader>
         <StyledLink to={`/page/${data.hostId}`}>
-          <ProfileImg src={data.profileImgUrl} />
+          <ProfileImg
+            // src={data.profileImgUrl}
+            src={profileImgSrc}
+            ref={profileImgRef}
+            alt="ProfileImg"
+          />
           <UserNickName>{data.nickName}</UserNickName>
         </StyledLink>
         <FlexWrap>

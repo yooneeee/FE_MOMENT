@@ -32,28 +32,44 @@ const ChatTest = () => {
   const [chatDates, setChatDates] = useState([]); // 날짜
   const [isVisible, setIsVisible] = useState(true); // 삭제후 채팅방 상태관리
 
+  const [messageCharacters, setMessageCharacters] = useState(0);
+  const messageMaxLength = 500;
+
   const client = useRef({});
   const scrollRef = useRef();
 
   /* 시간을 변환하는 함수->오전, 오후 */
-  const formatAMPM = (date) => {
+  // const formatAMPM = (date) => {
+  //   let hours = date.getHours();
+  //   let minutes = date.getMinutes();
+  //   const ampm = hours >= 12 ? "오후" : "오전";
+  //   hours = hours % 12;
+  //   hours = hours ? hours : 12;
+  //   minutes = minutes < 10 ? "0" + minutes : minutes;
+  //   const strTime = ampm + " " + hours + ":" + minutes + " ";
+  //   return strTime;
+  // };
+  const getHours = (date) => {
     let hours = date.getHours();
+    return hours > 12 ? hours - 12 : hours;
+  };
+
+  const getMinutes = (date) => {
     let minutes = date.getMinutes();
-    const ampm = hours >= 12 ? "오후" : "오전";
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    const strTime = ampm + " " + hours + ":" + minutes + " ";
-    return strTime;
+    return minutes < 10 ? "0" + minutes : minutes;
+  };
+
+  const getAMPM = (date) => {
+    return date.getHours() >= 12 ? "오후" : "오전";
   };
 
   const { isError, isLoading, data, error } = useQuery(
     ["Chatting", receiverId],
     () => Chatting(receiverId)
   );
-  console.log("채팅할사람", data);
+  // console.log("채팅할사람", data);
   const chatRoomIds = data?.chatList?.map((item) => item.chatRoomId);
-  console.log("챗룸", chatRoomIds);
+  // console.log("챗룸", chatRoomIds);
 
   // useEffect(() => {
   //   if (data?.chatList) {
@@ -197,21 +213,21 @@ const ChatTest = () => {
           ]);
         }
       );
-      client.current?.subscribe(`/pub/chat/read`, ({ body }) => {
-        const readStatusUpdate = JSON.parse(body);
-        console.log("확인:::", readStatusUpdate);
+      // client.current?.subscribe(`/pub/chat/read`, ({ body }) => {
+      //   const readStatusUpdate = JSON.parse(body);
+      //   console.log("확인:::", readStatusUpdate);
 
-        setChatMessages((prevChatMessages) =>
-          prevChatMessages.map((message) =>
-            data.chatRoomId === chatRoomIds
-              ? { ...message, readStatus: readStatusUpdate.readStatus }
-              : message
-          )
-        );
-        console.log("확인:::", readStatusUpdate);
-        // readStatusUpdate에 따라 필요한 동작을 수행합니다.
-        // 예를 들어, 메시지를 읽은 상태로 표시하거나, 읽지 않은 메시지 개수를 업데이트하는 등의 동작을 수행할 수 있습니다.
-      });
+      //   setChatMessages((prevChatMessages) =>
+      //     prevChatMessages.map((message) =>
+      //       data.chatRoomId === chatRoomIds
+      //         ? { ...message, readStatus: readStatusUpdate.readStatus }
+      //         : message
+      //     )
+      //   );
+      //   console.log("확인:::", readStatusUpdate);
+      //   // readStatusUpdate에 따라 필요한 동작을 수행합니다.
+      //   // 예를 들어, 메시지를 읽은 상태로 표시하거나, 읽지 않은 메시지 개수를 업데이트하는 등의 동작을 수행할 수 있습니다.
+      // });
     }
   };
 
@@ -261,6 +277,7 @@ const ChatTest = () => {
 
     setMessage("");
     setOverLimit(false);
+    setMessageCharacters(0);
   };
   /* Enter key 메시지 전송 */
   const enterHandler = (e, message) => {
@@ -279,6 +296,12 @@ const ChatTest = () => {
       // sendMessage.mutate(message);
       e.preventDefault();
     }
+  };
+
+  const handleMessageInput = (e) => {
+    publish(message);
+    // setMessage(e.target.value);
+    // setMessageCharacters(0);
   };
 
   return (
@@ -316,7 +339,7 @@ const ChatTest = () => {
                   <GuideText>
                     <span>{data.receiverNickName}님과 대화를 시작합니다</span>
                   </GuideText>
-                  {chatMessages.map((_chatMessage, index) => (
+                  {chatMessages.map((_chatMessage, index, arr) => (
                     <React.Fragment key={_chatMessage.uuid}>
                       <GuideText>
                         {(index === 0 ||
@@ -350,19 +373,30 @@ const ChatTest = () => {
                             alt="Profile"
                           />
                         </ProfileContainer>
-                        <MessageContainer>
-                          <ChatBubble
-                            key={index}
-                            isSender={_chatMessage.senderId === userId}
-                            isReceiver={_chatMessage.receiverId === userId}
-                          >
-                            {_chatMessage.message}
-                          </ChatBubble>
-                          {/* <Time>{todayTime()}</Time> */}
-                        </MessageContainer>
-                        <Time>
-                          {formatAMPM(new Date(_chatMessage.createdAt))}
-                        </Time>
+                        <ParentContainer
+                          isSender={_chatMessage.senderId === userId}
+                        >
+                          <MessageContainer>
+                            <ChatBubble
+                              key={index}
+                              isSender={_chatMessage.senderId === userId}
+                              isReceiver={_chatMessage.receiverId === userId}
+                            >
+                              {_chatMessage.message}
+                            </ChatBubble>
+                          </MessageContainer>
+                          {index === arr.length - 1 ||
+                          new Date(_chatMessage.createdAt).getMinutes() !==
+                            new Date(arr[index + 1].createdAt).getMinutes() ? (
+                            <Time isSender={_chatMessage.senderId === userId}>
+                              {getAMPM(new Date(_chatMessage.createdAt)) +
+                                " " +
+                                getHours(new Date(_chatMessage.createdAt)) +
+                                ":" +
+                                getMinutes(new Date(_chatMessage.createdAt))}
+                            </Time>
+                          ) : null}
+                        </ParentContainer>
                       </MessageWrapper>
                     </React.Fragment>
                   ))}
@@ -370,17 +404,19 @@ const ChatTest = () => {
               )}
               <div ref={scrollRef}></div>
               <SendContainer>
-                {overLimit && <span>999자를 초과하였습니다!</span>}
+                {overLimit && <span>500자 초과하였습니다!</span>}
                 <ChatInputContainer>
                   <ChatInput
                     placeholder="메세지를 입력해주세요."
-                    maxLength={1000}
+                    maxLength={500}
                     rows={1}
                     type={"text"}
                     value={message}
                     onChange={(e) => {
-                      if (e.target.value.length <= 1000) {
-                        setMessage(e.target.value);
+                      const newValue = e.target.value;
+                      if (newValue.length <= messageMaxLength) {
+                        setMessage(newValue);
+                        setMessageCharacters(newValue.length);
                         setOverLimit(false); // 길이 제한이 초과되지 않았으므로 경고를 숨김
                       } else {
                         setOverLimit(true); // 길이 제한이 초과되었으므로 경고를 표시
@@ -390,7 +426,12 @@ const ChatTest = () => {
                     onKeyDown={(e) => enterHandler(e, message)}
                   />
                   {/* <SendButton onClick={() => sendMessage.mutate(message)}> */}
-                  <SendButton onClick={() => publish(message)}>전송</SendButton>
+                  <Bundle>
+                    <span>
+                      {messageCharacters}/{messageMaxLength}
+                    </span>
+                    <SendButton onClick={handleMessageInput}>전송</SendButton>
+                  </Bundle>
                 </ChatInputContainer>
               </SendContainer>
             </ScrollableDiv>
@@ -448,19 +489,13 @@ const SenderName = styled.span`
 const MessageWrapper = styled.div`
   display: flex;
   flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
-  /* align-items: colum; */
   align-items: center;
-  /* justify-content: space-between; */
   align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
-  /* margin: 10px 0; */
 `;
 
 const ScrollableDiv = styled.div`
   overflow-y: auto;
   height: calc(100% - 80px);
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-between; */
 
   /* // For Webkit-based Browsers
   ::-webkit-scrollbar {
@@ -474,31 +509,21 @@ const ScrollableDiv = styled.div`
 const EntireContainer = styled.div`
   display: flex;
   width: 100%;
-  /* height: 100vh; */
   height: calc(100vh - 190px);
   max-width: 75%;
-  /* max-height: 60%; */
   margin: auto;
   overflow: hidden;
 `;
 const ChatRoomContainer = styled.div`
   flex: 2; // 차지하는 공간의 비율을 2로 설정
   border-left: 1px solid #ccc;
-  /* padding: 20px; */
-  /* overflow: auto; */
   max-height: 900px;
-  /* padding: 0px 90px 0px 0px; */
-
-  /* display: flex; */
 `;
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
   width: 100%;
-  /* max-width: 800px; */
   padding: 0px 20px;
-  /* align-items: center; */
   margin: 20px 0;
 
   position: relative;
@@ -511,12 +536,17 @@ const SendContainer = styled.div`
   width: 100%;
   max-width: 800px;
   margin: 10px auto;
+  margin: 0 auto;
+`;
+const ParentContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
 `;
 
 const MessageContainer = styled.div`
   display: flex;
   align-items: center;
-  /* align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")}; */
   margin: 10px 15px;
   flex-direction: ${(props) => (props.isSender ? "row-reverse" : "row")};
 `;
@@ -546,7 +576,7 @@ const ChatBubble = styled.div`
 
   white-space: pre-wrap;
   word-wrap: break-word;
-  max-width: 700px; /* 한 줄에 표시되는 최대 너비 */
+  max-width: 550px; /* 한 줄에 표시되는 최대 너비 */
   overflow-wrap: break-word;
 
   &:after {
@@ -565,7 +595,7 @@ const ChatBubble = styled.div`
 const Time = styled.div`
   font-size: 13px;
   color: #a0a0a0;
-  margin-top: 20px;
+  margin-bottom: 10px;
 `;
 const ChatInputContainer = styled.div`
   display: flex;
@@ -573,11 +603,6 @@ const ChatInputContainer = styled.div`
   margin-top: 16px;
   border: 1px solid #a0a0a0;
   border-radius: 4px;
-
-  /* position: absolute; */
-  /* bottom: 20px; */
-  /* left: 50%; */
-  /* transform: translateX(-50%); */
 `;
 
 const ChatInput = styled.textarea`
@@ -590,11 +615,18 @@ const ChatInput = styled.textarea`
   border-radius: 4px;
   resize: none; // 사용자가 크기를 조절하지 못하게 함
 `;
+const Bundle = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  & span {
+    margin-left: 8px;
+  }
+`;
 
 const SendButton = styled.button`
   margin-left: 8px;
-  margin-right: 4px;
-  margin-top: 30px;
+  margin-top: 10px;
   padding: 8px 20px;
   background-color: #483767;
   color: #fff;
