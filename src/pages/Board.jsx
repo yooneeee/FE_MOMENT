@@ -1,6 +1,5 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { Suspense, lazy, useRef, useState, useCallback } from "react";
 import styled from "styled-components";
-import BoardItem from "../components/BoardItem";
 import { getBoard } from "../apis/create/getBoard";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -10,15 +9,17 @@ import { useInfiniteQuery, useMutation } from "react-query";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import ScrollToTopButton from "../components/ScrollToTopButton";
-import { GrSearch } from "react-icons/gr";
+import { GrSearch } from "@react-icons/all-files/gr/GrSearch";
 import { searchBoardAxios } from "../apis/board/searchBoard";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { IoIosArrowDown } from "@react-icons/all-files/io/IoIosArrowDown";
 import { throttle } from "lodash";
+const BoardItem = lazy(() => import("../components/BoardItem"));
 
 function Board() {
   const navigate = useNavigate();
   const [activeNavItem, setActiveNavItem] = useState("Model");
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [timer, setTimer] = useState(null);
   let optArr = ["제목", "닉네임", "장소", "해시태그"];
   const [currentOpt, setCurrentOpt] = useState("제목");
   const [showList, setShowList] = useState(false);
@@ -82,6 +83,9 @@ function Board() {
   });
 
   const searchButtonClickHandler = () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
     if (keyword.trim() === "") {
       // Swal.fire({
       //   icon: "warning",
@@ -92,7 +96,11 @@ function Board() {
       return;
     }
     const role = activeNavItem.toUpperCase();
-    searchMutation.mutate({ keyword, option, role });
+    setTimer(
+      setTimeout(() => {
+        searchMutation.mutate({ keyword, option, role });
+      }, 500)
+    );
   };
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -121,7 +129,7 @@ function Board() {
   }, [handleScrollThrottled]);
 
   const { isLoading, isError, data, fetchNextPage } = useInfiniteQuery(
-    ["getBoard", activeNavItem], // activeNavItem을 키로 사용하여 캐시 분리
+    ["getBoard", activeNavItem],
     ({ pageParam = 0 }) => getBoard({ pageParam, activeNavItem }),
     {
       getNextPageParam: (lastPage) => {
@@ -161,7 +169,7 @@ function Board() {
             <SelectWrap ref={selectWrapRef}>
               <SelectButton onClick={toggleShowList}>
                 {currentOpt}
-                <MdOutlineKeyboardArrowDown style={{ fontSize: "18px" }} />
+                <IoIosArrowDown style={{ fontSize: "18px" }} />
               </SelectButton>
               {showList && (
                 <LanguageUl>
@@ -178,6 +186,7 @@ function Board() {
                 </LanguageUl>
               )}
             </SelectWrap>
+
             <SearchInput
               type="text"
               placeholder="키워드를 입력해주세요"
@@ -211,22 +220,24 @@ function Board() {
         {searchResults.length > 0 ? (
           <>
             {searchResults.map((item) => (
-              <BoardItem
-                onClick={() => {
-                  if (isLoggedIn) {
-                    navigate(`${item.boardId}`);
-                  } else {
-                    Swal.fire({
-                      icon: "warning",
-                      title: "회원 전용 서비스!",
-                      text: `로그인이 필요한 서비스입니다🙏`,
-                      confirmButtonText: "확인",
-                    });
-                  }
-                }}
-                item={item}
-                key={item.boardId}
-              />
+              <Suspense fallback={<LoadingSpinner />}>
+                <BoardItem
+                  onClick={() => {
+                    if (isLoggedIn) {
+                      navigate(`${item.boardId}`);
+                    } else {
+                      Swal.fire({
+                        icon: "warning",
+                        title: "회원 전용 서비스!",
+                        text: `로그인이 필요한 서비스입니다🙏`,
+                        confirmButtonText: "확인",
+                      });
+                    }
+                  }}
+                  item={item}
+                  key={item.boardId}
+                />
+              </Suspense>
             ))}
           </>
         ) : (
@@ -409,7 +420,6 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 45px;
-
   @media (max-width: 1300px) {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -419,10 +429,6 @@ const Content = styled.div`
   @media (max-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
   }
-
-  @media (max-width: 768px) {
-    margin: 30px 20px;
-  }
 `;
 
 /* 
@@ -431,6 +437,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 
 const Navbar = styled.nav`
   display: flex;
@@ -559,5 +566,6 @@ const SearchButton = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 15px;
+  cursor: pointer;
 `;
- */
+*/

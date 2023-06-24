@@ -1,5 +1,5 @@
 import React from "react";
-import { LuArrowUpCircle } from "react-icons/lu";
+import { FiArrowUpCircle } from "@react-icons/all-files/fi/FiArrowUpCircle";
 import styled from "styled-components";
 
 function ScrollToTopButton() {
@@ -14,7 +14,7 @@ function ScrollToTopButton() {
 
 export default ScrollToTopButton;
 
-const ScrollTopButton = styled(LuArrowUpCircle)`
+const ScrollTopButton = styled(FiArrowUpCircle)`
   font-size: 16px;
   position: fixed;
   bottom: 1.5rem;

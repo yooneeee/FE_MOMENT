@@ -17,7 +17,7 @@ const MyPageInformation = () => {
   const loginUserData = UserDataComponent();
 
   const location = useLocation();
-  const checkKakaoId = location.state.checkKakaoId;
+  const checkKakaoId = location.state?.checkKakaoId;
   const [image, setImage] = useState(loginUserData.profileImg);
   const fileInput = useRef();
 
@@ -187,8 +187,7 @@ const MyPageInformation = () => {
           <Line />
           <Text1>사진</Text1>
           <ProfileContainer>
-            <ProfileImg src={image} />
-            {/* <ProfileImg src={imagePreview || loginUserData.profileImg} /> */}
+            <ProfileImg alt="프로필사진" src={image} />
           </ProfileContainer>
           <TextColumn>
             <ProfileText>

@@ -16,7 +16,8 @@ import {
   signupAxios,
 } from "../apis/auth/signup";
 import Swal from "sweetalert2";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiOutlineEye } from "@react-icons/all-files/ai/AiOutlineEye";
+import { AiOutlineEyeInvisible } from "@react-icons/all-files/ai/AiOutlineEyeInvisible";
 import TermsofService from "../components/TermsofService";
 import ImageCompressor from "browser-image-compression";
 

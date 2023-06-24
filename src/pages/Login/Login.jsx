@@ -11,13 +11,14 @@ import {
 } from "../../styles/ButtonStyles";
 import { useNavigate } from "react-router-dom";
 import { useInput } from "../../hooks/useInput";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { loginAxios } from "../../apis/auth/login";
 import { useDispatch } from "react-redux";
 import { loginSuccess, setUser } from "../../redux/modules/user";
-import { AiOutlineEye } from "react-icons/ai";
-import { AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiOutlineEye } from "@react-icons/all-files/ai/AiOutlineEye";
+import { AiOutlineEyeInvisible } from "@react-icons/all-files/ai/AiOutlineEyeInvisible";
 import Swal from "sweetalert2";
+import { unreadChatAxios } from "../../apis/main/unreadChat";
 
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
 
@@ -46,29 +47,37 @@ function Login() {
       ? setLoginActive(true)
       : setLoginActive(false);
   };
+  const onSuccess = (response) => {
+    Swal.fire({
+      icon: "success",
+      title: "로그인 성공!",
+      text: `[${response.nickName}]님 로그인되었습니다✨`,
+      confirmButtonText: "확인",
+    });
 
-  const loginMutation = useMutation(loginAxios, {
-    onSuccess: (response) => {
-      Swal.fire({
-        icon: "success",
-        title: "로그인 성공!",
-        text: `[${response.nickName}]님 로그인되었습니다✨`,
-        confirmButtonText: "확인",
+    unreadChatAxios()
+      .then((data) => {
+        console.log("안읽은 채팅", data);
+      })
+      .catch((error) => {
+        console.error(error);
       });
-      dispatch(loginSuccess());
-      dispatch(
-        setUser({
-          nickName: response.nickName,
-          profileImg: response.profileImg,
-          role: response.role,
-          userId: response.userId,
-        })
-      );
+    dispatch(loginSuccess());
+    dispatch(
+      setUser({
+        nickName: response.nickName,
+        profileImg: response.profileImg,
+        role: response.role,
+        userId: response.userId,
+      })
+    );
 
-      navigate("/main");
-      resetEmail();
-      resetPassword();
-    },
+    navigate("/main");
+    resetEmail();
+    resetPassword();
+  };
+  const loginMutation = useMutation(loginAxios, {
+    onSuccess: onSuccess,
     onError: (error) => {
       Swal.fire({
         icon: "error",
