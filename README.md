@@ -16,7 +16,6 @@
 |김희준|FE(react)|
 |손지윤|FE(react)|
 |남민영|FE(react)|
-|여준|Designer|
 
 ## 화면구성
 
