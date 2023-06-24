@@ -7,8 +7,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { mypage, mypageBoardDelete } from "../apis/mypage/mypage";
 import MyPageProfile from "../components/MyPageProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { FiSettings } from "react-icons/fi";
-import { BiDownArrow } from "react-icons/bi";
+import { FiSettings } from "@react-icons/all-files/fi/FiSettings";
+import { BiDownArrow } from "@react-icons/all-files/bi/BiDownArrow";
 import Swal from "sweetalert2";
 import EditBoard from "../components/EditBoard";
 

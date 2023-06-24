@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { IoArrowBack } from "react-icons/io5";
+import { IoArrowBack } from "@react-icons/all-files/io5/IoArrowBack";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 

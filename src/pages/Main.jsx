@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
-import Card from "../components/Card";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { main } from "../apis/main/main";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
-import MainBoard from "../components/MainBoard";
 import banner1 from "../assets/img/배너1.png";
 import banner2 from "../assets/img/배너2.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+const Card = React.lazy(() => import("../components/Card"));
+const MainBoard = React.lazy(() => import("../components/MainBoard"));
 
 function Main() {
+  const [areImagesLoaded, setImagesLoaded] = useState(false);
   const { isLoading, isError, data } = useQuery("main", main);
   const navigate = useNavigate();
   const banners = [banner1, banner2];
@@ -25,7 +26,28 @@ function Main() {
     autoplay: true,
     autoplaySpeed: 2700,
   };
+  useEffect(() => {
+    const imagePromises = banners.map((item) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = item;
+      });
+    });
 
+    Promise.all(imagePromises)
+      .then(() => {
+        setImagesLoaded(true);
+      })
+      .catch((error) => {
+        console.error("Failed to load images:", error);
+      });
+  }, []);
+
+  if (!areImagesLoaded) {
+    return <LoadingSpinner />;
+  }
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -35,19 +57,30 @@ function Main() {
   }
 
   if (!data) {
-    return null; // 또는 로딩 상태를 표시하는 컴포넌트를 반환하거나, 기본적인 화면 구조를 보여줄 수 있습니다.
+    return null;
   }
 
   const recommendataion = data.eachRoleUsersList;
   const board = data.boardList;
+  const handleMoreRecommendations = () => {
+    navigate("/feeds");
+  };
 
+  const handleMoreBoard = () => {
+    navigate("/board");
+  };
   return (
     <>
       <MainContainer>
         <SliderWrapper>
           <Styled_Slide {...settings}>
             {banners.map((item) => (
-              <MainImg key={item} src={item} fetchpriority="high" />
+              <MainImg
+                key={item}
+                src={item}
+                fetchpriority="high"
+                alt="메인 배너 이미지"
+              />
             ))}
           </Styled_Slide>
         </SliderWrapper>
@@ -55,35 +88,29 @@ function Main() {
           <CategoryContainer>
             <CardGroupName>
               <CardName>For You</CardName>
-              <MoreButton
-                onClick={() => {
-                  navigate("/feeds");
-                }}
-              >
+              <MoreButton onClick={handleMoreRecommendations}>
                 더보기 ▶
               </MoreButton>
             </CardGroupName>
             <CardContainer>
-              {recommendataion?.map((item) => {
-                return <Card key={item.userId} user={item} />;
-              })}
+              <Suspense fallback={<LoadingSpinner />}>
+                {recommendataion?.map((item) => {
+                  return <Card key={item.userId} user={item} />;
+                })}
+              </Suspense>
             </CardContainer>
           </CategoryContainer>
           <CategoryContainer>
             <CardGroupName>
               <CardName>Join with me</CardName>
-              <MoreButton
-                onClick={() => {
-                  navigate("/board");
-                }}
-              >
-                더보기 ▶
-              </MoreButton>
+              <MoreButton onClick={handleMoreBoard}>더보기 ▶</MoreButton>
             </CardGroupName>
             <BoardContainer>
-              {board?.map((item) => {
-                return <MainBoard key={item.boardId} board={item} />;
-              })}
+              <Suspense fallback={<LoadingSpinner />}>
+                {board?.map((item) => {
+                  return <MainBoard key={item.boardId} board={item} />;
+                })}
+              </Suspense>
             </BoardContainer>
           </CategoryContainer>
         </MainBody>
