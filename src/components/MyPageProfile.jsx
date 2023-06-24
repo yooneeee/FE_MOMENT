@@ -5,10 +5,12 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import UserDataComponent from "../components/UserDataComponent";
 
 const MyPageProfile = () => {
   const { hostId } = useParams();
   const userId = useSelector((state) => state.user.userId);
+  const loginUserData = UserDataComponent();
 
   const { isError, isLoading, data } = useQuery(
     ["mypage", hostId],
@@ -31,7 +33,7 @@ const MyPageProfile = () => {
     const chatHostId = data.hostId;
     return (
       <ProfileSection>
-        <ProfilePicture src={data.profileUrl} />
+        <ProfilePicture src={loginUserData.profileImg} />
         <ProfileInfo>
           <StFlex>
             <UserRole>{data.role}</UserRole>

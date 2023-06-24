@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import styled from "styled-components";
 import BoardItem from "../components/BoardItem";
 import { getBoard } from "../apis/create/getBoard";
@@ -13,12 +13,12 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 import { GrSearch } from "react-icons/gr";
 import { searchBoardAxios } from "../apis/board/searchBoard";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { throttle } from "lodash";
 
 function Board() {
-  const [activeNavItem, setActiveNavItem] = useState("Model");
   const navigate = useNavigate();
+  const [activeNavItem, setActiveNavItem] = useState("Model");
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-
   let optArr = ["제목", "닉네임", "장소", "해시태그"];
   const [currentOpt, setCurrentOpt] = useState("제목");
   const [showList, setShowList] = useState(false);
@@ -58,6 +58,7 @@ function Board() {
       document.removeEventListener("mousedown", clickListOutside);
     };
   }, []);
+
   const searchMutation = useMutation(searchBoardAxios, {
     onSuccess: (response) => {
       if (response.data.empty === true) {
@@ -69,7 +70,7 @@ function Board() {
         });
       }
       setSearchResults(response.data.content);
-      setKeyword("");
+      // setKeyword("");
     },
     onError: () => {
       Swal.fire({
@@ -82,11 +83,11 @@ function Board() {
 
   const searchButtonClickHandler = () => {
     if (keyword.trim() === "") {
-      Swal.fire({
-        icon: "warning",
-        title: "검색어를 입력해주세요!",
-        confirmButtonText: "확인",
-      });
+      // Swal.fire({
+      //   icon: "warning",
+      //   title: "검색어를 입력해주세요!",
+      //   confirmButtonText: "확인",
+      // });
       setSearchResults([]);
       return;
     }
@@ -98,21 +99,26 @@ function Board() {
       searchButtonClickHandler();
     }
   };
-  const ShowButtonClick = () => {
-    const { scrollY } = window;
-    scrollY > 200 ? setShowButton(true) : setShowButton(false);
-  };
-  useEffect(() => {
-    window.addEventListener("scroll", ShowButtonClick);
-    return () => {
-      window.removeEventListener("scroll", ShowButtonClick);
-    };
-  }, []);
 
   const handleNavItemClick = (item) => {
     setActiveNavItem(item);
     setSearchResults([]);
   };
+
+  const handleScrollThrottled = useCallback(
+    throttle(() => {
+      const { scrollY } = window;
+      scrollY > 200 ? setShowButton(true) : setShowButton(false);
+    }, 300),
+    []
+  );
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScrollThrottled);
+    return () => {
+      window.removeEventListener("scroll", handleScrollThrottled);
+    };
+  }, [handleScrollThrottled]);
 
   const { isLoading, isError, data, fetchNextPage } = useInfiniteQuery(
     ["getBoard", activeNavItem], // activeNavItem을 키로 사용하여 캐시 분리
@@ -143,7 +149,7 @@ function Board() {
   }
 
   if (isError) {
-    return <h1>오류가 발생하였습니다...!</h1>;
+    return <h1>에러가 발생하였습니다.</h1>;
   }
 
   return (
@@ -202,59 +208,6 @@ function Board() {
           </NavItems>
         </Navbar>
       </Header>
-      {/*       <Header>
-        <Navbar>
-          <span>게시판</span>
-          <Search>
-            <SelectWrap ref={selectWrapRef}>
-              <SelectButton onClick={toggleShowList}>
-                {currentOpt}
-                <MdOutlineKeyboardArrowDown style={{ fontSize: "18px" }} />
-              </SelectButton>
-              {showList && (
-                <LanguageUl>
-                  {optArr.map((item, index) => {
-                    return (
-                      <LanguageLi
-                        key={index}
-                        onClick={() => liClickHandler(index)}
-                      >
-                        {item}
-                      </LanguageLi>
-                    );
-                  })}
-                </LanguageUl>
-              )}
-            </SelectWrap>
-            <input
-              type="text"
-              placeholder="키워드를 입력해주세요"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              onKeyPress={handleKeyPress}
-            ></input>
-            <SearchButton type="button" onClick={searchButtonClickHandler}>
-              <GrSearch style={{ fontSize: "22px" }} />
-            </SearchButton>
-          </Search>
-          <NavItems>
-            <NavItem
-              className={activeNavItem === "Model" ? "active" : ""}
-              onClick={() => {
-                handleNavItemClick("Model");
-              }}
-            >
-              Model
-            </NavItem>
-            <NavItem
-              className={activeNavItem === "Photographer" ? "active" : ""}
-              onClick={() => handleNavItemClick("Photographer")}
-            >
-              Photographer
-            </NavItem>
-          </NavItems>
-        </Navbar>
-      </Header> */}
       <Content>
         {searchResults.length > 0 ? (
           <>
@@ -299,9 +252,10 @@ function Board() {
               />
             ))
         )}
-
-        <div ref={bottomObserverRef}></div>
       </Content>
+      {data.pages[data.pages.length - 1].last === false ? (
+        <BottomDiv ref={bottomObserverRef}></BottomDiv>
+      ) : null}
       {showButton && <ScrollToTopButton />}
     </>
   );
@@ -317,6 +271,10 @@ const Header = styled.header`
   @media (max-width: 768px) {
     margin: 0 30px;
   }
+`;
+
+const BottomDiv = styled.div`
+  height: 1px;
 `;
 
 const Navbar = styled.nav`
