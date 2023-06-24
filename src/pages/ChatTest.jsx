@@ -212,21 +212,21 @@ const ChatTest = () => {
           ]);
         }
       );
-      client.current?.subscribe(`/pub/chat/read`, ({ body }) => {
-        const readStatusUpdate = JSON.parse(body);
-        console.log("확인:::", readStatusUpdate);
+      // client.current?.subscribe(`/pub/chat/read`, ({ body }) => {
+      //   const readStatusUpdate = JSON.parse(body);
+      //   console.log("확인:::", readStatusUpdate);
 
-        setChatMessages((prevChatMessages) =>
-          prevChatMessages.map((message) =>
-            data.chatRoomId === chatRoomIds
-              ? { ...message, readStatus: readStatusUpdate.readStatus }
-              : message
-          )
-        );
-        console.log("확인:::", readStatusUpdate);
-        // readStatusUpdate에 따라 필요한 동작을 수행합니다.
-        // 예를 들어, 메시지를 읽은 상태로 표시하거나, 읽지 않은 메시지 개수를 업데이트하는 등의 동작을 수행할 수 있습니다.
-      });
+      //   setChatMessages((prevChatMessages) =>
+      //     prevChatMessages.map((message) =>
+      //       data.chatRoomId === chatRoomIds
+      //         ? { ...message, readStatus: readStatusUpdate.readStatus }
+      //         : message
+      //     )
+      //   );
+      //   console.log("확인:::", readStatusUpdate);
+      //   // readStatusUpdate에 따라 필요한 동작을 수행합니다.
+      //   // 예를 들어, 메시지를 읽은 상태로 표시하거나, 읽지 않은 메시지 개수를 업데이트하는 등의 동작을 수행할 수 있습니다.
+      // });
     }
   };
 
