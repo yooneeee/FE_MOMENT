@@ -170,37 +170,37 @@ const ChatTest = () => {
     client.current.deactivate();
   };
 
-  // const sendMessage = useMutation(
-  //   async (message) => {
-  //     if (!client.current.connected || !message.trim()) {
-  //       // message.trim()으로 메시지 앞뒤의 공백 제거 후 내용이 있는지 확인
-  //       return;
-  //     }
+  const sendMessage = useMutation(
+    async (message) => {
+      if (!client.current.connected || !message.trim()) {
+        // message.trim()으로 메시지 앞뒤의 공백 제거 후 내용이 있는지 확인
+        return;
+      }
 
-  //     client.current.publish({
-  //       destination: "/pub/chat/send",
-  //       body: JSON.stringify({
-  //         message: message,
-  //         senderId: userId,
-  //         receiverId: data.receiverId,
-  //         chatRoomId: data.chatRoomId,
-  //       }),
-  //     });
+      client.current.publish({
+        destination: "/pub/chat/send",
+        body: JSON.stringify({
+          message: message,
+          senderId: userId,
+          receiverId: data.receiverId,
+          chatRoomId: data.chatRoomId,
+        }),
+      });
 
-  //     setMessage("");
-  //     setOverLimit(false);
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       // 새 메시지를 성공적으로 보냈을 때, 채팅 목록 query를 무효화하여 다시 fetch하게 합니다.
-  //       queryClient.invalidateQueries("ChattingList");
-  //     },
-  //     onError: (error) => {
-  //       // 메시지 전송 실패 시에는 에러를 출력합니다.
-  //       console.error(error);
-  //     },
-  //   }
-  // );
+      setMessage("");
+      setOverLimit(false);
+      setMessageCharacters(0);
+    },
+    {
+      onSuccess: () => {
+        // 새 메시지를 성공적 -> 채팅 목록 query를 무효화하여 다시 fetch
+        queryClient.invalidateQueries("ChattingList");
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    }
+  );
 
   const subscribe = () => {
     if (data?.chatRoomId) {
@@ -259,7 +259,7 @@ const ChatTest = () => {
     return <h1>오류(⊙ˍ⊙)</h1>;
   }
 
-  const publish = (message) => {
+  /*   const publish = (message) => {
     if (!client.current.connected || !message.trim()) {
       // message.trim()으로 메시지 앞뒤의 공백 제거 후 내용이 있는지 확인
       return;
@@ -278,7 +278,7 @@ const ChatTest = () => {
     setMessage("");
     setOverLimit(false);
     setMessageCharacters(0);
-  };
+  }; */
   /* Enter key 메시지 전송 */
   const enterHandler = (e, message) => {
     // 메시지가 비어있고 enter키 눌렀을 때 동작 방지
@@ -292,17 +292,17 @@ const ChatTest = () => {
     }
     // enter 키를 누르면 메시지 전송
     else if (!e.shiftKey && e.which === 13 && message.trim() !== "") {
-      publish(message);
-      // sendMessage.mutate(message);
+      // publish(message);
+      sendMessage.mutate(message);
       e.preventDefault();
     }
   };
 
-  const handleMessageInput = (e) => {
+  /*   const handleMessageInput = (e) => {
     publish(message);
     // setMessage(e.target.value);
     // setMessageCharacters(0);
-  };
+  }; */
 
   return (
     <>
@@ -425,12 +425,14 @@ const ChatTest = () => {
                     // 만약 눌린 키가 Enter 키이면 publish(message) 함수를 실행
                     onKeyDown={(e) => enterHandler(e, message)}
                   />
-                  {/* <SendButton onClick={() => sendMessage.mutate(message)}> */}
                   <Bundle>
                     <span>
                       {messageCharacters}/{messageMaxLength}
                     </span>
-                    <SendButton onClick={handleMessageInput}>전송</SendButton>
+                    {/* <SendButton onClick={handleMessageInput}>전송</SendButton> */}
+                    <SendButton onClick={() => sendMessage.mutate(message)}>
+                      전송
+                    </SendButton>
                   </Bundle>
                 </ChatInputContainer>
               </SendContainer>
