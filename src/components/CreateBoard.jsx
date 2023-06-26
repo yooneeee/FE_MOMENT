@@ -209,23 +209,21 @@ const CreateBoard = (props) => {
     >
       {open ? (
         <section ref={modalRef}>
-          <div className="header">
-            <div className="headerTitle">새 게시글 만들기</div>
-            <div className="headerRightBox">
-              <button className="saveButton" onClick={saveButtonHandler}>
-                등록하기
-              </button>
-              <button className="close" onClick={close}>
+          <Header>
+            <HeaderTitle>새 게시글 만들기</HeaderTitle>
+            <HeaderRightBox>
+              <SaveButton onClick={saveButtonHandler}>등록하기</SaveButton>
+              <CloseButton onClick={close}>
                 <AiOutlineClose />
-              </button>
-            </div>
-          </div>
+              </CloseButton>
+            </HeaderRightBox>
+          </Header>
 
-          <div className="container">
-            <main className="main-body">
-              <div className="imgContainer">
+          <Container>
+            <MainBody>
+              <ImgContainer>
                 {!previewImage ? (
-                  <label htmlFor="file" className="btn-upload">
+                  <ButtonLabel htmlFor="file">
                     파일 업로드하기
                     <input
                       type="file"
@@ -233,29 +231,21 @@ const CreateBoard = (props) => {
                       id="file"
                       onChange={handleFileChange}
                     />
-                  </label>
+                  </ButtonLabel>
                 ) : (
-                  <img
-                    src={previewImage}
-                    alt="Preview"
-                    className="preview-image"
-                  />
+                  <ImgBox src={previewImage} alt="Preview" />
                 )}
-              </div>
-            </main>
+              </ImgContainer>
+            </MainBody>
 
-            <div className="inputSection">
-              <div className="profileBox">
-                <img
-                  src={loginUserData.profileImg}
-                  className="profileImg"
-                  alt="프로필이미지"
-                />
+            <InputSection>
+              <ProfileBox>
+                <ProfileImg src={loginUserData.profileImg} alt="프로필이미지" />
                 <div>
-                  <p className="position">{loginUserData.role}</p>
+                  <Position>{loginUserData.role}</Position>
                   <p>{loginUserData.nickName}</p>
                 </div>
-              </div>
+              </ProfileBox>
               <ContentContainer>
                 <InputTitle>제목</InputTitle>
                 <ContentInput
@@ -316,12 +306,11 @@ const CreateBoard = (props) => {
                     onKeyUp={addHashTag}
                     onKeyDown={keyDownHandler}
                     placeholder="#Enter를 눌러 해시태그를 등록해보세요."
-                    className="hashTagInput"
                   />
                 </HashTag>
               </HashTageContainer>
-            </div>
-          </div>
+            </InputSection>
+          </Container>
         </section>
       ) : null}
     </div>
@@ -331,7 +320,7 @@ const CreateBoard = (props) => {
 export default CreateBoard;
 
 const HashTageContainer = styled.div`
-  margin-top: 30px;
+  margin-top: 20px;
   margin-left: 5px;
 `;
 
@@ -346,6 +335,16 @@ const HashTag = styled.div`
   margin-top: 10px;
 `;
 
+const ImgBox = styled.img`
+  position: relative;
+  width: 720px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: contain;
+`;
+
 const ContentContainer = styled.div`
   margin-top: -15px;
 `;
@@ -354,6 +353,11 @@ const HashTagGuide = styled.div`
   color: #787878;
   font-size: 13px;
   margin-left: 10px;
+`;
+
+const CloseButton = styled.button`
+  margin: 3px 5px 0 0;
+  background-color: transparent;
 `;
 
 const Tag = styled.div`
@@ -393,4 +397,99 @@ const ContentInput = styled.input`
   border: none;
   outline: none;
   font-size: 15px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+`;
+
+const HeaderTitle = styled.div`
+  padding: 5px;
+  margin-left: 3px;
+  color: black;
+`;
+
+const HeaderRightBox = styled.div`
+  display: flex;
+  gap: 30px;
+  align-items: center;
+`;
+
+const SaveButton = styled.button`
+  padding: 5px;
+  background-color: transparent;
+  font-weight: 600;
+  margin-left: auto;
+`;
+
+const Container = styled.div`
+  display: flex;
+`;
+
+const MainBody = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 700px;
+  max-height: 700px;
+  overflow: hidden;
+`;
+
+const ImgContainer = styled.div`
+  position: relative;
+  width: 720px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const InputSection = styled.div`
+  min-width: 350px;
+  min-height: 700px;
+  padding: 10px;
+`;
+
+const ProfileBox = styled.div`
+  display: flex;
+  align-items: center;
+  color: black;
+`;
+
+const ProfileImg = styled.img`
+  width: 80px;
+  height: 80px;
+  border-radius: 70%;
+  object-fit: cover;
+  padding: 15px;
+  flex-shrink: 0;
+  cursor: pointer;
+`;
+
+const Position = styled.p`
+  color: #787878;
+`;
+
+const ButtonLabel = styled.label`
+  width: 150px;
+  height: 30px;
+  background: #483767;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+  &:hover {
+    background: #5f5374;
+    color: #fff;
+  }
 `;
