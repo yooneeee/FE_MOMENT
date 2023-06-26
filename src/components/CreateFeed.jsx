@@ -105,7 +105,7 @@ const CreateFeed = (props) => {
 
     const options = {
       maxSizeMB: 1, // 최대 크기 MB
-      maxWidthOrHeight: 1920, // 최대 너비 또는 높이
+      maxWidthOrHeight: 700, // 최대 너비 또는 높이 1920
       useWebWorker: true,
       // fileType: "webp",
     };
@@ -222,27 +222,23 @@ const CreateFeed = (props) => {
     <div className={open ? "openModal create-feed-modal" : "create-feed-modal"}>
       {open ? (
         <section ref={modalRef}>
-          <div className="header">
-            <div className="headerTitle">새 포트폴리오 만들기</div>
-            <div className="headerRightBox">
-              <button
-                className="saveButton"
-                onClick={saveButtonHandler}
-                disabled={isSaving}
-              >
+          <Header>
+            <HeaderTitle>새 포트폴리오 만들기</HeaderTitle>
+            <HeaderTitleBox>
+              <SaveButton onClick={saveButtonHandler} disabled={isSaving}>
                 등록하기
-              </button>
-              <button className="close" onClick={close}>
+              </SaveButton>
+              <CloseButton onClick={close}>
                 <AiOutlineClose />
-              </button>
-            </div>
-          </div>
+              </CloseButton>
+            </HeaderTitleBox>
+          </Header>
 
-          <div className="container">
-            <main className="main-body">
-              <div className="imgContainer">
+          <Container>
+            <MainBody>
+              <ImgContainerBox>
                 {previewImage == "" ? (
-                  <label htmlFor="file" className="btn-upload">
+                  <UploadButton htmlFor="file">
                     파일 업로드하기
                     <input
                       type="file"
@@ -251,12 +247,11 @@ const CreateFeed = (props) => {
                       id="file"
                       onChange={handleFileChange}
                     />
-                  </label>
+                  </UploadButton>
                 ) : (
-                  <img
+                  <PreviewImage
                     src={previewImage[mainImageIndex]}
                     alt="Preview"
-                    className="preview-image"
                   />
                 )}
                 {uploadToggleBtn && (
@@ -299,28 +294,23 @@ const CreateFeed = (props) => {
                 >
                   <RiCheckboxMultipleBlankLine size={"25px"} />
                 </MultipleUpload>
-              </div>
-            </main>
+              </ImgContainerBox>
+            </MainBody>
 
-            <div className="inputSection">
-              <div className="profileBox">
-                <img
-                  src={loginUserData.profileImg}
-                  className="profileImg"
-                  alt="프로필이미지"
-                />
+            <InputSection>
+              <ProfileBox>
+                <ProfileImg src={loginUserData.profileImg} alt="프로필이미지" />
                 <div>
-                  <p className="position">{loginUserData.role}</p>
+                  <Position>{loginUserData.role}</Position>
                   <p>{loginUserData.nickName}</p>
                 </div>
-              </div>
-              <textarea
-                className="contentInput"
+              </ProfileBox>
+              <InputTextArea
                 placeholder="문구 입력..."
                 value={content}
                 onChange={onChangeContentHandler}
                 maxLength={100}
-              ></textarea>
+              ></InputTextArea>
 
               <HashTageContainer>
                 <HashTagInputTitle>해시태그</HashTagInputTitle>
@@ -338,13 +328,12 @@ const CreateFeed = (props) => {
                     onKeyUp={addHashTag}
                     onKeyDown={keyDownHandler}
                     placeholder="#Enter를 눌러 해시태그를 등록해보세요."
-                    className="hashTagInput"
                     maxLength={8}
                   />
                 </HashTag>
               </HashTageContainer>
-            </div>
-          </div>
+            </InputSection>
+          </Container>
         </section>
       ) : null}
     </div>
@@ -361,7 +350,6 @@ const HashTag = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
   width: 320px;
-  /* background-color: aqua; */
   border: 2px solid $GRAY;
   border-radius: 10px;
   padding: 5px;
@@ -380,6 +368,11 @@ const Tag = styled.div`
   &:hover {
     background: #483767;
   }
+`;
+
+const CloseButton = styled.button`
+  margin-top: 3px;
+  background-color: transparent;
 `;
 
 const HashTagGuide = styled.div`
@@ -471,4 +464,113 @@ const DeletePhotoButton = styled.button`
   border-radius: 50%;
   width: 25px;
   height: 25px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+`;
+
+const HeaderTitle = styled.div`
+  padding: 5px;
+  margin-left: 6px;
+`;
+
+const HeaderTitleBox = styled.div`
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  margin: 0 10px 0 auto;
+`;
+
+const SaveButton = styled.div`
+  padding: 5px;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 13.333px;
+`;
+
+const Container = styled.div`
+  display: flex;
+`;
+
+const MainBody = styled.div`
+  display: flex;
+  min-height: 700px;
+  max-height: 700px;
+  overflow: hidden;
+`;
+
+const ImgContainerBox = styled.div`
+  width: 720px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const UploadButton = styled.label`
+  width: 150px;
+  height: 30px;
+  background: #483767;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+  &:hover {
+    background: #5f5374;
+    color: #fff;
+  }
+`;
+
+const PreviewImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+`;
+
+const InputSection = styled.div`
+  min-width: 350px;
+  min-height: 700px;
+  padding: 10px;
+`;
+
+const ProfileBox = styled.div`
+  display: flex;
+  align-items: center;
+  color: black;
+`;
+
+const ProfileImg = styled.img`
+  width: 80px;
+  height: 80px;
+  border-radius: 70%;
+  object-fit: cover;
+  padding: 15px;
+  flex-shrink: 0;
+`;
+
+const Position = styled.p`
+  color: #787878;
+  margin-bottom: 5px;
+`;
+
+const InputTextArea = styled.textarea`
+  margin-left: 5px;
+  width: 98%;
+  height: 50%;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 500;
+  resize: none;
+  border: none;
+  outline: none;
 `;
