@@ -83,27 +83,18 @@
   }
 }
 
-.container {
-  display: flex;
-}
 
-/* 사진 들어가는 부분 */
-.main-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 700px;
-  overflow: hidden;
-}
+
+
 
 /* 인풋 들어가는 부분 */
-.inputSection {
-  /* min-width: 100px;
-  min-height: 700px; */
+/* .inputSection {
+  min-width: 100px;
+  min-height: 700px;
   padding: 10px;
-}
+} */
 
-
+/* 
 .btn-upload {
   width: 150px;
   height: 30px;
@@ -141,10 +132,6 @@
   object-fit: contain;
 }
 
-.headerTitle {
-  padding: 5px;
-  color: black;
-}
 
 .saveButton {
   padding: 5px;
@@ -184,7 +171,7 @@
 .closeButton {
   display: flex;
   justify-content: flex-end;
-  /* padding: 0px; */
+  padding: 0px;
 }
 
 .close {
@@ -203,4 +190,4 @@
   border-radius: 10px;
   margin-left: auto;
   margin-right: 5px;
-}
+} */

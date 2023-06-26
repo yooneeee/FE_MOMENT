@@ -111,9 +111,9 @@ const FeedDetail = (props) => {
             </MainBody>
             <ContentSection>
               <CloseButtonBox>
-                <button className="close" onClick={close}>
+                <CloseButton onClick={close}>
                   <AiOutlineClose />
-                </button>
+                </CloseButton>
               </CloseButtonBox>
               <ProfileContainer>
                 <ProfileImg
@@ -271,6 +271,12 @@ const ContentSection = styled.div`
 const Position = styled.p`
   color: #787878;
   margin-bottom: 5px;
+`;
+
+const CloseButton = styled.button`
+  background-color: transparent;
+  font-weight: 700;
+  font-size: 16px;
 `;
 
 const SliderBody = styled.div`
