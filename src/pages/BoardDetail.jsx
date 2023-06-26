@@ -122,7 +122,7 @@ function BoardDetail() {
                     <ProfileVisitButton
                       onClick={() => {
                         Swal.fire({
-                          icon: "success",
+                          icon: "error",
                           title: "매칭이 이미 완료된 게시글입니다.",
                           confirmButtonText: "확인",
                         });
@@ -134,7 +134,7 @@ function BoardDetail() {
                     <ProfileVisitButton
                       onClick={() => {
                         Swal.fire({
-                          icon: "success",
+                          icon: "error",
                           title: "매칭이 이미 완료된 게시글입니다.",
                           confirmButtonText: "확인",
                         });

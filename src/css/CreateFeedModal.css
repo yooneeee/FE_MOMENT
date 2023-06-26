@@ -84,7 +84,6 @@
     display: flex;
 }
 
-/* 사진 들어가는 부분 */
 .main-body {
     display: flex;
     min-height: 700px;
@@ -92,37 +91,18 @@
     overflow: hidden;
 }
 
-/* 인풋 들어가는 부분 */
 .inputSection {
     min-width: 350px;
     min-height: 700px;
     padding: 10px;
 }
 
-.btn-upload {
-    width: 150px;
-    height: 30px;
-    background: #483767;
-    border: none;
-    border-radius: 10px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-
-    &:hover {
-        background: #5f5374;
-        color: #fff;
-    }
-}
 
 #file {
     display: none;
 }
 
-.imgContainer {
+/* .imgContainer {
     width: 720px;
     height: 100%;
     display: flex;
@@ -155,9 +135,6 @@
     color: black;
 }
 
-.position {
-    color: #787878;
-}
 
 .profileImg {
     width: 80px;
@@ -182,21 +159,7 @@
     outline: none;
 }
 
-.headerRightBox {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-    margin: 0 10px 0 auto;
-}
 
 .close {
     margin-top: 3px;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    color: white;
-    padding: 5px;
-    border-bottom: 1px solid #eee;
-}
+} */
