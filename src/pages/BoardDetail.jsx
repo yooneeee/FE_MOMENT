@@ -150,7 +150,7 @@ function BoardDetail() {
                           Swal.fire({
                             icon: "success",
                             title: "매칭 신청 완료!",
-                            text: "매칭이 완료되었습니다!",
+                            text: "매칭이 신청되었습니다!",
                             confirmButtonText: "확인",
                           });
                         } else {
