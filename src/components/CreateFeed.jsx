@@ -105,7 +105,7 @@ const CreateFeed = (props) => {
 
     const options = {
       maxSizeMB: 1, // 최대 크기 MB
-      maxWidthOrHeight: 1920, // 최대 너비 또는 높이
+      maxWidthOrHeight: 700, // 최대 너비 또는 높이 1920
       useWebWorker: true,
       // fileType: "webp",
     };

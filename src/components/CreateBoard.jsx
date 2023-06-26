@@ -116,7 +116,7 @@ const CreateBoard = (props) => {
 
     const options = {
       maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
+      maxWidthOrHeight: 700,
       useWebWorker: true, // 웹 워커 사용
     };
 

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { IoLocationSharp } from "@react-icons/all-files/io5/IoLocationSharp";
 import { BiDollarCircle } from "@react-icons/all-files/bi/BiDollarCircle";
 import { BsCalendar } from "@react-icons/all-files/bs/BsCalendar";
 import { useNavigate } from "react-router-dom";
 import { FaPen } from "@react-icons/all-files/fa/FaPen";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
 function BoardItem({
   item,
@@ -66,6 +67,11 @@ function BoardItem({
     }
   }, [item]);
 
+  const [cardProfileImgSrc, cardProfileImgRef] = useIntersectionObserver(
+    "/path/to/placeholder.jpg", // placeholder 이미지 경로
+    item.hostProfileUrl
+  );
+
   return (
     <Item key={item.boardId} onClick={onClick} hover={hover}>
       <ImageContainer img={item.boardImgUrl}>
@@ -97,7 +103,11 @@ function BoardItem({
           </MatchingStatusBox>
         ) : (
           <PhotographerInfo>
-            <CardProfileImg src={item.hostProfileUrl} />
+            <CardProfileImg
+              src={cardProfileImgSrc}
+              ref={cardProfileImgRef}
+              alt="ProfileImg"
+            />
             <PhotographerRole>{item.role}</PhotographerRole>
             <span>|</span>
             <PhotographerName>{item.nickName}</PhotographerName>
