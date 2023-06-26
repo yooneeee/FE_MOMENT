@@ -30,7 +30,7 @@ const MyPageProfile = () => {
     const chatHostId = data.hostId;
     return (
       <ProfileSection>
-        <ProfilePicture src={data.profileUrl} />
+        <ProfilePicture src={data.profileUrl} alt="프로필사진" />
         <ProfileInfo>
           <StFlex>
             <UserRole>{data.role}</UserRole>
