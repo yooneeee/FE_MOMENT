@@ -87,7 +87,6 @@ const CreateFeed = (props) => {
     setInputHashTag(e.target.value);
   };
 
-  ///////////////////////////////////////////////////////
   const { open, close } = props;
   const [selectedFile, setSelectedFile] = useState([]);
   const [previewImage, setPreviewImage] = useState([]);
@@ -125,9 +124,6 @@ const CreateFeed = (props) => {
       }
     });
   };
-
-  // console.log(selectedFile);
-  // console.log(previewImage);
 
   const handleDeletePhoto = (index) => {
     setSelectedFile((prevSelectedFile) => {
@@ -490,6 +486,7 @@ const SaveButton = styled.div`
   background-color: transparent;
   font-weight: 600;
   font-size: 13.333px;
+  cursor: pointer;
 `;
 
 const Container = styled.div`
@@ -501,6 +498,7 @@ const MainBody = styled.div`
   min-height: 700px;
   max-height: 700px;
   overflow: hidden;
+  background-color: #eee;
 `;
 
 const ImgContainerBox = styled.div`

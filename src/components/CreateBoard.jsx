@@ -86,7 +86,6 @@ const CreateBoard = (props) => {
     setInputHashTag(e.target.value);
   };
 
-  /////////////////////////////////////////////////////////////
   const { open, close } = props;
   const modalRef = useRef(null);
   const navigate = useNavigate();
@@ -438,6 +437,7 @@ const MainBody = styled.div`
   min-height: 700px;
   max-height: 700px;
   overflow: hidden;
+  background-color: #eee;
 `;
 
 const ImgContainer = styled.div`
