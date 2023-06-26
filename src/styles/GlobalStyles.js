@@ -17,6 +17,15 @@ export const GlobalStyles = createGlobalStyle`
         cursor: pointer;
     }
 
+    body{
+    -ms-overflow-style: none;
+    }
+    
+    ::-webkit-scrollbar {
+    display: none;
+    }
+
+
     .slick-slider .slick-track,
     .slick-slider .slick-list{
     -webkit-transform: translate3d(0, 0, 0);
