@@ -469,6 +469,7 @@ const GuideText = styled.div`
 const UserProfileImage = styled.img`
   width: 40px;
   height: 40px;
+  object-fit: cover;
   border-radius: 50%;
 `;
 
@@ -563,6 +564,7 @@ const ReceiverProfile = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  object-fit: cover;
   align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
 `;
 
