@@ -79,21 +79,20 @@
     }
 }
 
-/* .container {
+.container {
     display: flex;
-} */
+}
 
-/* 사진 들어가는 부분 */
-/* .main-body {
+.main-body {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 700px;
     max-height: 700px;
     overflow: hidden;
-} */
+}
 
-/* .imgContainer {
+.imgContainer {
     width: 720px;
     height: 100%;
     display: flex;
@@ -119,13 +118,13 @@
         background: #5f5374;
         color: #fff;
     }
-} */
+}
 
-/* #file {
+#file {
     display: none;
 }
 
-.imgContainer {
+/* .imgContainer {
     position: relative;
     width: 720px;
     height: 100%;
