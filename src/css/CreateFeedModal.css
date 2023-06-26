@@ -80,20 +80,18 @@
     }
 }
 
-/* .container {
+.container {
     display: flex;
-} */
+}
 
-/* 사진 들어가는 부분 */
-/* .main-body {
+.main-body {
     display: flex;
     min-height: 700px;
     max-height: 700px;
     overflow: hidden;
-} */
+}
 
-/* 인풋 들어가는 부분 */
-/* .inputSection {
+.inputSection {
     min-width: 350px;
     min-height: 700px;
     padding: 10px;
@@ -104,7 +102,7 @@
     display: none;
 }
 
-.imgContainer {
+/* .imgContainer {
     width: 720px;
     height: 100%;
     display: flex;
@@ -122,16 +120,16 @@
 .headerTitle {
     padding: 5px;
     margin-left: 6px;
-} */
+}
 
-/* .saveButton {
+.saveButton {
     padding: 5px;
     background-color: transparent;
     font-weight: 600;
     margin-left: auto;
-} */
+}
 
-/* .profileBox {
+.profileBox {
     display: flex;
     align-items: center;
     color: black;
