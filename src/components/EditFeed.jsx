@@ -90,11 +90,10 @@ const EditFeed = (props) => {
   }, [editFeedMutation.isSuccess, editFeedMutation.isError]);
 
   const saveButtonHandler = () => {
-    const editData = {
+    const contents = {
       content,
     };
-    // const photoId = id;
-    editFeedMutation.mutate({ photoId, editData });
+    editFeedMutation.mutate({ photoId, contents });
   };
 
   if (!getdata) return "Loading...";
@@ -270,7 +269,7 @@ const Container = styled.div`
   display: flex;
   @media (max-width: 1076px) {
     width: 80vw;
-    height: 80vw;
+    height: 50vw;
   }
 `;
 
@@ -302,7 +301,7 @@ const ImgContainerBox = styled.div`
     height: 596px;
   } */
   @media (max-width: 1076px) {
-    width: 80vw;
+    width: 50vw;
     height: 80vw;
   }
 `;
