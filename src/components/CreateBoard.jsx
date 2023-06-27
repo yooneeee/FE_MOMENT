@@ -492,4 +492,8 @@ const ButtonLabel = styled.label`
     background: #5f5374;
     color: #fff;
   }
+
+  input {
+    display: none; // input 태그를 숨깁니다
+  }
 `;
