@@ -150,7 +150,8 @@ const MyPageInformation = () => {
     }
   };
 
-  const prevValue = "";
+  // 값 재할당
+  let prevValue = "";
 
   const handlePwInput = (e) => {
     setNewPw(e.target.value);
