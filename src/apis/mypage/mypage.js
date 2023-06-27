@@ -36,6 +36,16 @@ const mypageFeedDelete = async (photoId) => {
   }
 };
 
+/* 마이페이지 피드 수정 */
+const mypageFeedEditAxios = async ({ photoId, editData }) => {
+  try {
+    const response = await instance.put(`/feeds/${photoId}`, editData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 /* 마이페이지 게시물 삭제 */
 const mypageBoardDelete = async (boardId) => {
   try {
@@ -62,4 +72,5 @@ export {
   mypageFeedDelete,
   mypageBoardDelete,
   mypageBoardEditAxios,
+  mypageFeedEditAxios,
 };
