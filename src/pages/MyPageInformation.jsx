@@ -314,7 +314,6 @@ const MyPageInformation = () => {
 
 export default MyPageInformation;
 
-/* 버튼 */
 const UploadButton = styled.label`
   display: inline-block;
   padding: 10px 75px;
@@ -322,7 +321,6 @@ const UploadButton = styled.label`
   color: #000000;
   border: 1px #acabab solid;
   border-radius: 3px;
-  /* margin-left: 45px; */
 
   &:hover {
     background-color: #483767;
@@ -350,7 +348,7 @@ const SelectionButton = styled.button`
 
   &:active,
   &:focus {
-    background-color: #000000; /* 선택 시 배경색 변경 */
+    background-color: #000000;
     color: white;
   }
 `;
@@ -397,7 +395,6 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 800px;
-  /* max-width: 50%; */
   margin: 10px auto 0;
 `;
 const Title = styled.div`
@@ -417,7 +414,6 @@ const ProfileContainer = styled.div`
   height: 200px;
   border-radius: 50%;
   overflow: hidden;
-  /* cursor: pointer; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -448,7 +444,7 @@ const HiddenInput = styled.input`
 
   &:focus {
     border-color: #000000;
-    outline: none; /* 포커스 시 기본 테두리 제거 */
+    outline: none;
   }
 
   &::placeholder {
@@ -510,7 +506,7 @@ const Introduce = styled.textarea`
 
   &:focus {
     border-color: #000000;
-    outline: none; /* 포커스 시 기본 테두리 제거 */
+    outline: none;
   }
 
   &::placeholder {
