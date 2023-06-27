@@ -88,7 +88,7 @@ function Header() {
   };
   const Access_key = sessionStorage.getItem("Access_key");
   const Refresh_key = sessionStorage.getItem("Refresh_key");
-
+  const eventSourceRef = useRef(null);
   const EventSource = EventSourcePolyfill;
   useEffect(() => {
     if (isLoggedIn) {
@@ -107,6 +107,7 @@ function Header() {
             heartbeatTimeout: 4000000,
           }
         );
+        eventSourceRef.current = eventSource;
         eventSource.addEventListener("chatAlarm-event", (event) => {
           const eventData = JSON.parse(event.data);
           console.log("Received event:", eventData);
@@ -116,6 +117,12 @@ function Header() {
       };
       fetchSse();
     }
+    return () => {
+      // 컴포넌트 언마운트 시 eventSource 연결 종료
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+    };
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -148,6 +155,9 @@ function Header() {
     sessionStorage.removeItem("Refresh_key");
     await logoutMutation.mutateAsync();
     dispatch(logoutSuccess());
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close(); // 로그아웃 시 eventSource 연결 종료
+    }
     navigate("/");
   };
   return (

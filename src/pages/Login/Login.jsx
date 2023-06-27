@@ -57,11 +57,22 @@ function Login() {
 
     unreadChatAxios()
       .then((data) => {
-        console.log("안읽은 채팅", data);
+        if (data) {
+          Swal.fire({
+            icon: "info",
+            text: `읽지않은 채팅이 있습니다.✨`,
+            confirmButtonText: "확인",
+          }).then(() => {
+            navigate(`/chatroomlist/${response.userId}`);
+          });
+        } else {
+          return;
+        }
       })
       .catch((error) => {
         console.error(error);
       });
+
     dispatch(loginSuccess());
     dispatch(
       setUser({
@@ -87,6 +98,7 @@ function Login() {
       });
 
       resetPassword();
+      navigate("/login");
     },
   });
 

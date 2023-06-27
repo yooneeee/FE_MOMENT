@@ -110,6 +110,7 @@ const FollowItem = styled.li`
 const UserImage = styled.img`
   background-size: cover;
   background-position: center;
+  object-fit: cover;
   width: 40px;
   height: 40px;
   border-radius: 50%;
