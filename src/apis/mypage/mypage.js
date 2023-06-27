@@ -37,9 +37,9 @@ const mypageFeedDelete = async (photoId) => {
 };
 
 /* 마이페이지 피드 수정 */
-const mypageFeedEditAxios = async ({ photoId, editData }) => {
+const mypageFeedEditAxios = async ({ photoId, contents }) => {
   try {
-    const response = await instance.put(`/feeds/${photoId}`, editData);
+    const response = await instance.put(`/feeds/${photoId}`, contents);
     return response.data;
   } catch (error) {
     throw error;
