@@ -178,13 +178,13 @@ function MyPageFeed() {
                         openFeedDetail(item.photoId);
                       }}
                     >
-                      {/* {isOpen && (
+                      {isOpen && (
                         <FeedDetail
                           open={() => openFeedDetail(item.photoId)}
                           close={() => closeFeedDetail(item.photoId)}
-                          // photoId={item.photoId}
+                          photoId={item.photoId}
                         />
-                      )} */}
+                      )}
                       <EditButton
                         onClick={(e) => {
                           e.stopPropagation();
@@ -199,6 +199,7 @@ function MyPageFeed() {
                           <Button
                             onClick={(e) => {
                               editButtonHandler(item.photoId);
+                              e.stopPropagation();
                             }}
                           >
                             수정
