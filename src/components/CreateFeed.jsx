@@ -526,6 +526,10 @@ const UploadButton = styled.label`
     background: #5f5374;
     color: #fff;
   }
+
+  input {
+    display: none; // input 태그를 숨깁니다
+  }
 `;
 
 const PreviewImage = styled.img`
