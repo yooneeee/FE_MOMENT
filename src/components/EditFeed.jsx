@@ -8,9 +8,6 @@ import { useMutation, useQueryClient, useQuery } from "react-query";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import UserDataComponent from "./UserDataComponent";
 import Swal from "sweetalert2";
-import { RiCheckboxMultipleBlankLine } from "@react-icons/all-files/ri/RiCheckboxMultipleBlankLine";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
-import imageCompression from "browser-image-compression";
 import { getFeedAxios } from "../apis/feed/getFeedAxios";
 import { mypageFeedEditAxios } from "../apis/mypage/mypage";
 import { feedDetailAxios } from "../apis/feed/feedDetailAxios";
@@ -26,21 +23,14 @@ const EditFeed = (props) => {
       keepPreviousData: true,
     }
   );
-  const {
-    isError,
-    isLoading,
-    data: DetailData,
-  } = useQuery(["feedDetailAxios", feedDetailAxios], () =>
-    feedDetailAxios(photoId)
+  const { data: DetailData } = useQuery(
+    ["feedDetailAxios", feedDetailAxios],
+    () => feedDetailAxios(photoId)
   );
-  console.log("getdata:::", getdata);
-  console.log("item:::", item);
-  console.log("DetailData:::", DetailData);
+  //   console.log("getdata:::", getdata);
+  //   console.log("item:::", item);
+  //   console.log("DetailData:::", DetailData);
 
-  const [selectedFile, setSelectedFile] = useState([]);
-  const [previewImage, setPreviewImage] = useState([]);
-  const [uploadToggleBtn, setUploadToggleBtn] = useState(false);
-  const [mainImageIndex, setMainImageIndex] = useState(0);
   const [content, onChangeContentHandler] = useInput();
   const [isSaving, setIsSaving] = useState(false); // 버튼 비활성화
   const modalRef = useRef(null);
@@ -55,52 +45,6 @@ const EditFeed = (props) => {
     slidesToScroll: 1,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
-  };
-
-  const handleFileChange = async (e) => {
-    const files = e.target.files;
-    const fileArray = Array.from(files);
-
-    const options = {
-      maxSizeMB: 1, // 최대 크기 MB
-      maxWidthOrHeight: 700, // 최대 너비 또는 높이 1920
-      useWebWorker: true,
-    };
-    const compressedFileArray = await Promise.all(
-      fileArray.map((file) => imageCompression(file, options))
-    );
-
-    setSelectedFile([...selectedFile, ...compressedFileArray]);
-
-    compressedFileArray.forEach((file) => {
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          setPreviewImage((prevImages) => [...prevImages, reader.result]);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  };
-
-  const handleDeletePhoto = (index) => {
-    setSelectedFile((prevSelectedFile) => {
-      const newSelectedFile = [...prevSelectedFile];
-      newSelectedFile.splice(index, 1);
-      return newSelectedFile;
-    });
-
-    setPreviewImage((prevPreviewImage) => {
-      const newPreviewImage = [...prevPreviewImage];
-      newPreviewImage.splice(index, 1);
-      return newPreviewImage;
-    });
-    // 메인 이미지 인덱스 변경
-    setMainImageIndex((index) => index - 1);
-  };
-
-  const handleImageClick = (index) => {
-    setMainImageIndex(index);
   };
 
   // 모달창 바깥을 눌렀을 때 모달 close
@@ -139,29 +83,6 @@ const EditFeed = (props) => {
     },
   });
 
-  /* 수정하기 버튼 클릭 */
-  //   const saveButtonHandler = () => {
-  //     if (!selectedFile || !content) {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "포트폴리오 수정 실패!",
-  //         text: `모든 내용을 입력해주세요🙏`,
-  //         confirmButtonText: "확인",
-  //       });
-  //       return;
-  //     }
-  //     setIsSaving(true);
-
-  //     const formData = new FormData();
-  //     formData.append("contents", content);
-
-  //     selectedFile.forEach((file) => {
-  //       formData.append("imageFile", file);
-  //     });
-
-  //     editFeedMutation.mutate(formData);
-  //   };
-
   useEffect(() => {
     if (editFeedMutation.isSuccess || editFeedMutation.isError) {
       setIsSaving(false);
@@ -180,9 +101,9 @@ const EditFeed = (props) => {
   const contentData = getdata.content.find(
     (content) => content.photoId === item.photoId
   );
-  console.log("데이터::::", contentData.photoUrl);
 
   const ImgArray = DetailData.photoUrls;
+
   return (
     <div className={open ? "openModal create-feed-modal" : "create-feed-modal"}>
       {open ? (
@@ -203,9 +124,13 @@ const EditFeed = (props) => {
               <MainBody>
                 <ImgContainerBox>
                   <Styled_Slide {...settings}>
-                    {ImgArray.map((url, index) => (
-                      <img key={index} src={url} alt="Preview" />
-                    ))}
+                    {ImgArray.map((img, index) => {
+                      return (
+                        <SliderBox key={index}>
+                          <SliderBody image={img} alt="피드사진" />
+                        </SliderBox>
+                      );
+                    })}
                   </Styled_Slide>
                 </ImgContainerBox>
               </MainBody>
@@ -269,13 +194,12 @@ const Styled_Slide = styled(Slider)`
     bottom: 20px; /* Increase the bottom position by 20px */
   }
 `;
-
 const SliderBox = styled.div`
   /* background-color: aqua; */
-  /* position: relative; */
-  @media (max-width: 1076px) {
+  position: relative;
+  /* @media (max-width: 1076px) {
     height: 596px;
-  }
+  } */
 `;
 const SliderBody = styled.div`
   display: flex;
@@ -314,78 +238,6 @@ const CloseButton = styled.button`
   background-color: transparent;
 `;
 
-const MultipleUpload = styled.button`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin: 0 20px 28px 0;
-  padding: 7px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: rgba(58, 58, 58, 0.5);
-  color: white;
-`;
-
-const UploadToggleContainer = styled.div`
-  display: flex;
-  position: absolute;
-  background-color: rgba(22, 22, 22, 0.7);
-  bottom: 0;
-  margin-bottom: 90px;
-  right: 0;
-  margin-right: 20px;
-  padding: 15px;
-  border-radius: 5px;
-`;
-
-const ImgContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-`;
-
-const ImgBox = styled.div`
-  width: 100px;
-  height: 100px;
-  cursor: pointer;
-`;
-
-const UploadImg = styled.div`
-  position: relative;
-  height: 100%;
-  background-position: center;
-  background-size: cover;
-  background-image: ${(props) => `url(${props.img})`};
-`;
-
-const PlusButton = styled.label`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  padding: 5px;
-  width: 40px;
-  height: 40px;
-  background-color: transparent;
-  color: white;
-  border: 1px solid white;
-  cursor: pointer;
-`;
-
-const DeletePhotoButton = styled.button`
-  padding: 5px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: rgba(58, 58, 58, 0.5);
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-`;
-
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -415,14 +267,19 @@ const SaveButton = styled.div`
 
 const Container = styled.div`
   display: flex;
+  @media (max-width: 1076px) {
+    width: 80vw;
+    height: 80vw;
+  }
 `;
 
 const MainBody = styled.div`
-  display: flex;
+  /* display: flex;
   min-height: 700px;
   max-height: 700px;
   overflow: hidden;
-  background-color: #eee;
+  background-color: #eee; */
+  max-height: 700px;
 `;
 
 const ImgContainerBox = styled.div`
@@ -439,39 +296,14 @@ const ImgContainerBox = styled.div`
   /* padding-bottom: 100%; */
   display: flex;
 
-  @media (max-width: 1076px) {
+  /* @media (max-width: 1076px) {
     width: 596px;
     height: 596px;
-  }
-`;
-
-const UploadButton = styled.label`
-  width: 150px;
-  height: 30px;
-  background: #483767;
-  border: none;
-  border-radius: 10px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-
-  &:hover {
-    background: #5f5374;
-    color: #fff;
-  }
-
-  input {
-    display: none; // input 태그를 숨깁니다
-  }
-`;
-
-const PreviewImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  } */
+  /* @media (max-width: 1076px) {
+    width: 80vw;
+    height: 80vw;
+  } */
 `;
 
 const InputSection = styled.div`
