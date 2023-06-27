@@ -14,10 +14,10 @@ import { feedDetailAxios } from "../apis/feed/feedDetailAxios";
 import Slider from "react-slick";
 
 const EditFeed = (props) => {
-  const { open, close, id, item } = props;
+  const { open, close, photoId, item } = props;
 
   const { data: getdata } = useQuery(
-    ["getFeedAxios", id],
+    ["getFeedAxios", photoId],
     () => getFeedAxios({ activeNavItem: "Latest" }),
     {
       keepPreviousData: true,
@@ -25,11 +25,12 @@ const EditFeed = (props) => {
   );
   const { data: DetailData } = useQuery(
     ["feedDetailAxios", feedDetailAxios],
-    () => feedDetailAxios(id)
+    () => feedDetailAxios(photoId)
   );
   //   console.log("getdata:::", getdata);
   //   console.log("item:::", item);
   //   console.log("DetailData:::", DetailData);
+
   const [content, onChangeContentHandler] = useInput();
   const [isSaving, setIsSaving] = useState(false); // 버튼 비활성화
   const modalRef = useRef(null);
@@ -92,7 +93,7 @@ const EditFeed = (props) => {
     const editData = {
       content,
     };
-    const photoId = id;
+    // const photoId = id;
     editFeedMutation.mutate({ photoId, editData });
   };
 

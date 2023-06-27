@@ -224,7 +224,7 @@ function MyPageFeed() {
                     )} */}
                     {selectedPhotoId === item.photoId && (
                       <EditFeed
-                        id={item.photoId}
+                        photoId={item.photoId}
                         item={item}
                         open={openFeedModal}
                         close={() => setSelectedPhotoId(null)}
