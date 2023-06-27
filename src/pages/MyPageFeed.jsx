@@ -12,6 +12,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import FeedDetail from "../components/FeedDetail";
+import EditFeed from "../components/EditFeed";
 
 function MyPageFeed() {
   const { hostId } = useParams();
@@ -23,6 +24,11 @@ function MyPageFeed() {
   const { isError, isLoading, data, error } = useQuery(["mypage", mypage], () =>
     mypage(hostId)
   );
+  const [feedModalOpen, setFeedModalOpen] = useState(false);
+  const [selectedPhotoId, setSelectedPhotoId] = useState(null);
+  const openFeedModal = () => {
+    setFeedModalOpen(true);
+  };
 
   // 모달 제어
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -57,14 +63,9 @@ function MyPageFeed() {
   });
 
   /* 삭제, 수정 버튼 */
-  const modifyButton = (e, index) => {
-    Swal.fire({
-      text: "준비중인 서비스입니다! 조금만 기다려주세요🙏",
-      icon: "warning",
-      confirmButtonColor: "#483767",
-      confirmButtonText: "확인",
-    });
-    toggleButtonClose(index);
+  const editButtonHandler = (photoId) => {
+    setSelectedPhotoId(photoId);
+    openFeedModal();
   };
 
   const deleteButtonHandler = (photoId) => {
@@ -178,6 +179,13 @@ function MyPageFeed() {
                         openFeedDetail(item.photoId);
                       }}
                     >
+                      {/* {isOpen && (
+                        <FeedDetail
+                          open={() => openFeedDetail(item.photoId)}
+                          close={() => closeFeedDetail(item.photoId)}
+                          photoId={item.photoId}
+                        />
+                      )} */}
                       <EditButton
                         onClick={(e) => {
                           e.stopPropagation();
@@ -191,8 +199,7 @@ function MyPageFeed() {
                         <ToggleWriteMenu ref={toggleWriteMenuRef}>
                           <Button
                             onClick={(e) => {
-                              modifyButton(e, index);
-                              e.stopPropagation();
+                              editButtonHandler(item.photoId);
                             }}
                           >
                             수정
@@ -208,11 +215,19 @@ function MyPageFeed() {
                         </ToggleWriteMenu>
                       )}
                     </WorkItem>
-                    {isOpen && (
+                    {/* {isOpen && (
                       <FeedDetail
                         open={() => openFeedDetail(item.photoId)}
                         close={() => closeFeedDetail(item.photoId)}
                         photoId={item.photoId}
+                      />
+                    )} */}
+                    {selectedPhotoId === item.photoId && (
+                      <EditFeed
+                        id={item.photoId}
+                        item={item}
+                        open={openFeedModal}
+                        close={() => setSelectedPhotoId(null)}
                       />
                     )}
                   </React.Fragment>
