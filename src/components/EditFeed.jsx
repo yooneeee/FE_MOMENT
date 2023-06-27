@@ -102,6 +102,7 @@ const EditFeed = (props) => {
   );
 
   //   const ImgArray = DetailData.photoUrls;
+  //   if (!DetailData) return "Loading...";
   const ImgArray = DetailData ? DetailData.photoUrls : [];
 
   return (
