@@ -7,6 +7,7 @@ import { loginSuccess, setUser, setUserRole } from "../../redux/modules/user";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import styled from "styled-components";
 import Swal from "sweetalert2";
+import { unreadChatAxios } from "../../apis/main/unreadChat";
 
 function KakaoLoginRedirect() {
   const navigate = useNavigate();
@@ -97,6 +98,25 @@ function KakaoLoginRedirect() {
         "로그인 성공!",
         `[${data.data.nickName}]님 로그인되었습니다✨`
       );
+      unreadChatAxios()
+        .then((response) => {
+          console.log("카카오", response);
+          if (response === true) {
+            Swal.fire({
+              icon: "info",
+              text: `읽지않은 채팅이 있습니다.✨`,
+              confirmButtonText: "확인",
+            }).then(() => {
+              navigate(`/chatroomlist/${data.data.userId}`);
+            });
+          } else {
+            navigate("/main");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          navigate("/");
+        });
       dispatch(loginSuccess());
       navigate("/main");
     }

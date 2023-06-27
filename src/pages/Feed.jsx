@@ -19,12 +19,11 @@ import { searchFeedAxios } from "../apis/feed/searchFeedAxios";
 import { IoIosArrowDown } from "@react-icons/all-files/io/IoIosArrowDown";
 import { GrSearch } from "@react-icons/all-files/gr/GrSearch";
 import FeedCard from "../components/FeedCard";
-import { throttle } from "lodash";
+import { debounce, throttle } from "lodash";
 const FeedDetail = lazy(() => import("../components/FeedDetail"));
 
 function Feed() {
   const [activeNavItem, setActiveNavItem] = useState("Latest");
-  const [timer, setTimer] = useState(null);
   // 모달 제어
   const [feedDetailOpen, setFeedDetailOpen] = useState([]);
   let optArr = ["내용", "닉네임", "해시태그"];
@@ -76,7 +75,7 @@ function Feed() {
         });
       }
       setSearchResults(response.data.content);
-      // setKeyword("");
+      setKeyword("");
     },
     onError: () => {
       Swal.fire({
@@ -86,27 +85,18 @@ function Feed() {
       });
     },
   });
+  const searchButtonClickHandler = useCallback(
+    debounce(() => {
+      if (keyword.trim() === "") {
+        setSearchResults([]);
+        return;
+      }
+      const role = activeNavItem.toUpperCase();
+      searchMutation.mutate({ keyword, option, role });
+    }, 500),
+    [keyword, activeNavItem, option, searchMutation]
+  );
 
-  const searchButtonClickHandler = () => {
-    if (timer) {
-      clearTimeout(timer);
-    }
-    if (keyword.trim() === "") {
-      // Swal.fire({
-      //   icon: "warning",
-      //   title: "검색어를 입력해주세요!",
-      //   confirmButtonText: "확인",
-      // });
-      setSearchResults([]);
-      return;
-    }
-    const role = activeNavItem.toUpperCase();
-    setTimer(
-      setTimeout(() => {
-        searchMutation.mutate({ keyword, option, role });
-      }, 500)
-    );
-  };
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       searchButtonClickHandler();
