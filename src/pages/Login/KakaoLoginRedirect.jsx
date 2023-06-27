@@ -99,8 +99,9 @@ function KakaoLoginRedirect() {
         `[${data.data.nickName}]님 로그인되었습니다✨`
       );
       unreadChatAxios()
-        .then((data) => {
-          if (data) {
+        .then((response) => {
+          console.log("카카오", response);
+          if (response === true) {
             Swal.fire({
               icon: "info",
               text: `읽지않은 채팅이 있습니다.✨`,
@@ -109,11 +110,12 @@ function KakaoLoginRedirect() {
               navigate(`/chatroomlist/${data.data.userId}`);
             });
           } else {
-            return;
+            navigate("/main");
           }
         })
         .catch((error) => {
           console.error(error);
+          navigate("/");
         });
       dispatch(loginSuccess());
       navigate("/main");
