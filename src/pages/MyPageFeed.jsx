@@ -65,7 +65,6 @@ function MyPageFeed() {
   /* 삭제, 수정 버튼 */
   const editButtonHandler = (photoId) => {
     setSelectedPhotoId(photoId);
-    openFeedModal();
   };
 
   const deleteButtonHandler = (photoId) => {
@@ -183,7 +182,7 @@ function MyPageFeed() {
                         <FeedDetail
                           open={() => openFeedDetail(item.photoId)}
                           close={() => closeFeedDetail(item.photoId)}
-                          photoId={item.photoId}
+                          // photoId={item.photoId}
                         />
                       )} */}
                       <EditButton
@@ -215,13 +214,6 @@ function MyPageFeed() {
                         </ToggleWriteMenu>
                       )}
                     </WorkItem>
-                    {/* {isOpen && (
-                      <FeedDetail
-                        open={() => openFeedDetail(item.photoId)}
-                        close={() => closeFeedDetail(item.photoId)}
-                        photoId={item.photoId}
-                      />
-                    )} */}
                     {selectedPhotoId === item.photoId && (
                       <EditFeed
                         photoId={item.photoId}
