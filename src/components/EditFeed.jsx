@@ -14,7 +14,7 @@ import { feedDetailAxios } from "../apis/feed/feedDetailAxios";
 import Slider from "react-slick";
 
 const EditFeed = (props) => {
-  const { open, close, id, item, photoId } = props;
+  const { open, close, id, item } = props;
 
   const { data: getdata } = useQuery(
     ["getFeedAxios", id],
@@ -25,12 +25,11 @@ const EditFeed = (props) => {
   );
   const { data: DetailData } = useQuery(
     ["feedDetailAxios", feedDetailAxios],
-    () => feedDetailAxios(photoId)
+    () => feedDetailAxios(id)
   );
   //   console.log("getdata:::", getdata);
   //   console.log("item:::", item);
   //   console.log("DetailData:::", DetailData);
-
   const [content, onChangeContentHandler] = useInput();
   const [isSaving, setIsSaving] = useState(false); // 버튼 비활성화
   const modalRef = useRef(null);
@@ -102,7 +101,8 @@ const EditFeed = (props) => {
     (content) => content.photoId === item.photoId
   );
 
-  const ImgArray = DetailData.photoUrls;
+  //   const ImgArray = DetailData.photoUrls;
+  const ImgArray = DetailData ? DetailData.photoUrls : [];
 
   return (
     <div className={open ? "openModal create-feed-modal" : "create-feed-modal"}>
