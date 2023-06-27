@@ -7,10 +7,10 @@ import { useInput } from "../hooks/useInput";
 import { useMutation, useQueryClient, useQuery } from "react-query";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import UserDataComponent from "./UserDataComponent";
-import Swal from "sweetalert2";
 import { getFeedAxios } from "../apis/feed/getFeedAxios";
 import { mypageFeedEditAxios } from "../apis/mypage/mypage";
 import { feedDetailAxios } from "../apis/feed/feedDetailAxios";
+import Swal from "sweetalert2";
 import Slider from "react-slick";
 
 const EditFeed = (props) => {
@@ -120,6 +120,7 @@ const EditFeed = (props) => {
               </CloseButton>
             </HeaderTitleBox>
           </Header>
+
           {getdata && (
             <Container>
               <MainBody>
@@ -166,7 +167,6 @@ export default EditFeed;
 
 const Styled_Slide = styled(Slider)`
   width: 100%;
-  /* padding-bottom: 100%; */
 
   .slick-prev,
   .slick-next {
@@ -192,11 +192,10 @@ const Styled_Slide = styled(Slider)`
   }
 
   .slick-dots {
-    bottom: 20px; /* Increase the bottom position by 20px */
+    bottom: 20px;
   }
 `;
 const SliderBox = styled.div`
-  /* background-color: aqua; */
   position: relative;
   /* @media (max-width: 1076px) {
     height: 596px;
@@ -275,26 +274,14 @@ const Container = styled.div`
 `;
 
 const MainBody = styled.div`
-  /* display: flex;
-  min-height: 700px;
-  max-height: 700px;
-  overflow: hidden;
-  background-color: #eee; */
   max-height: 700px;
 `;
 
 const ImgContainerBox = styled.div`
-  /* width: 720px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center; */
   position: relative;
   width: 650px;
   height: 700px;
   background-color: #eee;
-  /* height: 100%; */
-  /* padding-bottom: 100%; */
   display: flex;
 
   /* @media (max-width: 1076px) {
