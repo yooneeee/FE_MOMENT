@@ -300,10 +300,10 @@ const ImgContainerBox = styled.div`
     width: 596px;
     height: 596px;
   } */
-  /* @media (max-width: 1076px) {
+  @media (max-width: 1076px) {
     width: 80vw;
     height: 80vw;
-  } */
+  }
 `;
 
 const InputSection = styled.div`
