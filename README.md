@@ -11,6 +11,8 @@
 
  * 개발 : 2023.05.19(금) ~ 2023. 06. 30(금)
  * 유저테스트 : 2023. 06. 16(금) ~ 2023. 06. 19(월)
+> 🧡 [MOMENT 구경하기](https://www.momentapp.site/)
+>
 > 💛 [모먼트 노션](https://www.notion.so/Moment-7c56ea546ba44ab286ce1cdbaea7ecd7)
 >
 > 💜 [모먼트 원페이지 노션?]
@@ -21,7 +23,7 @@
 ||김희준VL|손지윤|남민영|이동규L|박민석| 김은양|
 |----|----|----|----|----|----|----|
 |주특기|FE(react)|FE(react)|FE(react)|BE(spring)|BE(spring)|BE(spring)|
-|깃허브|[@Jun](https://github.com/heejunKIM01 "김희준 깃허브")|[@yooneeee](https://github.com/yooneeee "손지윤 깃허브")|[@nminy](https://github.com/minyoungnam "남민영 깃허브")|[@동규](https://github.com/dongk96 "이동규 깃허브")|[@seokscribe](https://github.com/registaPark "박민석 깃허브")|[@silversheep](https://github.com/silversheep26 "김은양 깃허브")|
+|깃허브|[@Jun](https://github.com/heejunKIM01 "김희준 깃허브")|[@yooneeee](https://github.com/yooneeee "손지윤 깃허브")|[@nminy](https://github.com/minyoungnam "남민영 깃허브")|[@dongk](https://github.com/dongk96 "이동규 깃허브")|[@seokscribe](https://github.com/registaPark "박민석 깃허브")|[@silversheep](https://github.com/silversheep26 "김은양 깃허브")|
 
 ## 프로젝트 가이드
 
@@ -32,6 +34,8 @@
 - `포토그래퍼`라면, 당신의 작품에 적합한 모델을 쉽게 찾을 수 있습니다. 각 모델의 포트폴리오와 개인 스타일을 확인하고, 당신의 비전에 가장 잘 맞는 이들을 선택해보세요.
 
 - 반대로, `모델`이라면 저희 웹사이트를 통해 다양한 포토그래퍼들과 연결될 기회를 잡을 수 있습니다. 자신의 능력과 매력을 활용하여 다양한 작품에 참여하고, 새로운 경험을 쌓을 수 있습니다.
+
+https://github.com/minyoungnam/kimchi-recipe/assets/128782170/bafd59df-7a52-4381-b141-204687cf556f
 
 
 </details>
@@ -50,6 +54,8 @@ https://github.com/minyoungnam/kimchi-recipe/assets/128782170/c7cb69d4-b31d-4d78
 <summary>🔍 최적의 매칭을 위한 카테고리 별(내용, 해시태그, 장소 등) 검색 기능</summary>
 
 - 사용자들이 최적의 매칭을 찾기 위해 다양한 `검색 기능`을 제공합니다. 사용자의 필요와 기대에 딱 맞는 결과를 찾아내는 이 기능은 내용, 해시태그, 장소 등을 기준으로 분류되어 있습니다.
+
+https://github.com/minyoungnam/kimchi-recipe/assets/128782170/3a9ec193-4e86-4a26-b7b6-02050c6640b1
 
 
 </details>
@@ -71,6 +77,8 @@ https://github.com/minyoungnam/kimchi-recipe/assets/128782170/c7cb69d4-b31d-4d78
 
 - 이를 통해 사용자들은 플랫폼에서의 활동을 보다 효과적으로 관리하고, 성공적인 매칭과 프로젝트를 이루어가는데 도움을 받을 수 있습니다.
 
+![image](https://github.com/minyoungnam/FE_MOMENT/assets/128782170/3f0ab177-b6d1-40aa-a211-3fc579740add)
+
 
 </details>
 
@@ -82,21 +90,23 @@ https://github.com/minyoungnam/kimchi-recipe/assets/128782170/c7cb69d4-b31d-4d78
 
 
 ## 트러블슈팅
-
-- 무한 스크롤 이슈[보기]()
-- 고해상도 이미지 업로드 이슈[보기]()
-- 웹페이지 이미지로 인한 초기 로딩 시간 길어짐[보기]()
-- 검색 버튼 클릭 이슈[보기]()
-- 클릭 이벤트 발생 시 전체 페이지 리렌더링되는 이슈[보기]()
-- 디자인 통일성 이슈[보기]()
-- 동적 헤더 변경과 리덕스 데이터 휘발성 문제 해결[보기]()
-- 포트폴리오 등록하기 버튼 클릭 시 중복 게시[보기]()
+> [보러가기](https://github.com/moment-project/FE_MOMENT/wiki/Troubleshooting)
+- 무한 스크롤 이슈
+- 고해상도 이미지 업로드 이슈
+- 웹페이지 이미지로 인한 초기 로딩 시간 길어짐
+- 검색 버튼 클릭 이슈
+- 클릭 이벤트 발생 시 전체 페이지 리렌더링되는 이슈
+- 디자인 통일성 이슈
+- 동적 헤더 변경과 리덕스 데이터 휘발성 문제 해결
+- 포트폴리오 등록하기 버튼 클릭 시 중복 게시
 
 ## 기술스택
 
 > Platforms & Languages
 
-<img src="https://img.shields.io/badge/HTTPS-EF9421?style=flat-square&logo=HTTPS&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/JAVASCRIT-F7DF1E?style=flat-square&logo=javascript&logoColor=black" height="30"/> <img src="https://img.shields.io/badge/REDUX TOOLKIT-764ABC?style=flat-square&logo=REDUX TOOLKIT&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/REACT-61DAFB?style=flat-square&logo=react&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/REACTQUERY-FF4154?style=flat-square&logo=reactquery&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/STYLED COMPONENTS-DB7093?style=flat-square&logo=styled-components&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/CRYPTOJS-83B81A?style=flat-square&logo=CryptoJS&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/AXIOS-5A29E4?style=flat-square&logo=Axios&logoColor=white" height="30"/> 
+<img src="https://img.shields.io/badge/STYLED COMPONENTS-DB7093?style=flat-square&logo=styled-components&logoColor=white" height="30"/>
+
+<img src="https://img.shields.io/badge/HTTPS-EF9421?style=flat-square&logo=HTTPS&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/JAVASCRIT-F7DF1E?style=flat-square&logo=javascript&logoColor=black" height="30"/> <img src="https://img.shields.io/badge/REDUX TOOLKIT-764ABC?style=flat-square&logo=REDUX TOOLKIT&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/REACT-61DAFB?style=flat-square&logo=react&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/REACTQUERY-FF4154?style=flat-square&logo=reactquery&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/CRYPTOJS-83B81A?style=flat-square&logo=CryptoJS&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/AXIOS-5A29E4?style=flat-square&logo=Axios&logoColor=white" height="30"/> 
 
 <img src="https://img.shields.io/badge/WEBSOCKET-000000?style=flat-square&logo=WEBSOCKET&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/STOMP-000000?style=flat-square&logo=STOMP&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/SSE-000000?style=flat-square&logo=SSE&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/VERCEL-000000?style=flat-square&logo=Vercel&logoColor=white" height="30"/>
 
