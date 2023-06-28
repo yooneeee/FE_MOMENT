@@ -101,4 +101,4 @@
 
 > Tools
 
-<img src="https://img.shields.io/badge/GITHUB-181717?style=flat-square&logo=GitHub&logoColor=white" lor=white" /> <img src="https://img.shields.io/badge/VISUAL STUDIO Code-007ACC?style=flat-square&logo=Visual Studio Code&logoColor=white" lor=white" />
+<img src="https://img.shields.io/badge/GITHUB-181717?style=flat-square&logo=GitHub&logoColor=white" height="30" /> <img src="https://img.shields.io/badge/VISUAL STUDIO Code-007ACC?style=flat-square&logo=Visual Studio Code&logoColor=white" height="30" />
