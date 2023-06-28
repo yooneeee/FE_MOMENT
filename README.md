@@ -35,7 +35,7 @@
 
 - 반대로, `모델`이라면 저희 웹사이트를 통해 다양한 포토그래퍼들과 연결될 기회를 잡을 수 있습니다. 자신의 능력과 매력을 활용하여 다양한 작품에 참여하고, 새로운 경험을 쌓을 수 있습니다.
 
-https://github.com/minyoungnam/kimchi-recipe/assets/128782170/bafd59df-7a52-4381-b141-204687cf556f
+https://github.com/minyoungnam/hh99-SA/assets/128782170/8dcddecb-dcce-4100-8be0-865c65a74e1b
 
 
 </details>
