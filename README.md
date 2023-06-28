@@ -7,7 +7,7 @@
 ![image](https://github.com/minyoungnam/FE_MOMENT/assets/128782170/5859f9c9-ec4e-4d45-af1a-779a9765f37a)
 
 
-## 개발 기간
+## 프로젝트 기간
 
  * 개발 : 2023.05.19(금) ~ 2023. 06. 30(금)
  * 유저테스트 : 2023. 06. 16(금) ~ 2023. 06. 19(월)
@@ -94,7 +94,11 @@
 
 > Platforms & Languages
 
-<img src="https://img.shields.io/badge/https-EF9421?style=flat-square&logo=https&logoColor=white"/> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=white"/> <img src="https://img.shields.io/badge/reduxtoolkit-764ABC?style=flat-square&logo=reduxtoolkit&logoColor=white"/> <img src="https://img.shields.io/badge/react-61DAFB?style=flat-square&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/reactquery-FF4154?style=flat-square&logo=reactquery&logoColor=white"/> <img src="https://img.shields.io/badge/styled components-DB7093?style=flat-square&logo=styled-components&logoColor=white"/> <img src="https://img.shields.io/badge/CryptoJS-83B81A?style=flat-square&logo=CryptoJS&logoColor=white"/> <img src="https://img.shields.io/badge/Axios-5A29E4?style=flat-square&logo=Axios&logoColor=white"/> 
+<img src="https://img.shields.io/badge/HTTPS-EF9421?style=flat-square&logo=HTTPS&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/JAVASCRIT-F7DF1E?style=flat-square&logo=javascript&logoColor=black" height="30"/> <img src="https://img.shields.io/badge/REDUX TOOLKIT-764ABC?style=flat-square&logo=REDUX TOOLKIT&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/REACT-61DAFB?style=flat-square&logo=react&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/REACTQUERY-FF4154?style=flat-square&logo=reactquery&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/STYLED COMPONENTS-DB7093?style=flat-square&logo=styled-components&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/CRYPTOJS-83B81A?style=flat-square&logo=CryptoJS&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/AXIOS-5A29E4?style=flat-square&logo=Axios&logoColor=white" height="30"/> 
+
+<img src="https://img.shields.io/badge/WEBSOCKET-000000?style=flat-square&logo=WEBSOCKET&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/STOMP-000000?style=flat-square&logo=STOMP&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/SSE-000000?style=flat-square&logo=SSE&logoColor=white" height="30"/> <img src="https://img.shields.io/badge/VERCEL-000000?style=flat-square&logo=Vercel&logoColor=white" height="30"/>
 
 
 > Tools
+
+<img src="https://img.shields.io/badge/GITHUB-181717?style=flat-square&logo=GitHub&logoColor=white"/> <img src="https://img.shields.io/badge/VISUAL STUDIO Code-007ACC?style=flat-square&logo=Visual Studio Code&logoColor=white"/>
