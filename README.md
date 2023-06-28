@@ -67,7 +67,7 @@ https://github.com/minyoungnam/kimchi-recipe/assets/128782170/3a9ec193-4e86-4a26
 
 - 또한, 이 `채팅 기능`은 사용자 간의 인맥을 형성하고, 커뮤니티를 구축하는 데도 중요한 역할을 하며 그 과정에서 실질적인 연결을 만들어갈 수 있습니다.
 
-https://github.com/minyoungnam/kimchi-recipe/assets/128782170/7310e96d-6203-4e85-a3d0-0f132bfa217d
+https://github.com/minyoungnam/kimchi-recipe/assets/128782170/ae804e37-39db-4dcc-a95a-f22f038d2edb
 
 </details>
 
