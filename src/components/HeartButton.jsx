@@ -5,6 +5,7 @@ const HeartButton = ({ like, onClick }) => {
   return (
     <Heart
       src={like ? "/img/heart.png" : "/img/empty-heart.png"}
+      alt="heart"
       onClick={onClick}
     />
   );
