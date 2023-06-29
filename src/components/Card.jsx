@@ -61,7 +61,7 @@ function Card({ user }) {
             }
           }}
         >
-          <ProfileImg src={user.profileUrl}></ProfileImg>
+          <ProfileImg alt="프로필 이미지" src={user.profileUrl}></ProfileImg>
           <FlexWrap>
             <UserNickName>{user.nickName}</UserNickName>
             <UserPosition>
