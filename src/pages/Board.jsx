@@ -1,4 +1,11 @@
-import React, { Suspense, lazy, useRef, useState, useCallback } from "react";
+import React, {
+  Suspense,
+  lazy,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import styled from "styled-components";
 import { getBoard } from "../apis/create/getBoard";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +36,7 @@ function Board() {
   const [isEmpty, setIsEmpty] = useState(false);
   const toggleShowList = () => setShowList(true);
   const toggleCloseList = () => setShowList(false);
-  const optionChangeHandler = (currentOpt) => {
+  const optionChangeHandler = useCallback((currentOpt) => {
     if (currentOpt === "제목") {
       setOption("title");
     } else if (currentOpt === "해시태그") {
@@ -39,12 +46,15 @@ function Board() {
     } else if (currentOpt === "장소") {
       setOption("location");
     }
-  };
-  const liClickHandler = (index) => {
-    setCurrentOpt(optArr[index]);
-    optionChangeHandler(optArr[index]);
-    toggleCloseList();
-  };
+  }, []);
+  const liClickHandler = useCallback(
+    (index) => {
+      setCurrentOpt(optArr[index]);
+      optionChangeHandler(optArr[index]);
+      toggleCloseList();
+    },
+    [optionChangeHandler, optArr]
+  );
 
   const selectWrapRef = useRef();
   useEffect(() => {
@@ -80,15 +90,16 @@ function Board() {
       });
     },
   });
-  const searchButtonClickHandler = useCallback(
-    debounce(() => {
-      if (keyword.trim() === "") {
-        setSearchResults([]);
-        return;
-      }
-      const role = activeNavItem.toUpperCase();
-      searchMutation.mutate({ keyword, option, role });
-    }, 500),
+  const searchButtonClickHandler = useMemo(
+    () =>
+      debounce(() => {
+        if (keyword.trim() === "") {
+          setSearchResults([]);
+          return;
+        }
+        const role = activeNavItem.toUpperCase();
+        searchMutation.mutate({ keyword, option, role });
+      }, 500),
     [keyword, activeNavItem, option, searchMutation]
   );
 
@@ -98,11 +109,10 @@ function Board() {
     }
   };
 
-  const handleNavItemClick = (item) => {
+  const handleNavItemClick = useCallback((item) => {
     setActiveNavItem(item);
     setSearchResults([]);
-  };
-
+  }, []);
   const handleScrollThrottled = useCallback(
     throttle(() => {
       const { scrollY } = window;

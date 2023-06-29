@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
   useCallback,
+  useMemo,
 } from "react";
 import styled from "styled-components";
 import "../css/App.css";
@@ -85,15 +86,16 @@ function Feed() {
       });
     },
   });
-  const searchButtonClickHandler = useCallback(
-    debounce(() => {
-      if (keyword.trim() === "") {
-        setSearchResults([]);
-        return;
-      }
-      const role = activeNavItem.toUpperCase();
-      searchMutation.mutate({ keyword, option, role });
-    }, 500),
+  const searchButtonClickHandler = useMemo(
+    () =>
+      debounce(() => {
+        if (keyword.trim() === "") {
+          setSearchResults([]);
+          return;
+        }
+        const role = activeNavItem.toUpperCase();
+        searchMutation.mutate({ keyword, option, role });
+      }, 500),
     [keyword, activeNavItem, option, searchMutation]
   );
 
