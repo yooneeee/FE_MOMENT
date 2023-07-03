@@ -121,6 +121,7 @@ function Header() {
       // 컴포넌트 언마운트 시 eventSource 연결 종료
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
+        eventSourceRef.current = null; // eventSourceRef 초기화
       }
     };
   }, [isLoggedIn]);
