@@ -9,6 +9,7 @@ import banner2 from "../assets/img/배너2.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import LazyLoad from "react-lazyload";
 const Card = React.lazy(() => import("../components/Card"));
 const MainBoard = React.lazy(() => import("../components/MainBoard"));
 
@@ -75,12 +76,13 @@ function Main() {
         <SliderWrapper>
           <Styled_Slide {...settings}>
             {banners.map((item) => (
-              <MainImg
-                key={item}
-                src={item}
-                fetchpriority="high"
-                alt="메인 배너 이미지"
-              />
+              <LazyLoad key={item} height={400}>
+                <MainImg
+                  src={item}
+                  fetchpriority="high"
+                  alt="메인 배너 이미지"
+                />
+              </LazyLoad>
             ))}
           </Styled_Slide>
         </SliderWrapper>
